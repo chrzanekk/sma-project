@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.com.chrzanowski</groupId>
-    <artifactId>sma-backend</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>sma-backend-api</artifactId>
+    <version>1.0.0</version>
     <name>Scaffolding Company Management App</name>
     <description>Second version of ScaffApp - rebuilded</description>
     <properties>
@@ -18,7 +18,7 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <docker.username>chrzanekk</docker.username>
-        <docker.image.name>backend</docker.image.name>
+        <docker.image.name>sma-backend-api</docker.image.name>
         <docker.image.tag>1.0.0</docker.image.tag>
         <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>

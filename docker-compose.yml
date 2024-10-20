@@ -15,8 +15,8 @@ services:
       - sma-network
     restart: unless-stopped
 
-  sma-backend-api:
-    image: chrzanekk/sma-backend:latest
+  backend-api:
+    image: chrzanekk/sma-backend-api:latest
     container_name: sma-backend-api
     environment:
       SPRING_DATASOURCE_URL: ${DB_URL}
