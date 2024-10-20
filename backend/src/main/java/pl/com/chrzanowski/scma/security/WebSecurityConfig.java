@@ -16,7 +16,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pl.com.chrzanowski.scma.config.SecurityProblemSupport;
 import pl.com.chrzanowski.scma.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.scma.security.service.UserDetailsServiceImpl;
 

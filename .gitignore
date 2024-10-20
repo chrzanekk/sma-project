@@ -2,9 +2,7 @@
 **/.idea/
 **/node_modules
 **/*.iml
-
-# JavaScript
-
+.env
 # Logs
 logs
 *.log

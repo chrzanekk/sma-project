@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>pl.com.chrzanowski</groupId>
-    <artifactId>scma-backend</artifactId>
+    <artifactId>sma-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Scaffolding Company Management App</name>
     <description>Second version of ScaffApp - rebuilded</description>
@@ -221,6 +221,13 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+<!--        ENV-->
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>java-dotenv</artifactId>
+            <version>5.2.2</version>
+        </dependency>
     </dependencies>
 
     <build>
