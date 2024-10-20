@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Title</title>
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+</head>
+<body>
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="0095cc">
+    <tr>
+        <td height="50" align="center"><p th:text="#{mail.after.confirmation.header}"></p></td>
+    </tr>
+    <tr bgcolor="ffffff">
+        <td height="100" align="center"><h1 th:text="#{mail.after.confirmation.content}"></h1></td>
+    </tr>
+    <tr bgcolor="ffffff">
+        <td height="100" align="center"><h3><span
+                th:text="#{mail.after.confirmation.login.email}"></span><span> </span><a
+                th:href="${loginPageUrl}" th:text="#{mail.after.confirmation.click}"></a></h3>
+        </td>
+    </tr>
+    <tr>
+        <td height="50" align="center">
+            <p><span th:text="#{mail.footer}"></span>
+                <a th:href="${loginPageUrl}" th:text="#{mail.footer.click}"></a>
+            </p>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

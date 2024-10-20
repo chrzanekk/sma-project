@@ -1,0 +1,19 @@
+package pl.com.chrzanowski.scma.domain.enumeration;
+
+public enum TypeOfService {
+    OIL_SERVICE,
+    MECHANICAL_REPAIR,
+    MECHANICAL_CONSERVATION,
+    SHEET_METAL_REPAIR,
+    SHEET_METAL_AND_PAINT_REPAIR,
+    PAINT_REPAIR,
+    TECHNICAL_REVIEW,
+    TIRE_BALANCING,
+    TIRE_DISPOSAL,
+    TIRE_MOUNTING_AND_BALANCING,
+    TIRE_FIXING,
+    OTHERS
+
+
+
+}

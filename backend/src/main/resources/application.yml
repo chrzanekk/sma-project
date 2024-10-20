@@ -1,0 +1,89 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: ${DEV_DB_USERNAME}
+    password: ${DEV_DB_PASSWORD}
+    url: jdbc:mysql://188.68.236.142:3306/smc_db_dev?useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&zeroDateTimeBehavior=convertToNull&useLegacyDatetimeCode=false&serverTimezone=Europe/Warsaw
+    max-active: 16
+    max-idle: 2
+    min-idle: 1
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: false
+        show-sql: true
+  profiles:
+    active: dev
+
+  mail:
+    host: mail51.mydevil.net
+    port: 587
+    username: scaffapp@kchrzanowski.pl
+    password: EloRapy@2023
+#    properties:
+#      mail:
+#        transport:
+#          protocol: smtp
+#        smtp:
+#          port: 587
+#          auth: true
+#          starttls:
+#            enable: true
+#            required: true
+#        debug: false
+    protocol: smtp
+  thymeleaf:
+      cache: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 25MB
+
+
+scaffolding-app:
+  jwtSecret: 4jE4XcimwrEF9PUiOGaasXROjlw9zpkj5Hr59gojyiE6SMcxDBf9sJu/sCX/eazVrd+TyfYB/e8mz0NmgzuMNYmeb/Cw4aI1wOVgihSrVxT9erUXQXaGD8chY4wdWI9yaZOQKOdHcq8HTLYde3Xum34hgIMG3UJfHIfUNfL0a8Z6YiZGnuEnZrCsmMPTufN0o+pWQk5e7NI7fAgveTBvcV04oLJKK5sjky8a3N9rVPX2XZ6UOsG2n7Cvn/940dpy+DqRPBYCfagUyKNmakjAV2Desn7FkZ7dlGgsZGaWvXm3dhQ1l9TSdZTyx6QlLyaLB95pCDojfwaCYwKTEmj6
+  jwtExpirationMs: 86400000
+
+
+
+company:
+  name: Test Company
+  addressFirstLine: 00-000 Internet
+  addressSecondLine: www street 12
+  country: Web
+  nip: 0000000000
+  regon: 000000000
+  pageUrl: http://www.kchrzanowski.pl
+  contactMail: konrad.chrzanowski@gmail.com
+  contactMailto: mailto:konrad.chrzanowski@gmail.com
+
+platform:
+  url: http://localhost:4200
+  name:
+    front: Scaffolding App
+    panel: Scaffolding App
+  replyToEmail: scaffapp@kchrzanowski.pl
+  fromEmail: Scaffolding App / LocalHost <scaffapp@kchrzanowski.pl>
+tokenValidityTimeInMinutes: 15
+logo:
+  frontPath: /img/logos/logorch-1-128.png
+  panelPath: /img/logos/logorch-1-128.png
+faviconPath: /img/logos/logorch-1-128.png
+path-to-service-actions-demand-pdf: E:/
+path-to-fonts: /static/fonts/
+path-to-email-template: /resources/mail-templates
+
+#logging:
+#  level:
+#    pl.com.chrzanowski.scaffolding: TRACE
+#  pattern:
+#    console: d{yyyy-MMM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{15} - %msg%n
+
+
+
