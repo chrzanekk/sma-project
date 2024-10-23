@@ -24,11 +24,7 @@ spring:
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: validate
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
+      ddl-auto: create-drop
     show-sql: true
 
   mail:
@@ -44,13 +40,17 @@ spring:
       enabled: true
       max-file-size: 20MB
       max-request-size: 25MB
-
+  config:
+    import: "optional:file:.env[.properties]"
 
 jwt:
   jwtSecret: ${JWT_SECRET}
   jwtExpirationMs: 86400000
   tokenValidityTimeInMinutes: 15
 
-
+platform:
+  url: http://localhost:4200
+  replyToEmail: scaffapp@kchrzanowski.pl
+  fromEmail: Scaffolding App / LocalHost <scaffapp@kchrzanowski.pl>
 
 
