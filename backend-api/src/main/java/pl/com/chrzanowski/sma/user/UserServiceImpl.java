@@ -21,6 +21,7 @@ import pl.com.chrzanowski.sma.role.RoleService;
 import pl.com.chrzanowski.sma.security.SecurityUtils;
 import pl.com.chrzanowski.sma.util.EmailUtil;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -112,13 +113,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO save(UserDTO userDTO) {
         log.info("Saving new user {} to database", userDTO);
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDTO)));
+        UserDTO userDTOToSave = userDTO.toBuilder().createdDatetime(Instant.now()).build();
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDTOToSave)));
     }
 
     @Override
     public UserDTO update(UserDTO userDTO) {
         log.info("Update user {} to database", userDTO);
-        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDTO)));
+        UserDTO userDTOToUpdate = userDTO.toBuilder().lastModifiedDatetime(Instant.now()).build();
+        return userMapper.toDto(userRepository.save(userMapper.toEntity(userDTOToUpdate)));
     }
 
     @Override

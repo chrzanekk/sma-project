@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 
-@Builder
+@Builder(toBuilder = true)
 @Value
 @AllArgsConstructor
 public class SentEmailDTO {

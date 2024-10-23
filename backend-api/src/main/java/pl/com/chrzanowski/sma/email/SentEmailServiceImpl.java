@@ -69,7 +69,8 @@ public class SentEmailServiceImpl implements SentEmailService {
                 .title(title)
                 .content(content)
                 .mailEvent(MailEvent.AFTER_REGISTRATION)
-                .language(Language.from(locale.getLanguage())).build();
+                .language(Language.from(locale.getLanguage()))
+                .createDatetime(Instant.now()).build();
         emailSenderService.sendEmail(sentEmailDTO);
         SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sentEmailRepository.save(sentEmail);
@@ -114,7 +115,8 @@ public class SentEmailServiceImpl implements SentEmailService {
                 .title(title)
                 .content(content)
                 .mailEvent(MailEvent.PASSWORD_RESET)
-                .language(Language.from(locale.getLanguage())).build();
+                .language(Language.from(locale.getLanguage()))
+                .createDatetime(Instant.now()).build();
         emailSenderService.sendEmail(sentEmailDTO);
         SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sentEmailRepository.save(sentEmail);

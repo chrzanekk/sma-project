@@ -3,6 +3,7 @@ package pl.com.chrzanowski.sma.role;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -99,27 +100,31 @@ class RoleServiceImplTest {
 
     @Test
     void testSaveRoleSuccess() {
-        when(roleMapper.toEntity(roleUserDTO)).thenReturn(roleUser);
-        when(roleRepository.save(roleUser)).thenReturn(roleUser);
+        ArgumentCaptor<RoleDTO> captor = ArgumentCaptor.forClass(RoleDTO.class);
 
-        when(roleMapper.toDto(roleUser)).thenReturn(roleUserDTO);
+        when(roleMapper.toEntity(any(RoleDTO.class))).thenReturn(roleUser);
+        when(roleRepository.save(any(Role.class))).thenReturn(roleUser);
+        when(roleMapper.toDto(any(Role.class))).thenReturn(roleUserDTO);
 
         RoleDTO result = roleService.saveRole(roleUserDTO);
 
         assertNotNull(result);
         assertEquals(ERole.ROLE_USER, result.getName());
 
-        verify(roleMapper, times(1)).toEntity(roleUserDTO);
-        verify(roleRepository, times(1)).save(roleUser);
-        verify(roleMapper, times(1)).toDto(roleUser);
+        verify(roleMapper).toEntity(captor.capture());
+        RoleDTO capturedDTO = captor.getValue();
+        assertEquals(ERole.ROLE_USER, capturedDTO.getName());
+        assertNotNull(capturedDTO.getCreatedDatetime());
     }
 
     @Test
-    void testSaveRoleInvalidRole() {
+    void testSaveRoleWhenRoleNameIsNull() {
+        RoleDTO roleWithoutName = RoleDTO.builder().build();
 
-        RoleDTO invalidRoleDTO = RoleDTO.builder().build();
-
-        assertThrows(RoleException.class, () -> roleService.saveRole(invalidRoleDTO));
+        RoleException exception = assertThrows(RoleException.class, () -> {
+            roleService.saveRole(roleWithoutName);
+        });
+        assertEquals("Error RoleName not found", exception.getMessage());
 
         verify(roleRepository, never()).save(any(Role.class));
     }

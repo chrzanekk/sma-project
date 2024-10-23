@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.enumeration.ERole;
 import pl.com.chrzanowski.sma.exception.RoleException;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -44,9 +45,10 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDTO saveRole(RoleDTO roleDTO) {
         log.info("Adding new role {} to database", roleDTO.getName());
-        if(roleDTO.getName() == null) {
+        if (roleDTO.getName() == null) {
             throw new RoleException("Error RoleName not found");
         }
-        return roleMapper.toDto(roleRepository.save(roleMapper.toEntity(roleDTO)));
+        RoleDTO roleDTOToSave = roleDTO.toBuilder().createdDatetime(Instant.now()).build();
+        return roleMapper.toDto(roleRepository.save(roleMapper.toEntity(roleDTOToSave)));
     }
 }
