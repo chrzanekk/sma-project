@@ -14,6 +14,7 @@ import pl.com.chrzanowski.sma.enumeration.DictionaryType;
 import pl.com.chrzanowski.sma.enumeration.Language;
 import pl.com.chrzanowski.sma.enumeration.MailEvent;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -90,7 +91,7 @@ public class SentEmailServiceImpl implements SentEmailService {
                 .content(content)
                 .mailEvent(MailEvent.AFTER_CONFIRMATION)
                 .language(Language.from(locale.getLanguage()))
-                .createDatetime(LocalDateTime.now()).build();
+                .createDatetime(Instant.now()).build();
         emailSenderService.sendEmail(sentEmailDTO);
         SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sentEmailRepository.save(sentEmail);
@@ -135,7 +136,7 @@ public class SentEmailServiceImpl implements SentEmailService {
                 .content(content)
                 .mailEvent(MailEvent.AFTER_PASSWORD_CHANGE)
                 .language(Language.from(locale.getLanguage()))
-                .createDatetime(LocalDateTime.now()).build();
+                .createDatetime(Instant.now()).build();
         emailSenderService.sendEmail(sentEmailDTO);
         SentEmail sentEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sentEmailRepository.save(sentEmail);

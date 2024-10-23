@@ -32,7 +32,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public WorkshopDTO save(WorkshopDTO workshopDTO) {
         log.debug("Save workshop: {}", workshopDTO);
         WorkshopDTO workshopDTOtoSave = workshopDTO.toBuilder()
-                .createDate(workshopDTO.getCreateDate()).build();
+                .createdDatetime(workshopDTO.getCreatedDatetime()).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoSave));
         return workshopMapper.toDto(workshop);
     }
@@ -41,7 +41,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public WorkshopDTO update(WorkshopDTO workshopDTO) {
         log.debug("Update workshop: {}", workshopDTO);
         WorkshopDTO workshopDTOtoUpdate = workshopDTO.toBuilder()
-                .modifyDate(workshopDTO.getModifyDate()).build();
+                .lastModifiedDatetime(workshopDTO.getLastModifiedDatetime()).build();
         Workshop workshop = workshopRepository.save(workshopMapper.toEntity(workshopDTOtoUpdate));
         return workshopMapper.toDto(workshop);
     }

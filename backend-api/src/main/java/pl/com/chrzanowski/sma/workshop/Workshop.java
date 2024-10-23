@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.chrzanowski.sma.enumeration.Country;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
@@ -52,8 +53,8 @@ public class Workshop {
     private Country country;
 
     @Column(name = "create_date")
-    private LocalDateTime createDate;
+    private Instant createdDatetime;
 
     @Column(name = "modify_date")
-    private LocalDateTime modifyDate;
+    private Instant lastModifiedDatetime;
 }

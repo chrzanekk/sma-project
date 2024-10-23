@@ -1,9 +1,11 @@
 package pl.com.chrzanowski.sma.workshop;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 import pl.com.chrzanowski.sma.enumeration.Country;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -18,6 +20,6 @@ public class WorkshopDTO {
     String postalCode;
     String city;
     Country country;
-    LocalDateTime createDate;
-    LocalDateTime modifyDate;
+    Instant createdDatetime;
+    Instant lastModifiedDatetime;
 }

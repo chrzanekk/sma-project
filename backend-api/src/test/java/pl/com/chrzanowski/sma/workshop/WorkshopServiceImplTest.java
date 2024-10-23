@@ -14,6 +14,7 @@ import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.util.DateTimeUtil;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -49,7 +50,7 @@ class WorkshopServiceImplTest {
         workshopDTO = WorkshopDTO.builder()
                 .id(1L)
                 .name("Workshop 1")
-                .createDate(LocalDateTime.now())
+                .createdDatetime(Instant.now())
                 .build();
 
         workshop = new Workshop();

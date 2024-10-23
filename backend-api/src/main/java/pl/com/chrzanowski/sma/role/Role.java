@@ -5,6 +5,7 @@ import lombok.*;
 import pl.com.chrzanowski.sma.enumeration.ERole;
 import pl.com.chrzanowski.sma.user.User;
 
+import java.time.Instant;
 import java.util.Set;
 
 @Entity
@@ -26,4 +27,10 @@ public class Role {
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
+
+    @Column(name = "create_date")
+    private Instant createdDatetime;
+
+    @Column(name = "modify_date")
+    private Instant lastModifiedDatetime;
 }

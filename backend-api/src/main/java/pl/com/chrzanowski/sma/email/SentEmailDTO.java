@@ -4,6 +4,7 @@ import lombok.*;
 import pl.com.chrzanowski.sma.enumeration.Language;
 import pl.com.chrzanowski.sma.enumeration.MailEvent;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 
@@ -19,5 +20,5 @@ public class SentEmailDTO {
     String content;
     MailEvent mailEvent;
     Language language;
-    LocalDateTime createDatetime;
+    Instant createDatetime;
 }

@@ -7,6 +7,9 @@ import pl.com.chrzanowski.sma.enumeration.Language;
 import pl.com.chrzanowski.sma.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.user.User;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @Builder
@@ -38,4 +41,8 @@ public class SentEmail {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
+
+    @Column(name = "create_date")
+    private Instant createdDatetime;
+
 }
