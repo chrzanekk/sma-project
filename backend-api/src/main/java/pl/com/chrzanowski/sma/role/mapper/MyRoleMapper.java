@@ -1,14 +1,14 @@
 package pl.com.chrzanowski.sma.role.mapper;
 
-import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.role.model.Role;
+import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.role.model.Role;
 
-@Service
+@Component
 public class MyRoleMapper {
 
     public Role roleDTOtoRole(RoleDTO roleDTO) {
-        if(roleDTO == null) {
+        if (roleDTO == null) {
             return null;
         } else {
             Role role = new Role();

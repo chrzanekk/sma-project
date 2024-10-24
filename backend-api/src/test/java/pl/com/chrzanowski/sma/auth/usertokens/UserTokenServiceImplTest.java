@@ -8,7 +8,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
-import pl.com.chrzanowski.sma.user.UserDTO;
+import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
+import pl.com.chrzanowski.sma.usertoken.mapper.UserTokenMapper;
+import pl.com.chrzanowski.sma.usertoken.model.UserToken;
+import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
+import pl.com.chrzanowski.sma.usertoken.service.UserTokenServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -148,8 +153,8 @@ class UserTokenServiceImplTest {
     }
 
     @Test
-    void testDeleteConfirmationTokenSuccess() {
-        userTokenService.deleteConfirmationToken(1L);
+    void testDeleteTokenSuccess() {
+        userTokenService.deleteToken(1L);
 
         verify(userTokenRepository, times(1)).deleteById(1L);
     }

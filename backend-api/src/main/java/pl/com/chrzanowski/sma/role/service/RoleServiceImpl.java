@@ -1,9 +1,9 @@
 package pl.com.chrzanowski.sma.role.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.RoleException;
@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
+@Transactional
 public class RoleServiceImpl implements RoleService {
 
     private final Logger log = LoggerFactory.getLogger(RoleServiceImpl.class);

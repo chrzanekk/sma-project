@@ -23,19 +23,19 @@ public class RoleJPADaoImpl implements RoleDao {
 
     @Override
     public List<Role> findAll() {
-        log.info("DAO: Fetching all roles.");
+        log.debug("JPA DAO: Fetching all roles.");
         return roleRepository.findAll();
     }
 
     @Override
     public Optional<Role> findByName(ERole name) {
-        log.info("DAO: Fetching role {}", name);
+        log.debug("JPA DAO: Fetching role {}", name);
         return roleRepository.findByName(name);
     }
 
     @Override
     public Role saveRole(Role role) {
-        log.info("DAO: Adding new role {} to database", role.getName());
+        log.debug("JPA DAO: Adding new role {} to database", role.getName());
         return roleRepository.save(role);
     }
 }

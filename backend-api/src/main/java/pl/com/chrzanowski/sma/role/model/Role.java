@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.role.model;
 import jakarta.persistence.*;
 import lombok.*;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
-import pl.com.chrzanowski.sma.user.User;
+import pl.com.chrzanowski.sma.user.model.User;
 
 import java.time.Instant;
 import java.util.Set;
