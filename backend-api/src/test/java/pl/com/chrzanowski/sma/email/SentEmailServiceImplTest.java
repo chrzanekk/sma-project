@@ -2,7 +2,6 @@ package pl.com.chrzanowski.scma.email;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -10,12 +9,12 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import pl.com.chrzanowski.sma.auth.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenDTO;
-import pl.com.chrzanowski.sma.dictionary.DictionaryDTO;
-import pl.com.chrzanowski.sma.dictionary.DictionaryService;
+import pl.com.chrzanowski.sma.common.dictionary.DictionaryDTO;
+import pl.com.chrzanowski.sma.common.dictionary.DictionaryService;
 import pl.com.chrzanowski.sma.email.*;
-import pl.com.chrzanowski.sma.enumeration.DictionaryType;
-import pl.com.chrzanowski.sma.enumeration.Language;
-import pl.com.chrzanowski.sma.enumeration.MailEvent;
+import pl.com.chrzanowski.sma.common.enumeration.DictionaryType;
+import pl.com.chrzanowski.sma.common.enumeration.Language;
+import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 
 import java.util.List;
 import java.util.Locale;

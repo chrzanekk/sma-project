@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.workshop;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import pl.com.chrzanowski.sma.enumeration.Country;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 import java.time.Instant;
 

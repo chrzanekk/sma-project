@@ -13,13 +13,14 @@ import pl.com.chrzanowski.sma.auth.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenDTO;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenService;
-import pl.com.chrzanowski.sma.enumeration.ERole;
-import pl.com.chrzanowski.sma.role.Role;
-import pl.com.chrzanowski.sma.role.RoleDTO;
-import pl.com.chrzanowski.sma.role.RoleRepository;
-import pl.com.chrzanowski.sma.role.RoleService;
-import pl.com.chrzanowski.sma.security.SecurityUtils;
-import pl.com.chrzanowski.sma.util.EmailUtil;
+import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.role.model.Role;
+import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.role.repository.RoleRepository;
+import pl.com.chrzanowski.sma.role.dao.RoleDao;
+import pl.com.chrzanowski.sma.common.security.SecurityUtils;
+import pl.com.chrzanowski.sma.common.util.EmailUtil;
+import pl.com.chrzanowski.sma.role.service.RoleService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -38,18 +39,16 @@ public class UserServiceImpl implements UserService {
     private final static String USER_NOT_FOUND = "user with email %s not found";
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final RoleService roleService;
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository,
+    public UserServiceImpl(UserRepository userRepository,
                            UserMapper userMapper,
                            RoleService roleService,
                            PasswordEncoder encoder, UserTokenService userTokenService) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.roleService = roleService;
         this.userTokenService = userTokenService;

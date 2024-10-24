@@ -1,6 +1,6 @@
 package pl.com.chrzanowski.sma.auth.response;
 
-import pl.com.chrzanowski.sma.enumeration.ERole;
+import pl.com.chrzanowski.sma.common.enumeration.ERole;
 
 import java.util.List;
 

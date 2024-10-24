@@ -6,8 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.exception.ObjectNotFoundException;
-import pl.com.chrzanowski.sma.util.DateTimeUtil;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 
 import java.util.List;
 import java.util.Optional;

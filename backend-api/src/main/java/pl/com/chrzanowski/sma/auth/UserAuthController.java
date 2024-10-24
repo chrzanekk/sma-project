@@ -23,16 +23,16 @@ import pl.com.chrzanowski.sma.auth.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenDTO;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenService;
 import pl.com.chrzanowski.sma.email.SentEmailService;
-import pl.com.chrzanowski.sma.enumeration.TokenType;
-import pl.com.chrzanowski.sma.exception.EmailAlreadyExistsException;
-import pl.com.chrzanowski.sma.exception.EmailNotFoundException;
-import pl.com.chrzanowski.sma.exception.PasswordNotMatchException;
-import pl.com.chrzanowski.sma.exception.UsernameAlreadyExistsException;
-import pl.com.chrzanowski.sma.security.jwt.AuthTokenFilter;
-import pl.com.chrzanowski.sma.security.jwt.JwtUtils;
+import pl.com.chrzanowski.sma.common.enumeration.TokenType;
+import pl.com.chrzanowski.sma.common.exception.EmailAlreadyExistsException;
+import pl.com.chrzanowski.sma.common.exception.EmailNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.PasswordNotMatchException;
+import pl.com.chrzanowski.sma.common.exception.UsernameAlreadyExistsException;
+import pl.com.chrzanowski.sma.common.security.jwt.AuthTokenFilter;
+import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
 import pl.com.chrzanowski.sma.user.UserDTO;
 import pl.com.chrzanowski.sma.user.UserService;
-import pl.com.chrzanowski.sma.util.TokenUtil;
+import pl.com.chrzanowski.sma.common.util.TokenUtil;
 
 import java.util.Locale;
 

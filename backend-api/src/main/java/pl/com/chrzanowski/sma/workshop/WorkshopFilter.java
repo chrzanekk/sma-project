@@ -1,6 +1,6 @@
 package pl.com.chrzanowski.sma.workshop;
 
-import pl.com.chrzanowski.sma.enumeration.Country;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 import java.time.Instant;
 

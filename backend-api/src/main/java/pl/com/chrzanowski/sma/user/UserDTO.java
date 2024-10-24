@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
-import pl.com.chrzanowski.sma.role.RoleDTO;
+import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 
 import java.time.Instant;
 import java.util.Set;

@@ -2,7 +2,7 @@ package pl.com.chrzanowski.sma.workshop;
 
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.sma.enumeration.Country;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 import java.time.Instant;
 

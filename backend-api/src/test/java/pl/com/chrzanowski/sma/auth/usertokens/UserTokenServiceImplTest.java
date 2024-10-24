@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.com.chrzanowski.sma.enumeration.TokenType;
-import pl.com.chrzanowski.sma.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.enumeration.TokenType;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.UserDTO;
 
 import java.time.LocalDateTime;

@@ -3,12 +3,11 @@ package pl.com.chrzanowski.sma.email;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.com.chrzanowski.sma.enumeration.Language;
-import pl.com.chrzanowski.sma.enumeration.MailEvent;
+import pl.com.chrzanowski.sma.common.enumeration.Language;
+import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.user.User;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Data

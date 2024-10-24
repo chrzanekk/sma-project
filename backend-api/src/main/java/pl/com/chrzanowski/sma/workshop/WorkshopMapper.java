@@ -1,7 +1,7 @@
 package pl.com.chrzanowski.sma.workshop;
 
 import org.mapstruct.Mapper;
-import pl.com.chrzanowski.sma.shared.mapper.EntityMapper;
+import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 
 @Mapper(componentModel = "spring", uses = {})
 public interface WorkshopMapper extends EntityMapper<WorkshopDTO, Workshop> {

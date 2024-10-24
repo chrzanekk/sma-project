@@ -3,8 +3,8 @@ package pl.com.chrzanowski.sma.auth.usertokens;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.enumeration.TokenType;
-import pl.com.chrzanowski.sma.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.enumeration.TokenType;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.UserDTO;
 
 import java.time.LocalDateTime;

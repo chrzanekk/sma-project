@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.exception.EmailSendFailException;
+import pl.com.chrzanowski.sma.common.exception.EmailSendFailException;
 
 @Service
 @Transactional

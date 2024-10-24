@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.com.chrzanowski.sma.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 
 import java.util.List;
 

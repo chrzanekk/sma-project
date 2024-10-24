@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.chrzanowski.sma.role.Role;
+import pl.com.chrzanowski.sma.role.model.Role;
 
 import java.time.Instant;
 import java.util.HashSet;

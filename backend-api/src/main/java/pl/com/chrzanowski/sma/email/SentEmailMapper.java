@@ -2,7 +2,7 @@ package pl.com.chrzanowski.sma.email;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.chrzanowski.sma.shared.mapper.EntityMapper;
+import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.user.UserMapper;
 
 

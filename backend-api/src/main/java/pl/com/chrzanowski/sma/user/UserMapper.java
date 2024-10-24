@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.user;
 
 import org.mapstruct.Mapper;
-import pl.com.chrzanowski.sma.role.RoleMapper;
-import pl.com.chrzanowski.sma.shared.mapper.EntityMapper;
+import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
+import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper extends EntityMapper<UserDTO, User> {

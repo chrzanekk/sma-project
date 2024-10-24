@@ -11,12 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import pl.com.chrzanowski.sma.exception.ObjectNotFoundException;
-import pl.com.chrzanowski.sma.util.DateTimeUtil;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;

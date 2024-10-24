@@ -14,11 +14,11 @@ import pl.com.chrzanowski.sma.auth.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenDTO;
 import pl.com.chrzanowski.sma.auth.usertokens.UserTokenService;
-import pl.com.chrzanowski.sma.enumeration.ERole;
-import pl.com.chrzanowski.sma.role.Role;
-import pl.com.chrzanowski.sma.role.RoleDTO;
-import pl.com.chrzanowski.sma.role.RoleService;
-import pl.com.chrzanowski.sma.security.SecurityUtils;
+import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.role.model.Role;
+import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.common.security.SecurityUtils;
+import pl.com.chrzanowski.sma.role.service.RoleService;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

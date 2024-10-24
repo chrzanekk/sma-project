@@ -7,10 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.chrzanowski.sma.enumeration.Country;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Data

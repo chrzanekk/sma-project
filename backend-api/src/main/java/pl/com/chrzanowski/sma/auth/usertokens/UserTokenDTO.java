@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.auth.usertokens;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import pl.com.chrzanowski.sma.enumeration.TokenType;
+import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 
 import java.time.LocalDateTime;
 

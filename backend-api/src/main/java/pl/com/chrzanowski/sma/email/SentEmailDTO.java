@@ -1,11 +1,10 @@
 package pl.com.chrzanowski.sma.email;
 
 import lombok.*;
-import pl.com.chrzanowski.sma.enumeration.Language;
-import pl.com.chrzanowski.sma.enumeration.MailEvent;
+import pl.com.chrzanowski.sma.common.enumeration.Language;
+import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 
 @Builder(toBuilder = true)

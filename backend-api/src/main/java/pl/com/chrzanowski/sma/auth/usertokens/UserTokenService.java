@@ -1,6 +1,6 @@
 package pl.com.chrzanowski.sma.auth.usertokens;
 
-import pl.com.chrzanowski.sma.enumeration.TokenType;
+import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.user.UserDTO;
 
 public interface UserTokenService {
