@@ -1,10 +1,10 @@
-package pl.com.chrzanowski.sma.workshop;
+package pl.com.chrzanowski.sma.contractor.service.filter;
 
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 import java.time.Instant;
 
-public class WorkshopFilter {
+public class ContractorFilter {
     private Long id;
     private String name;
     private String taxNumber;
@@ -19,10 +19,10 @@ public class WorkshopFilter {
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
 
-    public WorkshopFilter() {
+    public ContractorFilter() {
     }
 
-    private WorkshopFilter(Builder builder) {
+    private ContractorFilter(Builder builder) {
         setId(builder.id);
         setName(builder.name);
         setTaxNumber(builder.taxNumber);
@@ -230,8 +230,8 @@ public class WorkshopFilter {
             return this;
         }
 
-        public WorkshopFilter build() {
-            return new WorkshopFilter(this);
+        public ContractorFilter build() {
+            return new ContractorFilter(this);
         }
     }
 }

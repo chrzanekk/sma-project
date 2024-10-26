@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.user;
+package pl.com.chrzanowski.sma.user.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.service.UserServiceImpl;
 import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;

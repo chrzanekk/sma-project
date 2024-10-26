@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.auth.usertokens;
+package pl.com.chrzanowski.sma.usertokens.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

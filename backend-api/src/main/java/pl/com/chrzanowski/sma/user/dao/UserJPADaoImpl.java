@@ -72,11 +72,13 @@ public class UserJPADaoImpl implements UserDao {
 
     @Override
     public List<User> findAll(Specification<User> specification) {
-        return List.of();
+        log.debug("DAO: Find all users by specification {}", specification);
+        return userRepository.findAll(specification);
     }
 
     @Override
     public void deleteById(Long id) {
-
+        log.debug("DAO: Delete user by id: {}", id);
+        userRepository.deleteById(id);
     }
 }

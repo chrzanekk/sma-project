@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.scma.email;
+package pl.com.chrzanowski.sma.email.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +19,11 @@ import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.email.dto.SentEmailDTO;
 import pl.com.chrzanowski.sma.email.mapper.SentEmailMapper;
 import pl.com.chrzanowski.sma.email.model.SendEmail;
-import pl.com.chrzanowski.sma.email.service.EmailSenderService;
-import pl.com.chrzanowski.sma.email.service.SendEmailServiceImpl;
 
 import java.util.List;
 import java.util.Locale;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -71,7 +70,6 @@ class SendEmailServiceImplTest {
 
     @Test
     void testSendAfterRegistration() {
-        // Mockowanie odpowiedzi z templateEngine
         when(templateEngine.process(eq("mail-after-registration"), any(Context.class)))
                 .thenReturn("Email content");
 
@@ -83,7 +81,6 @@ class SendEmailServiceImplTest {
         when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
                 .thenReturn(List.of(emailTitleDictionary));
 
-        // Mockowanie metody mappera
         SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
                 .userId(userTokenDTO.getUserId())
                 .userEmail(userTokenDTO.getEmail())
@@ -95,16 +92,11 @@ class SendEmailServiceImplTest {
         SendEmail sendEmail = new SendEmail();
         when(sentEmailMapper.toEntity(any(SentEmailDTO.class))).thenReturn(sendEmail);
 
-        // Wywołanie metody
         MessageResponse response = sentEmailService.sendAfterRegistration(userTokenDTO, locale);
 
-        // Sprawdzanie czy email został wysłany
         verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
-
-        // Sprawdzanie czy rekord został zapisany
         verify(sendEmailDao).save(sendEmail);
 
-        // Assercja na odpowiedzi
         assertEquals("Register successful", response.getMessage());
     }
 
@@ -143,4 +135,99 @@ class SendEmailServiceImplTest {
 
         assertEquals("Confirmed successful", response.getMessage());
     }
+
+    @Test
+    void testSendPasswordResetMail_Success() {
+        when(templateEngine.process(eq("mail-password-reset"), any(Context.class)))
+                .thenReturn("Password reset email content");
+
+        DictionaryDTO emailTitleDictionary = DictionaryDTO.builder()
+                .code(MailEvent.PASSWORD_RESET.getCode())
+                .value("Password Reset Request")
+                .build();
+
+        when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
+                .thenReturn(List.of(emailTitleDictionary));
+
+        SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
+                .userId(userTokenDTO.getUserId())
+                .userEmail(userTokenDTO.getEmail())
+                .content("Password reset email content")
+                .title("Password Reset Request")
+                .mailEvent(MailEvent.PASSWORD_RESET)
+                .language(Language.ENGLISH)
+                .build();
+        SendEmail sendEmail = new SendEmail();
+        when(sentEmailMapper.toEntity(any(SentEmailDTO.class))).thenReturn(sendEmail);
+
+        MessageResponse response = sentEmailService.sendPasswordResetMail(userTokenDTO, locale);
+
+        verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
+        verify(sendEmailDao).save(sendEmail);
+
+        assertEquals("Password reset token sent with token: " + userTokenDTO.getToken(), response.getMessage());
+    }
+
+    @Test
+    void testSendPasswordResetMail_TitleNotFound() {
+        when(templateEngine.process(eq("mail-password-reset"), any(Context.class)))
+                .thenReturn("Password reset email content");
+
+        when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
+                .thenReturn(List.of());
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            sentEmailService.sendPasswordResetMail(userTokenDTO, locale);
+        });
+
+        assertEquals("No email title!", exception.getMessage());
+    }
+
+    @Test
+    void testSendAfterPasswordChange_Success() {
+        when(templateEngine.process(eq("mail-after-password-change"), any(Context.class)))
+                .thenReturn("Password change confirmation email content");
+
+        DictionaryDTO emailTitleDictionary = DictionaryDTO.builder()
+                .code(MailEvent.AFTER_PASSWORD_CHANGE.getCode())
+                .value("Password Changed Successfully")
+                .build();
+
+        when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
+                .thenReturn(List.of(emailTitleDictionary));
+
+        SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
+                .userId(userTokenDTO.getUserId())
+                .userEmail(userTokenDTO.getEmail())
+                .content("Password change confirmation email content")
+                .title("Password Changed Successfully")
+                .mailEvent(MailEvent.AFTER_PASSWORD_CHANGE)
+                .language(Language.ENGLISH)
+                .build();
+        SendEmail sendEmail = new SendEmail();
+        when(sentEmailMapper.toEntity(any(SentEmailDTO.class))).thenReturn(sendEmail);
+
+        MessageResponse response = sentEmailService.sendAfterPasswordChange(userTokenDTO, locale);
+
+        verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
+        verify(sendEmailDao).save(sendEmail);
+
+        assertEquals("Password changed successfully", response.getMessage());
+    }
+
+    @Test
+    void testSendAfterPasswordChange_TitleNotFound() {
+        when(templateEngine.process(eq("mail-after-password-change"), any(Context.class)))
+                .thenReturn("Password change confirmation email content");
+
+        when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
+                .thenReturn(List.of()); // Pusta lista - brak tytułu
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            sentEmailService.sendAfterPasswordChange(userTokenDTO, locale);
+        });
+
+        assertEquals("No email title!", exception.getMessage());
+    }
+
 }

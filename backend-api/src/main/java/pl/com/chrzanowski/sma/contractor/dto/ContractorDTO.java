@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.workshop;
+package pl.com.chrzanowski.sma.contractor.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import java.time.Instant;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @Value
-public class WorkshopDTO {
+public class ContractorDTO {
     Long id;
     String name;
     String taxNumber;
