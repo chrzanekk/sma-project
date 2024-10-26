@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.scma.email;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -8,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
+import pl.com.chrzanowski.sma.email.dao.SendEmailDao;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.common.dictionary.DictionaryDTO;
 import pl.com.chrzanowski.sma.common.dictionary.DictionaryService;
@@ -17,7 +19,6 @@ import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.email.dto.SentEmailDTO;
 import pl.com.chrzanowski.sma.email.mapper.SentEmailMapper;
 import pl.com.chrzanowski.sma.email.model.SendEmail;
-import pl.com.chrzanowski.sma.email.repository.SendEmailRepository;
 import pl.com.chrzanowski.sma.email.service.EmailSenderService;
 import pl.com.chrzanowski.sma.email.service.SendEmailServiceImpl;
 
@@ -34,7 +35,7 @@ class SendEmailServiceImplTest {
     private EmailSenderService emailSenderService;
 
     @Mock
-    private SendEmailRepository sendEmailRepository;
+    private SendEmailDao sendEmailDao;
 
     @Mock
     private DictionaryService dictionaryService;
@@ -50,16 +51,22 @@ class SendEmailServiceImplTest {
 
     private UserTokenDTO userTokenDTO;
     private Locale locale;
+    private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        autoCloseable = MockitoAnnotations.openMocks(this);
         userTokenDTO = UserTokenDTO.builder()
                 .email("test@example.com")
                 .userId(1L)
                 .token("token123")
                 .build();
         locale = new Locale("en");
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        autoCloseable.close();
     }
 
     @Test
@@ -95,7 +102,7 @@ class SendEmailServiceImplTest {
         verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
 
         // Sprawdzanie czy rekord został zapisany
-        verify(sendEmailRepository).save(sendEmail);
+        verify(sendEmailDao).save(sendEmail);
 
         // Assercja na odpowiedzi
         assertEquals("Register successful", response.getMessage());
@@ -103,7 +110,6 @@ class SendEmailServiceImplTest {
 
     @Test
     void testSendAfterEmailConfirmation() {
-        // Mockowanie odpowiedzi z templateEngine
         when(templateEngine.process(eq("mail-after-confirmation"), any(Context.class)))
                 .thenReturn("Confirmation email content");
 
@@ -115,8 +121,6 @@ class SendEmailServiceImplTest {
         when(dictionaryService.getDictionary(eq(DictionaryType.EMAIL_TITLES), eq(locale)))
                 .thenReturn(List.of(emailTitleDictionary));
 
-
-        // Mockowanie metody mappera
         SentEmailDTO sentEmailDTO = SentEmailDTO.builder()
                 .userId(userTokenDTO.getUserId())
                 .userEmail(userTokenDTO.getEmail())
@@ -128,16 +132,15 @@ class SendEmailServiceImplTest {
         SendEmail sendEmail = new SendEmail();
         when(sentEmailMapper.toEntity(any(SentEmailDTO.class))).thenReturn(sendEmail);
 
-        // Wywołanie metody
+
         MessageResponse response = sentEmailService.sendAfterEmailConfirmation(userTokenDTO, locale);
 
-        // Sprawdzanie czy email został wysłany
+
         verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
 
-        // Sprawdzanie czy rekord został zapisany
-        verify(sendEmailRepository).save(sendEmail);
+        verify(sendEmailDao).save(sendEmail);
 
-        // Assercja na odpowiedzi
+
         assertEquals("Confirmed successful", response.getMessage());
     }
 }

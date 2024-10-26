@@ -9,10 +9,10 @@ import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.usertoken.dao.UserTokenDao;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.mapper.UserTokenMapper;
 import pl.com.chrzanowski.sma.usertoken.model.UserToken;
-import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenServiceImpl;
 
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.*;
 class UserTokenServiceImplTest {
 
     @Mock
-    private UserTokenRepository userTokenRepository;
+    private UserTokenDao userTokenDao;
 
     @Mock
     private UserTokenMapper userTokenMapper;
@@ -85,7 +85,7 @@ class UserTokenServiceImplTest {
     @Test
     void testSaveTokenSuccess() {
         when(userTokenMapper.toEntity(any(UserTokenDTO.class))).thenReturn(userToken);
-        when(userTokenRepository.save(any(UserToken.class))).thenReturn(userToken);
+        when(userTokenDao.saveToken(any(UserToken.class))).thenReturn(userToken);
         when(userTokenMapper.toDto(any(UserToken.class))).thenReturn(userTokenDTO);
 
         UserTokenDTO result = userTokenService.saveToken(userTokenDTO.getToken(), userDTO, TokenType.PASSWORD_RESET_TOKEN);
@@ -94,7 +94,7 @@ class UserTokenServiceImplTest {
         assertEquals(userTokenDTO.getToken(), result.getToken());
 
         verify(userTokenMapper, times(1)).toEntity(any(UserTokenDTO.class));
-        verify(userTokenRepository, times(1)).save(any(UserToken.class));
+        verify(userTokenDao, times(1)).saveToken(any(UserToken.class));
         verify(userTokenMapper, times(1)).toDto(any(UserToken.class));
     }
 
@@ -106,28 +106,49 @@ class UserTokenServiceImplTest {
 
         assertEquals("User must not be null", exception.getMessage());
 
-        verify(userTokenRepository, times(0)).save(any(UserToken.class));
+        verify(userTokenDao, times(0)).saveToken(any(UserToken.class));
     }
 
     @Test
     void testUpdateTokenSuccess() {
-        when(userTokenMapper.toEntity(any(UserTokenDTO.class))).thenReturn(userToken);
-        when(userTokenRepository.save(any(UserToken.class))).thenReturn(userToken);
-        when(userTokenMapper.toDto(any(UserToken.class))).thenReturn(userTokenDTO);
+
+        UserToken updatedUserToken = UserToken.builder()
+                .id(1L)
+                .token(userTokenDTO.getToken())
+                .createDate(userTokenDTO.getCreateDate())
+                .expireDate(userTokenDTO.getExpireDate())
+                .useDate(userTokenDTO.getCreateDate().plusMinutes(30))
+                .tokenType(TokenType.PASSWORD_RESET_TOKEN)
+                .build();
+
+        UserTokenDTO updatedUserTokenDTO = UserTokenDTO.builder()
+                .id(1L)
+                .token(UUID.randomUUID().toString())
+                .userId(1L)
+                .userName("testUser")
+                .email("test@example.com")
+                .createDate(LocalDateTime.now())
+                .expireDate(LocalDateTime.now().plusMinutes(30))
+                .useDate(updatedUserToken.getUseDate())
+                .tokenType(TokenType.PASSWORD_RESET_TOKEN)
+                .build();
+        when(userTokenDao.updateToken(any(UserToken.class))).thenReturn(updatedUserToken);
+        when(userTokenMapper.toEntity(any(UserTokenDTO.class))).thenReturn(updatedUserToken);
+        when(userTokenMapper.toDto(any(UserToken.class))).thenReturn(updatedUserTokenDTO);
 
         UserTokenDTO result = userTokenService.updateToken(userTokenDTO);
 
         assertNotNull(result);
-        assertEquals(userTokenDTO.getToken(), result.getToken());
+        assertEquals(updatedUserTokenDTO.getToken(), result.getToken());
 
         verify(userTokenMapper, times(1)).toEntity(any(UserTokenDTO.class));
-        verify(userTokenRepository, times(1)).save(any(UserToken.class));
+        verify(userTokenDao, times(1)).updateToken(any(UserToken.class));
         verify(userTokenMapper, times(1)).toDto(any(UserToken.class));
     }
 
     @Test
     void testGetTokenDataSuccess() {
-        when(userTokenRepository.findUserTokensByToken(anyString())).thenReturn(Optional.of(userToken));
+        when(userTokenDao.findUserTokensByToken(anyString())).thenReturn(Optional.of(userToken));
         when(userTokenMapper.toDto(any(UserToken.class))).thenReturn(userTokenDTO);
 
         UserTokenDTO result = userTokenService.getTokenData(userTokenDTO.getToken());
@@ -135,13 +156,13 @@ class UserTokenServiceImplTest {
         assertNotNull(result);
         assertEquals(userTokenDTO.getToken(), result.getToken());
 
-        verify(userTokenRepository, times(1)).findUserTokensByToken(anyString());
+        verify(userTokenDao, times(1)).findUserTokensByToken(anyString());
         verify(userTokenMapper, times(1)).toDto(any(UserToken.class));
     }
 
     @Test
     void testGetTokenDataNotFound() {
-        when(userTokenRepository.findUserTokensByToken(anyString())).thenReturn(Optional.empty());
+        when(userTokenDao.findUserTokensByToken(anyString())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
             userTokenService.getTokenData("invalidToken");
@@ -149,13 +170,14 @@ class UserTokenServiceImplTest {
 
         assertEquals("Token not found.", exception.getMessage());
 
-        verify(userTokenRepository, times(1)).findUserTokensByToken(anyString());
+        verify(userTokenDao, times(1)).findUserTokensByToken(anyString());
     }
 
     @Test
     void testDeleteTokenSuccess() {
+
         userTokenService.deleteToken(1L);
 
-        verify(userTokenRepository, times(1)).deleteById(1L);
+        verify(userTokenDao, times(1)).deleteTokenById(1L);
     }
 }

@@ -55,7 +55,7 @@ class RoleServiceImplTest {
     @Test
     void testFindAllSuccess() {
         when(roleDao.findAll()).thenReturn(Arrays.asList(roleUser));
-        when(roleMapper.toDto(anySet())).thenReturn(Set.of(roleUserDTO));
+        when(roleMapper.toDtoSet(anySet())).thenReturn(Set.of(roleUserDTO));
 
         Set<RoleDTO> roles = roleService.findAll();
 
@@ -64,7 +64,7 @@ class RoleServiceImplTest {
         assertTrue(roles.stream().anyMatch(role -> role.getName() == ERole.ROLE_USER));
 
         verify(roleDao, times(1)).findAll();
-        verify(roleMapper, times(1)).toDto(anySet());
+        verify(roleMapper, times(1)).toDtoSet(anySet());
     }
 
     @Test

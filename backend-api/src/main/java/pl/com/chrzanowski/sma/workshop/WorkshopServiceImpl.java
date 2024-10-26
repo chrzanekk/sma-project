@@ -49,7 +49,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public List<WorkshopDTO> findByFilter(WorkshopFilter workshopFilter) {
         log.debug("Find all workshops by filter: {}", workshopFilter);
         Specification<Workshop> spec = WorkshopSpecification.createSpecification(workshopFilter);
-        return workshopMapper.toDto(workshopRepository.findAll(spec));
+        return workshopMapper.toDtoList(workshopRepository.findAll(spec));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public List<WorkshopDTO> findAll() {
         log.debug("Find all workshops.");
         List<Workshop> workshopList = workshopRepository.findAll();
-        return workshopMapper.toDto(workshopList);
+        return workshopMapper.toDtoList(workshopList);
     }
 
     @Override

@@ -98,7 +98,7 @@ class WorkshopServiceImplTest {
         WorkshopFilter filter = new WorkshopFilter();
 
         when(workshopRepository.findAll(any(Specification.class))).thenReturn(Collections.singletonList(workshop));
-        when(workshopMapper.toDto(anyList())).thenReturn(Collections.singletonList(workshopDTO));
+        when(workshopMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(workshopDTO));
 
         List<WorkshopDTO> result = workshopService.findByFilter(filter);
 
@@ -106,7 +106,7 @@ class WorkshopServiceImplTest {
         assertEquals(1, result.size());
 
         verify(workshopRepository, times(1)).findAll(any(Specification.class));
-        verify(workshopMapper, times(1)).toDto(anyList());
+        verify(workshopMapper, times(1)).toDtoList(anyList());
     }
 
     @Test
@@ -153,7 +153,7 @@ class WorkshopServiceImplTest {
     @Test
     void testFindAllSuccess() {
         when(workshopRepository.findAll()).thenReturn(Collections.singletonList(workshop));
-        when(workshopMapper.toDto(anyList())).thenReturn(Collections.singletonList(workshopDTO));
+        when(workshopMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(workshopDTO));
 
         List<WorkshopDTO> result = workshopService.findAll();
 
@@ -161,7 +161,7 @@ class WorkshopServiceImplTest {
         assertEquals(1, result.size());
 
         verify(workshopRepository, times(1)).findAll();
-        verify(workshopMapper, times(1)).toDto(anyList());
+        verify(workshopMapper, times(1)).toDtoList(anyList());
     }
 
     @Test

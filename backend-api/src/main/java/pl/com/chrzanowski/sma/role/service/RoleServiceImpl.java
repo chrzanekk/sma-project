@@ -35,7 +35,7 @@ public class RoleServiceImpl implements RoleService {
     public Set<RoleDTO> findAll() {
         log.info("DAO: Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
-        return roleMapper.toDto(Set.copyOf(roleList));
+        return roleMapper.toDtoSet(Set.copyOf(roleList));
     }
 
     @Override
