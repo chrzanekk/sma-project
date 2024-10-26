@@ -7,7 +7,6 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.util.Optional;
 
-@Repository
 public interface ContractorRepository extends JpaRepository<Contractor, Long>, JpaSpecificationExecutor<Contractor> {
 
     void deleteById(Long id);

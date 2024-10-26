@@ -27,7 +27,7 @@ public class ContractorServiceImpl implements ContractorService {
     private final ContractorMapper contractorMapper;
     private final ContractorSpecification contractorSpecification;
 
-    public ContractorServiceImpl(@Qualifier("jpa") ContractorDao contractorDao,
+    public ContractorServiceImpl(ContractorDao contractorDao,
                                  ContractorMapper contractorMapper,
                                  ContractorSpecification contractorSpecification) {
         this.contractorDao = contractorDao;

@@ -10,7 +10,7 @@ import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("jpa")
+@Repository("roleJPA")
 public class RoleJPADaoImpl implements RoleDao {
 
     private final Logger log = LoggerFactory.getLogger(RoleJPADaoImpl.class);

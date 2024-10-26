@@ -14,7 +14,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "sent_emails")
+@Table(name = "send_emails")
 public class SendEmail {
 
     @Id

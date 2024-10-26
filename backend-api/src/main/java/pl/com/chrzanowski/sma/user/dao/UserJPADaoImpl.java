@@ -12,7 +12,7 @@ import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Repository("jpa")
+@Repository("userJPA")
 public class UserJPADaoImpl implements UserDao {
 
     private final Logger log = LoggerFactory.getLogger(UserJPADaoImpl.class);

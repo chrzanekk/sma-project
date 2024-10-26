@@ -8,7 +8,7 @@ import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
 
 import java.util.Optional;
 
-@Repository("jpa")
+@Repository("userTokenJPA")
 public class UserTokenJPADaoImpl implements UserTokenDao {
 
     private final Logger log = LoggerFactory.getLogger(UserTokenJPADaoImpl.class);

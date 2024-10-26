@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.email.model.SendEmail;
 import pl.com.chrzanowski.sma.email.repository.SendEmailRepository;
 
-@Repository("jpa")
+@Repository("sendEmailJPA")
 public class SendEmailJPADaoImpl implements SendEmailDao {
 
     private final Logger log = LoggerFactory.getLogger(SendEmailJPADaoImpl.class);

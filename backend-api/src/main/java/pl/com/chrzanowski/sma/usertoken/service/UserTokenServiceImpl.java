@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.usertoken.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
@@ -17,7 +18,8 @@ import java.util.UUID;
 @Service
 public class UserTokenServiceImpl implements UserTokenService {
 
-    private static final int TOKEN_VALIDITY_TIME_IN_MINUTES = 30;
+    @Value("${jwt.tokenValidityTimeInMinutes}")
+    private int TOKEN_VALIDITY_TIME_IN_MINUTES;
 
     private final Logger log = LoggerFactory.getLogger(UserTokenServiceImpl.class);
     private final UserTokenDao userTokenDao;

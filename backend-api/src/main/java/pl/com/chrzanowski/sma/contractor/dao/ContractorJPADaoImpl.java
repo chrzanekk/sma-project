@@ -5,12 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
 
     private Logger log = LoggerFactory.getLogger(ContractorJPADaoImpl.class);

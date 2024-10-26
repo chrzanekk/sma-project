@@ -26,7 +26,7 @@ public class RoleServiceImpl implements RoleService {
     private final RoleDao roleDao;
     private final RoleMapper roleMapper;
 
-    public RoleServiceImpl(@Qualifier("jpa") RoleDao roleDao, RoleMapper roleMapper) {
+    public RoleServiceImpl(RoleDao roleDao, RoleMapper roleMapper) {
         this.roleDao = roleDao;
         this.roleMapper = roleMapper;
     }
