@@ -23,15 +23,13 @@ public class AccountController {
 
     @GetMapping("/get")
     public UserInfoResponse getAccount() {
+        log.info("REST: Get account information");
         return userService.getUserWithAuthorities();
     }
 
     @PostMapping("/save")
     public void saveAccount(@Valid @RequestBody UserDTO userDTO) {
-        //todo implement save updated user info
+        log.info("REST: Saving account {}", userDTO);
+        userService.save(userDTO);
     }
-
-
-
-
 }

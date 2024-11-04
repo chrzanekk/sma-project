@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         UserDTO newUser = UserDTO.builder().username(request.getUsername()).email(request.getEmail())
-                .roles(roleDTOSet).enabled(false).locked(false).password(encoder.encode(request.getPassword()))
+                .roles(roleDTOSet).enabled(false).locked(false).password(request.getPassword())
                 .build();
         return save(newUser);
     }
@@ -96,20 +96,21 @@ public class UserServiceImpl implements UserService {
         UserTokenDTO confirmedDTO = userTokenService.updateToken(userTokenDTO);
         UserDTO user = getUser(confirmedDTO.getEmail());
         update(user.toBuilder().enabled(true).locked(false).build());
-        return "Confirmed at" + confirmedDTO.getUseDate().toString();
+        return "Confirmed";
     }
 
     @Override
     public UserDTO save(UserDTO userDTO) {
         log.info("Saving new user {} to database", userDTO);
-        UserDTO userDTOToSave = userDTO.toBuilder().createdDatetime(Instant.now()).build();
+        UserDTO userDTOToSave = userDTO.toBuilder().createdDatetime(Instant.now()).password(encoder.encode(userDTO.getPassword())).build();
         return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToSave)));
     }
 
+    //todo in future update need to extend update method to check if password was changed and encode it again.
     @Override
     public UserDTO update(UserDTO userDTO) {
         log.info("Update user {} to database", userDTO);
-        UserDTO userDTOToUpdate = userDTO.toBuilder().lastModifiedDatetime(Instant.now()).build();
+        UserDTO userDTOToUpdate = userDTO.toBuilder().password(userDTO.getPassword()).lastModifiedDatetime(Instant.now()).build();
         return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToUpdate)));
     }
 

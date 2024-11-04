@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.auth.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -16,15 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import pl.com.chrzanowski.sma.auth.service.PasswordResetService;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.PasswordResetRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
-import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
-import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
-import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.auth.service.PasswordResetService;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.EmailAlreadyExistsException;
 import pl.com.chrzanowski.sma.common.exception.EmailNotFoundException;
@@ -32,9 +29,12 @@ import pl.com.chrzanowski.sma.common.exception.PasswordNotMatchException;
 import pl.com.chrzanowski.sma.common.exception.UsernameAlreadyExistsException;
 import pl.com.chrzanowski.sma.common.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
+import pl.com.chrzanowski.sma.common.util.TokenUtil;
+import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserService;
-import pl.com.chrzanowski.sma.common.util.TokenUtil;
+import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
+import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
 import java.util.Locale;
 
@@ -70,7 +70,7 @@ public class AuthController {
     public ResponseEntity<JWTToken> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.debug("REST request to login user {}", loginRequest);
         LoginRequest updatedRequest =
-                LoginRequest.builder(loginRequest).username(loginRequest.getUsername().toLowerCase()).build();
+                loginRequest.toBuilder().username(loginRequest.getUsername().toLowerCase()).build();
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(updatedRequest.getUsername(), updatedRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
@@ -107,17 +107,18 @@ public class AuthController {
         UserTokenDTO userTokenDTO = userTokenService.saveToken(generatedToken, savedUser, TokenType.CONFIRMATION_TOKEN);
 
         MessageResponse response = sendEmailService.sendAfterRegistration(userTokenDTO, new Locale("pl"));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().header("Confirmation-Token", userTokenDTO.getToken()).body(response);
     }
 
     @GetMapping("/confirm")
-    public String confirmRegistration(@RequestParam("token") String token) {
+    public ResponseEntity<MessageResponse> confirmRegistration(@RequestParam("token") String token) {
         log.debug("REST request to confirm user registration. Token: {}", token);
         UserTokenDTO userTokenDTO = userTokenService.getTokenData(token);
 
         TokenUtil.validateTokenTime(userTokenDTO.getCreateDate(), tokenValidityTimeInMinutes);
         sendEmailService.sendAfterEmailConfirmation(userTokenDTO, new Locale("pl"));
-        return userService.confirm(token);
+        MessageResponse response = new MessageResponse(userService.confirm(token));
+        return ResponseEntity.ok().body(response);
     }
 
     @PutMapping("/request-password-reset")
@@ -164,24 +165,6 @@ public class AuthController {
     private void validatePasswordMatch(NewPasswordPutRequest request) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new PasswordNotMatchException("Password not match");
-        }
-    }
-
-    static class JWTToken {
-
-        private String tokenValue;
-
-        JWTToken(String tokenValue) {
-            this.tokenValue = tokenValue;
-        }
-
-        @JsonProperty("id_token")
-        String getTokenValue() {
-            return tokenValue;
-        }
-
-        void setTokenValue(String tokenValue) {
-            this.tokenValue = tokenValue;
         }
     }
 

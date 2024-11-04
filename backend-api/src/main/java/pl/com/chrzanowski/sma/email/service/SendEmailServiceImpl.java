@@ -123,7 +123,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         emailSenderService.sendEmail(sentEmailDTO);
         SendEmail sendEmail = sentEmailMapper.toEntity(sentEmailDTO);
         sendEmailDao.save(sendEmail);
-        return new MessageResponse("Password reset token sent with token: " + userTokenDTO.getToken());
+        return new MessageResponse("Password reset token sent");
     }
 
     @Override
