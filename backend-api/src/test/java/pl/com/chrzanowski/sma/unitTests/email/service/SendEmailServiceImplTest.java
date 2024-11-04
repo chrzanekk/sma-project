@@ -167,7 +167,7 @@ class SendEmailServiceImplTest {
         verify(emailSenderService).sendEmail(any(SentEmailDTO.class));
         verify(sendEmailDao).save(sendEmail);
 
-        assertEquals("Password reset token sent with token: " + userTokenDTO.getToken(), response.getMessage());
+        assertEquals("Password reset token sent",response.getMessage());
     }
 
     @Test
