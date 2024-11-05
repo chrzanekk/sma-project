@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.stream.Collectors;
 
@@ -26,16 +25,17 @@ public class JwtUtils {
 
     private static final String AUTHORITIES_KEY = "auth";
 
-    @Value("${jwt.jwtSecret}")
+    @Value(value = "${jwt.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${jwt.jwtExpirationMs}")
+    @Value(value = "${jwt.jwtExpirationMs}")
     private Long jwtExpirationMs;
 
 
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().verifyWith((SecretKey) key()).build().parse(authToken);
+            SecretKey key = key();
+            Jwts.parser().verifyWith(key).build().parseSignedClaims(authToken);
             return true;
         } catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());
@@ -70,13 +70,12 @@ public class JwtUtils {
     }
 
 
-    private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    private SecretKey key() {
+        byte[] keyBytes = Decoders.BASE64.decode(this.jwtSecret);
+        return Keys.hmacShaKeyFor(keyBytes);
     }
 
     public String getUserNameFromJwtToken(String token) {
-        return Jwts.parser().decryptWith((SecretKey) key()).build().parseSignedClaims(token).getPayload().getSubject();
+        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload().getSubject();
     }
-
-
 }

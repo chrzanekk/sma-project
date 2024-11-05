@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -149,9 +150,13 @@ public class AuthController {
     }
 
     @GetMapping("/authenticate")
-    public String isAuthenticated(HttpServletRequest request) {
+    public ResponseEntity<Boolean> isAuthenticated() {
         log.debug("REST request to check if the current user is authenticated");
-        return request.getRemoteUser();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken);
+        return ResponseEntity.ok(isAuthenticated);
     }
 
     private boolean isEmailTaken(String email) {
@@ -167,5 +172,4 @@ public class AuthController {
             throw new PasswordNotMatchException("Password not match");
         }
     }
-
 }

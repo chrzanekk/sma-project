@@ -73,7 +73,6 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/auth/reset-password").permitAll()
                         .requestMatchers("/api/auth/validate-token").permitAll()
                         .requestMatchers("/api/auth/token").permitAll()
-                        .requestMatchers("/api/auth/authenticate").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/test//all").permitAll()
                                 //todo this is only for tests - fixed later
@@ -82,7 +81,7 @@ public class WebSecurityConfig {
 //                        .requestMatchers("/api/test/mod").hasAnyAuthority(ERole.ROLE_MODERATOR.getRoleName())
 //                        .requestMatchers("/api/test/admin").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName())
 //                        .requestMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(), ERole.ROLE_USER.getRoleName())
-//                        .requestMatchers("/api/account/**").authenticated()
+//                        .requestMatchers("/api/auth/authenticate").authenticated()
                 );
 
         http.addFilterBefore(authenticationTJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

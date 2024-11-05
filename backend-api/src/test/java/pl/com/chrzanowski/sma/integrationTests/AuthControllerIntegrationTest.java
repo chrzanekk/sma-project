@@ -318,4 +318,99 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isBadRequest();
     }
+
+
+    @Test
+    void shouldAuthenticateSuccessfully() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        LoginRequest loginRequest = LoginRequest.builder()
+                .username(existingUser.getUsername())
+                .password(existingUser.getPassword())
+                .rememberMe(false).build();
+
+        String token = webTestClient.post()
+                .uri("/api/auth/login")
+                .body(Mono.just(loginRequest), LoginRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseHeaders().getFirst("Authorization");
+
+        Boolean result = webTestClient.get()
+                .uri("/api/auth/authenticate")
+                .header("Authorization", token)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Boolean.class)
+                .returnResult().getResponseBody();
+
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(true);
+    }
+
+    @Test
+    void shouldAuthenticateFailWithInvalidToken() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        LoginRequest loginRequest = LoginRequest.builder()
+                .username(existingUser.getUsername())
+                .password(existingUser.getPassword())
+                .rememberMe(false).build();
+
+        String token = webTestClient.post()
+                .uri("/api/auth/login")
+                .body(Mono.just(loginRequest), LoginRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseHeaders().getFirst("Authorization");
+
+        Boolean result = webTestClient.get()
+                .uri("/api/auth/authenticate")
+                .header("Authorization", token + "111")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(Boolean.class)
+                .returnResult().getResponseBody();
+
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(false);
+    }
 }
