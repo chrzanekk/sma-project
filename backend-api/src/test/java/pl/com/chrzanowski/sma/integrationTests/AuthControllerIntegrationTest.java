@@ -10,6 +10,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.PasswordResetRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
@@ -249,6 +251,9 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(result).isNotNull();
         assertThat(result.getTokenValue()).isGreaterThan("");
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
     }
 
     @Test
@@ -283,6 +288,9 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .body(Mono.just(loginRequest), LoginRequest.class)
                 .exchange()
                 .expectStatus().isBadRequest();
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
     }
 
     @Test
@@ -317,8 +325,10 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .body(Mono.just(loginRequest), LoginRequest.class)
                 .exchange()
                 .expectStatus().isBadRequest();
-    }
 
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+    }
 
     @Test
     void shouldAuthenticateSuccessfully() {
@@ -365,6 +375,9 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(true);
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
     }
 
     @Test
@@ -412,5 +425,218 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(result).isNotNull();
         assertThat(result).isEqualTo(false);
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+    }
+
+    @Test
+    void shouldRequestResetPasswordSuccessfully() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(existingUser.getEmail());
+
+        MessageResponse result = webTestClient.put()
+                .uri("/api/auth/request-password-reset")
+                .body(Mono.just(passwordResetRequest), PasswordResetRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseBody();
+
+        assertThat(result).isNotNull();
+        assertThat(result.getMessage()).isEqualTo("Password reset token sent");
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+        verify(sendEmailService, times(1)).sendPasswordResetMail(any(), any());
+    }
+
+    @Test
+    void shouldRequestResetPasswordFailWithWrongEmail() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest("test@test.test");
+
+        webTestClient.put()
+                .uri("/api/auth/request-password-reset")
+                .body(Mono.just(passwordResetRequest), PasswordResetRequest.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+        verify(sendEmailService, times(0)).sendPasswordResetMail(any(), any());
+    }
+
+
+    @Test
+    void shouldResetPasswordSuccessfully() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(existingUser.getEmail());
+
+        String result = webTestClient.put()
+                .uri("/api/auth/request-password-reset")
+                .body(Mono.just(passwordResetRequest), PasswordResetRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseHeaders().getFirst("Reset-Token");
+
+        NewPasswordPutRequest newPasswordPutRequest = new NewPasswordPutRequest("newPassword", "newPassword", result);
+
+        MessageResponse resultAfterReset = webTestClient.put()
+                .uri("/api/auth/reset-password")
+                .body(Mono.just(newPasswordPutRequest), NewPasswordPutRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseBody();
+
+        assertThat(resultAfterReset).isNotNull();
+        assertThat(resultAfterReset.getMessage()).isEqualTo("Password changed successfully");
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+        verify(sendEmailService, times(1)).sendPasswordResetMail(any(), any());
+        verify(sendEmailService, times(1)).sendAfterPasswordChange(any(), any());
+    }
+
+    @Test
+    void shouldResetPasswordFailWithInvalidToken() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        PasswordResetRequest passwordResetRequest = new PasswordResetRequest(existingUser.getEmail());
+
+        String result = webTestClient.put()
+                .uri("/api/auth/request-password-reset")
+                .body(Mono.just(passwordResetRequest), PasswordResetRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .returnResult().getResponseHeaders().getFirst("Reset-Token");
+
+        NewPasswordPutRequest newPasswordPutRequest = new NewPasswordPutRequest("newPassword", "newPassword", result + "111");
+
+        webTestClient.put()
+                .uri("/api/auth/reset-password")
+                .body(Mono.just(newPasswordPutRequest), NewPasswordPutRequest.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+        verify(sendEmailService, times(1)).sendPasswordResetMail(any(), any());
+        verify(sendEmailService, times(0)).sendAfterPasswordChange(any(), any());
+    }
+
+    @Test
+    void shouldResetPasswordFailWithEmptyToken() {
+        userTokenRepository.deleteAll();
+        userRepository.deleteAll();
+        RegisterRequest existingUser = RegisterRequest.builder()
+                .username("username")
+                .password("password")
+                .email("username@test.com")
+                .build();
+
+        String existingResponse = webTestClient.post().uri("/api/auth/register")
+                .body(Mono.just(existingUser), RegisterRequest.class)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(MessageResponse.class)
+                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
+
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
+                .exchange()
+                .expectStatus().isOk();
+
+        NewPasswordPutRequest newPasswordPutRequest = new NewPasswordPutRequest("newPassword", "newPassword", "");
+
+        webTestClient.put()
+                .uri("/api/auth/reset-password")
+                .body(Mono.just(newPasswordPutRequest), NewPasswordPutRequest.class)
+                .exchange()
+                .expectStatus().isBadRequest();
+
+        verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
+        verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
+        verify(sendEmailService, times(0)).sendPasswordResetMail(any(), any());
+        verify(sendEmailService, times(0)).sendAfterPasswordChange(any(), any());
     }
 }

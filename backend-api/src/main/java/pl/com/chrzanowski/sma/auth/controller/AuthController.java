@@ -134,7 +134,7 @@ public class AuthController {
         String token = userTokenService.generateToken();
         UserTokenDTO userTokenDTO = userTokenService.saveToken(token, userDTO, TokenType.PASSWORD_RESET_TOKEN);
         MessageResponse response = sendEmailService.sendPasswordResetMail(userTokenDTO, new Locale("pl"));
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.ok().header("Reset-Token", userTokenDTO.getToken()).body(response);
     }
 
     @PutMapping("/reset-password")

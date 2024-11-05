@@ -38,6 +38,6 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         userService.save(updatedUserDTO);
         userTokenService.updateToken(userTokenDTO.toBuilder()
                 .useDate(LocalDateTime.now()).build());
-        return new MessageResponse("Password changed successfully.");
+        return new MessageResponse("Password changed successfully");
     }
 }
