@@ -12,6 +12,4 @@ public interface UserTokenRepository extends JpaRepository<UserToken, Long> {
     Optional<UserToken> findUserTokenByToken(String token);
 
     void deleteById(Long id);
-
-    Optional<UserToken> findByUserEmailAndTokenType(@NotBlank @Size(max = 50) String user_email, TokenType tokenType);
 }

@@ -74,7 +74,7 @@ class PasswordResetServiceImplTest {
         MessageResponse result = passwordResetService.saveNewPassword(userTokenDTO, request);
 
         assertNotNull(result);
-        assertEquals("Password changed successfully.", result.getMessage());
+        assertEquals("Password changed successfully", result.getMessage());
 
         verify(userService, times(1)).getUser(anyString());
         verify(passwordEncoder, times(1)).encode(anyString());

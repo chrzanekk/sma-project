@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
@@ -40,7 +41,8 @@ public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final static String USER_NOT_FOUND = "user with email %s not found";
+    private final static String USER_WITH_EMAIL_NOT_FOUND = "user with email %s not found";
+    private final static String USER_WITH_ID_NOT_FOUND = "user with id %d not found";
 
     private final UserDao userDao;
     private final UserMapper userMapper;
@@ -110,8 +112,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO update(UserDTO userDTO) {
         log.info("Update user {} to database", userDTO);
-        UserDTO userDTOToUpdate = userDTO.toBuilder().password(userDTO.getPassword()).lastModifiedDatetime(Instant.now()).build();
-        return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToUpdate)));
+        UserDTO existingUserDTO = findById(userDTO.getId());
+        UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
+
+        if(existingUserDTO.getUsername() != null && userDTO.getUsername() != null && !existingUserDTO.getUsername().equals(userDTO.getUsername())) {
+            builder.username(userDTO.getUsername()).build();
+        }
+
+        if(existingUserDTO.getEmail() != null && userDTO.getEmail() != null && !existingUserDTO.getEmail().equals(userDTO.getEmail())) {
+            if(isUserExists(userDTO.getEmail())) {
+                throw new IllegalStateException("User with email %s already exists");
+            }
+            builder.email(userDTO.getEmail()).build();
+        }
+
+        UserDTO updatedUserDTO = builder.build();
+
+        return userMapper.toDto(userDao.save(userMapper.toEntity(updatedUserDTO)));
     }
 
     @Override
@@ -132,7 +149,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findById(Long id) {
         log.debug("Find user by id: {}", id);
         Optional<User> optionalUser = userDao.findById(id);
-        return userMapper.toDto(optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        return userMapper.toDto(optionalUser.orElseThrow(() -> new ObjectNotFoundException(String.format(USER_WITH_ID_NOT_FOUND, id))));
     }
 
     @Override
@@ -151,7 +168,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUser(String email) {
         log.info("Fetching user {} ", email);
         User user = userDao.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND, email)));
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_WITH_EMAIL_NOT_FOUND, email)));
         return userMapper.toDto(user);
     }
 

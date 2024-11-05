@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
@@ -115,13 +116,14 @@ class UserServiceImplTest {
                 .expireDate(LocalDateTime.now().plusDays(1))
                 .useDate(LocalDateTime.now())
                 .build();
-
+        userDTO = userDTO.toBuilder().id(1L).build();
         when(userTokenService.getTokenData(anyString())).thenReturn(tokenDTO);
         when(userTokenService.updateToken(any(UserTokenDTO.class))).thenReturn(confirmTokenDTO);
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(userDao.save(any(User.class))).thenReturn(user);
         when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
 
         String result = userService.confirm("token123");
 
@@ -159,7 +161,7 @@ class UserServiceImplTest {
     void testConfirmTokenWhenTokenExpired() {
         UserTokenDTO tokenDTO = UserTokenDTO.builder()
                 .email("test@example.com")
-                .expireDate(LocalDateTime.now().minusDays(1)) // Token wygasł
+                .expireDate(LocalDateTime.now().minusDays(1))
                 .build();
 
         when(userTokenService.getTokenData(anyString())).thenReturn(tokenDTO);
@@ -190,7 +192,7 @@ class UserServiceImplTest {
     void testFindById_UserNotFound() {
         when(userDao.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.findById(1L));
+        assertThrows(ObjectNotFoundException.class, () -> userService.findById(1L));
     }
 
     @Test
@@ -277,11 +279,20 @@ class UserServiceImplTest {
 
     @Test
     void updateUserWithSuccess() {
+        userDTO = userDTO.toBuilder().id(1L).build();
+        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userDao.save(any(User.class))).thenReturn(user);
 
-        userService.update(userDTO);
+        UserDTO result = userService.update(userDTO);
 
         verify(userDao,times(1)).save(user);
+
+        assertNotNull(result);
+        assertEquals(userDTO.getId(), result.getId());
+        assertEquals(userDTO.getUsername(), result.getUsername());
+        assertEquals(userDTO.getEmail(), result.getEmail());
     }
 
     @Test

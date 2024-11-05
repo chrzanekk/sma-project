@@ -55,11 +55,24 @@ public class UserController {
         return ResponseEntity.ok().body(userDTO);
     }
 
+    @PostMapping(path = "/add")
+    public ResponseEntity<UserDTO> add(@RequestBody UserDTO userDTO) {
+        log.debug("REST request to add user: {}", userDTO);
+        UserDTO result = userService.save(userDTO);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO) {
+        log.debug("REST request to update user: {}", userDTO);
+        UserDTO result = userService.update(userDTO);
+        return ResponseEntity.ok().body(result);
+    }
+
     @DeleteMapping(path = "/delete/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         log.debug("REST request to delete user by id: {}", id);
         userService.delete(id);
         return ResponseEntity.ok().build();
     }
-
 }
