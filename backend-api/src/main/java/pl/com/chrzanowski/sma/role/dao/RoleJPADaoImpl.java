@@ -38,4 +38,16 @@ public class RoleJPADaoImpl implements RoleDao {
         log.debug("JPA DAO: Adding new role {} to database", role.getName());
         return roleRepository.save(role);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        log.debug("JPA DAO: Deleting role with id {}", id);
+        roleRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Role> findById(Long id) {
+        log.debug("JPA DAO: Finding role with id {}", id);
+        return roleRepository.findById(id);
+    }
 }

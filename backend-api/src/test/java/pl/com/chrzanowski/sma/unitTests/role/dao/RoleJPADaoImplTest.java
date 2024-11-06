@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.common.exception.RoleException;
+import pl.com.chrzanowski.sma.role.dao.RoleDao;
 import pl.com.chrzanowski.sma.role.dao.RoleJPADaoImpl;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
@@ -25,6 +27,9 @@ class RoleJPADaoImplTest {
 
     @Mock
     private RoleRepository roleRepository;
+
+    @Mock
+    private RoleDao roleDao;
 
     private AutoCloseable closeable;
 
@@ -123,5 +128,17 @@ class RoleJPADaoImplTest {
         // When / Then
         assertThrows(RuntimeException.class, () -> roleJPADaoImpl.saveRole(role));
         verify(roleRepository, times(1)).save(role);
+    }
+
+    @Test
+    void testDeleteById_Success() {
+        Long roleId = 3L;
+        Role role = Role.builder().id(roleId).name("ROLE_CUSTOMER").build();
+
+        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
+
+        assertDoesNotThrow(() -> roleJPADaoImpl.deleteById(roleId));
+
+        verify(roleRepository, times(1)).deleteById(roleId);
     }
 }

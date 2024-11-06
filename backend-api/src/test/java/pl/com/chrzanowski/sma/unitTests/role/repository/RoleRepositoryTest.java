@@ -13,6 +13,7 @@ import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 
 import java.util.Optional;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
@@ -54,4 +55,18 @@ class RoleRepositoryTest extends AbstractTestContainers {
         //Then
         assertEquals(Optional.empty(), actual);
     }
+
+    @Test
+    void testDeleteRoleById() {
+        // Given
+        Role role = Role.builder().name("ROLE_CUSTOMER").build();
+        role = roleRepository.save(role);
+
+        // When
+        roleRepository.deleteById(role.getId());
+
+        // Then
+        assertFalse(roleRepository.findById(role.getId()).isPresent());
+    }
+
 }

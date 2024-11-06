@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.role.service;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.RoleException;
@@ -54,5 +53,21 @@ public class RoleServiceImpl implements RoleService {
         }
         RoleDTO roleDTOToSave = roleDTO.toBuilder().createdDatetime(Instant.now()).build();
         return roleMapper.toDto(roleDao.saveRole(roleMapper.toEntity(roleDTOToSave)));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        log.info("Deleting role {}", id);
+        Optional<Role> existingRole = roleDao.findById(id);
+        if (existingRole.isPresent()) {
+            Role role = existingRole.get();
+            if (role.getName().equals(ERole.ROLE_USER.getRoleName()) || role.getName().equals(ERole.ROLE_ADMIN.getRoleName())) {
+                throw new RoleException(String.format("Cannot delete role %s", role.getName()));
+            } else {
+                roleDao.deleteById(id);
+            }
+        } else {
+            throw new RoleException("Error Role not found");
+        }
     }
 }

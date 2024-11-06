@@ -129,4 +129,45 @@ class RoleServiceImplTest {
 
         verify(roleDao,never()).saveRole(any(Role.class));
     }
+
+    @Test
+    void testDeleteById_Success() {
+        Long roleId = 3L;
+        Role role = Role.builder().id(roleId).name("ROLE_CUSTOMER").build();
+
+        when(roleDao.findById(roleId)).thenReturn(Optional.of(role));
+
+        assertDoesNotThrow(() -> roleService.deleteById(roleId));
+
+        verify(roleDao, times(1)).findById(roleId);
+        verify(roleDao, times(1)).deleteById(roleId);
+    }
+
+    @Test
+    void testDeleteById_CannotDeleteAdminRole() {
+        Long roleId = 2L;
+        Role role = Role.builder().id(roleId).name(ERole.ROLE_ADMIN.getRoleName()).build();
+
+        when(roleDao.findById(roleId)).thenReturn(Optional.of(role));
+
+        RoleException exception = assertThrows(RoleException.class, () -> roleService.deleteById(roleId));
+        assertEquals("Cannot delete role ROLE_ADMIN", exception.getMessage());
+
+        verify(roleDao, times(1)).findById(roleId);
+        verify(roleDao, times(0)).deleteById(roleId);
+    }
+
+    @Test
+    void testDeleteById_RoleNotFound() {
+        Long roleId = 5L;
+
+        when(roleDao.findById(roleId)).thenReturn(Optional.empty());
+
+        RoleException exception = assertThrows(RoleException.class, () -> roleService.deleteById(roleId));
+        assertEquals("Error Role not found", exception.getMessage());
+
+        verify(roleDao, times(1)).findById(roleId);
+        verify(roleDao, times(0)).deleteById(roleId);
+    }
+
 }
