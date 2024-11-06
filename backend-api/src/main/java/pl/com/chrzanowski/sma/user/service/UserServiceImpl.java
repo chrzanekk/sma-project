@@ -20,6 +20,7 @@ import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
@@ -33,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -70,10 +72,10 @@ public class UserServiceImpl implements UserService {
         if (stringRoles == null || stringRoles.isEmpty()) {
             List<UserDTO> userDTOList = findAll();
             if (userDTOList.isEmpty()) {
-                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN);
+                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getRoleName());
                 roleDTOSet.add(adminRole);
             } else {
-                roleDTOSet.add(roleService.findByName(ERole.ROLE_USER));
+                roleDTOSet.add(roleService.findByName(ERole.ROLE_USER.getRoleName()));
             }
         }
         UserDTO newUser = UserDTO.builder().username(request.getUsername()).email(request.getEmail())
@@ -108,27 +110,63 @@ public class UserServiceImpl implements UserService {
         return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToSave)));
     }
 
-    //todo in future update need to extend update method to check if password was changed and encode it again.
+
     @Override
     public UserDTO update(UserDTO userDTO) {
         log.info("Update user {} to database", userDTO);
         UserDTO existingUserDTO = findById(userDTO.getId());
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
 
-        if(existingUserDTO.getUsername() != null && userDTO.getUsername() != null && !existingUserDTO.getUsername().equals(userDTO.getUsername())) {
-            builder.username(userDTO.getUsername()).build();
+        if (existingUserDTO.getUsername() != null && userDTO.getUsername() != null && !existingUserDTO.getUsername().equals(userDTO.getUsername())) {
+            builder.username(userDTO.getUsername());
         }
 
-        if(existingUserDTO.getEmail() != null && userDTO.getEmail() != null && !existingUserDTO.getEmail().equals(userDTO.getEmail())) {
-            if(isUserExists(userDTO.getEmail())) {
+        if (existingUserDTO.getEmail() != null && userDTO.getEmail() != null && !existingUserDTO.getEmail().equals(userDTO.getEmail())) {
+            if (isUserExists(userDTO.getEmail())) {
                 throw new IllegalStateException("User with email %s already exists");
             }
-            builder.email(userDTO.getEmail()).build();
+            builder.email(userDTO.getEmail());
         }
-
+        builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
 
         return userMapper.toDto(userDao.save(userMapper.toEntity(updatedUserDTO)));
+    }
+
+    @Override
+    public void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest) {
+        log.info("Update user password by id: {}", userPasswordChangeRequest.userId());
+        UserDTO existingUserDTO = findById(userPasswordChangeRequest.userId());
+        if (userPasswordChangeRequest.newPassword() == null || userPasswordChangeRequest.newPassword().isEmpty()) {
+            throw new IllegalStateException("New password cannot be empty");
+        }
+        if (!encoder.matches(userPasswordChangeRequest.currentPassword(), existingUserDTO.getPassword())) {
+            throw new IllegalStateException("Current password does not match");
+        }
+        UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
+        String encodedPassword = encoder.encode(userPasswordChangeRequest.newPassword());
+        builder.password(encodedPassword);
+        builder.lastModifiedDatetime(Instant.now());
+        UserDTO updatedUserDTO = builder.build();
+        userDao.save(userMapper.toEntity(updatedUserDTO));
+    }
+
+
+    @Override
+    public UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles) {
+        log.info("Update user roles by id: {}", userId);
+        UserDTO existingUserDTO = findById(userId);
+
+        UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
+
+        Set<RoleDTO> roleSet = roles.stream()
+                .map(roleDTO -> roleService.findByName(roleDTO.getName()))
+                .collect(Collectors.toSet());
+        builder.roles(roleSet);
+        builder.lastModifiedDatetime(Instant.now());
+        UserDTO updatedUserDTO = builder.build();
+        userDao.save(userMapper.toEntity(updatedUserDTO));
+        return updatedUserDTO;
     }
 
     @Override
@@ -188,7 +226,7 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponse getUserWithAuthorities() {
         String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         User currentUser = userDao.findByUsername(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        List<ERole> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
+        List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         return new UserInfoResponse(
                 currentUser.getId(),
                 currentUser.getUsername(),

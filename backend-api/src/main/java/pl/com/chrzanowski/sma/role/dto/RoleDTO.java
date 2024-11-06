@@ -11,7 +11,7 @@ import java.time.Instant;
 @AllArgsConstructor
 public class RoleDTO {
     Long id;
-    ERole name;
+    String name;
     Instant createdDatetime;
     Instant lastModifiedDatetime;
 }

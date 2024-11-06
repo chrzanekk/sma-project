@@ -12,7 +12,7 @@ public interface RoleDao {
 
     List<Role> findAll();
 
-    Optional<Role> findByName(ERole name);
+    Optional<Role> findByName(String name);
 
     Role saveRole(Role role);
 }

@@ -41,8 +41,8 @@ class RoleJPADaoImplTest {
     @Test
     void findAll_Positive() {
         // Given
-        Role role1 = Role.builder().name(ERole.ROLE_USER).build();
-        Role role2 = Role.builder().name(ERole.ROLE_ADMIN).build();
+        Role role1 = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
+        Role role2 = Role.builder().name(ERole.ROLE_ADMIN.getRoleName()).build();
         when(roleRepository.findAll()).thenReturn(List.of(role1, role2));
 
         // When
@@ -72,7 +72,7 @@ class RoleJPADaoImplTest {
     @Test
     void findByName_Positive() {
         // Given
-        ERole roleName = ERole.ROLE_USER;
+        String roleName = ERole.ROLE_USER.getRoleName();
         Role role = Role.builder().name(roleName).build();
         when(roleRepository.findByName(roleName)).thenReturn(Optional.of(role));
 
@@ -88,7 +88,7 @@ class RoleJPADaoImplTest {
     @Test
     void findByName_Negative() {
         // Given
-        ERole roleName = ERole.ROLE_MODERATOR;
+        String roleName = ERole.ROLE_USER.getRoleName();
         when(roleRepository.findByName(roleName)).thenReturn(Optional.empty());
 
         // When
@@ -103,7 +103,7 @@ class RoleJPADaoImplTest {
     @Test
     void saveRole_Positive() {
         // Given
-        Role role = Role.builder().name(ERole.ROLE_USER).build();
+        Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
         when(roleRepository.save(role)).thenReturn(role);
 
         // When
@@ -117,7 +117,7 @@ class RoleJPADaoImplTest {
     @Test
     void saveRole_Negative() {
         // Given
-        Role role = Role.builder().name(ERole.ROLE_USER).build();
+        Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
         when(roleRepository.save(role)).thenThrow(new RuntimeException("Save failed"));
 
         // When / Then

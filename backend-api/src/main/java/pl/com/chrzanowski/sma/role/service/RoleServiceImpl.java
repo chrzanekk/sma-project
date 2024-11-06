@@ -39,11 +39,11 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public RoleDTO findByName(ERole name) {
+    public RoleDTO findByName(String name) {
         log.info("Fetching role {}", name);
         Optional<Role> role = roleDao.findByName(name);
         return role.map(roleMapper::toDto)
-                .orElseThrow(() -> new RoleException("ErrorRole not found: " + ERole.ROLE_ADMIN.getRoleName()));
+                .orElseThrow(() -> new RoleException("ErrorRole not found: " + name));
     }
 
     @Override

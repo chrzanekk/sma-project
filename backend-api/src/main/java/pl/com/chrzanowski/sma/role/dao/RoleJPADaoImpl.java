@@ -28,7 +28,7 @@ public class RoleJPADaoImpl implements RoleDao {
     }
 
     @Override
-    public Optional<Role> findByName(ERole name) {
+    public Optional<Role> findByName(String name) {
         log.debug("JPA DAO: Fetching role {}", name);
         return roleRepository.findByName(name);
     }

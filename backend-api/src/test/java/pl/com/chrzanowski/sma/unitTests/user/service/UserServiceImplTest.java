@@ -19,6 +19,7 @@ import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserServiceImpl;
@@ -32,10 +33,7 @@ import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -80,7 +78,7 @@ class UserServiceImplTest {
         registerRequest.setEmail("test@example.com");
         registerRequest.setPassword("password");
 
-        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER).build();
+        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
         user = User.builder().id(1L).username("testUser").email("test@example.com").roles(Set.of(roleUser)).build();
     }
 
@@ -91,8 +89,8 @@ class UserServiceImplTest {
 
     @Test
     void testRegisterUserWithDefaultRole() {
-        RoleDTO roleUser = RoleDTO.builder().id(1L).name(ERole.ROLE_USER).build();
-        when(roleService.findByName(ERole.ROLE_USER)).thenReturn(roleUser);
+        RoleDTO roleUser = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        when(roleService.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(roleUser);
         when(encoder.encode(anyString())).thenReturn("encodedPassword");
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(new User());
         when(userDao.save(any(User.class))).thenReturn(new User());
@@ -147,9 +145,7 @@ class UserServiceImplTest {
         when(userDao.save(any(User.class))).thenReturn(user);
         when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            userService.confirm("token123");
-        });
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.confirm("token123"));
 
         assertEquals("Email already confirmed", exception.getMessage());
 
@@ -166,9 +162,7 @@ class UserServiceImplTest {
 
         when(userTokenService.getTokenData(anyString())).thenReturn(tokenDTO);
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            userService.confirm("token123");
-        });
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.confirm("token123"));
 
         assertEquals("Token expired.", exception.getMessage());
 
@@ -200,8 +194,8 @@ class UserServiceImplTest {
         UserFilter filter = new UserFilter()
                 .setEmailStartsWith("test")
                 .setEnabled(true);
-        when(userDao.findAll(any(Specification.class))).thenReturn(Arrays.asList(user));
-        when(userMapper.toDtoList(anyList())).thenReturn(Arrays.asList(userDTO));
+        when(userDao.findAll(any(Specification.class))).thenReturn(Collections.singletonList(user));
+        when(userMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(userDTO));
 
 
         List<UserDTO> result = userService.findByFilter(filter);
@@ -308,7 +302,7 @@ class UserServiceImplTest {
             assertEquals("testUser", result.username());
             assertEquals("test@example.com", result.email());
             assertEquals(1L, result.id());
-            assertEquals(List.of(ERole.ROLE_USER), result.roles());
+            assertEquals(List.of(ERole.ROLE_USER.getRoleName()), result.roles());
 
             securityUtilsMockedStatic.verify(SecurityUtils::getCurrentUserLogin, times(1));
         }
@@ -370,5 +364,95 @@ class UserServiceImplTest {
         verify(userDao, times(1)).findAll(any(Specification.class), eq(pageable));
         verify(userMapper, times(0)).toDto(any(User.class));
     }
+
+    @Test
+    void testUpdateUserPassword_Success() {
+        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "currentPassword", "newPassword");
+        userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
+
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(encoder.matches("currentPassword", userDTO.getPassword())).thenReturn(true);
+        when(encoder.encode("newPassword")).thenReturn("encodedNewPassword");
+        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+
+        assertDoesNotThrow(() -> userService.updateUserPassword(passwordChangeRequest));
+
+        verify(userDao, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserPassword_IncorrectCurrentPassword() {
+        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "wrongCurrentPassword", "newPassword");
+        userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
+
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(encoder.matches("wrongCurrentPassword", userDTO.getPassword())).thenReturn(false);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.updateUserPassword(passwordChangeRequest));
+        assertEquals("Current password does not match", exception.getMessage());
+
+        verify(userDao, times(0)).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserPassword_EmptyNewPassword() {
+        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "currentPassword", "");
+
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.updateUserPassword(passwordChangeRequest));
+        assertEquals("New password cannot be empty", exception.getMessage());
+
+        verify(userDao, times(0)).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserRoles_Success() {
+        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build(), RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build());
+        userDTO = userDTO.toBuilder().id(1L).roles(newRoles).build();
+
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(roleService.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build());
+        when(roleService.findByName(ERole.ROLE_ADMIN.getRoleName())).thenReturn(RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build());
+
+        UserDTO updatedUser = userService.updateUserRoles(1L, newRoles);
+
+        assertNotNull(updatedUser);
+        assertEquals(2, updatedUser.getRoles().size());
+        verify(userDao, times(1)).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserRoles_InvalidRole() {
+        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name("ROLE_NON_EXISTING").build());
+        userDTO = userDTO.toBuilder().id(1L).roles(newRoles).build();
+
+        when(userDao.findById(1L)).thenReturn(Optional.of(user));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(roleService.findByName("ROLE_NON_EXISTING")).thenThrow(new IllegalArgumentException("Role not found"));
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.updateUserRoles(1L, newRoles));
+        assertEquals("Role not found", exception.getMessage());
+
+        verify(userDao, times(0)).save(any(User.class));
+    }
+
+    @Test
+    void testUpdateUserRoles_UserNotFound() {
+        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build());
+
+        when(userDao.findById(1L)).thenReturn(Optional.empty());
+
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> userService.updateUserRoles(1L, newRoles));
+        assertEquals(String.format("user with id %d not found", 1L), exception.getMessage());
+
+        verify(userDao, times(0)).save(any(User.class));
+    }
+
 
 }

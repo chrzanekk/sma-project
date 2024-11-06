@@ -15,10 +15,7 @@ import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.service.RoleServiceImpl;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,9 +40,9 @@ class RoleServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER).build();
+        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
 
-        roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER).build();
+        roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
     }
 
     @AfterEach
@@ -62,7 +59,7 @@ class RoleServiceImplTest {
 
         assertNotNull(roles);
         assertEquals(1, roles.size());
-        assertTrue(roles.stream().anyMatch(role -> role.getName() == ERole.ROLE_USER));
+        assertTrue(roles.stream().anyMatch(role -> Objects.equals(role.getName(), ERole.ROLE_USER.getRoleName())));
 
         verify(roleDao, times(1)).findAll();
         verify(roleMapper, times(1)).toDtoSet(anySet());
@@ -81,25 +78,25 @@ class RoleServiceImplTest {
 
     @Test
     void testFindByNameSuccess() {
-        when(roleDao.findByName(ERole.ROLE_USER)).thenReturn(Optional.of(roleUser));
+        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.of(roleUser));
         when(roleMapper.toDto(roleUser)).thenReturn(roleUserDTO);
 
-        RoleDTO result = roleService.findByName(ERole.ROLE_USER);
+        RoleDTO result = roleService.findByName(ERole.ROLE_USER.getRoleName());
 
         assertNotNull(result);
-        assertEquals(ERole.ROLE_USER, result.getName());
+        assertEquals(ERole.ROLE_USER.getRoleName(), result.getName());
 
-        verify(roleDao, times(1)).findByName(ERole.ROLE_USER);
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
         verify(roleMapper, times(1)).toDto(roleUser);
     }
 
     @Test
     void testFindByNameRoleNotFound() {
-        when(roleDao.findByName(ERole.ROLE_USER)).thenReturn(Optional.empty());
+        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.empty());
 
-        assertThrows(RoleException.class, () -> roleService.findByName(ERole.ROLE_USER));
+        assertThrows(RoleException.class, () -> roleService.findByName(ERole.ROLE_USER.getRoleName()));
 
-        verify(roleDao, times(1)).findByName(ERole.ROLE_USER);
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
     }
 
     @Test
@@ -113,11 +110,11 @@ class RoleServiceImplTest {
         RoleDTO result = roleService.saveRole(roleUserDTO);
 
         assertNotNull(result);
-        assertEquals(ERole.ROLE_USER, result.getName());
+        assertEquals(ERole.ROLE_USER.getRoleName(), result.getName());
 
         verify(roleMapper).toEntity(captor.capture());
         RoleDTO capturedDTO = captor.getValue();
-        assertEquals(ERole.ROLE_USER, capturedDTO.getName());
+        assertEquals(ERole.ROLE_USER.getRoleName(), capturedDTO.getName());
         assertNotNull(capturedDTO.getCreatedDatetime());
     }
 

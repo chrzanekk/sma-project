@@ -31,12 +31,12 @@ class RoleRepositoryTest extends AbstractTestContainers {
     @Test
     void findByName() {
         //Given
-        Role role = Role.builder().name(ERole.ROLE_USER).build();
+        Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
         roleRepository.save(role);
 
 
         //When
-        var actual = roleRepository.findByName(ERole.ROLE_USER).get();
+        var actual = roleRepository.findByName(ERole.ROLE_USER.getRoleName()).get();
 
 
         //Then
@@ -48,7 +48,7 @@ class RoleRepositoryTest extends AbstractTestContainers {
         //Given
 
         //When
-        var actual = roleRepository.findByName(ERole.ROLE_USER);
+        var actual = roleRepository.findByName(ERole.ROLE_USER.getRoleName());
 
 
         //Then
