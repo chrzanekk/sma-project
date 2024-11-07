@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
@@ -38,6 +39,7 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private UserTokenRepository userTokenRepository;
 
@@ -415,16 +417,11 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .expectBody(String.class)
                 .returnResult().getResponseHeaders().getFirst("Authorization");
 
-        Boolean result = webTestClient.get()
+        webTestClient.get()
                 .uri("/api/auth/authenticate")
-                .header("Authorization", token + "111")
+                .header(HttpHeaders.AUTHORIZATION, token + "111")
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Boolean.class)
-                .returnResult().getResponseBody();
-
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(false);
+                .expectStatus().isBadRequest();
 
         verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
         verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());

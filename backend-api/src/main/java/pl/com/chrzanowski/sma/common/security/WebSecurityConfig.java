@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.common.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -66,22 +65,13 @@ public class WebSecurityConfig {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
                 })
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/confirm").permitAll()
-                        .requestMatchers("/api/auth/request-password-reset").permitAll()
-                        .requestMatchers("/api/auth/reset-password").permitAll()
-                        .requestMatchers("/api/auth/validate-token").permitAll()
-                        .requestMatchers("/api/auth/token").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/test//all").permitAll()
-                                //todo this is only for tests - fixed later
-                                .requestMatchers("/api/**").permitAll()
-//                        .requestMatchers("/api/test/user").hasAnyAuthority(ERole.ROLE_USER.getRoleName())
-//                        .requestMatchers("/api/test/mod").hasAnyAuthority(ERole.ROLE_MODERATOR.getRoleName())
-//                        .requestMatchers("/api/test/admin").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName())
-//                        .requestMatchers("/api/tires/**").hasAnyAuthority(ERole.ROLE_ADMIN.getRoleName(), ERole.ROLE_USER.getRoleName())
-//                        .requestMatchers("/api/auth/authenticate").authenticated()
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/confirm",
+                                "/api/auth/request-password-reset", "/api/auth/reset-password").permitAll()
+
+                        //ACCOUNT CONTROLLER
+                        .requestMatchers("/api/account/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+
+                        .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(authenticationTJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

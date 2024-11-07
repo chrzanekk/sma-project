@@ -6,9 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.service.UserService;
-import pl.com.chrzanowski.sma.user.dto.UserDTO;
 
 
 @RestController
@@ -24,15 +24,17 @@ public class AccountController {
     }
 
     @GetMapping("/get")
-    public UserInfoResponse getAccount() {
+    public ResponseEntity<UserInfoResponse> getAccount() {
         log.debug("REST: Get account information");
-        return userService.getUserWithAuthorities();
+        UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
+        return ResponseEntity.ok(userInfoResponse);
     }
 
     @PutMapping("/update")
-    public void updatAccount(@Valid @RequestBody UserDTO userDTO) {
+    public ResponseEntity<Void> updateAccount(@Valid @RequestBody UserDTO userDTO) {
         log.debug("REST: Update account {}", userDTO);
         userService.update(userDTO);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/change-password")
