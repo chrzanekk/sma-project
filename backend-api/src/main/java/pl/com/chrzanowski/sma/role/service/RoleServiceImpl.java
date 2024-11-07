@@ -32,14 +32,14 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Set<RoleDTO> findAll() {
-        log.info("DAO: Fetching all roles.");
+        log.debug("DAO: Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
         return roleMapper.toDtoSet(Set.copyOf(roleList));
     }
 
     @Override
     public RoleDTO findByName(String name) {
-        log.info("Fetching role {}", name);
+        log.debug("Fetching role {}", name);
         Optional<Role> role = roleDao.findByName(name);
         return role.map(roleMapper::toDto)
                 .orElseThrow(() -> new RoleException("ErrorRole not found: " + name));
@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public RoleDTO saveRole(RoleDTO roleDTO) {
-        log.info("Adding new role {} to database", roleDTO.getName());
+        log.debug("Adding new role {} to database", roleDTO.getName());
         if (roleDTO.getName() == null) {
             throw new RoleException("Error RoleName not found");
         }
@@ -56,8 +56,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        log.info("Deleting role {}", id);
+    public boolean deleteById(Long id) {
+        log.debug("Deleting role {}", id);
         Optional<Role> existingRole = roleDao.findById(id);
         if (existingRole.isPresent()) {
             Role role = existingRole.get();
@@ -65,6 +65,7 @@ public class RoleServiceImpl implements RoleService {
                 throw new RoleException(String.format("Cannot delete role %s", role.getName()));
             } else {
                 roleDao.deleteById(id);
+                return true;
             }
         } else {
             throw new RoleException("Error Role not found");

@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public String confirm(String token) {
+        log.debug("Confirm user registration by token: {}", token);
         UserTokenDTO userTokenDTO = userTokenService.getTokenData(token);
         if (userTokenDTO.getUseDate() != null) {
             throw new IllegalStateException("Email already confirmed");
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO save(UserDTO userDTO) {
-        log.info("Saving new user {} to database", userDTO);
+        log.debug("Saving new user {} to database", userDTO);
         UserDTO userDTOToSave = userDTO.toBuilder().createdDatetime(Instant.now()).password(encoder.encode(userDTO.getPassword())).build();
         return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToSave)));
     }
@@ -113,7 +114,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(UserDTO userDTO) {
-        log.info("Update user {} to database", userDTO);
+        log.debug("Update user {} to database", userDTO);
         UserDTO existingUserDTO = findById(userDTO.getId());
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
 
@@ -135,7 +136,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest) {
-        log.info("Update user password by id: {}", userPasswordChangeRequest.userId());
+        log.debug("Update user password by id: {}", userPasswordChangeRequest.userId());
         UserDTO existingUserDTO = findById(userPasswordChangeRequest.userId());
         if (userPasswordChangeRequest.newPassword() == null || userPasswordChangeRequest.newPassword().isEmpty()) {
             throw new IllegalStateException("New password cannot be empty");
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles) {
-        log.info("Update user roles by id: {}", userId);
+        log.debug("Update user roles by id: {}", userId);
         UserDTO existingUserDTO = findById(userId);
 
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
@@ -198,13 +199,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDTO> findAll() {
-        log.info("Fetching all users. ");
+        log.debug("Fetching all users. ");
         return userMapper.toDtoList(userDao.findAll());
     }
 
     @Override
     public UserDTO getUser(String email) {
-        log.info("Fetching user {} ", email);
+        log.debug("Fetching user {} ", email);
         User user = userDao.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_WITH_EMAIL_NOT_FOUND, email)));
         return userMapper.toDto(user);
@@ -224,6 +225,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserInfoResponse getUserWithAuthorities() {
+        log.debug("Get user with authorities.");
         String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         User currentUser = userDao.findByUsername(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();

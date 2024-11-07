@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.role.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 

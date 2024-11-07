@@ -18,6 +18,9 @@
     </appender>
 
     <logger name="org.springframework.web.servlet.HandlerMapping.Mappings" level="DEBUG" additivity="false"/>
+    <logger name="pl.com.chrzanowski.sma" level="DEBUG" />
+
+
 
     <logger name="jakarta.activation" level="WARN"/>
 

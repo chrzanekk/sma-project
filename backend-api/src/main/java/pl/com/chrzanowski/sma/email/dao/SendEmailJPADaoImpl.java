@@ -19,7 +19,7 @@ public class SendEmailJPADaoImpl implements SendEmailDao {
 
     @Override
     public void save(SendEmail sendEmail) {
-        log.debug("JPA DAO: save sendEmail");
+        log.debug("JPA DAO: save sent email.");
         sendEmailRepository.save(sendEmail);
     }
 }

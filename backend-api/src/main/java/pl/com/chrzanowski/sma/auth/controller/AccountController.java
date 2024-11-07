@@ -25,19 +25,19 @@ public class AccountController {
 
     @GetMapping("/get")
     public UserInfoResponse getAccount() {
-        log.info("REST: Get account information");
+        log.debug("REST: Get account information");
         return userService.getUserWithAuthorities();
     }
 
     @PutMapping("/update")
     public void updatAccount(@Valid @RequestBody UserDTO userDTO) {
-        log.info("REST: Update account {}", userDTO);
+        log.debug("REST: Update account {}", userDTO);
         userService.update(userDTO);
     }
 
     @PutMapping("/change-password")
     public ResponseEntity<Boolean> changePassword(@Valid @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
-        log.info("REST: Change password for user id:{}", userPasswordChangeRequest.userId());
+        log.debug("REST: Change password for user id:{}", userPasswordChangeRequest.userId());
         userService.updateUserPassword(userPasswordChangeRequest);
         return ResponseEntity.ok(true);
     }
