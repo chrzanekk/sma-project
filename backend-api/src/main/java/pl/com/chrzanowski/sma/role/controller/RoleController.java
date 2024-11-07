@@ -10,7 +10,7 @@ import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -25,7 +25,7 @@ public class RoleController {
     }
 
     @GetMapping("/roles")
-    public ResponseEntity<Set<RoleDTO>> getRoles() {
+    public ResponseEntity<List<RoleDTO>> getRoles() {
         log.debug("REST request to get roles");
         return ResponseEntity.ok().body(roleService.findAll());
     }

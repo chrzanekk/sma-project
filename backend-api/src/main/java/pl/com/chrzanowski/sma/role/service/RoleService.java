@@ -2,11 +2,11 @@ package pl.com.chrzanowski.sma.role.service;
 
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 
-import java.util.Set;
+import java.util.List;
 
 public interface RoleService {
 
-    Set<RoleDTO> findAll();
+    List<RoleDTO> findAll();
 
     RoleDTO findByName(String name);
 

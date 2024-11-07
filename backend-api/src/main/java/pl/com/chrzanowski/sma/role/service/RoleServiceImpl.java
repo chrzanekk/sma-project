@@ -31,10 +31,10 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Set<RoleDTO> findAll() {
+    public List<RoleDTO> findAll() {
         log.debug("DAO: Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
-        return roleMapper.toDtoSet(Set.copyOf(roleList));
+        return roleMapper.toDtoList(roleList);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class RoleServiceImpl implements RoleService {
         Optional<Role> existingRole = roleDao.findById(id);
         if (existingRole.isPresent()) {
             Role role = existingRole.get();
-            if (role.getName().equals(ERole.ROLE_USER.getRoleName()) || role.getName().equals(ERole.ROLE_ADMIN.getRoleName())) {
+            if (isRoleIsBase(role)) {
                 throw new RoleException(String.format("Cannot delete role %s", role.getName()));
             } else {
                 roleDao.deleteById(id);
@@ -70,5 +70,11 @@ public class RoleServiceImpl implements RoleService {
         } else {
             throw new RoleException("Error Role not found");
         }
+    }
+
+    private boolean isRoleIsBase(Role role) {
+        return role.getName().equals(ERole.ROLE_USER.getRoleName())
+                || role.getName().equals(ERole.ROLE_ADMIN.getRoleName())
+                || role.getName().equals(ERole.ROLE_MODERATOR.getRoleName());
     }
 }

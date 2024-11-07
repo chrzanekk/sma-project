@@ -10,7 +10,9 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
+import pl.com.chrzanowski.sma.user.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertFalse;
@@ -24,17 +26,13 @@ class RoleRepositoryTest extends AbstractTestContainers {
     @Autowired
     private RoleRepository roleRepository;
 
-    @BeforeEach
-    void setUp() {
-        roleRepository.deleteAll();
-    }
-
     @Test
     void findByName() {
         //Given
+        roleRepository.deleteAll();
         Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
         roleRepository.save(role);
-
+        List<Role> roles = roleRepository.findAll();
 
         //When
         var actual = roleRepository.findByName(ERole.ROLE_USER.getRoleName()).get();
@@ -47,7 +45,7 @@ class RoleRepositoryTest extends AbstractTestContainers {
     @Test
     void findByNameWithFail() {
         //Given
-
+        roleRepository.deleteAll();
         //When
         var actual = roleRepository.findByName(ERole.ROLE_USER.getRoleName());
 
