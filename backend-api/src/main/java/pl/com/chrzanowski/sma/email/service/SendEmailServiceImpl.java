@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.email.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
+@Transactional
 public class SendEmailServiceImpl implements SendEmailService {
 
     @Value("${jwt.tokenValidityTimeInMinutes}")

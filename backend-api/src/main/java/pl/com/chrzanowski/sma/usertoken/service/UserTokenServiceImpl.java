@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.usertoken.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
+@Transactional
 public class UserTokenServiceImpl implements UserTokenService {
 
     @Value("${jwt.tokenValidityTimeInMinutes}")

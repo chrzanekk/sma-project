@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.auth.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import pl.com.chrzanowski.sma.user.service.UserService;
 import java.time.LocalDateTime;
 
 @Service
+@Transactional
 public class PasswordResetServiceImpl implements PasswordResetService {
 
     private final Logger log = LoggerFactory.getLogger(PasswordResetServiceImpl.class);

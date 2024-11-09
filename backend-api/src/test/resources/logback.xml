@@ -17,17 +17,14 @@
         </encoder>
     </appender>
 
-    <logger name="org.springframework.web.servlet.HandlerMapping.Mappings">
-        <level value="DEBUG"/>
-        <additivity>false</additivity>
-    </logger>
+    <logger name="org.springframework.web.servlet.HandlerMapping.Mappings" level="DEBUG" additivity="false"/>
+    <logger name="pl.com.chrzanowski.sma" level="DEBUG" />
 
-    <logger name="jakarta.activation">
-        <level value="WARN"/>
-    </logger>
 
-    <root>
-        <level value="INFO"/>
+
+    <logger name="jakarta.activation" level="WARN"/>
+
+    <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
     </root>

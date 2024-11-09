@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
@@ -18,9 +18,6 @@ import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
-import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.repository.UserRepository;
-import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -34,17 +31,10 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles("test")
 public class RoleControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private WebTestClient webTestClient;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserTokenRepository userTokenRepository;
 
     @Autowired
     private RoleService roleService;
@@ -52,16 +42,18 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @MockBean
     private SendEmailService sendEmailService;
 
+    @Autowired
+    private Flyway flyway;
+
     private String jwtToken;
-    private User registeredUser;
 
     @BeforeEach
     void setUp() {
         this.webTestClient = this.webTestClient.mutate()
                 .responseTimeout(Duration.ofSeconds(60)).build();
 
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
+        flyway.clean();
+        flyway.migrate();
 
         reset(sendEmailService);
 

@@ -1,25 +1,25 @@
 package pl.com.chrzanowski.sma.contractor.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
-import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorSpecification;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
+import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
+import pl.com.chrzanowski.sma.contractor.service.filter.ContractorSpecification;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class ContractorServiceImpl implements ContractorService {
 
     private final Logger log = LoggerFactory.getLogger(ContractorServiceImpl.class);
@@ -64,7 +64,7 @@ public class ContractorServiceImpl implements ContractorService {
     public Page<ContractorDTO> findByFilterAndPage(ContractorFilter contractorFilter, Pageable pageable) {
         log.debug("Find all workshops by filter and page: {}", contractorFilter);
         Specification<Contractor> spec = ContractorSpecification.createSpecification(contractorFilter);
-        return contractorDao.findAll(spec,pageable).map(contractorMapper::toDto);
+        return contractorDao.findAll(spec, pageable).map(contractorMapper::toDto);
     }
 
     @Override

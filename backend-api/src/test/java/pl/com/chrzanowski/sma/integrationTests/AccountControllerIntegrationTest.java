@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
 
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
@@ -37,7 +37,6 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles("test")
 public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
@@ -47,24 +46,24 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     private UserRepository userRepository;
 
     @Autowired
-    private UserTokenRepository userTokenRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @MockBean
     private SendEmailService sendEmailService;
 
+    @Autowired
+    private Flyway flyway;
+
     private String jwtToken;
     private User registeredUser;
+
 
     @BeforeEach
     void setUp() {
         this.webTestClient = this.webTestClient.mutate()
                 .responseTimeout(Duration.ofSeconds(60)).build();
-
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
+        flyway.clean();
+        flyway.migrate();
 
         reset(sendEmailService);
 
@@ -140,7 +139,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/account/update")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(userDTO)
+                .body(Mono.just(userDTO), UserDTO.class)
                 .exchange()
                 .expectStatus().isOk();
 
@@ -161,7 +160,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.put()
                 .uri("/api/account/update")
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(invalidUserDTO)
+                .body(Mono.just(invalidUserDTO), UserDTO.class)
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -175,7 +174,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/account/change-password")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(passwordChangeRequest)
+                .body(Mono.just(passwordChangeRequest), UserPasswordChangeRequest.class)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(Boolean.class)

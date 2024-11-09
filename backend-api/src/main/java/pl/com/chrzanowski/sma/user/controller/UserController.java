@@ -62,7 +62,7 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public ResponseEntity<UserDTO> update(@RequestBody UserDTO userDTO) {
         log.debug("REST request to update user: {}", userDTO);
         UserDTO result = userService.update(userDTO);

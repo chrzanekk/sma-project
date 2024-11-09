@@ -1,12 +1,13 @@
-package pl.com.chrzanowski.sma.auth.controller;
+package pl.com.chrzanowski.sma.integrationTests;
 
+import jakarta.transaction.Transactional;
+import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
@@ -17,13 +18,9 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
-import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.repository.UserRepository;
-import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -31,25 +28,25 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
-@ActiveProfiles("test")
+@Transactional
 public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private WebTestClient webTestClient;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private UserTokenRepository userTokenRepository;
-
     @MockBean
     private SendEmailService sendEmailService;
+
+    @Autowired
+    private Flyway flyway;
 
     @BeforeEach
     void setUp() {
         this.webTestClient = this.webTestClient.mutate()
                 .responseTimeout(Duration.ofSeconds(60)).build();
+
+        flyway.clean();
+        flyway.migrate();
 
         reset(sendEmailService);
 
@@ -65,9 +62,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRegisterSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
-        List<User> users = userRepository.findAll();
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -88,8 +82,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRegisterFailWithBadUsername() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -126,8 +118,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRegisterFailWithBadEmail() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -164,8 +154,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldConfirmSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -191,8 +179,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldConfirmFailWithBadToken() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -218,8 +204,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldLoginSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -260,8 +244,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldLoginFailWithBadPassword() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -297,8 +279,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldLoginFailWithBadLogin() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -334,8 +314,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldAuthenticateSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -384,8 +362,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldAuthenticateFailWithInvalidToken() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -429,8 +405,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRequestResetPasswordSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -469,8 +443,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRequestResetPasswordFailWithWrongEmail() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -506,8 +478,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldResetPasswordSuccessfully() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -557,8 +527,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldResetPasswordFailWithInvalidToken() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
@@ -603,8 +571,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldResetPasswordFailWithEmptyToken() {
-        userTokenRepository.deleteAll();
-        userRepository.deleteAll();
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
