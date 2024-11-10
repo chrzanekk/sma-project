@@ -77,4 +77,10 @@ public class UserTokenServiceImpl implements UserTokenService {
         log.debug("Request to delete token: {}", id);
         userTokenDao.deleteTokenById(id);
     }
+
+    @Override
+    public void deleteTokenByUserId(Long userId) {
+        log.debug("Request to delete token by userId: {}", userId);
+        userTokenDao.deleteTokensByUserId(userId);
+    }
 }

@@ -1,7 +1,6 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
 import org.flywaydb.core.Flyway;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +18,16 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.role.model.Role;
+import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.model.User;
+import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,10 +46,15 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private Flyway flyway;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @MockBean
     private SendEmailService sendEmailService;
 
     private String jwtToken;
+    @Autowired
+    private UserRepository userRepository;
 
     @BeforeEach
     void setUp() {
@@ -67,10 +75,16 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
         RegisterRequest existingUser = RegisterRequest.builder()
                 .username("username")
                 .password("password")
                 .email("username@test.com")
+                .role(Set.of(adminRole.getName()))
                 .build();
 
         registerUser(existingUser);
@@ -78,6 +92,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .username("second")
                 .password("password")
                 .email("second@test.com")
+                .role(Set.of(userRole.getName()))
                 .build();
         registerUser(secondUser);
 
@@ -193,6 +208,11 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk();
+
+        List<Role> roles = roleRepository.findAll();
+        List<User> users = userRepository.findAll();
+        assertThat(roles).hasSize(3);
+        assertThat(users).hasSize(1);
     }
 
     @Test
@@ -315,7 +335,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertEquals(users.get(0).getUsername(),"username");
+        assertEquals(users.get(0).getUsername(), "username");
     }
 
     @Test

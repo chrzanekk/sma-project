@@ -30,6 +30,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public List<RoleDTO> findAll() {
         log.debug("DAO: Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
@@ -37,6 +38,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDTO findByName(String name) {
         log.debug("Fetching role {}", name);
         Optional<Role> role = roleDao.findByName(name);
@@ -45,6 +47,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public RoleDTO saveRole(RoleDTO roleDTO) {
         log.debug("Adding new role {} to database", roleDTO.getName());
         if (roleDTO.getName() == null) {
@@ -55,6 +58,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public boolean deleteById(Long id) {
         log.debug("Deleting role {}", id);
         Optional<Role> existingRole = roleDao.findById(id);

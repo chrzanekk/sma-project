@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.user.service;
 
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
@@ -16,6 +16,7 @@ import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
@@ -49,37 +50,29 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
     private final UserMapper userMapper;
     private final RoleService roleService;
+    private final RoleMapper roleMapper;
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
 
     public UserServiceImpl(UserDao userDao,
                            UserMapper userMapper,
-                           RoleService roleService,
+                           RoleService roleService, RoleMapper roleMapper,
                            PasswordEncoder encoder, UserTokenService userTokenService) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.roleService = roleService;
+        this.roleMapper = roleMapper;
         this.userTokenService = userTokenService;
         this.encoder = encoder;
     }
 
     @Override
+    @Transactional
     public UserDTO register(RegisterRequest request) {
         log.debug("Request to register new user: {}", request);
         EmailUtil.validateEmail(request.getEmail());
-        Set<String> stringRoles = request.getRole();
-        Set<RoleDTO> roleDTOSet = new HashSet<>();
-        if (stringRoles == null || stringRoles.isEmpty()) {
-            List<UserDTO> userDTOList = findAll();
-            if (userDTOList.isEmpty()) {
-                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getRoleName());
-                roleDTOSet.add(adminRole);
-            } else {
-                roleDTOSet.add(roleService.findByName(ERole.ROLE_USER.getRoleName()));
-            }
-        }
         UserDTO newUser = UserDTO.builder().username(request.getUsername()).email(request.getEmail())
-                .roles(roleDTOSet).enabled(false).locked(false).password(request.getPassword())
+                .enabled(false).locked(false).password(request.getPassword())
                 .build();
         return save(newUser);
     }
@@ -105,14 +98,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO save(UserDTO userDTO) {
         log.debug("Saving new user {} to database", userDTO);
-        UserDTO userDTOToSave = userDTO.toBuilder().createdDatetime(Instant.now()).password(encoder.encode(userDTO.getPassword())).build();
-        return userMapper.toDto(userDao.save(userMapper.toEntity(userDTOToSave)));
+
+        Set<RoleDTO> stringRoles = userDTO.getRoles();
+        Set<RoleDTO> roleDTOSet = new HashSet<>();
+        if (stringRoles == null || stringRoles.isEmpty()) {
+            List<UserDTO> userDTOList = findAll();
+            if (userDTOList.isEmpty()) {
+                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getRoleName());
+                roleDTOSet.add(adminRole);
+            } else {
+                RoleDTO userRole = roleService.findByName(ERole.ROLE_USER.getRoleName());
+                roleDTOSet.add(userRole);
+            }
+        } else {
+            roleDTOSet.addAll(stringRoles.stream().map(roleDTO -> roleService.findByName(roleDTO.getName())).collect(Collectors.toSet()));
+        }
+
+        UserDTO userDTOToSave = userDTO.toBuilder()
+                .createdDatetime(Instant.now())
+                .password(encoder.encode(userDTO.getPassword()))
+                .roles(roleDTOSet)
+                .build();
+
+        User userEntity = userMapper.toEntity(userDTOToSave);
+        Set<Role> managedRoles = userEntity.getRoles().stream()
+                .map(role -> roleMapper.toEntity(roleService.findByName(role.getName())))
+                .collect(Collectors.toSet());
+        userEntity.setRoles(managedRoles);
+
+        return userMapper.toDto(userDao.save(userEntity));
     }
 
 
     @Override
+    @Transactional
     public UserDTO update(UserDTO userDTO) {
         log.debug("Update user {} to database", userDTO);
         UserDTO existingUserDTO = findById(userDTO.getId());
@@ -135,6 +157,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest) {
         log.debug("Update user password by id: {}", userPasswordChangeRequest.userId());
         UserDTO existingUserDTO = findById(userPasswordChangeRequest.userId());
@@ -154,6 +177,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @Transactional
     public UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles) {
         log.debug("Update user roles by id: {}", userId);
         UserDTO existingUserDTO = findById(userId);
@@ -171,6 +195,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public List<UserDTO> findByFilter(UserFilter filter) {
         log.debug("Find all users by filter: {}", filter);
         Specification<User> specification = UserSpecification.create(filter);
@@ -178,6 +203,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Page<UserDTO> findByFilterAndPage(UserFilter filter, Pageable pageable) {
         log.debug("Find all users by filter and page: {}", filter);
         Specification<User> specification = UserSpecification.create(filter);
@@ -185,6 +211,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO findById(Long id) {
         log.debug("Find user by id: {}", id);
         Optional<User> optionalUser = userDao.findById(id);
@@ -192,18 +219,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         log.debug("Delete user by id: {}", id);
+        userTokenService.deleteTokenByUserId(id);
         userDao.deleteById(id);
     }
 
     @Override
+    @Transactional
     public List<UserDTO> findAll() {
         log.debug("Fetching all users. ");
         return userMapper.toDtoList(userDao.findAll());
     }
 
     @Override
+    @Transactional
     public UserDTO getUser(String email) {
         log.debug("Fetching user {} ", email);
         User user = userDao.findByEmail(email)
@@ -212,18 +243,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Boolean isUserExists(String userName) {
         log.debug("Request to check if userName exists in DB: {}", userName);
         return userDao.existsByUsername(userName);
     }
 
     @Override
+    @Transactional
     public Boolean isEmailExists(String email) {
         log.debug("Request to check if email exists in DB: {}", email);
         return userDao.existsByEmail(email);
     }
 
     @Override
+    @Transactional
     public UserInfoResponse getUserWithAuthorities() {
         log.debug("Get user with authorities.");
         String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));

@@ -42,4 +42,10 @@ public class UserTokenJPADaoImpl implements UserTokenDao {
         log.debug("JPA DAO: delete confirmation token");
         userTokenRepository.deleteById(id);
     }
+
+    @Override
+    public void deleteTokensByUserId(Long userId) {
+        log.debug("JPA DAO: delete confirmation token by userId");
+        userTokenRepository.deleteUserTokenByUserId(userId);
+    }
 }

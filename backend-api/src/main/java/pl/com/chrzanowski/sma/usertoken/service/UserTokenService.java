@@ -16,4 +16,5 @@ public interface UserTokenService {
 
     void deleteToken(Long id);
 
+    void deleteTokenByUserId(Long userId);
 }

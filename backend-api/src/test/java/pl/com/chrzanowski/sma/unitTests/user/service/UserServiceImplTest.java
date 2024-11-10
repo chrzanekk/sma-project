@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
@@ -46,6 +47,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserMapper userMapper;
+
+    @Mock
+    private RoleMapper roleMapper;
 
     @Mock
     private RoleService roleService;
@@ -265,6 +269,7 @@ class UserServiceImplTest {
     @Test
     void saveNewUser() {
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(roleMapper.toEntity(any(RoleDTO.class))).thenReturn(roleUser);
 
         userService.save(userDTO);
 

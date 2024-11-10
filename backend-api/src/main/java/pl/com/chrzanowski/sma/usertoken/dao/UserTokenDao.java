@@ -14,4 +14,5 @@ public interface UserTokenDao {
 
     void deleteTokenById(Long id);
 
+    void deleteTokensByUserId(Long userId);
 }
