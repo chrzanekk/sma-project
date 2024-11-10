@@ -26,17 +26,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/")
-    public ResponseEntity<List<UserDTO>> getUsersByFilter(UserFilter userFilter) {
-        log.debug("REST request to get all users by filter: {}", userFilter);
-        List<UserDTO> result = userService.findByFilter(userFilter);
-        return ResponseEntity.ok().body(result);
-    }
-
     @GetMapping(path = "/all")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         log.debug("REST request to get all users.");
         List<UserDTO> result = userService.findAll();
+        return ResponseEntity.ok().body(result);
+    }
+
+    @GetMapping( "/")
+    public ResponseEntity<List<UserDTO>> getUsersByFilter(UserFilter userFilter) {
+        log.debug("REST request to get all users by filter: {}", userFilter);
+        List<UserDTO> result = userService.findByFilter(userFilter);
         return ResponseEntity.ok().body(result);
     }
 

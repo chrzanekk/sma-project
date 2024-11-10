@@ -191,9 +191,9 @@ class UserServiceImplTest {
 
     @Test
     void testFindByFilter() {
-        UserFilter filter = new UserFilter()
-                .setEmailStartsWith("test")
-                .setEnabled(true);
+        UserFilter filter = UserFilter.builder()
+                .emailStartsWith("test")
+                .isEnabled(true).build();
         when(userDao.findAll(any(Specification.class))).thenReturn(Collections.singletonList(user));
         when(userMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(userDTO));
 
@@ -325,9 +325,9 @@ class UserServiceImplTest {
 
     @Test
     void testFindByFilterAndPage_Success() {
-        UserFilter filter = new UserFilter()
-                .setEmailStartsWith("test")
-                .setEnabled(true);
+        UserFilter filter = UserFilter.builder()
+                .emailStartsWith("test")
+                .isEnabled(true).build();
         Pageable pageable = PageRequest.of(0, 10);
         User user = User.builder().id(1L).username("testUser").email("test@example.com").build();
         UserDTO userDTO = UserDTO.builder().id(1L).username("testUser").email("test@example.com").build();
@@ -348,9 +348,9 @@ class UserServiceImplTest {
 
     @Test
     void testFindByFilterAndPage_NoResults() {
-        UserFilter filter = new UserFilter()
-                .setEmailStartsWith("nonexistent")
-                .setEnabled(true);
+        UserFilter filter = UserFilter.builder()
+                .emailStartsWith("test")
+                .isEnabled(true).build();
         Pageable pageable = PageRequest.of(0, 10);
         when(userDao.findAll(any(Specification.class), eq(pageable)))
                 .thenReturn(Page.empty(pageable));

@@ -7,7 +7,7 @@ public class UserSpecification {
 
     private static final String ID = "id";
     private static final String EMAIL = "email";
-    private static final String USER_NAME = "userName";
+    private static final String USER_NAME = "username";
     private static final String IS_LOCKED = "isLocked";
     private static final String IS_ENABLED = "isEnabled";
 
@@ -23,11 +23,11 @@ public class UserSpecification {
             if (filter.getEmailStartsWith() != null) {
                 specification = specification.and(hasString(filter.getEmailStartsWith(), EMAIL));
             }
-            if (filter.isEnabled() != null) {
-                specification = specification.and(hasBoolean(filter.isEnabled(), IS_ENABLED));
+            if (filter.getIsEnabled() != null) {
+                specification = specification.and(hasBoolean(filter.getIsEnabled(), IS_ENABLED));
             }
-            if (filter.isLocked() != null) {
-                specification = specification.and(hasBoolean(filter.isLocked(), IS_LOCKED));
+            if (filter.getIsLocked() != null) {
+                specification = specification.and(hasBoolean(filter.getIsEnabled(), IS_LOCKED));
             }
         }
         return specification;
