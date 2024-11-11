@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.user.dao;
 
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.user.model.User;
 
 import java.util.List;
@@ -24,9 +24,9 @@ public interface UserDao {
 
     List<User> findAll();
 
-    Page<User> findAll(Specification<User> specification, Pageable pageable);
+    Page<User> findAll(BooleanBuilder specification, Pageable pageable);
 
-    List<User> findAll(Specification<User> specification);
+    List<User> findAll(BooleanBuilder specification);
 
     void deleteById(Long id);
 }

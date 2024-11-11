@@ -17,11 +17,10 @@ import pl.com.chrzanowski.sma.contractor.service.ContractorService;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/workshops")
+@RequestMapping(path = "/api/contractors")
 public class ContractorController {
 
     private final Logger log = LoggerFactory.getLogger(ContractorController.class);
-    private static final String ENTITY_NAME = "workshop";
     private final ContractorService contractorService;
 
     public ContractorController(ContractorService contractorService) {
@@ -29,21 +28,21 @@ public class ContractorController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ContractorDTO>> getAllWorkshops() {
+    public ResponseEntity<List<ContractorDTO>> getAllContractors() {
         log.debug("REST request to get all workshops");
         List<ContractorDTO> contractorDTOS = contractorService.findAll();
         return ResponseEntity.ok().body(contractorDTOS);
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ContractorDTO>> getAllWorkshopsByFilter(ContractorFilter contractorFilter) {
+    public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
         log.debug("REST request to get all workshops by filter: {}", contractorFilter);
         List<ContractorDTO> contractorDTOS = contractorService.findByFilter(contractorFilter);
         return ResponseEntity.ok().body(contractorDTOS);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<ContractorDTO>> getAllWorkshopsByFilterAndPage(ContractorFilter contractorFilter,
+    public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
                                                                               Pageable pageable) {
         log.debug("REST request to get all workshops by filter: {}", contractorFilter);
         Page<ContractorDTO> page = contractorService.findByFilterAndPage(contractorFilter,
@@ -55,28 +54,28 @@ public class ContractorController {
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ContractorDTO> getWorkshopById(@Valid @PathVariable Long id) {
+    public ResponseEntity<ContractorDTO> getContractorById(@Valid @PathVariable Long id) {
         log.debug("REST request to get workshop by id: {}", id);
         ContractorDTO contractorDTO = contractorService.findById(id);
         return ResponseEntity.ok().body(contractorDTO);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ContractorDTO> addWorkshop(@RequestBody ContractorDTO contractorDTO) {
+    public ResponseEntity<ContractorDTO> addContractor(@RequestBody ContractorDTO contractorDTO) {
         log.debug("REST request to add new workshop: {}", contractorDTO);
         ContractorDTO newContractorDTO = contractorService.save(contractorDTO);
         return ResponseEntity.ok().body(newContractorDTO);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ContractorDTO> updateWorkshop(@RequestBody ContractorDTO contractorDTO) {
+    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorDTO contractorDTO) {
         log.debug("RST request to update workshop: {}", contractorDTO);
         ContractorDTO updatedContractorDTO = contractorService.update(contractorDTO);
         return ResponseEntity.ok().body(updatedContractorDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteWorkshop(@PathVariable Long id) {
+    public ResponseEntity<?> deleteContractor(@PathVariable Long id) {
         log.debug("REST request to delete workshop of id: {}", id);
         contractorService.delete(id);
         return ResponseEntity.ok().build();

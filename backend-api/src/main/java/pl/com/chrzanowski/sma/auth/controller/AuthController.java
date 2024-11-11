@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.auth.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

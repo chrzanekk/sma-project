@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.service.UserQueryService;
 import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
@@ -21,9 +22,11 @@ public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final UserQueryService userQueryService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserQueryService userQueryService) {
         this.userService = userService;
+        this.userQueryService = userQueryService;
     }
 
     @GetMapping(path = "/all")
@@ -36,14 +39,14 @@ public class UserController {
     @GetMapping( "/")
     public ResponseEntity<List<UserDTO>> getUsersByFilter(UserFilter userFilter) {
         log.debug("REST request to get all users by filter: {}", userFilter);
-        List<UserDTO> result = userService.findByFilter(userFilter);
+        List<UserDTO> result = userQueryService.findByFilter(userFilter);
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping(path = "/page")
     public ResponseEntity<List<UserDTO>> getUsersByFilterAndPage(UserFilter userFilter, Pageable pageable) {
         log.debug("REST request to get all users by filter and page: {},{}", userFilter, pageable);
-        Page<UserDTO> result = userService.findByFilterAndPage(userFilter, pageable);
+        Page<UserDTO> result = userQueryService.findByFilter(userFilter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), result);
         return ResponseEntity.ok().headers(headers).body(result.getContent());
     }

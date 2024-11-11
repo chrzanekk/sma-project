@@ -3,9 +3,6 @@ package pl.com.chrzanowski.sma.user.service;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,8 +21,6 @@ import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
-import pl.com.chrzanowski.sma.user.service.filter.UserSpecification;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
@@ -194,21 +189,7 @@ public class UserServiceImpl implements UserService {
         return updatedUserDTO;
     }
 
-    @Override
-    @Transactional
-    public List<UserDTO> findByFilter(UserFilter filter) {
-        log.debug("Find all users by filter: {}", filter);
-        Specification<User> specification = UserSpecification.create(filter);
-        return userMapper.toDtoList(userDao.findAll(specification));
-    }
 
-    @Override
-    @Transactional
-    public Page<UserDTO> findByFilterAndPage(UserFilter filter, Pageable pageable) {
-        log.debug("Find all users by filter and page: {}", filter);
-        Specification<User> specification = UserSpecification.create(filter);
-        return userDao.findAll(specification, pageable).map(userMapper::toDto);
-    }
 
     @Override
     @Transactional
@@ -220,17 +201,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
-        log.debug("Delete user by id: {}", id);
-        userTokenService.deleteTokenByUserId(id);
-        userDao.deleteById(id);
+    public List<UserDTO> findAll() {
+        log.debug("Fetching all users. ");
+        return userMapper.toDtoList(userDao.findAll());
     }
 
     @Override
     @Transactional
-    public List<UserDTO> findAll() {
-        log.debug("Fetching all users. ");
-        return userMapper.toDtoList(userDao.findAll());
+    public void delete(Long id) {
+        log.debug("Delete user by id: {}", id);
+        userTokenService.deleteTokenByUserId(id);
+        userDao.deleteById(id);
     }
 
     @Override

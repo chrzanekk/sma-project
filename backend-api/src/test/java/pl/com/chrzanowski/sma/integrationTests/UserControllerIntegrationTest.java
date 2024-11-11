@@ -18,6 +18,7 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -87,14 +88,14 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .role(Set.of(adminRole.getName()))
                 .build();
 
-        registerUser(existingUser);
+        UserHelper.registerUser(existingUser, webTestClient);
         RegisterRequest secondUser = RegisterRequest.builder()
                 .username("second")
                 .password("password")
                 .email("second@test.com")
                 .role(Set.of(userRole.getName()))
                 .build();
-        registerUser(secondUser);
+        UserHelper.registerUser(secondUser, webTestClient);
 
         LoginRequest loginRequest = LoginRequest.builder()
                 .username(existingUser.getUsername())
@@ -114,22 +115,6 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     }
 
-    private void registerUser(RegisterRequest request) {
-
-
-        String confirmationToken = webTestClient.post().uri("/api/auth/register")
-                .body(Mono.just(request), RegisterRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(String.class)
-                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", confirmationToken).build())
-                .exchange()
-                .expectStatus().isOk();
-    }
-
     @Test
     void shouldGetAllUsersSuccessfully() {
         List<UserDTO> users = webTestClient.get()
@@ -141,6 +126,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(2);
     }
 
     @Test
@@ -262,6 +248,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
         assertThat(users).anyMatch(user -> "username".equals(user.getUsername()));
     }
 
@@ -283,6 +270,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
         assertThat(users).anyMatch(user -> "username".equals(user.getUsername()));
     }
 
@@ -354,6 +342,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
         assertThat(users).allMatch(user -> user.getEmail().startsWith("username"));
     }
 
@@ -375,6 +364,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
         assertThat(users).allMatch(user -> user.getUsername().startsWith("user"));
     }
 
@@ -396,6 +386,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
         assertThat(users).allMatch(user -> user.getEmail().startsWith("username"));
     }
 }

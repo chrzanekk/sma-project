@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.unitTests.user.dao;
 
+import com.querydsl.core.BooleanBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.user.dao.UserJPADaoImpl;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
@@ -250,7 +250,7 @@ class UserJPADaoImplTest {
     @Test
     void findAll_WithSpecificationAndPageable_Positive() {
         // Given
-        Specification<User> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         Pageable pageable = PageRequest.of(0, 2);
         User user1 = User.builder().username("user1").build();
         Page<User> page = new PageImpl<>(List.of(user1), pageable, 1);
@@ -268,7 +268,7 @@ class UserJPADaoImplTest {
     @Test
     void findAll_WithSpecificationAndPageable_Negative() {
         // Given
-        Specification<User> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         Pageable pageable = PageRequest.of(0, 2);
         Page<User> page = new PageImpl<>(Collections.emptyList(), pageable, 0);
         when(userRepository.findAll(specification, pageable)).thenReturn(page);
@@ -284,7 +284,7 @@ class UserJPADaoImplTest {
     @Test
     void findAll_WithSpecification_Positive() {
         // Given
-        Specification<User> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         User user1 = User.builder().username("user1").build();
         when(userRepository.findAll(specification)).thenReturn(List.of(user1));
 
@@ -300,7 +300,7 @@ class UserJPADaoImplTest {
     @Test
     void findAll_WithSpecification_Negative() {
         // Given
-        Specification<User> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         when(userRepository.findAll(specification)).thenReturn(Collections.emptyList());
 
         // When

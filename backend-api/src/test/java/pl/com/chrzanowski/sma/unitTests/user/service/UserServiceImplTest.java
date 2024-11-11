@@ -194,25 +194,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testFindByFilter() {
-        UserFilter filter = UserFilter.builder()
-                .emailStartsWith("test")
-                .isEnabled(true).build();
-        when(userDao.findAll(any(Specification.class))).thenReturn(Collections.singletonList(user));
-        when(userMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(userDTO));
-
-
-        List<UserDTO> result = userService.findByFilter(filter);
-
-        assertEquals(1, result.size());
-        assertEquals("testUser", result.get(0).getUsername());
-
-        verify(userDao, times(1)).findAll(any(Specification.class));
-
-        verify(userMapper, times(1)).toDtoList(anyList());
-    }
-
-    @Test
     void testGetUser_UserExists() {
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
@@ -326,48 +307,6 @@ class UserServiceImplTest {
             securityUtilsMockedStatic.verify(SecurityUtils::getCurrentUserLogin, times(1));
         }
         verify(userDao, times(1)).findByUsername("nonexistentUser");
-    }
-
-    @Test
-    void testFindByFilterAndPage_Success() {
-        UserFilter filter = UserFilter.builder()
-                .emailStartsWith("test")
-                .isEnabled(true).build();
-        Pageable pageable = PageRequest.of(0, 10);
-        User user = User.builder().id(1L).username("testUser").email("test@example.com").build();
-        UserDTO userDTO = UserDTO.builder().id(1L).username("testUser").email("test@example.com").build();
-
-        when(userDao.findAll(any(Specification.class), eq(pageable)))
-                .thenReturn(new PageImpl<>(List.of(user)));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
-
-        Page<UserDTO> result = userService.findByFilterAndPage(filter, pageable);
-
-        assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
-        assertEquals("testUser", result.getContent().get(0).getUsername());
-
-        verify(userDao, times(1)).findAll(any(Specification.class), eq(pageable));
-        verify(userMapper, times(1)).toDto(any(User.class));
-    }
-
-    @Test
-    void testFindByFilterAndPage_NoResults() {
-        UserFilter filter = UserFilter.builder()
-                .emailStartsWith("test")
-                .isEnabled(true).build();
-        Pageable pageable = PageRequest.of(0, 10);
-        when(userDao.findAll(any(Specification.class), eq(pageable)))
-                .thenReturn(Page.empty(pageable));
-
-
-        Page<UserDTO> result = userService.findByFilterAndPage(filter, pageable);
-
-        assertNotNull(result);
-        assertTrue(result.isEmpty(), "Result should be empty");
-
-        verify(userDao, times(1)).findAll(any(Specification.class), eq(pageable));
-        verify(userMapper, times(0)).toDto(any(User.class));
     }
 
     @Test

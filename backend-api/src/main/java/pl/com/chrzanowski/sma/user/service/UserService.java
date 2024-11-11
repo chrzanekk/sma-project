@@ -27,10 +27,6 @@ public interface UserService {
 
     UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles);
 
-    List<UserDTO> findByFilter(UserFilter filter);
-
-    Page<UserDTO> findByFilterAndPage(UserFilter filter, Pageable pageable);
-
     UserDTO findById(Long id);
 
     List<UserDTO> findAll();
