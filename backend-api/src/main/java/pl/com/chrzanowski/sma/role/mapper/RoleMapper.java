@@ -2,8 +2,8 @@ package pl.com.chrzanowski.sma.role.mapper;
 
 import org.mapstruct.Mapper;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.role.model.Role;
 
 @Mapper(componentModel = "spring")
 public interface RoleMapper extends EntityMapper<RoleDTO, Role> {

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
-import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.common.dictionary.DictionaryDTO;
 import pl.com.chrzanowski.sma.common.dictionary.DictionaryService;
 import pl.com.chrzanowski.sma.common.enumeration.DictionaryType;
@@ -18,6 +17,7 @@ import pl.com.chrzanowski.sma.email.dao.SendEmailDao;
 import pl.com.chrzanowski.sma.email.dto.SentEmailDTO;
 import pl.com.chrzanowski.sma.email.mapper.SentEmailMapper;
 import pl.com.chrzanowski.sma.email.model.SendEmail;
+import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 
 import java.time.Instant;
 import java.util.List;

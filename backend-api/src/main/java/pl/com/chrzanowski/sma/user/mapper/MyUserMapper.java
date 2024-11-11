@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.user.mapper;
 
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.model.User;
 
 @Service
 public class MyUserMapper {

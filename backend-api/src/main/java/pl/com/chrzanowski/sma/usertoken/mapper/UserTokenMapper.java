@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.usertoken.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.model.UserToken;

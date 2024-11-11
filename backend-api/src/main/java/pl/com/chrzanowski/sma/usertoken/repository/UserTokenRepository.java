@@ -1,9 +1,6 @@
 package pl.com.chrzanowski.sma.usertoken.repository;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
-import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.usertoken.model.UserToken;
 
 import java.util.Optional;

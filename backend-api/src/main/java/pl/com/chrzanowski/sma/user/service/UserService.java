@@ -1,14 +1,11 @@
 package pl.com.chrzanowski.sma.user.service;
 
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
-import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
-import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 
 import java.util.List;
 import java.util.Set;

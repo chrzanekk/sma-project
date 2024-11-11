@@ -1,7 +1,8 @@
 package pl.com.chrzanowski.sma.role.dto;
 
-import lombok.*;
-import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 
 import java.time.Instant;
 

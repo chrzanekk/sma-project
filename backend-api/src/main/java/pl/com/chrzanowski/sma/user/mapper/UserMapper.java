@@ -2,16 +2,10 @@ package pl.com.chrzanowski.sma.user.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.chrzanowski.sma.role.dao.RoleDao;
-import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.role.model.Role;
-import pl.com.chrzanowski.sma.role.service.RoleService;
-import pl.com.chrzanowski.sma.user.model.User;
+import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-
-import java.util.Set;
-import java.util.stream.Collectors;
+import pl.com.chrzanowski.sma.user.model.User;
 
 @Mapper(componentModel = "spring", uses = {RoleMapper.class})
 public interface UserMapper extends EntityMapper<UserDTO, User> {

@@ -9,9 +9,9 @@ import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.usertoken.dao.UserTokenDao;
-import pl.com.chrzanowski.sma.usertoken.model.UserToken;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.mapper.UserTokenMapper;
+import pl.com.chrzanowski.sma.usertoken.model.UserToken;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

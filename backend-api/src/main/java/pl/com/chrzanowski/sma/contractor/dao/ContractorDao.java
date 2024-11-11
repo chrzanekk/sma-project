@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.contractor.dao;
 
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.util.List;
@@ -20,9 +20,9 @@ public interface ContractorDao {
 
     List<Contractor> findAll();
 
-    Page<Contractor> findAll(Specification<Contractor> specification, Pageable pageable);
+    Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable);
 
-    List<Contractor> findAll(Specification<Contractor> specification);
+    List<Contractor> findAll(BooleanBuilder specification);
 
     void deleteById(Long id);
 }

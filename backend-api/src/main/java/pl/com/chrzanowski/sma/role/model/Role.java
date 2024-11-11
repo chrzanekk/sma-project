@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.role.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
-import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.user.model.User;
 
 import java.time.Instant;

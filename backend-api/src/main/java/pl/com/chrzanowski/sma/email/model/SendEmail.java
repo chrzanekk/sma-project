@@ -2,7 +2,10 @@ package pl.com.chrzanowski.sma.email.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import pl.com.chrzanowski.sma.common.enumeration.Language;
 import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.user.model.User;

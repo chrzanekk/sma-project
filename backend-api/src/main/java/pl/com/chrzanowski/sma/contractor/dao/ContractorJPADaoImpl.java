@@ -1,10 +1,10 @@
 package pl.com.chrzanowski.sma.contractor.dao;
 
+import com.querydsl.core.BooleanBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
@@ -54,15 +54,15 @@ public class ContractorJPADaoImpl implements ContractorDao {
     }
 
     @Override
-    public Page<Contractor> findAll(Specification<Contractor> specification, Pageable pageable) {
+    public Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contractors with specification for page {}, {}", specification, pageable);
         return repository.findAll(specification, pageable);
     }
 
     @Override
-    public List<Contractor> findAll(Specification<Contractor> specification) {
+    public List<Contractor> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all contractors with specification {}", specification);
-        return repository.findAll(specification);
+        return (List<Contractor>) repository.findAll(specification);
     }
 
     @Override

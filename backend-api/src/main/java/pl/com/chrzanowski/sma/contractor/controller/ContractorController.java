@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
+import pl.com.chrzanowski.sma.contractor.service.ContractorQueryService;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
+import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 
 import java.util.List;
 
@@ -21,10 +22,13 @@ import java.util.List;
 public class ContractorController {
 
     private final Logger log = LoggerFactory.getLogger(ContractorController.class);
-    private final ContractorService contractorService;
 
-    public ContractorController(ContractorService contractorService) {
+    private final ContractorService contractorService;
+    private final ContractorQueryService contractorQueryService;
+
+    public ContractorController(ContractorService contractorService, ContractorQueryService contractorQueryService) {
         this.contractorService = contractorService;
+        this.contractorQueryService = contractorQueryService;
     }
 
     @GetMapping("/all")
@@ -37,16 +41,15 @@ public class ContractorController {
     @GetMapping("/")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
         log.debug("REST request to get all workshops by filter: {}", contractorFilter);
-        List<ContractorDTO> contractorDTOS = contractorService.findByFilter(contractorFilter);
+        List<ContractorDTO> contractorDTOS = contractorQueryService.findByFilter(contractorFilter);
         return ResponseEntity.ok().body(contractorDTOS);
     }
 
     @GetMapping("/page")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
-                                                                              Pageable pageable) {
+                                                                                Pageable pageable) {
         log.debug("REST request to get all workshops by filter: {}", contractorFilter);
-        Page<ContractorDTO> page = contractorService.findByFilterAndPage(contractorFilter,
-                pageable);
+        Page<ContractorDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
         HttpHeaders headers =
                 PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(),
                         page);

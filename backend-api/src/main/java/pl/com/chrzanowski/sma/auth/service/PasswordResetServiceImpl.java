@@ -7,10 +7,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
-import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
-import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserService;
+import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
+import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
 import java.time.LocalDateTime;
 

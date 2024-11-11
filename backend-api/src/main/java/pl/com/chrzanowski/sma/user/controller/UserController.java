@@ -11,8 +11,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserQueryService;
-import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import pl.com.chrzanowski.sma.user.service.UserService;
+import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 
 import java.util.List;
 

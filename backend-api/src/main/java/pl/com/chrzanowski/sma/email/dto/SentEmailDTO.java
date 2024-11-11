@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.sma.email.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Value;
 import pl.com.chrzanowski.sma.common.enumeration.Language;
 import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 

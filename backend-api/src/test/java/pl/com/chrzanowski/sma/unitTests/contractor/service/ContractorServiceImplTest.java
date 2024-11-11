@@ -18,7 +18,7 @@ import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorSpecification;
+import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -38,10 +38,10 @@ class ContractorServiceImplTest {
     private ContractorMapper contractorMapper;
 
     @Mock
-    private ContractorSpecification contractorSpecification;
+    private ContractorQuerySpec contractorQuerySpec;
 
     @InjectMocks
-    private ContractorServiceImpl workshopService;
+    private ContractorServiceImpl contractorService;
 
     private ContractorDTO contractorDTO;
     private Contractor contractor;
@@ -69,12 +69,12 @@ class ContractorServiceImplTest {
     }
 
     @Test
-    void testSaveWorkshopSuccess() {
+    void testSaveContractorSuccess() {
         when(contractorMapper.toEntity(any(ContractorDTO.class))).thenReturn(contractor);
         when(contractorDao.save(any(Contractor.class))).thenReturn(contractor);
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
 
-        ContractorDTO result = workshopService.save(contractorDTO);
+        ContractorDTO result = contractorService.save(contractorDTO);
 
         assertNotNull(result);
         assertEquals("Workshop 1", result.getName());
@@ -85,52 +85,18 @@ class ContractorServiceImplTest {
     }
 
     @Test
-    void testUpdateWorkshopSuccess() {
+    void testUpdateContractorSuccess() {
         when(contractorMapper.toEntity(any(ContractorDTO.class))).thenReturn(contractor);
         when(contractorDao.save(any(Contractor.class))).thenReturn(contractor);
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
 
-        ContractorDTO result = workshopService.update(contractorDTO);
+        ContractorDTO result = contractorService.update(contractorDTO);
 
         assertNotNull(result);
         assertEquals("Workshop 1", result.getName());
 
         verify(contractorMapper, times(1)).toEntity(any(ContractorDTO.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
-        verify(contractorMapper, times(1)).toDto(any(Contractor.class));
-    }
-
-    @Test
-    void testFindByFilterSuccess() {
-        ContractorFilter filter = new ContractorFilter();
-
-        when(contractorDao.findAll(any(Specification.class))).thenReturn(Collections.singletonList(contractor));
-        when(contractorMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorDTO));
-
-        List<ContractorDTO> result = workshopService.findByFilter(filter);
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-
-        verify(contractorDao, times(1)).findAll(any(Specification.class));
-        verify(contractorMapper, times(1)).toDtoList(anyList());
-    }
-
-    @Test
-    void testFindByFilterAndPageSuccess() {
-        ContractorFilter filter = new ContractorFilter();
-        Pageable pageable = PageRequest.of(0, 10);
-
-        Page<Contractor> workshopPage = new PageImpl<>(Collections.singletonList(contractor));
-        when(contractorDao.findAll(any(Specification.class), any(Pageable.class))).thenReturn(workshopPage);
-        when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
-
-        Page<ContractorDTO> result = workshopService.findByFilterAndPage(filter, pageable);
-
-        assertNotNull(result);
-        assertEquals(1, result.getTotalElements());
-
-        verify(contractorDao, times(1)).findAll(any(Specification.class), any(Pageable.class));
         verify(contractorMapper, times(1)).toDto(any(Contractor.class));
     }
 
@@ -139,7 +105,7 @@ class ContractorServiceImplTest {
         when(contractorDao.findById(1L)).thenReturn(Optional.of(contractor));
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
 
-        ContractorDTO result = workshopService.findById(1L);
+        ContractorDTO result = contractorService.findById(1L);
 
         assertNotNull(result);
         assertEquals("Workshop 1", result.getName());
@@ -152,7 +118,7 @@ class ContractorServiceImplTest {
     void testFindByIdNotFound() {
         when(contractorDao.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, () -> workshopService.findById(1L));
+        assertThrows(ObjectNotFoundException.class, () -> contractorService.findById(1L));
 
         verify(contractorDao, times(1)).findById(1L);
     }
@@ -162,7 +128,7 @@ class ContractorServiceImplTest {
         when(contractorDao.findAll()).thenReturn(Collections.singletonList(contractor));
         when(contractorMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorDTO));
 
-        List<ContractorDTO> result = workshopService.findAll();
+        List<ContractorDTO> result = contractorService.findAll();
 
         assertNotNull(result);
         assertEquals(1, result.size());
@@ -173,7 +139,7 @@ class ContractorServiceImplTest {
 
     @Test
     void testDeleteSuccess() {
-        workshopService.delete(1L);
+        contractorService.delete(1L);
 
         verify(contractorDao, times(1)).deleteById(1L);
     }

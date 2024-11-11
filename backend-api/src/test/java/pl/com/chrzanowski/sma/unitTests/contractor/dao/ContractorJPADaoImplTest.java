@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.unitTests.contractor.dao;
 
+import com.querydsl.core.BooleanBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -208,7 +209,7 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecificationAndPageable_Positive() {
         // Given
-        Specification<Contractor> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         PageRequest pageable = PageRequest.of(0, 10);
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
         Page<Contractor> contractorPage = new PageImpl<>(List.of(contractor));
@@ -227,7 +228,7 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecificationAndPageable_Negative() {
         // Given
-        Specification<Contractor> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         PageRequest pageable = PageRequest.of(0, 10);
         when(contractorRepository.findAll(specification, pageable)).thenReturn(Page.empty());
 
@@ -242,7 +243,7 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecification_Positive() {
         // Given
-        Specification<Contractor> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
         when(contractorRepository.findAll(specification)).thenReturn(List.of(contractor));
 
@@ -258,7 +259,7 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecification_Negative() {
         // Given
-        Specification<Contractor> specification = mock(Specification.class);
+        BooleanBuilder specification = mock(BooleanBuilder.class);
         when(contractorRepository.findAll(specification)).thenReturn(Collections.emptyList());
 
         // When
