@@ -137,4 +137,27 @@ class UserTokenJPADaoImplTest {
         verify(userTokenRepository, times(1)).deleteById(nonExistentId);
     }
 
+    @Test
+    void deleteTokenByUserId_Positive() {
+        // Given
+        Long userId = 1L;
+
+        // When
+        userTokenJPADaoImpl.deleteTokensByUserId(userId);
+
+        // Then
+        verify(userTokenRepository, times(1)).deleteUserTokenByUserId(userId);
+    }
+
+    @Test
+    void deleteTokenByUserId_Negative() {
+        // Given
+        Long nonExistentId = 999L;
+        doThrow(new RuntimeException("Delete failed")).when(userTokenRepository).deleteUserTokenByUserId(nonExistentId);
+
+        // When / Then
+        assertThrows(RuntimeException.class, () -> userTokenJPADaoImpl.deleteTokensByUserId(nonExistentId));
+        verify(userTokenRepository, times(1)).deleteUserTokenByUserId(nonExistentId);
+    }
+
 }

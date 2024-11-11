@@ -43,7 +43,11 @@ public class UserTokenServiceImpl implements UserTokenService {
         log.debug("Request to save token: {}, {}", tokenType.name(), token);
         if (userDTO == null) {
             throw new ObjectNotFoundException("User must not be null");
-        } else {
+        } else if (token == null || token.isEmpty()) {
+            throw new ObjectNotFoundException("Token must not be null or empty");
+        }
+
+        else {
             UserTokenDTO userTokenDTO = UserTokenDTO.builder()
                     .token(token)
                     .createDate(LocalDateTime.now())

@@ -92,4 +92,39 @@ class UserTokenRepositoryTest extends AbstractTestContainers {
         // Then
         assertTrue(deletedToken.isEmpty());
     }
+
+    @Test
+    void deleteByUserId_Positive() {
+        // Given
+        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        userRepository.save(user);
+        UserToken token = UserToken.builder()
+                .token("testToken123")
+                .user(user)
+                .createDate(LocalDateTime.now())
+                .expireDate(LocalDateTime.now().plusDays(1))
+                .tokenType(TokenType.CONFIRMATION_TOKEN)
+                .build();
+        UserToken savedToken = userTokenRepository.save(token);
+
+        // When
+        userTokenRepository.deleteUserTokenByUserId(user.getId());
+        var deletedToken = userTokenRepository.findById(savedToken.getId());
+
+        // Then
+        assertTrue(deletedToken.isEmpty());
+    }
+
+    @Test
+    void deleteByUserId_Negative() {
+        // Given
+        Long nonexistentId = 999L;
+
+        // When
+        userTokenRepository.deleteUserTokenByUserId(nonexistentId);
+        var deletedToken = userTokenRepository.findById(nonexistentId);
+
+        // Then
+        assertTrue(deletedToken.isEmpty());
+    }
 }

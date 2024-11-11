@@ -110,6 +110,18 @@ class UserTokenServiceImplTest {
     }
 
     @Test
+    void testSaveTokenWithEmptyToken() {
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+            userTokenService.saveToken(null, userDTO, TokenType.PASSWORD_RESET_TOKEN);
+        });
+
+        assertEquals("Token must not be null or empty", exception.getMessage());
+
+        verify(userTokenDao, never()).saveToken(any(UserToken.class));
+    }
+
+
+    @Test
     void testUpdateTokenSuccess() {
 
         UserToken updatedUserToken = UserToken.builder()
@@ -174,10 +186,43 @@ class UserTokenServiceImplTest {
     }
 
     @Test
+    void testGetTokenDataWithEmptyToken() {
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+            userTokenService.getTokenData(null);
+        });
+
+        assertEquals("Token not found.", exception.getMessage());
+
+        verify(userTokenDao, never()).findUserTokensByToken(anyString());
+    }
+
+    @Test
     void testDeleteTokenSuccess() {
 
         userTokenService.deleteToken(1L);
 
         verify(userTokenDao, times(1)).deleteTokenById(1L);
     }
+
+    @Test
+    void testDeleteTokenByUserIdSuccess() {
+
+        userTokenService.deleteTokenByUserId(1L);
+
+        verify(userTokenDao, times(1)).deleteTokensByUserId(1L);
+    }
+
+    @Test
+    void testDeleteTokenByNonExistingUserId() {
+        doThrow(new ObjectNotFoundException("User not found for id: 999")).when(userTokenDao).deleteTokensByUserId(999L);
+
+        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+            userTokenService.deleteTokenByUserId(999L);
+        });
+
+        assertEquals("User not found for id: 999", exception.getMessage());
+
+        verify(userTokenDao, times(1)).deleteTokensByUserId(999L);
+    }
+
 }
