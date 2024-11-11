@@ -197,18 +197,21 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFilterContractorsByAllFieldsSuccessfully() {
-        ContractorFilter filter = new ContractorFilter();
-        filter.setName("First");
-        filter.setTaxNumber("1234567890");
-        filter.setCity("Warsaw");
-        filter.setCountry(Country.POLAND);
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("name", "First");
+        queryParams.add("taxNumber", "1234567890");
+        queryParams.add("street", "Main Street");
+        queryParams.add("city", "Warsaw");
+        queryParams.add("buildingNo", "10");
+        queryParams.add("apartmentNo", "1A");
+        queryParams.add("postalCode", "00-001");
+        queryParams.add("country", Country.POLAND.name());
+        queryParams.add("page", "0");
+        queryParams.add("pageSize", "10");
 
         List<ContractorDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/")
-                        .queryParam("name", filter.getName())
-                        .queryParam("taxNumber", filter.getTaxNumber())
-                        .queryParam("city", filter.getCity())
-                        .queryParam("country", filter.getCountry().name())
+                .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
+                        .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
@@ -218,6 +221,33 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
         assertThat(contractors).hasSize(1);
         assertThat(contractors.get(0).getName()).isEqualTo("First Contractor");
+    }
+
+    @Test
+    void shouldFilterContractorsByAllFieldsSuccessfullyReturnZeroElements() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("name", "Second");
+        queryParams.add("taxNumber", "1234567890");
+        queryParams.add("street", "Second Street");
+        queryParams.add("city", "Warsaw");
+        queryParams.add("buildingNo", "10");
+        queryParams.add("apartmentNo", "1A");
+        queryParams.add("postalCode", "00-001");
+        queryParams.add("country", Country.POLAND.name());
+        queryParams.add("page", "0");
+        queryParams.add("pageSize", "10");
+
+        List<ContractorDTO> contractors = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
+                        .queryParams(queryParams)
+                        .build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ContractorDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(contractors).hasSize(0);
     }
 
     @Test

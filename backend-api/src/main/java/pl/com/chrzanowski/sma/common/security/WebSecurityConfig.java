@@ -70,6 +70,8 @@ public class WebSecurityConfig {
 
                         //ACCOUNT CONTROLLER
                         .requestMatchers("/api/account/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/api/user/**").hasAnyAuthority( "ROLE_ADMIN")
+                        .requestMatchers("/api/contractors/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
 
                         .anyRequest().authenticated()
                 );

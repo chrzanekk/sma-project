@@ -38,7 +38,7 @@ public class ContractorController {
         return ResponseEntity.ok().body(contractorDTOS);
     }
 
-    @GetMapping("/")
+    @GetMapping("/find")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
         log.debug("REST request to get all workshops by filter: {}", contractorFilter);
         List<ContractorDTO> contractorDTOS = contractorQueryService.findByFilter(contractorFilter);
