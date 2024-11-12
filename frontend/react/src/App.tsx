@@ -1,13 +1,13 @@
-import {Button} from '@/components/ui/button'
-import { Theme } from "@chakra-ui/react"
+import React from "react";
+import Navbar from "@/layout/Navbar.tsx";
 
 
-function App() {
+const App: React.FC = () => {
     return (
-        <Theme appearance="light">
-        <Button colorPalette={'green'} variant="surface">HIT ME</Button>
-        </Theme>
-    );
+        <div>
+            <Navbar/>
+        </div>
+    )
 }
 
 export default App;
