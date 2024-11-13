@@ -2,35 +2,34 @@
 
 import React from 'react'
 import {
-    Box,
-    Flex,
     Avatar,
+    Box,
+    Collapse,
+    Flex,
     HStack,
-    Text,
+    Icon,
     IconButton,
+    Image,
+    Link,
     Menu,
     MenuButton,
-    MenuList,
-    MenuItem,
     MenuDivider,
-    Stack,
-    Collapse,
+    MenuItem,
+    MenuList,
     Popover,
-    PopoverTrigger,
     PopoverContent,
+    PopoverTrigger,
+    Stack,
+    Text,
     useColorModeValue,
     useDisclosure,
-    Icon,
-    Image, VStack, Link
+    VStack
 } from '@chakra-ui/react'
-import {
-    HamburgerIcon,
-    CloseIcon,
-    ChevronRightIcon,
-} from '@chakra-ui/icons'
+import {ChevronRightIcon, CloseIcon, HamburgerIcon,} from '@chakra-ui/icons'
 import {FiChevronDown} from "react-icons/fi";
-import { NAV_ITEMS } from './navItems';
-import { USER_MENU_ITEMS } from './userMenuItems';
+import {getNavItems} from './navItems';
+import {getUserMenuItems} from './userMenuItems';
+import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 
 // Typy dla elementów nawigacyjnych
 interface NavItem {
@@ -39,8 +38,10 @@ interface NavItem {
     children?: Array<NavItem>
     href?: string
 }
+
 const Navbar: React.FC = () => {
-    const { isOpen, onToggle} = useDisclosure()
+    const {isOpen, onToggle} = useDisclosure();
+    const userMenuItems = getUserMenuItems();
 
     return (
         <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -48,9 +49,9 @@ const Navbar: React.FC = () => {
                 {/* Hamburger Icon */}
                 <IconButton
                     size={'md'}
-                    icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+                    icon={isOpen ? <CloseIcon/> : <HamburgerIcon/>}
                     aria-label={'Toggle Navigation'}
-                    display={{ md: 'none' }}
+                    display={{md: 'none'}}
                     onClick={onToggle}
                 />
 
@@ -64,8 +65,8 @@ const Navbar: React.FC = () => {
                             alt='S.M.A.'
                         />
                     </Box>
-                    <HStack as={'nav'} spacing={4} display={{ base: 'none', md: 'flex' }}>
-                        <DesktopNav />
+                    <HStack as={'nav'} spacing={4} display={{base: 'none', md: 'flex'}}>
+                        <DesktopNav/>
                     </HStack>
                 </HStack>
 
@@ -96,22 +97,23 @@ const Navbar: React.FC = () => {
                         <MenuList
                             bg={useColorModeValue('white', 'gray.900')}
                             borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                            {USER_MENU_ITEMS.map((item) => (
+                            {userMenuItems.map((item) => (
                                 <MenuItem key={item.label}>
-                                    <Link href={item.href} _hover={{ textDecoration: 'none' }}>
+                                    <Link href={item.href} _hover={{textDecoration: 'none'}}>
                                         {item.label}
                                     </Link>
                                 </MenuItem>
                             ))}
-                            <MenuDivider />
+                            <MenuDivider/>
                         </MenuList>
                     </Menu>
+                    <LanguageSwitcher/>
                 </Flex>
             </Flex>
 
             {/* Mobile Navigation */}
             <Collapse in={isOpen} animateOpacity>
-                <MobileNav />
+                <MobileNav/>
             </Collapse>
         </Box>
     )
@@ -121,10 +123,10 @@ const DesktopNav: React.FC = () => {
     const linkColor = useColorModeValue('gray.600', 'gray.200')
     const linkHoverColor = useColorModeValue('gray.800', 'white')
     const popoverContentBgColor = useColorModeValue('white', 'gray.800')
-
+    const navItems = getNavItems();
     return (
         <Stack direction={'row'} spacing={4}>
-            {NAV_ITEMS.map((navItem) => (
+            {navItems.map((navItem) => (
                 <Box key={navItem.label}>
                     <Popover trigger={'hover'} placement={'bottom-start'}>
                         <PopoverTrigger>
@@ -165,7 +167,7 @@ const DesktopNav: React.FC = () => {
     )
 }
 
-const DesktopSubNav: React.FC<NavItem> = ({ label, href, subLabel }) => {
+const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
     return (
         <Box
             as="a"
@@ -174,43 +176,45 @@ const DesktopSubNav: React.FC<NavItem> = ({ label, href, subLabel }) => {
             display={'block'}
             p={2}
             rounded={'md'}
-            _hover={{ bg: useColorModeValue('pink.50', 'gray.900') }}>
+            _hover={{bg: useColorModeValue('pink.50', 'gray.900')}}>
             <Stack direction={'row'} align={'center'}>
                 <Box>
-                    <Text transition={'all .3s ease'} _groupHover={{ color: 'pink.400' }} fontWeight={500}>
+                    <Text transition={'all .3s ease'} _groupHover={{color: 'pink.400'}} fontWeight={500}>
                         {label}
                     </Text>
                     <Text fontSize={'sm'}>{subLabel}</Text>
                 </Box>
-                <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon} />
+                <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon}/>
             </Stack>
         </Box>
     )
 }
 
 const MobileNav: React.FC = () => {
+    const navItems = getNavItems();
     return (
-        <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{ md: 'none' }}>
-            {NAV_ITEMS.map((navItem) => (
+        <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{md: 'none'}}>
+            {navItems.map((navItem) => (
                 <MobileNavItem key={navItem.label} {...navItem} />
             ))}
         </Stack>
     )
 }
 
-const MobileNavItem: React.FC<NavItem> = ({ label, children, href }) => {
-    const { isOpen, onToggle } = useDisclosure()
+const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
+    const {isOpen, onToggle} = useDisclosure()
 
     return (
         <Stack spacing={4} onClick={children && onToggle}>
-            <Box py={2} as="a" href={href ?? '#'} _hover={{ textDecoration: 'none' }}>
+            <Box py={2} as="a" href={href ?? '#'} _hover={{textDecoration: 'none'}}>
                 <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
                     {label}
                 </Text>
             </Box>
 
             <Collapse in={isOpen} animateOpacity>
-                <Stack pl={4} borderLeft={1} borderStyle={'solid'} borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                <Stack pl={4} borderLeft={1} borderStyle={'solid'}
+                       borderColor={useColorModeValue('gray.200', 'gray.700')}>
                     {children &&
                         children.map((child) => (
                             <Box as="a" key={child.label} py={2} href={child.href}>

@@ -1,3 +1,5 @@
+import {useTranslation} from "react-i18next";
+
 export interface NavItem {
     label: string;
     subLabel?: string;
@@ -5,35 +7,38 @@ export interface NavItem {
     href?: string;
 }
 
-export const NAV_ITEMS: Array<NavItem> = [
-    {
-        label: 'Dziennik rusztowań',
-        children: [
-            {
-                label: 'Lista dzienników',
-                subLabel: 'Przeglądaj utworzone dzienniki rusztowań',
-                href: '#',
-            },
-            {
-                label: 'Dodaj nowy',
-                subLabel: 'Stworzenie nowego dziennika rusztowań',
-                href: '#',
-            },
-        ],
-    },
-    {
-        label: 'Magazyn',
-        children: [
-            {
-                label: 'Główny',
-                subLabel: 'Magazyn główny',
-                href: '#',
-            },
-            {
-                label: 'Budowy',
-                subLabel: 'Przeglądaj stany magazynowe na budowach',
-                href: '#',
-            },
-        ],
-    },
-];
+export const getNavItems = (): Array<NavItem> => {
+    const {t} = useTranslation('navbar');
+    return [
+        {
+            label: t('diary'),
+            children: [
+                {
+                    label: t('diaryList'),
+                    subLabel: t('diaryListSubLabel'),
+                    href: '#',
+                },
+                {
+                    label: t('diaryAddNew'),
+                    subLabel: t('diaryAddNewSubLabel'),
+                    href: '#',
+                },
+            ],
+        },
+        {
+            label: t('warehouse'),
+            children: [
+                {
+                    label: t('mainWarehouse'),
+                    subLabel: t('mainWarehouseSubLabel'),
+                    href: '#',
+                },
+                {
+                    label: t('constructionSites'),
+                    subLabel: t('constructionSitesSubLabel'),
+                    href: '#',
+                },
+            ],
+        },
+    ];
+}

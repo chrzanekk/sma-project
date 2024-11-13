@@ -1,0 +1,12 @@
+{
+  "diary": "Scaffold Diary",
+  "diaryList": "Diary List",
+  "diaryListSubLabel": "Browse created scaffold diaries",
+  "diaryAddNew": "Add New",
+  "diaryAddNewSubLabel": "Create a new scaffold diary",
+  "warehouse": "Warehouse",
+  "mainWarehouse": "Main Warehouse",
+  "mainWarehouseSubLabel": "Main warehouse",
+  "constructionSites": "Construction Sites",
+  "constructionSitesSubLabel": "View warehouse states on construction sites"
+}

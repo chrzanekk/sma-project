@@ -1,0 +1,12 @@
+{
+  "diary": "Dziennik rusztowań",
+  "diaryList": "Lista dzienników",
+  "diaryListSubLabel": "Przeglądaj utworzone dzienniki rusztowań",
+  "diaryAddNew": "Dodaj nowy",
+  "diaryAddNewSubLabel": "Stworzenie nowego dziennika rusztowań",
+  "warehouse": "Magazyn",
+  "mainWarehouse": "Główny",
+  "mainWarehouseSubLabel": "Magazyn główny",
+  "constructionSites": "Budowy",
+  "constructionSitesSubLabel": "Przeglądaj stany magazynowe na budowach"
+}
