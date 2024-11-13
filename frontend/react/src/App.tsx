@@ -1,12 +1,18 @@
 import React from "react";
 import Navbar from "@/layout/Navbar.tsx";
+import Footer from "@/layout/Footer.tsx"
+import {Box} from "@chakra-ui/react";
 
 
 const App: React.FC = () => {
     return (
-        <div>
+        <Box minHeight="100vh" display="flex" flexDirection="column">
             <Navbar/>
-        </div>
+            <Box flex="1">
+                {/* Tutaj wstaw główną treść aplikacji */}
+            </Box>
+            <Footer/>
+        </Box>
     )
 }
 

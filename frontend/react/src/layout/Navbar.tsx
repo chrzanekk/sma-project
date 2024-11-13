@@ -21,7 +21,6 @@ import {
     PopoverTrigger,
     Stack,
     Text,
-    useColorModeValue,
     useDisclosure,
     VStack
 } from '@chakra-ui/react'
@@ -30,8 +29,9 @@ import {FiChevronDown} from "react-icons/fi";
 import {getNavItems} from './navItems';
 import {getUserMenuItems} from './userMenuItems';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
+import {themeColors} from '@/theme/themeColors.ts'
 
-// Typy dla elementów nawigacyjnych
+
 interface NavItem {
     label: string
     subLabel?: string
@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
     const userMenuItems = getUserMenuItems();
 
     return (
-        <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+        <Box bg={themeColors.bgColor()} px={4}>
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                 {/* Hamburger Icon */}
                 <IconButton
@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
                             alt='S.M.A.'
                         />
                     </Box>
-                    <HStack as={'nav'} spacing={4} display={{base: 'none', md: 'flex'}}>
+                    <HStack as={'nav'} spacing={1} display={{base: 'none', md: 'flex'}}>
                         <DesktopNav/>
                     </HStack>
                 </HStack>
@@ -73,7 +73,19 @@ const Navbar: React.FC = () => {
                 {/* User Menu */}
                 <Flex alignItems={'center'}>
                     <Menu>
-                        <MenuButton py={2} transition="all 0.3s" _focus={{boxShadow: 'none'}}>
+                        <MenuButton
+                            py={2}
+                            transition="all 0.3s"
+                            _focus={{boxShadow: 'none'}}
+                            rounded={'md'}
+                            p={2}
+                            _hover={{
+                                border: '1px solid white',
+                                textDecoration: 'none',
+                                bg: themeColors.highlightBgColor(),
+                                color: themeColors.popoverBgColor()
+                            }}
+                        >
                             <HStack>
                                 <Avatar
                                     size={'md'}
@@ -86,19 +98,29 @@ const Navbar: React.FC = () => {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="md">ZALOGOWANY JAKO:</Text>
-                                    <Text fontSize="md">TU BEDZIE USERNAME</Text>
+                                    <Text fontSize="small" color={themeColors.mobileFontColor()}
+                                    >ZALOGOWANY JAKO:</Text>
+                                    <Text fontSize="x-small" color={themeColors.mobileFontColor()}
+                                    >TU BEDZIE USERNAME</Text>
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
                                     <FiChevronDown/>
                                 </Box>
                             </HStack>
                         </MenuButton>
-                        <MenuList
-                            bg={useColorModeValue('white', 'gray.900')}
-                            borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                        <MenuList bg={themeColors.bgColor()} p={1}>
                             {userMenuItems.map((item) => (
-                                <MenuItem key={item.label}>
+                                <MenuItem key={item.label}
+                                          bg={themeColors.bgColor()}
+                                          rounded={'md'}
+                                          color={themeColors.mobileFontColor()}
+                                          p={2}
+                                          _hover={{
+                                              textDecoration: 'none',
+                                              bg: themeColors.highlightBgColor(),
+                                              color: themeColors.popoverBgColor(),
+                                              border: '1px solid white'
+                                          }}>
                                     <Link href={item.href} _hover={{textDecoration: 'none'}}>
                                         {item.label}
                                     </Link>
@@ -120,9 +142,6 @@ const Navbar: React.FC = () => {
 }
 
 const DesktopNav: React.FC = () => {
-    const linkColor = useColorModeValue('gray.600', 'gray.200')
-    const linkHoverColor = useColorModeValue('gray.800', 'white')
-    const popoverContentBgColor = useColorModeValue('white', 'gray.800')
     const navItems = getNavItems();
     return (
         <Stack direction={'row'} spacing={4}>
@@ -136,10 +155,13 @@ const DesktopNav: React.FC = () => {
                                 href={navItem.href ?? '#'}
                                 fontSize={'sm'}
                                 fontWeight={500}
-                                color={linkColor}
+                                color={themeColors.mobileFontColor()}
+                                rounded={'lg'}
                                 _hover={{
+                                    border: '1px solid white',
                                     textDecoration: 'none',
-                                    color: linkHoverColor,
+                                    bg: themeColors.highlightBgColor(),
+                                    color: themeColors.popoverBgColor()
                                 }}>
                                 {navItem.label}
                             </Box>
@@ -147,12 +169,14 @@ const DesktopNav: React.FC = () => {
 
                         {navItem.children && (
                             <PopoverContent
-                                border={0}
+                                border="1px solid white"
                                 boxShadow={'xl'}
-                                bg={popoverContentBgColor}
-                                p={4}
+                                bg={themeColors.bgColor()}
+                                color={themeColors.mobileFontColor()}
+                                p={2}
                                 rounded={'xl'}
-                                minW={'sm'}>
+                                minW={'sm'}
+                                mt={3}>
                                 <Stack>
                                     {navItem.children.map((child) => (
                                         <DesktopSubNav key={child.label} {...child} />
@@ -174,17 +198,24 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
             href={href}
             role={'group'}
             display={'block'}
-            p={2}
+            p={1}
             rounded={'md'}
-            _hover={{bg: useColorModeValue('pink.50', 'gray.900')}}>
+            bg={themeColors.bgColor()}
+            _hover={{
+                border: '1px solid white',
+                textDecoration: 'none',
+                bg: themeColors.highlightBgColor(),
+                color: themeColors.popoverBgColor()
+            }}
+        >
             <Stack direction={'row'} align={'center'}>
                 <Box>
-                    <Text transition={'all .3s ease'} _groupHover={{color: 'pink.400'}} fontWeight={500}>
+                    <Text fontWeight={500}>
                         {label}
                     </Text>
-                    <Text fontSize={'sm'}>{subLabel}</Text>
+                    <Text fontSize={'xs'}>{subLabel}</Text>
                 </Box>
-                <Icon color={'pink.400'} w={5} h={5} as={ChevronRightIcon}/>
+                <Icon w={5} h={5} as={ChevronRightIcon}/>
             </Stack>
         </Box>
     )
@@ -193,7 +224,7 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
 const MobileNav: React.FC = () => {
     const navItems = getNavItems();
     return (
-        <Stack bg={useColorModeValue('white', 'gray.800')} p={4} display={{md: 'none'}}>
+        <Stack bg={themeColors.bgColor()} p={4} display={{md: 'none'}}>
             {navItems.map((navItem) => (
                 <MobileNavItem key={navItem.label} {...navItem} />
             ))}
@@ -207,18 +238,26 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
     return (
         <Stack spacing={4} onClick={children && onToggle}>
             <Box py={2} as="a" href={href ?? '#'} _hover={{textDecoration: 'none'}}>
-                <Text fontWeight={600} color={useColorModeValue('gray.600', 'gray.200')}>
+                <Text fontWeight={600} color={themeColors.mobileFontColor()}>
                     {label}
                 </Text>
             </Box>
 
             <Collapse in={isOpen} animateOpacity>
                 <Stack pl={4} borderLeft={1} borderStyle={'solid'}
-                       borderColor={useColorModeValue('gray.200', 'gray.700')}>
+                       borderColor={themeColors.borderColor()}>
                     {children &&
                         children.map((child) => (
-                            <Box as="a" key={child.label} py={2} href={child.href}>
-                                {child.label}
+                            <Box as="a"
+                                 key={child.label}
+                                 py={2}
+                                 borderBottom={1}
+                                 borderStyle={'solid'}
+                                 borderColor={themeColors.borderColor()}
+                                 href={child.href}>
+                                <Text fontWeight={700} color={themeColors.mobileFontColorChildMenu()}>
+                                    {child.label}
+                                </Text>
                             </Box>
                         ))}
                 </Stack>
