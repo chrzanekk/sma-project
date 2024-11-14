@@ -16,7 +16,7 @@ export default function SmallWithLogoLeft() {
                         alt="Konrad Chrzanowski"
                         boxSize="45px"
                     />
-                    <Text fontWeight={700} color={themeColors.mobileFontColor()}>© 2024 Konrad Chrzanowski. All rights reserved.</Text>
+                    <Text fontWeight={700} color={themeColors.fontColor()}>© 2024 Konrad Chrzanowski. All rights reserved.</Text>
                 </HStack>
             </Stack>
         </Box>

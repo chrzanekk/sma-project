@@ -19,7 +19,7 @@ const LanguageSwitcher: React.FC = () => {
             <MenuButton
                 bg={themeColors.bgColor()}
                 ml={4}
-                color={themeColors.mobileFontColor()}
+                color={themeColors.fontColor()}
                 _hover={{
                     textDecoration: 'none',
                     bg: themeColors.highlightBgColor(),
@@ -37,7 +37,7 @@ const LanguageSwitcher: React.FC = () => {
                 <MenuItem
                     bg={themeColors.bgColor()}
                     p={2}
-                    color={themeColors.mobileFontColor()}
+                    color={themeColors.fontColor()}
                     rounded={'md'}
                     _hover={{
                         textDecoration: 'none',
@@ -49,7 +49,7 @@ const LanguageSwitcher: React.FC = () => {
                 <MenuItem
                     bg={themeColors.bgColor()}
                     rounded={'md'}
-                    color={themeColors.mobileFontColor()}
+                    color={themeColors.fontColor()}
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),

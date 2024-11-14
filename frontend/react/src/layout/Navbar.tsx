@@ -98,9 +98,9 @@ const Navbar: React.FC = () => {
                                     alignItems="flex-start"
                                     spacing="1px"
                                     ml="2">
-                                    <Text fontSize="small" color={themeColors.mobileFontColor()}
+                                    <Text fontSize="small" color={themeColors.fontColor()}
                                     >ZALOGOWANY JAKO:</Text>
-                                    <Text fontSize="x-small" color={themeColors.mobileFontColor()}
+                                    <Text fontSize="x-small" color={themeColors.fontColor()}
                                     >TU BEDZIE USERNAME</Text>
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
                                 <MenuItem key={item.label}
                                           bg={themeColors.bgColor()}
                                           rounded={'md'}
-                                          color={themeColors.mobileFontColor()}
+                                          color={themeColors.fontColor()}
                                           p={2}
                                           _hover={{
                                               textDecoration: 'none',
@@ -155,7 +155,7 @@ const DesktopNav: React.FC = () => {
                                 href={navItem.href ?? '#'}
                                 fontSize={'sm'}
                                 fontWeight={500}
-                                color={themeColors.mobileFontColor()}
+                                color={themeColors.fontColor()}
                                 rounded={'lg'}
                                 _hover={{
                                     border: '1px solid white',
@@ -172,7 +172,7 @@ const DesktopNav: React.FC = () => {
                                 border="1px solid white"
                                 boxShadow={'xl'}
                                 bg={themeColors.bgColor()}
-                                color={themeColors.mobileFontColor()}
+                                color={themeColors.fontColor()}
                                 p={2}
                                 rounded={'xl'}
                                 minW={'sm'}
@@ -238,7 +238,7 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
     return (
         <Stack spacing={4} onClick={children && onToggle}>
             <Box py={2} as="a" href={href ?? '#'} _hover={{textDecoration: 'none'}}>
-                <Text fontWeight={600} color={themeColors.mobileFontColor()}>
+                <Text fontWeight={600} color={themeColors.fontColor()}>
                     {label}
                 </Text>
             </Box>
@@ -255,7 +255,7 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
                                  borderStyle={'solid'}
                                  borderColor={themeColors.borderColor()}
                                  href={child.href}>
-                                <Text fontWeight={700} color={themeColors.mobileFontColorChildMenu()}>
+                                <Text fontWeight={700} color={themeColors.fontColorChildMenu()}>
                                     {child.label}
                                 </Text>
                             </Box>
