@@ -3,6 +3,7 @@ import {login as performLogin} from "../services/auth-service.ts";
 import {jwtDecode} from "jwt-decode";
 import {User} from "../types/user-types.ts";
 import {AuthContextType, DecodedToken} from "@/types/auth-context-types.ts";
+import {JwtPayload} from "@/types/jwt-payload.ts";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -22,12 +23,11 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         }
     };
 
-    const setUserData = (decodedToken: DecodedToken) => {
+    const setUserData = (decodedToken: JwtPayload) => {
         const userData: User = {
-            id: decodedToken.id,
-            email: decodedToken.email,
-            username: decodedToken.sub,
-            roles: decodedToken.scopes,
+            login: decodedToken.sub,
+            //todo convert authorities to set<roles>
+            roles: decodedToken.authorities,
         };
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
@@ -59,7 +59,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
             if (!jwtToken) {
                 throw new Error("Authorization token not found in response headers");
             }
-
             localStorage.setItem("auth", jwtToken);
 
             const decodedToken = jwtDecode<DecodedToken>(jwtToken);

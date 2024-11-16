@@ -12,12 +12,15 @@ const RegisterForm = () => {
     return (
         <Formik
             initialValues={{
-                username: '',
+                login: '',
                 email: '',
-                password: ''
+                password: '',
+                firstName: '',
+                lastName: '',
+                position: ''
             }}
             validationSchema={Yup.object({
-                userName: Yup.string()
+                login: Yup.string()
                     .max(15, 'Must be 15 characters or less')
                     .required('Required'),
                 email: Yup.string()
@@ -26,6 +29,14 @@ const RegisterForm = () => {
                 password: Yup.string()
                     .min(4, 'Must be 4 characters or more')
                     .max(10, 'Must be 10 characters or less')
+                    .required('Required'),
+                firstName: Yup.string()
+                    .min(1, 'Must be 1 character or more')
+                    .max(30, 'Must be 10 characters or less')
+                    .required('Required'),
+                lastName: Yup.string()
+                    .min(1, 'Must be 1 character or more')
+                    .max(30, 'Must be 10 characters or less')
                     .required('Required')
             })}
             onSubmit={async (register: RegisterRequest, {setSubmitting}) => {
@@ -34,7 +45,7 @@ const RegisterForm = () => {
                     await registerUser(register);
                     successNotification(
                         "User registered successful.",
-                        `${register.username} was successfully saved. Please check your email to activate your account.`
+                        `${register.login} was successfully saved. Please check your email to activate your account.`
                     );
                 } catch (err: any) {
                     console.error(err);
@@ -64,7 +75,7 @@ const RegisterForm = () => {
                     <Stack spacing="24px">
                         <MyTextInput
                             label="Login"
-                            name="username"
+                            name="login"
                             type="text"
                             placeholder="login"
                         />
@@ -79,6 +90,18 @@ const RegisterForm = () => {
                             name="password"
                             type="password"
                             placeholder="Pick a secure password"
+                        />
+                        <MyTextInput
+                            label="Imię"
+                            name="firstName"
+                            type="text"
+                            placeholder="Jan"
+                        />
+                        <MyTextInput
+                            label="Nazwisko"
+                            name="lastName"
+                            type="text"
+                            placeholder="Kowalski"
                         />
                         <Button isDisabled={!isValid || isSubmitting} type="submit">
                             Submit

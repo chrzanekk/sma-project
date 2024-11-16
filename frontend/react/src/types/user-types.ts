@@ -1,5 +1,5 @@
 export interface LoginRequest {
-    username: string;
+    login: string;
     password: string;
     rememberMe?: boolean;
 }
@@ -15,16 +15,19 @@ export interface PasswordResetRequest {
 }
 
 export interface RegisterRequest {
-    username: string;
+    login: string;
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
+    position: string | "";
     role?: Set<string>;
 }
 
 export interface User {
     id?: number;
     email: string;
-    username: string;
+    login: string;
     password?: string;
     roles?: Set<string>;
 }
@@ -32,7 +35,10 @@ export interface User {
 export interface UserInfo {
     id?: number;
     email: string;
-    username: string;
+    login: string;
+    firstName: string;
+    lastName: string;
+    position: string;
     roles?: Set<string>;
 }
 

@@ -1,67 +1,53 @@
 'use client'
 
-import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Checkbox,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    useColorModeValue,
-} from '@chakra-ui/react'
+import {Flex, Image, Stack, Text} from '@chakra-ui/react'
+import {useAuth} from "@/context/AuthContext.tsx";
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
+import LoginForm from "./LoginForm.jsx";
 
-export default function SimpleCard() {
+const Login = () => {
+
+    const {user} = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (user) {
+            navigate("/dashboard");
+        }
+    })
+
     return (
-        <Flex
-            minH={'100vh'}
-            align={'center'}
-            justify={'center'}
-            bg={useColorModeValue('gray.50', 'gray.800')}>
-            <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-                <Stack align={'center'}>
-                    <Heading fontSize={'4xl'}>Sign in to your account</Heading>
-                    <Text fontSize={'lg'} color={'gray.600'}>
-                        to enjoy all of our cool <Text color={'blue.400'}>features</Text> ✌️
-                    </Text>
+        <Stack minH={'100vh'} direction={{base: 'column', md: 'row'}}>
+            <Flex p={8} flex={1} align={'center'} justify={'center'}>
+                <Stack spacing={4} w={'full'} maxW={'md'}>
+                    <LoginForm/>
+                    {/*<Link color={"blue.600"} href="/register" align={'center'}>*/}
+                    {/*    Dont have an account? Register now*/}
+                    {/*</Link>*/}
                 </Stack>
-                <Box
-                    rounded={'lg'}
-                    bg={useColorModeValue('white', 'gray.700')}
-                    boxShadow={'lg'}
-                    p={8}>
-                    <Stack spacing={4}>
-                        <FormControl id="email">
-                            <FormLabel>Email address</FormLabel>
-                            <Input type="email" />
-                        </FormControl>
-                        <FormControl id="password">
-                            <FormLabel>Password</FormLabel>
-                            <Input type="password" />
-                        </FormControl>
-                        <Stack spacing={10}>
-                            <Stack
-                                direction={{ base: 'column', sm: 'row' }}
-                                align={'start'}
-                                justify={'space-between'}>
-                                <Checkbox>Remember me</Checkbox>
-                                <Text color={'blue.400'}>Forgot password?</Text>
-                            </Stack>
-                            <Button
-                                bg={'blue.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
-                                Sign in
-                            </Button>
-                        </Stack>
-                    </Stack>
-                </Box>
-            </Stack>
-        </Flex>
+            </Flex>
+            <Flex flex={1}
+                  p={10}
+                  flexDirection='column'
+                  alignItems={'center'}
+                  justifyContent={'center'}
+                  bgGradient={{sm: 'linear(to-r,blue.200,purple.600)'}}>
+                <Text fontSize={"6xl"} color={'white'} fontWeight={'bold'} mb={5}>
+                    TEST ENVIRONMENT
+                </Text>
+                <Image
+                    alt={'Login Image'}
+                    objectFit="scale-down"
+                    src={
+                        '/img/logo.jpg'
+                    }
+                    width={'600px'}
+                    height={'auto'}
+                />
+            </Flex>
+        </Stack>
     )
 }
+
+export default Login
