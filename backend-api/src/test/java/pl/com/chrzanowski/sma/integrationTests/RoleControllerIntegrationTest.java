@@ -13,12 +13,11 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
-import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
@@ -45,6 +44,9 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private Flyway flyway;
 
+    @Autowired
+    private UserHelper userHelper;
+
     private String jwtToken;
 
     @BeforeEach
@@ -66,39 +68,8 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        RegisterRequest existingUser = RegisterRequest.builder()
-                .username("username")
-                .password("password")
-                .email("username@test.com")
-                .build();
-
-        String existingResponse = webTestClient.post().uri("/api/auth/register")
-                .body(Mono.just(existingUser), RegisterRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(MessageResponse.class)
-                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
-                .exchange()
-                .expectStatus().isOk();
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .username(existingUser.getUsername())
-                .password(existingUser.getPassword())
-                .rememberMe(false).build();
-
-        JWTToken result = webTestClient.post()
-                .uri("/api/auth/login")
-                .body(Mono.just(loginRequest), LoginRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(JWTToken.class)
-                .returnResult().getResponseBody();
-
-        assertThat(result).isNotNull();
-        this.jwtToken = result.getTokenValue();
+        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
     }
 
     @Test

@@ -28,3 +28,16 @@ export interface User {
     password?: string;
     roles?: Set<string>;
 }
+
+export interface UserInfo {
+    id?: number;
+    email: string;
+    username: string;
+    roles?: Set<string>;
+}
+
+export interface UserPasswordChangeRequest {
+    userId: number;
+    password: string;
+    newPassword: string;
+}

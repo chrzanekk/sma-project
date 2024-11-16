@@ -55,6 +55,8 @@ export default function UserProfileEdit() {
                             <Button w="full">Change Icon</Button>
                         </Center>
                     </Stack>
+
+
                 </FormControl>
                 <FormControl id="userName" isRequired>
                     <FormLabel>User name</FormLabel>

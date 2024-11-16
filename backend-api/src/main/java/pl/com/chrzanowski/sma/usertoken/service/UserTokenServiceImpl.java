@@ -54,7 +54,7 @@ public class UserTokenServiceImpl implements UserTokenService {
                     .expireDate(LocalDateTime.now().plusMinutes(TOKEN_VALIDITY_TIME_IN_MINUTES))
                     .userId(userDTO.getId())
                     .email(userDTO.getEmail())
-                    .userName(userDTO.getUsername())
+                    .login(userDTO.getLogin())
                     .tokenType(tokenType)
                     .build();
             return userTokenMapper.toDto(userTokenDao.saveToken(userTokenMapper.toEntity(userTokenDTO)));

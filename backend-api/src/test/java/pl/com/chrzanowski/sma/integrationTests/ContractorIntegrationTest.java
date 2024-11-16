@@ -21,7 +21,6 @@ import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.model.Role;
@@ -58,8 +57,9 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     private ContractorRepository contractorRepository;
 
     private String jwtToken;
+
     @Autowired
-    private ContractorMapper contractorMapper;
+    private UserHelper userHelper;
 
     @BeforeEach
     void setUp() {
@@ -80,33 +80,9 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        RegisterRequest existingUser = RegisterRequest.builder()
-                .username("username")
-                .password("password")
-                .email("username@test.com")
-                .role(Set.of(adminRole.getName()))
-                .build();
-
-        UserHelper.registerUser(existingUser, webTestClient);
-        RegisterRequest secondUser = RegisterRequest.builder()
-                .username("second")
-                .password("password")
-                .email("second@test.com")
-                .role(Set.of(userRole.getName()))
-                .build();
-        UserHelper.registerUser(secondUser, webTestClient);
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .username(existingUser.getUsername())
-                .password(existingUser.getPassword())
-                .rememberMe(false).build();
-
-        this.jwtToken = UserHelper.authenticateUser(loginRequest, webTestClient);
+        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        userHelper.registerSecondUser(webTestClient);
+        this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
 
         createContractor(null, "First Contractor", "1234567890", "Main Street", "10", "1A",
                 "00-001", "Warsaw", Country.POLAND);

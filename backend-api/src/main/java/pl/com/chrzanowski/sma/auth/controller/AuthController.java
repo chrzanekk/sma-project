@@ -14,6 +14,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
@@ -32,11 +33,15 @@ import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
 import pl.com.chrzanowski.sma.common.util.TokenUtil;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/api/auth")
@@ -53,15 +58,17 @@ public class AuthController {
     private final PasswordResetService passwordResetService;
     private final SendEmailService sendEmailService;
     private final UserService userService;
+    private final UserMapper userMapper;
     private final UserTokenService userTokenService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, PasswordResetService passwordResetService, SendEmailService sendEmailService, UserService userService, UserTokenService userTokenService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, PasswordResetService passwordResetService, SendEmailService sendEmailService, UserService userService, UserMapper userMapper, UserTokenService userTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.passwordResetService = passwordResetService;
         this.sendEmailService = sendEmailService;
         this.userService = userService;
+        this.userMapper = userMapper;
         this.userTokenService = userTokenService;
     }
 
@@ -70,12 +77,16 @@ public class AuthController {
     public ResponseEntity<JWTToken> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         log.debug("REST request to login user {}", loginRequest);
         LoginRequest updatedRequest =
-                loginRequest.toBuilder().username(loginRequest.getUsername().toLowerCase()).build();
+                loginRequest.toBuilder().login(loginRequest.getLogin().toLowerCase()).build();
         UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(updatedRequest.getUsername(), updatedRequest.getPassword());
+                new UsernamePasswordAuthenticationToken(updatedRequest.getLogin(), updatedRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
+//        UserDetails principal = (UserDetails) authentication.getPrincipal();
+//        UserDTO authenticatedUser = userService.;
+//        UserDTO userDTO = userMapper.toDto(principal);
+//        Map<String, Object> claims = setClaims(userDTO);
+//        String newToken = jwtUtils.issueToken(principal.getLogin(), claims);
         String jwt = jwtUtils.generateJwtToken(authentication);
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthTokenFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -92,9 +103,9 @@ public class AuthController {
     @Transactional
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         log.debug("REST request to register new user {}", registerRequest);
-        RegisterRequest updatedRequest =
-                RegisterRequest.builder(registerRequest).username(registerRequest.getUsername().toLowerCase()).build();
-        if (isUsernameTaken(updatedRequest.getUsername())) {
+        RegisterRequest updatedRequest = registerRequest.toBuilder()
+                .login(registerRequest.getLogin().toLowerCase()).build();
+        if (isUsernameTaken(updatedRequest.getLogin())) {
             throw new UsernameAlreadyExistsException("Error. Username is already in use.");
         }
 
@@ -170,5 +181,14 @@ public class AuthController {
         if (!request.password().equals(request.confirmPassword())) {
             throw new PasswordNotMatchException("Password not match");
         }
+    }
+
+    private Map<String, Object> setClaims(UserDTO userDTO) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", userDTO.getId());
+        claims.put("username", userDTO.getLogin());
+        claims.put("email", userDTO.getEmail());
+        claims.put("roles", userDTO.getRoles());
+        return claims;
     }
 }

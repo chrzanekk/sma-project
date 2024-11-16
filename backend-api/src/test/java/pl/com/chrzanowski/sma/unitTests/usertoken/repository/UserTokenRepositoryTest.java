@@ -29,7 +29,13 @@ class UserTokenRepositoryTest extends AbstractTestContainers {
     @Test
     void findUserTokenByToken_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
         UserToken token = UserToken.builder()
                 .token("testToken123")
@@ -46,7 +52,7 @@ class UserTokenRepositoryTest extends AbstractTestContainers {
         // Then
         assertTrue(foundToken.isPresent());
         assertEquals("testToken123", foundToken.get().getToken());
-        assertEquals("testuser", foundToken.get().getUser().getUsername());
+        assertEquals("testuser", foundToken.get().getUser().getLogin());
     }
 
     @Test
@@ -61,7 +67,13 @@ class UserTokenRepositoryTest extends AbstractTestContainers {
     @Test
     void deleteById_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
         UserToken token = UserToken.builder()
                 .token("testToken123")
@@ -96,7 +108,13 @@ class UserTokenRepositoryTest extends AbstractTestContainers {
     @Test
     void deleteByUserId_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
         UserToken token = UserToken.builder()
                 .token("testToken123")

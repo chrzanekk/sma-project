@@ -15,7 +15,7 @@ public class UserTokenDTO {
     Long id;
     String token;
     Long userId;
-    String userName;
+    String login;
     String email;
     LocalDateTime createDate;
     LocalDateTime expireDate;

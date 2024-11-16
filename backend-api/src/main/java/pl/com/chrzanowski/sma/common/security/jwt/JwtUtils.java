@@ -1,9 +1,6 @@
 package pl.com.chrzanowski.sma.common.security.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
@@ -15,7 +12,10 @@ import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -68,6 +68,29 @@ public class JwtUtils {
                 .signWith(key())
                 .compact();
     }
+    public String issueToken(String subject, Map<String, Object> claims) {
+        return Jwts.builder()
+                .claims(claims)
+                .subject(subject)
+                .issuer("http:://kondzioczanek.com")
+                .issuedAt(Date.from(Instant.now()))
+                .expiration(Date.from(Instant.now().plus(jwtExpirationMs, ChronoUnit.MILLIS)))
+                .signWith(key())
+                .compact();
+    }
+
+    public String issueToken(String subject, String... scopes) {
+        return issueToken(subject, Map.of("scopes", scopes));
+    }
+
+    public String getSubject(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parser().verifyWith(key()).build().parseSignedClaims(token).getPayload();
+    }
+
 
 
     private SecretKey key() {

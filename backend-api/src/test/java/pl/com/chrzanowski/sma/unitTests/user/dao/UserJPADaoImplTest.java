@@ -45,7 +45,7 @@ class UserJPADaoImplTest {
     @Test
     void save_Positive() {
         // Given
-        User user = User.builder().username("testuser").email("test@example.com").build();
+        User user = User.builder().login("testuser").email("test@example.com").build();
         when(userRepository.save(user)).thenReturn(user);
 
         // When
@@ -59,7 +59,7 @@ class UserJPADaoImplTest {
     @Test
     void save_Negative() {
         // Given
-        User user = User.builder().username("testuser").email("test@example.com").build();
+        User user = User.builder().login("testuser").email("test@example.com").build();
         when(userRepository.save(user)).thenThrow(new RuntimeException("Save failed"));
 
         // When / Then
@@ -101,31 +101,31 @@ class UserJPADaoImplTest {
     @Test
     void findByUsername_Positive() {
         // Given
-        String username = "testuser";
-        User user = User.builder().username(username).build();
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        String login = "testuser";
+        User user = User.builder().login(login).build();
+        when(userRepository.findByLogin(login)).thenReturn(Optional.of(user));
 
         // When
-        Optional<User> foundUser = userJPADaoImpl.findByUsername(username);
+        Optional<User> foundUser = userJPADaoImpl.findByUsername(login);
 
         // Then
         assertTrue(foundUser.isPresent());
         assertEquals(user, foundUser.get());
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).findByLogin(login);
     }
 
     @Test
     void findByUsername_Negative() {
         // Given
-        String username = "nonexistentuser";
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty());
+        String login = "nonexistentuser";
+        when(userRepository.findByLogin(login)).thenReturn(Optional.empty());
 
         // When
-        Optional<User> foundUser = userJPADaoImpl.findByUsername(username);
+        Optional<User> foundUser = userJPADaoImpl.findByUsername(login);
 
         // Then
         assertTrue(foundUser.isEmpty());
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).findByLogin(login);
     }
 
     @Test
@@ -160,29 +160,29 @@ class UserJPADaoImplTest {
     @Test
     void existsByUsername_Positive() {
         // Given
-        String username = "testuser";
-        when(userRepository.existsByUsername(username)).thenReturn(true);
+        String login = "testuser";
+        when(userRepository.existsByLogin(login)).thenReturn(true);
 
         // When
-        Boolean exists = userJPADaoImpl.existsByUsername(username);
+        Boolean exists = userJPADaoImpl.existsByUsername(login);
 
         // Then
         assertTrue(exists);
-        verify(userRepository, times(1)).existsByUsername(username);
+        verify(userRepository, times(1)).existsByLogin(login);
     }
 
     @Test
     void existsByUsername_Negative() {
         // Given
-        String username = "nonexistentuser";
-        when(userRepository.existsByUsername(username)).thenReturn(false);
+        String login = "nonexistentuser";
+        when(userRepository.existsByLogin(login)).thenReturn(false);
 
         // When
-        Boolean exists = userJPADaoImpl.existsByUsername(username);
+        Boolean exists = userJPADaoImpl.existsByUsername(login);
 
         // Then
         assertFalse(exists);
-        verify(userRepository, times(1)).existsByUsername(username);
+        verify(userRepository, times(1)).existsByLogin(login);
     }
 
     @Test
@@ -219,8 +219,8 @@ class UserJPADaoImplTest {
     @Test
     void findAll_Positive() {
         // Given
-        User user1 = User.builder().username("user1").build();
-        User user2 = User.builder().username("user2").build();
+        User user1 = User.builder().login("user1").build();
+        User user2 = User.builder().login("user2").build();
         when(userRepository.findAll()).thenReturn(List.of(user1, user2));
 
         // When
@@ -252,7 +252,7 @@ class UserJPADaoImplTest {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
         Pageable pageable = PageRequest.of(0, 2);
-        User user1 = User.builder().username("user1").build();
+        User user1 = User.builder().login("user1").build();
         Page<User> page = new PageImpl<>(List.of(user1), pageable, 1);
         when(userRepository.findAll(specification, pageable)).thenReturn(page);
 
@@ -285,7 +285,7 @@ class UserJPADaoImplTest {
     void findAll_WithSpecification_Positive() {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        User user1 = User.builder().username("user1").build();
+        User user1 = User.builder().login("user1").build();
         when(userRepository.findAll(specification)).thenReturn(List.of(user1));
 
         // When

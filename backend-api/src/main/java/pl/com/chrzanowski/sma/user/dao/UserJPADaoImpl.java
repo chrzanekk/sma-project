@@ -36,8 +36,8 @@ public class UserJPADaoImpl implements UserDao {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        log.debug("DAO: Find user by username: {}", username);
-        return userRepository.findByUsername(username);
+        log.debug("DAO: Find user by login: {}", username);
+        return userRepository.findByLogin(username);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class UserJPADaoImpl implements UserDao {
 
     @Override
     public Boolean existsByUsername(String username) {
-        log.debug("DAO: Check if user exists by username: {}", username);
-        return userRepository.existsByUsername(username);
+        log.debug("DAO: Check if user exists by login: {}", username);
+        return userRepository.existsByLogin(username);
     }
 
     @Override

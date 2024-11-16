@@ -26,10 +26,10 @@ import {
 } from '@chakra-ui/react'
 import {ChevronRightIcon, CloseIcon, HamburgerIcon,} from '@chakra-ui/icons'
 import {FiChevronDown} from "react-icons/fi";
-import {getNavItems} from './navItems';
-import {getUserMenuItems} from './userMenuItems';
+import {getNavItems} from './nav-items.ts';
+import {getUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
-import {themeColors} from '@/theme/themeColors.ts'
+import {themeColors} from '@/theme/theme-colors.ts'
 
 
 interface NavItem {

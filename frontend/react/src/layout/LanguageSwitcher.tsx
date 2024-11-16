@@ -2,7 +2,7 @@ import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
 import {ChevronDownIcon} from "@chakra-ui/icons";
-import {themeColors} from "@/theme/themeColors.ts";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 const LanguageSwitcher: React.FC = () => {
     const {i18n} = useTranslation();

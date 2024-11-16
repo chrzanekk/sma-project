@@ -19,11 +19,11 @@ import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
-import pl.com.chrzanowski.sma.usertoken.repository.UserTokenRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -54,6 +54,9 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private Flyway flyway;
 
+    @Autowired
+    private UserHelper userHelper;
+
     private String jwtToken;
     private User registeredUser;
 
@@ -76,39 +79,8 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        RegisterRequest existingUser = RegisterRequest.builder()
-                .username("username")
-                .password("password")
-                .email("username@test.com")
-                .build();
-
-        String existingResponse = webTestClient.post().uri("/api/auth/register")
-                .body(Mono.just(existingUser), RegisterRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(MessageResponse.class)
-                .returnResult().getResponseHeaders().getFirst("Confirmation-Token");
-
-        webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
-                .exchange()
-                .expectStatus().isOk();
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .username(existingUser.getUsername())
-                .password(existingUser.getPassword())
-                .rememberMe(false).build();
-
-        JWTToken result = webTestClient.post()
-                .uri("/api/auth/login")
-                .body(Mono.just(loginRequest), LoginRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(JWTToken.class)
-                .returnResult().getResponseBody();
-
-        assertThat(result).isNotNull();
-        this.jwtToken = result.getTokenValue();
+        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
     }
 
     @Test
@@ -123,7 +95,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(response).isNotNull();
-        assertThat(response.username()).isEqualTo("username");
+        assertThat(response.login()).isEqualTo("login");
     }
 
     @Test
@@ -131,7 +103,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         registeredUser = userRepository.findAll().get(0);
         UserDTO userDTO = UserDTO.builder()
                 .id(registeredUser.getId())
-                .username("newUsername")
+                .login("newUsername")
                 .email("newemail@test.com")
                 .build();
 
@@ -144,7 +116,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .expectStatus().isOk();
 
         User updatedUser = userRepository.findById(registeredUser.getId()).orElseThrow();
-        assertThat(updatedUser.getUsername()).isEqualTo("newUsername");
+        assertThat(updatedUser.getLogin()).isEqualTo("newUsername");
         assertThat(updatedUser.getEmail()).isEqualTo("newemail@test.com");
     }
 
@@ -153,7 +125,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         registeredUser = userRepository.findAll().get(0);
         UserDTO invalidUserDTO = UserDTO.builder()
                 .id(registeredUser.getId())
-                .username("") // Invalid data: username cannot be empty
+                .login("") // Invalid data: login cannot be empty
                 .email("invalidemail")
                 .build();
 

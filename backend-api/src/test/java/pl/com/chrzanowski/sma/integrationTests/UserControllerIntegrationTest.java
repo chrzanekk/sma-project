@@ -14,8 +14,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
-import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
@@ -24,11 +22,9 @@ import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,9 +49,13 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     @MockBean
     private SendEmailService sendEmailService;
 
-    private String jwtToken;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserHelper userHelper;
+
+    private String jwtToken;
 
     @BeforeEach
     void setUp() {
@@ -76,43 +76,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-        Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
-
-        RegisterRequest existingUser = RegisterRequest.builder()
-                .username("username")
-                .password("password")
-                .email("username@test.com")
-                .role(Set.of(adminRole.getName()))
-                .build();
-
-        UserHelper.registerUser(existingUser, webTestClient);
-        RegisterRequest secondUser = RegisterRequest.builder()
-                .username("second")
-                .password("password")
-                .email("second@test.com")
-                .role(Set.of(userRole.getName()))
-                .build();
-        UserHelper.registerUser(secondUser, webTestClient);
-
-        LoginRequest loginRequest = LoginRequest.builder()
-                .username(existingUser.getUsername())
-                .password(existingUser.getPassword())
-                .rememberMe(false).build();
-
-        JWTToken result = webTestClient.post()
-                .uri("/api/auth/login")
-                .body(Mono.just(loginRequest), LoginRequest.class)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(JWTToken.class)
-                .returnResult().getResponseBody();
-
-        assertThat(result).isNotNull();
-        this.jwtToken = result.getTokenValue();
-
+        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        userHelper.registerSecondUser(webTestClient);
+        this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
     }
 
     @Test
@@ -146,9 +112,12 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldAddUserSuccessfully() {
         UserDTO newUser = UserDTO.builder()
-                .username("newuser")
+                .login("newuser")
                 .email("newuser@test.com")
                 .password("newpassword")
+                .firstName("firstName")
+                .lastName("lastName")
+                .position("position")
                 .build();
 
         UserDTO savedUser = webTestClient.post()
@@ -162,14 +131,14 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(savedUser).isNotNull();
-        assertThat(savedUser.getUsername()).isEqualTo("newuser");
+        assertThat(savedUser.getLogin()).isEqualTo("newuser");
     }
 
     @Test
     void shouldUpdateUserSuccessfully() {
         UserDTO updateUser = UserDTO.builder()
                 .id(1L)
-                .username("updateduser")
+                .login("updateduser")
                 .email("updated@test.com")
                 .build();
 
@@ -184,7 +153,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(updatedUser).isNotNull();
-        assertThat(updatedUser.getUsername()).isEqualTo("updateduser");
+        assertThat(updatedUser.getLogin()).isEqualTo("updateduser");
     }
 
     @Test
@@ -212,7 +181,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailAddUserWithoutAuthentication() {
         UserDTO newUser = UserDTO.builder()
-                .username("unauthorizeduser")
+                .login("unauthorizeduser")
                 .email("unauthorized@test.com")
                 .password("password")
                 .build();
@@ -234,9 +203,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     }
 
     @Test
-    void shouldGetUsersByFilterSuccessfully() {
+    void shouldGetUsersByLoginFilterSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("usernameStartsWith", "user");
+        queryParams.add("loginStartsWith", "log");
 
         List<UserDTO> users = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/")
@@ -249,13 +218,89 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users).anyMatch(user -> "username".equals(user.getUsername()));
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
+    }
+
+    @Test
+    void shouldGetUsersByEmailFilterSuccessfully() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("emailStartsWith", "log");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
+    }
+
+    @Test
+    void shouldGetUsersByFirstNameFilterSuccessfully() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("firstNameStartsWith", "first");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
+    }
+
+    @Test
+    void shouldGetUsersByLastNameFilterSuccessfully() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("lastNameStartsWith", "last");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
+    }
+
+    @Test
+    void shouldGetUsersByPositionFilterSuccessfully() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("positionStartsWith", "firstPos");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
     }
 
     @Test
     void shouldGetUsersByFilterAndPageSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("usernameStartsWith", "username");
+        queryParams.add("loginStartsWith", "login");
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
@@ -271,13 +316,13 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users).anyMatch(user -> "username".equals(user.getUsername()));
+        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
     }
 
     @Test
     void shouldReturnEmptyListWhenNoUsersMatchFilter() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("usernameStartsWith", "nonexistentuser");
+        queryParams.add("loginStartsWith", "nonexistentuser");
 
         List<UserDTO> users = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/").queryParams(queryParams).build())
@@ -307,9 +352,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     }
 
     @Test
-    void shouldGetUsersByUsernameStartsWithSuccessfully() {
+    void shouldGetUsersByLoginStartsWithSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("usernameStartsWith", "user");
+        queryParams.add("loginStartsWith", "log");
 
         List<UserDTO> users = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/")
@@ -323,13 +368,13 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertEquals(users.get(0).getUsername(), "username");
+        assertEquals(users.get(0).getLogin(), "login");
     }
 
     @Test
     void shouldGetUsersByEmailStartsWithSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("emailStartsWith", "username");
+        queryParams.add("emailStartsWith", "login");
 
         List<UserDTO> users = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/")
@@ -343,13 +388,13 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users).allMatch(user -> user.getEmail().startsWith("username"));
+        assertThat(users).allMatch(user -> user.getEmail().startsWith("login"));
     }
 
     @Test
-    void shouldGetUsersByFilterAndPageWithUsernameStartsWithSuccessfully() {
+    void shouldGetUsersByFilterAndPageWithLoginStartsWithSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("usernameStartsWith", "user");
+        queryParams.add("loginStartsWith", "log");
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
@@ -365,13 +410,13 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users).allMatch(user -> user.getUsername().startsWith("user"));
+        assertThat(users).allMatch(user -> user.getLogin().startsWith("log"));
     }
 
     @Test
     void shouldGetUsersByFilterAndPageWithEmailStartsWithSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("emailStartsWith", "user");
+        queryParams.add("emailStartsWith", "log");
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
@@ -387,6 +432,6 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users).allMatch(user -> user.getEmail().startsWith("username"));
+        assertThat(users).allMatch(user -> user.getEmail().startsWith("login"));
     }
 }

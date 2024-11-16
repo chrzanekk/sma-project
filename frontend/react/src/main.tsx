@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client'
 import App from './App.tsx'
 import {ChakraProvider, createStandaloneToast} from "@chakra-ui/react";
 import './i18n/i18n';
-import {AuthProvider} from "@/contexts/AuthContext.tsx";
+import {AuthProvider} from "@/context/AuthContext.tsx";
 
 const {ToastContainer} = createStandaloneToast();
 

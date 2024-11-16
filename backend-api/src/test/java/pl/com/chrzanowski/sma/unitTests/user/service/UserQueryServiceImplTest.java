@@ -51,17 +51,29 @@ class UserQueryServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         userDTO = UserDTO.builder()
-                .username("testUser")
+                .login("testUser")
                 .email("test@example.com")
                 .password("encodedPassword")
+                .firstName("firstName")
+                .lastName("lastName")
+                .position("position")
                 .build();
         registerRequest = new RegisterRequest();
-        registerRequest.setUsername("testUser");
+        registerRequest.setLogin("testUser");
         registerRequest.setEmail("test@example.com");
+        registerRequest.setFirstName("firstName");
+        registerRequest.setLastName("lastName");
+        registerRequest.setPosition("position");
         registerRequest.setPassword("password");
 
         roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
-        user = User.builder().id(1L).username("testUser").email("test@example.com").roles(Set.of(roleUser)).build();
+        user = User.builder().id(1L)
+                .login("testUser")
+                .email("test@example.com")
+                .firstName("firstName")
+                .lastName("lastName")
+                .position("position")
+                .roles(Set.of(roleUser)).build();
     }
 
     @AfterEach
@@ -82,7 +94,7 @@ class UserQueryServiceImplTest {
         List<UserDTO> result = userQueryService.findByFilter(filter);
 
         assertEquals(1, result.size());
-        assertEquals("testUser", result.get(0).getUsername());
+        assertEquals("testUser", result.get(0).getLogin());
 
         verify(userDao, times(1)).findAll(any(BooleanBuilder.class));
 
@@ -91,13 +103,11 @@ class UserQueryServiceImplTest {
 
 
     @Test
-    void testFindByFilter_Success() {
+    void testFindByFilter_SuccessWithEmail() {
         UserFilter filter = UserFilter.builder()
                 .emailStartsWith("test")
                 .isEnabled(true).build();
         Pageable pageable = PageRequest.of(0, 10);
-        User user = User.builder().id(1L).username("testUser").email("test@example.com").build();
-        UserDTO userDTO = UserDTO.builder().id(1L).username("testUser").email("test@example.com").build();
 
         when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
                 .thenReturn(new PageImpl<>(List.of(user)));
@@ -107,7 +117,91 @@ class UserQueryServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
-        assertEquals("testUser", result.getContent().get(0).getUsername());
+        assertEquals("testUser", result.getContent().get(0).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(1)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_SuccessWithLogin() {
+        UserFilter filter = UserFilter.builder()
+                .loginStartsWith("test")
+                .isEnabled(true).build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(user)));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("testUser", result.getContent().get(0).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(1)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_SuccessWithFirstName() {
+        UserFilter filter = UserFilter.builder()
+                .firstNameStartsWith("first")
+                .isEnabled(true).build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(user)));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("testUser", result.getContent().get(0).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(1)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_SuccessWithLastName() {
+        UserFilter filter = UserFilter.builder()
+                .lastNameStartsWith("last")
+                .isEnabled(true).build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(user)));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("testUser", result.getContent().get(0).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(1)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_SuccessWithPosition() {
+        UserFilter filter = UserFilter.builder()
+                .positionStartsWith("pos")
+                .isEnabled(true).build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(user)));
+        when(userMapper.toDto(user)).thenReturn(userDTO);
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("testUser", result.getContent().get(0).getLogin());
 
         verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
         verify(userMapper, times(1)).toDto(any(User.class));

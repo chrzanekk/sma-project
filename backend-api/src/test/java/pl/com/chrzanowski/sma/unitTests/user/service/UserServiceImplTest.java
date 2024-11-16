@@ -7,11 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
@@ -24,7 +19,6 @@ import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserServiceImpl;
-import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
@@ -73,17 +67,17 @@ class UserServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
         userDTO = UserDTO.builder()
-                .username("testUser")
+                .login("testUser")
                 .email("test@example.com")
                 .password("encodedPassword")
                 .build();
         registerRequest = new RegisterRequest();
-        registerRequest.setUsername("testUser");
+        registerRequest.setLogin("testUser");
         registerRequest.setEmail("test@example.com");
         registerRequest.setPassword("password");
 
         roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
-        user = User.builder().id(1L).username("testUser").email("test@example.com").roles(Set.of(roleUser)).build();
+        user = User.builder().id(1L).login("testUser").email("test@example.com").roles(Set.of(roleUser)).build();
     }
 
     @AfterEach
@@ -102,7 +96,7 @@ class UserServiceImplTest {
 
         UserDTO result = userService.register(registerRequest);
 
-        assertEquals("testUser", result.getUsername());
+        assertEquals("testUser", result.getLogin());
         assertEquals("test@example.com", result.getEmail());
         verify(userDao, times(1)).save(any(User.class));
     }
@@ -183,7 +177,7 @@ class UserServiceImplTest {
         UserDTO result = userService.findById(1L);
 
         assertNotNull(result);
-        assertEquals("testUser", result.getUsername());
+        assertEquals("testUser", result.getLogin());
     }
 
     @Test
@@ -201,7 +195,7 @@ class UserServiceImplTest {
         UserDTO result = userService.getUser("test@example.com");
 
         assertNotNull(result);
-        assertEquals("testUser", result.getUsername());
+        assertEquals("testUser", result.getLogin());
         verify(userDao, times(1)).findByEmail("test@example.com");
     }
 
@@ -271,7 +265,7 @@ class UserServiceImplTest {
 
         assertNotNull(result);
         assertEquals(userDTO.getId(), result.getId());
-        assertEquals(userDTO.getUsername(), result.getUsername());
+        assertEquals(userDTO.getLogin(), result.getLogin());
         assertEquals(userDTO.getEmail(), result.getEmail());
     }
 
@@ -285,7 +279,7 @@ class UserServiceImplTest {
             UserInfoResponse result = userService.getUserWithAuthorities();
 
             assertNotNull(result);
-            assertEquals("testUser", result.username());
+            assertEquals("testUser", result.login());
             assertEquals("test@example.com", result.email());
             assertEquals(1L, result.id());
             assertEquals(List.of(ERole.ROLE_USER.getRoleName()), result.roles());

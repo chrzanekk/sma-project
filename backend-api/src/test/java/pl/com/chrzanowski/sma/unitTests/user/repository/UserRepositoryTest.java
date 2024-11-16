@@ -20,7 +20,13 @@ class UserRepositoryTest extends AbstractTestContainers {
     @Test
     void findByEmail_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
 
         // When
@@ -28,7 +34,7 @@ class UserRepositoryTest extends AbstractTestContainers {
 
         // Then
         assertTrue(foundUser.isPresent());
-        assertEquals("testuser", foundUser.get().getUsername());
+        assertEquals("testuser", foundUser.get().getLogin());
     }
 
     @Test
@@ -42,13 +48,19 @@ class UserRepositoryTest extends AbstractTestContainers {
 
 
     @Test
-    void findByUsername_Positive() {
+    void findByLogin_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
 
         // When
-        var foundUser = userRepository.findByUsername("testuser");
+        var foundUser = userRepository.findByLogin("testuser");
 
         // Then
         assertTrue(foundUser.isPresent());
@@ -56,9 +68,9 @@ class UserRepositoryTest extends AbstractTestContainers {
     }
 
     @Test
-    void findByUsername_Negative() {
+    void findByLogin_Negative() {
         // When
-        var foundUser = userRepository.findByUsername("nonexistentuser");
+        var foundUser = userRepository.findByLogin("nonexistentuser");
 
         // Then
         assertTrue(foundUser.isEmpty());
@@ -68,7 +80,13 @@ class UserRepositoryTest extends AbstractTestContainers {
     @Test
     void existsByEmail_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
 
         // When
@@ -89,22 +107,28 @@ class UserRepositoryTest extends AbstractTestContainers {
 
 
     @Test
-    void existsByUsername_Positive() {
+    void existsByLogin_Positive() {
         // Given
-        User user = User.builder().email("test@example.com").username("testuser").password("password123").build();
+        User user = User.builder()
+                .email("test@example.com")
+                .login("testuser")
+                .password("password123")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
         userRepository.save(user);
 
         // When
-        boolean exists = userRepository.existsByUsername("testuser");
+        boolean exists = userRepository.existsByLogin("testuser");
 
         // Then
         assertTrue(exists);
     }
 
     @Test
-    void existsByUsername_Negative() {
+    void existsByLogin_Negative() {
         // When
-        boolean exists = userRepository.existsByUsername("nonexistentuser");
+        boolean exists = userRepository.existsByLogin("nonexistentuser");
 
         // Then
         assertFalse(exists);

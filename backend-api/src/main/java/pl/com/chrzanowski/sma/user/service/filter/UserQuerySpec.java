@@ -13,11 +13,20 @@ public class UserQuerySpec {
             if (userFilter.getId() != null) {
                 predicate.and(user.id.eq(userFilter.getId()));
             }
-            if (userFilter.getUsernameStartsWith() != null) {
-                predicate.and(user.username.startsWithIgnoreCase(userFilter.getUsernameStartsWith()));
+            if (userFilter.getLoginStartsWith() != null) {
+                predicate.and(user.login.startsWithIgnoreCase(userFilter.getLoginStartsWith()));
             }
             if (userFilter.getEmailStartsWith() != null) {
                 predicate.and(user.email.startsWithIgnoreCase(userFilter.getEmailStartsWith()));
+            }
+            if(userFilter.getFirstNameStartsWith() != null) {
+                predicate.and(user.firstName.startsWithIgnoreCase(userFilter.getFirstNameStartsWith()));
+            }
+            if(userFilter.getLastNameStartsWith() != null) {
+                predicate.and(user.lastName.startsWithIgnoreCase(userFilter.getLastNameStartsWith()));
+            }
+            if(userFilter.getPositionStartsWith() != null) {
+                predicate.and(user.position.startsWithIgnoreCase(userFilter.getPositionStartsWith()));
             }
             if (userFilter.getIsEnabled() != null) {
                 predicate.and(user.enabled.eq(userFilter.getIsEnabled()));

@@ -37,6 +37,4 @@ public interface UserService {
     Boolean isEmailExists(String email);
 
     UserInfoResponse getUserWithAuthorities();
-
-
 }

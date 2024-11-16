@@ -66,7 +66,12 @@ public class UserServiceImpl implements UserService {
     public UserDTO register(RegisterRequest request) {
         log.debug("Request to register new user: {}", request);
         EmailUtil.validateEmail(request.getEmail());
-        UserDTO newUser = UserDTO.builder().username(request.getUsername()).email(request.getEmail())
+        UserDTO newUser = UserDTO.builder()
+                .login(request.getLogin())
+                .email(request.getEmail())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .position(request.getPosition())
                 .enabled(false).locked(false).password(request.getPassword())
                 .build();
         return save(newUser);
@@ -135,8 +140,11 @@ public class UserServiceImpl implements UserService {
         UserDTO existingUserDTO = findById(userDTO.getId());
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
 
-        if (existingUserDTO.getUsername() != null && userDTO.getUsername() != null && !existingUserDTO.getUsername().equals(userDTO.getUsername())) {
-            builder.username(userDTO.getUsername());
+        if (existingUserDTO.getLogin() != null && userDTO.getLogin() != null && !existingUserDTO.getLogin().equals(userDTO.getLogin())) {
+            if (isUserExists(userDTO.getLogin())) {
+                throw new IllegalStateException("User with login %s already exists");
+            }
+            builder.login(userDTO.getLogin());
         }
 
         if (existingUserDTO.getEmail() != null && userDTO.getEmail() != null && !existingUserDTO.getEmail().equals(userDTO.getEmail())) {
@@ -144,6 +152,15 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalStateException("User with email %s already exists");
             }
             builder.email(userDTO.getEmail());
+        }
+        if (existingUserDTO.getFirstName() != null && userDTO.getFirstName() != null && !existingUserDTO.getFirstName().equals(userDTO.getFirstName())) {
+            builder.firstName(userDTO.getFirstName());
+        }
+        if (existingUserDTO.getLastName() != null && userDTO.getLastName() != null && !existingUserDTO.getLastName().equals(userDTO.getLastName())) {
+            builder.lastName(userDTO.getLastName());
+        }
+        if (existingUserDTO.getPosition() != null && userDTO.getPosition() != null && !existingUserDTO.getPosition().equals(userDTO.getPosition())) {
+            builder.position(userDTO.getPosition());
         }
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
@@ -188,7 +205,6 @@ public class UserServiceImpl implements UserService {
         userDao.save(userMapper.toEntity(updatedUserDTO));
         return updatedUserDTO;
     }
-
 
 
     @Override
@@ -246,7 +262,7 @@ public class UserServiceImpl implements UserService {
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         return new UserInfoResponse(
                 currentUser.getId(),
-                currentUser.getUsername(),
+                currentUser.getLogin(),
                 currentUser.getEmail(),
                 currentRoles);
     }

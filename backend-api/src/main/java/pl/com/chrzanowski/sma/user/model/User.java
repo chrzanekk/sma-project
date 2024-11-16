@@ -22,7 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "login"),
 })
 public class User {
 
@@ -38,12 +38,26 @@ public class User {
 
     @NotBlank
     @Size(max = 20)
-    @Column(length = 20, nullable = false, name = "username")
-    private String username;
+    @Column(length = 20, nullable = false, name = "login")
+    private String login;
 
     @NotBlank
     @Size(min = 8, max = 120)
     private String password;
+
+    @NotBlank
+    @Size(max = 30)
+    @Column(length = 30, name = "first_name")
+    private String firstName;
+
+    @NotBlank
+    @Size(max = 30)
+    @Column(length = 30, name = "last_name")
+    private String lastName;
+
+    @Size(max = 50)
+    @Column(length = 50, name = "position")
+    private String position;
 
     private Boolean locked;
     private Boolean enabled;

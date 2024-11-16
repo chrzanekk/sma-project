@@ -17,8 +17,11 @@ public class UserDTO {
 
     Long id;
     String email;
-    String username;
+    String login;
     String password;
+    String firstName;
+    String lastName;
+    String position;
     Boolean locked;
     Boolean enabled;
     Set<RoleDTO> roles;

@@ -1,0 +1,7 @@
+
+ALTER TABLE users RENAME COLUMN username TO login;
+
+ALTER TABLE users
+    ADD COLUMN first_name VARCHAR(30) DEFAULT '' NOT NULL,
+    ADD COLUMN last_name VARCHAR(30) DEFAULT '' NOT NULL,
+    ADD COLUMN position VARCHAR(50);

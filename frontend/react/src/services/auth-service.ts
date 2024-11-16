@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {LoginRequest, NewPasswordPutRequest, PasswordResetRequest, RegisterRequest} from "@/types/userTypes.ts";
+import {LoginRequest, NewPasswordPutRequest, PasswordResetRequest, RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import {errorNotification} from "@/notifications/notifications.ts";
 

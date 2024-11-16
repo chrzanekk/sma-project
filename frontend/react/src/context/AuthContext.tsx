@@ -1,28 +1,9 @@
 import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {login as performLogin} from "../services/auth.ts";
+import {login as performLogin} from "../services/auth-service.ts";
 import {jwtDecode} from "jwt-decode";
-import {User} from "../types/userTypes";
+import {User} from "../types/user-types.ts";
+import {AuthContextType, DecodedToken} from "@/types/auth-context-types.ts";
 
-// Typy danych
-interface DecodedToken {
-    id: number;
-    email: string;
-    sub: string;
-    scopes: Set<string>;
-    exp: number;
-}
-
-interface AuthContextType {
-    user: User | null;
-    login: (usernameAndPassword: any) => Promise<any>;
-    logOut: () => void;
-    isAuthenticated: () => boolean;
-    setUserFromToken: () => void;
-    updateUserData: (updatedData: Partial<User>) => void;
-    setUserData: (decodedToken: DecodedToken) => void;
-}
-
-// Inicjalizacja kontekstu
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 // Typy dla dzieci komponentu

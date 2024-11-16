@@ -1,7 +1,7 @@
 'use client'
 
 import {Box, HStack, Image, Stack, Text} from '@chakra-ui/react'
-import {themeColors} from "@/theme/themeColors.ts";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 export default function SmallWithLogoLeft() {
     return (

@@ -1,8 +1,7 @@
 import { useEffect, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../contexts/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
-// Typy dla propsów
 interface ProtectedRouteProps {
     children: ReactNode;
 }

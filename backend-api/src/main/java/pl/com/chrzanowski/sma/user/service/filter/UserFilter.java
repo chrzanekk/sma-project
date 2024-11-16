@@ -13,7 +13,10 @@ public class UserFilter {
 
     private Long id;
     private String emailStartsWith;
-    private String usernameStartsWith;
+    private String loginStartsWith;
+    private String firstNameStartsWith;
+    private String lastNameStartsWith;
+    private String positionStartsWith;
     private Boolean isLocked;
     private Boolean isEnabled;
 }

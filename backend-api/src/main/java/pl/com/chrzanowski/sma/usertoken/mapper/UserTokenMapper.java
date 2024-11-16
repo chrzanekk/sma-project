@@ -12,7 +12,7 @@ public interface UserTokenMapper extends EntityMapper<UserTokenDTO, UserToken> {
 
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "user.email", target = "email")
-    @Mapping(source = "user.username", target = "userName")
+    @Mapping(source = "user.login", target = "login")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "token", target = "token")
     @Mapping(source = "createDate", target = "createDate")
@@ -24,7 +24,7 @@ public interface UserTokenMapper extends EntityMapper<UserTokenDTO, UserToken> {
 
     @Mapping(source = "userId", target = "user.id")
     @Mapping(source = "email", target = "user.email")
-    @Mapping(source = "userName", target = "user.username")
+    @Mapping(source = "login", target = "user.login")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "token", target = "token")
     @Mapping(source = "createDate", target = "createDate")
