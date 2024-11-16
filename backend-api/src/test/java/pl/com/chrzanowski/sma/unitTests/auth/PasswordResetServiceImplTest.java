@@ -67,7 +67,6 @@ class PasswordResetServiceImplTest {
     @Test
     void testSaveNewPasswordSuccess() {
         when(userService.getUser(anyString())).thenReturn(userDTO);
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedNewPassword");
         when(userService.save(any(UserDTO.class))).thenReturn(userDTO.toBuilder().password("encodedNewPassword").build());
         userTokenService.updateToken(any(UserTokenDTO.class));
 
@@ -77,7 +76,6 @@ class PasswordResetServiceImplTest {
         assertEquals("Password changed successfully", result.getMessage());
 
         verify(userService, times(1)).getUser(anyString());
-        verify(passwordEncoder, times(1)).encode(anyString());
         verify(userService, times(1)).save(any(UserDTO.class));
         verify(userTokenService, times(1)).updateToken(any(UserTokenDTO.class));
     }
@@ -101,7 +99,6 @@ class PasswordResetServiceImplTest {
     @Test
     void testSaveNewPasswordTokenUpdateFailed() {
         when(userService.getUser(anyString())).thenReturn(userDTO);
-        when(passwordEncoder.encode(anyString())).thenReturn("encodedNewPassword");
         when(userService.save(any(UserDTO.class))).thenReturn(userDTO.toBuilder().password("encodedNewPassword").build());
         doThrow(new IllegalStateException("Token update failed")).when(userTokenService).updateToken(any(UserTokenDTO.class));
 
@@ -112,7 +109,6 @@ class PasswordResetServiceImplTest {
         assertEquals("Token update failed", exception.getMessage());
 
         verify(userService, times(1)).getUser(anyString());
-        verify(passwordEncoder, times(1)).encode(anyString());
         verify(userService, times(1)).save(any(UserDTO.class));
         verify(userTokenService, times(1)).updateToken(any(UserTokenDTO.class)); // Powinna próbować zaktualizować token
     }

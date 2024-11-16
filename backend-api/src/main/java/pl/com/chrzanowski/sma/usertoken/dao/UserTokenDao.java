@@ -10,7 +10,7 @@ public interface UserTokenDao {
 
     UserToken updateToken(UserToken userToken);
 
-    Optional<UserToken> findUserTokensByToken(String token);
+    Optional<UserToken> findUserTokenByToken(String token);
 
     void deleteTokenById(Long id);
 

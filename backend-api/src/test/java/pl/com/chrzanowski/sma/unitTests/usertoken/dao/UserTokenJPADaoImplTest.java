@@ -92,7 +92,7 @@ class UserTokenJPADaoImplTest {
         when(userTokenRepository.findUserTokenByToken(token)).thenReturn(Optional.of(userToken));
 
         // When
-        Optional<UserToken> foundToken = userTokenJPADaoImpl.findUserTokensByToken(token);
+        Optional<UserToken> foundToken = userTokenJPADaoImpl.findUserTokenByToken(token);
 
         // Then
         assertTrue(foundToken.isPresent());
@@ -107,7 +107,7 @@ class UserTokenJPADaoImplTest {
         when(userTokenRepository.findUserTokenByToken(token)).thenReturn(Optional.empty());
 
         // When
-        Optional<UserToken> foundToken = userTokenJPADaoImpl.findUserTokensByToken(token);
+        Optional<UserToken> foundToken = userTokenJPADaoImpl.findUserTokenByToken(token);
 
         // Then
         assertTrue(foundToken.isEmpty());

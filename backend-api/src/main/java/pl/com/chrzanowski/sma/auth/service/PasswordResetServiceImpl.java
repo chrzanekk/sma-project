@@ -21,13 +21,10 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     private final Logger log = LoggerFactory.getLogger(PasswordResetServiceImpl.class);
 
     private final UserService userService;
-    private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
 
-    public PasswordResetServiceImpl(UserService userService,
-                                    PasswordEncoder encoder, UserTokenService userTokenService) {
+    public PasswordResetServiceImpl(UserService userService, UserTokenService userTokenService) {
         this.userService = userService;
-        this.encoder = encoder;
         this.userTokenService = userTokenService;
     }
 
@@ -36,7 +33,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         log.debug("Request to save new password.");
         UserDTO userDTO = userService.getUser(userTokenDTO.getEmail());
         UserDTO updatedUserDTO =
-                userDTO.toBuilder().password(encoder.encode(request.password())).build();
+                userDTO.toBuilder().password(request.password()).build();
         userService.save(updatedUserDTO);
         userTokenService.updateToken(userTokenDTO.toBuilder()
                 .useDate(LocalDateTime.now()).build());

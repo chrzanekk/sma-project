@@ -160,7 +160,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testGetTokenDataSuccess() {
-        when(userTokenDao.findUserTokensByToken(anyString())).thenReturn(Optional.of(userToken));
+        when(userTokenDao.findUserTokenByToken(anyString())).thenReturn(Optional.of(userToken));
         when(userTokenMapper.toDto(any(UserToken.class))).thenReturn(userTokenDTO);
 
         UserTokenDTO result = userTokenService.getTokenData(userTokenDTO.getToken());
@@ -168,13 +168,13 @@ class UserTokenServiceImplTest {
         assertNotNull(result);
         assertEquals(userTokenDTO.getToken(), result.getToken());
 
-        verify(userTokenDao, times(1)).findUserTokensByToken(anyString());
+        verify(userTokenDao, times(1)).findUserTokenByToken(anyString());
         verify(userTokenMapper, times(1)).toDto(any(UserToken.class));
     }
 
     @Test
     void testGetTokenDataNotFound() {
-        when(userTokenDao.findUserTokensByToken(anyString())).thenReturn(Optional.empty());
+        when(userTokenDao.findUserTokenByToken(anyString())).thenReturn(Optional.empty());
 
         ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
             userTokenService.getTokenData("invalidToken");
@@ -182,7 +182,7 @@ class UserTokenServiceImplTest {
 
         assertEquals("Token not found.", exception.getMessage());
 
-        verify(userTokenDao, times(1)).findUserTokensByToken(anyString());
+        verify(userTokenDao, times(1)).findUserTokenByToken(anyString());
     }
 
     @Test
@@ -193,7 +193,7 @@ class UserTokenServiceImplTest {
 
         assertEquals("Token not found.", exception.getMessage());
 
-        verify(userTokenDao, never()).findUserTokensByToken(anyString());
+        verify(userTokenDao, never()).findUserTokenByToken(anyString());
     }
 
     @Test

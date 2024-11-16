@@ -72,7 +72,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     @Override
     public UserTokenDTO getTokenData(String token) {
         log.debug("Request to get token data: {}", token);
-        return userTokenDao.findUserTokensByToken(token).map(userTokenMapper::toDto)
+        return userTokenDao.findUserTokenByToken(token).map(userTokenMapper::toDto)
                 .orElseThrow(() -> new ObjectNotFoundException("Token not found."));
     }
 

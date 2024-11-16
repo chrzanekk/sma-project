@@ -32,7 +32,7 @@ public class UserTokenJPADaoImpl implements UserTokenDao {
     }
 
     @Override
-    public Optional<UserToken> findUserTokensByToken(String token) {
+    public Optional<UserToken> findUserTokenByToken(String token) {
         log.debug("JPA DAO: find user token by token");
         return userTokenRepository.findUserTokenByToken(token);
     }
