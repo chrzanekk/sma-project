@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -121,7 +122,7 @@ class UserServiceImplTest {
         when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
 
-        String result = userService.confirm("token123");
+        MessageResponse result = userService.confirm("token123");
 
         assertNotNull(result);
         verify(userTokenService, times(1)).getTokenData("token123");
@@ -217,7 +218,7 @@ class UserServiceImplTest {
 
     @Test
     void testIsUserExists() {
-        when(userDao.existsByUsername("testUser")).thenReturn(true);
+        when(userDao.existsByLogin("testUser")).thenReturn(true);
 
         Boolean result = userService.isUserExists("testUser");
 
@@ -274,7 +275,7 @@ class UserServiceImplTest {
 
         try (MockedStatic<SecurityUtils> securityUtilsMockedStatic = mockStatic(SecurityUtils.class)) {
             securityUtilsMockedStatic.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.of("testUser"));
-            when(userDao.findByUsername("testUser")).thenReturn(Optional.of(user));
+            when(userDao.findByLogin("testUser")).thenReturn(Optional.of(user));
 
             UserInfoResponse result = userService.getUserWithAuthorities();
 
@@ -287,20 +288,20 @@ class UserServiceImplTest {
             securityUtilsMockedStatic.verify(SecurityUtils::getCurrentUserLogin, times(1));
         }
 
-        verify(userDao, times(1)).findByUsername("testUser");
+        verify(userDao, times(1)).findByLogin("testUser");
     }
 
     @Test
     void testGetUserWithAuthoritiesUserNotFound() {
         try (MockedStatic<SecurityUtils> securityUtilsMockedStatic = mockStatic(SecurityUtils.class)) {
             securityUtilsMockedStatic.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.of("nonexistentUser"));
-            when(userDao.findByUsername("nonexistentUser")).thenReturn(Optional.empty());
+            when(userDao.findByLogin("nonexistentUser")).thenReturn(Optional.empty());
 
             assertThrows(UsernameNotFoundException.class, () -> userService.getUserWithAuthorities());
 
             securityUtilsMockedStatic.verify(SecurityUtils::getCurrentUserLogin, times(1));
         }
-        verify(userDao, times(1)).findByUsername("nonexistentUser");
+        verify(userDao, times(1)).findByLogin("nonexistentUser");
     }
 
     @Test

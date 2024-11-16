@@ -14,7 +14,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
@@ -34,7 +33,6 @@ import pl.com.chrzanowski.sma.common.util.TokenUtil;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
-import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
@@ -82,11 +80,6 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(updatedRequest.getLogin(), updatedRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-//        UserDetails principal = (UserDetails) authentication.getPrincipal();
-//        UserDTO authenticatedUser = userService.;
-//        UserDTO userDTO = userMapper.toDto(principal);
-//        Map<String, Object> claims = setClaims(userDTO);
-//        String newToken = jwtUtils.issueToken(principal.getLogin(), claims);
         String jwt = jwtUtils.generateJwtToken(authentication);
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthTokenFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
@@ -128,7 +121,7 @@ public class AuthController {
 
         TokenUtil.validateTokenTime(userTokenDTO.getCreateDate(), tokenValidityTimeInMinutes);
         sendEmailService.sendAfterEmailConfirmation(userTokenDTO, new Locale("pl"));
-        MessageResponse response = new MessageResponse(userService.confirm(token));
+        MessageResponse response = userService.confirm(token);
         return ResponseEntity.ok().body(response);
     }
 
@@ -148,7 +141,7 @@ public class AuthController {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<?> newPasswordPut(@RequestBody NewPasswordPutRequest request) {
+    public ResponseEntity<?> setNewPassword(@RequestBody NewPasswordPutRequest request) {
         log.debug("REST request to set new password by token: {}", request.token());
         validatePasswordMatch(request);
         UserTokenDTO userTokenDTO = userTokenService.getTokenData(request.token());

@@ -118,16 +118,16 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
                 .build();
         RoleDTO savedRole = roleService.saveRole(roleDTO);
 
-        MessageResponse response = webTestClient.delete()
+        Boolean response = webTestClient.delete()
                 .uri("/api/roles/" + savedRole.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(MessageResponse.class)
+                .expectBody(Boolean.class)
                 .returnResult().getResponseBody();
 
         assertThat(response).isNotNull();
-        assertThat(response.getMessage()).isEqualTo("Role deleted successfully");
+        assertThat(response).isTrue();
     }
 
     @Test

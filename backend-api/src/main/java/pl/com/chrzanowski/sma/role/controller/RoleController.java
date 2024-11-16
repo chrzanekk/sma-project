@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 
@@ -38,12 +37,11 @@ public class RoleController {
     }
 
     @DeleteMapping("/roles/{id}")
-    public ResponseEntity<MessageResponse> deleteRole(@PathVariable Long id) {
+    public ResponseEntity<Boolean> deleteRole(@PathVariable Long id) {
         log.debug("REST request to delete Role : {}", id);
         boolean result = roleService.deleteById(id);
         if (result) {
-            MessageResponse response = new MessageResponse("Role deleted successfully");
-            return ResponseEntity.ok().body(response);
+            return ResponseEntity.ok().body(true);
         }
         return ResponseEntity.noContent().build();
     }

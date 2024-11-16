@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String confirm(String token) {
+    public MessageResponse confirm(String token) {
         log.debug("Confirm user registration by token: {}", token);
         UserTokenDTO userTokenDTO = userTokenService.getTokenData(token);
         if (userTokenDTO.getUseDate() != null) {
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService {
         UserTokenDTO confirmedDTO = userTokenService.updateToken(userTokenDTO);
         UserDTO user = getUser(confirmedDTO.getEmail());
         update(user.toBuilder().enabled(true).locked(false).build());
-        return "Confirmed";
+        return new MessageResponse("Confirmed");
     }
 
     @Override
@@ -153,15 +154,19 @@ public class UserServiceImpl implements UserService {
             }
             builder.email(userDTO.getEmail());
         }
+
         if (existingUserDTO.getFirstName() != null && userDTO.getFirstName() != null && !existingUserDTO.getFirstName().equals(userDTO.getFirstName())) {
             builder.firstName(userDTO.getFirstName());
         }
+
         if (existingUserDTO.getLastName() != null && userDTO.getLastName() != null && !existingUserDTO.getLastName().equals(userDTO.getLastName())) {
             builder.lastName(userDTO.getLastName());
         }
+
         if (existingUserDTO.getPosition() != null && userDTO.getPosition() != null && !existingUserDTO.getPosition().equals(userDTO.getPosition())) {
             builder.position(userDTO.getPosition());
         }
+
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
 
@@ -243,7 +248,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public Boolean isUserExists(String userName) {
         log.debug("Request to check if userName exists in DB: {}", userName);
-        return userDao.existsByUsername(userName);
+        return userDao.existsByLogin(userName);
     }
 
     @Override
@@ -258,12 +263,15 @@ public class UserServiceImpl implements UserService {
     public UserInfoResponse getUserWithAuthorities() {
         log.debug("Get user with authorities.");
         String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        User currentUser = userDao.findByUsername(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User currentUser = userDao.findByLogin(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         return new UserInfoResponse(
                 currentUser.getId(),
                 currentUser.getLogin(),
                 currentUser.getEmail(),
+                currentUser.getFirstName(),
+                currentUser.getLastName(),
+                currentUser.getPosition(),
                 currentRoles);
     }
 }

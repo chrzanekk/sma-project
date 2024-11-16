@@ -14,8 +14,6 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
-import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
@@ -148,9 +146,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(passwordChangeRequest), UserPasswordChangeRequest.class)
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody(Boolean.class)
-                .isEqualTo(true);
+                .expectStatus().isNoContent();
 
         User updatedUser = userRepository.findById(registeredUser.getId()).orElseThrow();
         assertFalse(passwordEncoder.matches(updatedUser.getPassword(), registeredUser.getPassword()));

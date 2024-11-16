@@ -14,13 +14,13 @@ public interface UserDao {
 
     Optional<User> findByEmail(String email);
 
-    Optional<User> findByUsername(String username);
+    Optional<User> findByLogin(String login);
 
     Optional<User> findById(Long id);
 
     Boolean existsByEmail(String email);
 
-    Boolean existsByUsername(String username);
+    Boolean existsByLogin(String login);
 
     List<User> findAll();
 

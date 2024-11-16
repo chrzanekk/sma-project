@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.user.service;
 
 
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -14,15 +15,17 @@ public interface UserService {
 
     UserDTO register(RegisterRequest request);
 
-    String confirm(String token);
+    MessageResponse confirm(String token);
+
+    UserInfoResponse getUserWithAuthorities();
+
+    UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles);
+
+    void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest);
 
     UserDTO save(UserDTO userDTO);
 
     UserDTO update(UserDTO userDTO);
-
-    void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest);
-
-    UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles);
 
     UserDTO findById(Long id);
 
@@ -35,6 +38,4 @@ public interface UserService {
     Boolean isUserExists(String userName);
 
     Boolean isEmailExists(String email);
-
-    UserInfoResponse getUserWithAuthorities();
 }

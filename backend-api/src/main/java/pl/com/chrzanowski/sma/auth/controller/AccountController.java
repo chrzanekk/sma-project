@@ -38,9 +38,9 @@ public class AccountController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<Boolean> changePassword(@Valid @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
+    public ResponseEntity<?> changePassword(@Valid @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
         log.debug("REST: Change password for user id:{}", userPasswordChangeRequest.userId());
         userService.updateUserPassword(userPasswordChangeRequest);
-        return ResponseEntity.ok(true);
+        return ResponseEntity.noContent().build();
     }
 }
