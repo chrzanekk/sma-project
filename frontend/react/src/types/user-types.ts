@@ -47,3 +47,10 @@ export interface UserPasswordChangeRequest {
     password: string;
     newPassword: string;
 }
+
+export interface UserFromToken {
+    id: number;
+    login: string;
+    email: string;
+    roles: Set<string>;
+}

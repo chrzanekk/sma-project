@@ -15,16 +15,15 @@ const LoginForm = () => {
             validateOnMount={true}
             validationSchema={
                 Yup.object({
-                    username: Yup.string()
-                        .email("Must be valid email.")
-                        .required("Email is required."),
+                    login: Yup.string()
+                        .required("Login is required."),
                     password: Yup.string()
                         .min(4, "Password cannot be less than 4 characters")
                         .max(10, "Password cannot be more than 10 characters")
                         .required("Password is required.")
                 })
             }
-            initialValues={{username: '', password: ''}}
+            initialValues={{login: '', password: '', rememberMe: false}}
             onSubmit={(values, {setSubmitting}) => {
                 setSubmitting(true);
                 login(values).then(() => {
@@ -42,23 +41,24 @@ const LoginForm = () => {
                     <Stack spacing={15}>
                         <Box display="flex" justifyContent="center">
                             <Image
-                                alt={'Login Image'}
+                                alt={'ResetPassword Image'}
                                 objectFit={"scale-down"}
                                 src={
-                                    '/img/logo-round.png'
+                                    '/img/sma-logo.png'
                                 }
                                 width={'200px'}
                                 height={'auto'}
                             />
                         </Box>
                         <Box display="flex" justifyContent="center">
-                            <Heading fontSize={'2xl'} mb={15}>Login your account</Heading>
+                            <Heading fontSize={'2xl'} mb={15}>Login your to account/Zaloguj się /jeszcze nie zrobiłem
+                                tłumaczeń/</Heading>
                         </Box>
                         <MyTextInput
-                            label={"Email"}
+                            label={"Login"}
                             name={"login"}
                             type={"text"}
-                            placeholder={"example@example.com"}
+                            placeholder={"login"}
                         />
                         <MyTextInput
                             label={"Password"}

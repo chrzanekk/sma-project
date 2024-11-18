@@ -61,6 +61,6 @@ jwt:
   tokenValidityTimeInMinutes: 15
 
 platform:
-  url: http://localhost:4200
+  url: http://localhost:5173
   replyToEmail: scaffapp@kchrzanowski.pl
   fromEmail: Scaffolding App / LocalHost <scaffapp@kchrzanowski.pl>

@@ -61,7 +61,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public MessageResponse sendAfterRegistration(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user registration: {}", userTokenDTO.getEmail());
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/account/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl);
         context.setVariable("emailConfirmationLink",
                 scaffoldingAppUrl + "/confirm?token=" + userTokenDTO.getToken());
         context.setVariable("tokenValidityTime", tokenValidityTimeInMinutes);
@@ -86,7 +86,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public MessageResponse sendAfterEmailConfirmation(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user activation:");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/account/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl);
         //template to send as string
         String content = templateEngine.process("mail-after-confirmation", context);
         String title = chooseTitle(MailEvent.AFTER_CONFIRMATION, locale);
@@ -108,7 +108,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public MessageResponse sendPasswordResetMail(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to reset password");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/account/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl);
         context.setVariable("passwordResetLink",
                 scaffoldingAppUrl + "/account/password-reset?token=" + userTokenDTO.getToken());
         context.setVariable("tokenValidityTime", tokenValidityTimeInMinutes);
@@ -132,7 +132,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     public MessageResponse sendAfterPasswordChange(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm password reset.");
         Context context = new Context(locale);
-        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl + "/account/login");
+        context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl);
         //template to send as string
         String content = templateEngine.process("mail-after-password-change", context);
         String title = chooseTitle(MailEvent.AFTER_PASSWORD_CHANGE, locale);

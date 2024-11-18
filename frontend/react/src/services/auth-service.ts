@@ -8,11 +8,10 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-export const login = async (loginRequest: LoginRequest) => {
+export const login = async (loginRequest: LoginRequest, t: any) => {
     try {
         return await api.post('/api/auth/login', loginRequest);
     } catch (e: any) {
-        const {t} = useTranslation();
         errorNotification(t('error.loginFailed'), e.response?.data?.message || t('error.generic'));
         throw e;
     }
@@ -27,6 +26,16 @@ export const registerUser = async (registerRequest: RegisterRequest) => {
         throw e;
     }
 };
+export const confirmAccount = async (token: string) => {
+    try {
+        return await api.get(`/api/auth/confirm?token=${token}`);
+    } catch (e: any) {
+        const { t } = useTranslation();
+        errorNotification(t('error.confirmationFailed'), e.response?.data?.message || t('error.generic'));
+        throw e;
+    }
+};
+
 
 export const requestPasswordReset = async (passwordResetRequest: PasswordResetRequest) => {
     try {

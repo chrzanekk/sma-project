@@ -62,7 +62,7 @@ const RegisterForm = () => {
                 <Form>
                     <Box display="flex" justifyContent="center">
                         <Image
-                            alt="Login Image"
+                            alt="ResetPassword Image"
                             objectFit="scale-down"
                             src="/img/sma-logo.png"
                             width="200px"

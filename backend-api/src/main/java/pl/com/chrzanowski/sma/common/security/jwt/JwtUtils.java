@@ -16,6 +16,7 @@ import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -23,7 +24,9 @@ import java.util.stream.Collectors;
 public class JwtUtils {
     private static final Logger log = LoggerFactory.getLogger(JwtUtils.class);
 
-    private static final String AUTHORITIES_KEY = "auth";
+    private static final String AUTHORITIES_KEY = "authorities";
+    private static final String USER_ID = "user_id";
+    private static final String USER_EMAIL = "user_email";
 
     @Value(value = "${jwt.jwtSecret}")
     private String jwtSecret;
@@ -53,6 +56,11 @@ public class JwtUtils {
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
+        Long id = userDetails.getId();
+        String email = userDetails.getEmail();
+
+        Set<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
 
@@ -60,7 +68,9 @@ public class JwtUtils {
         Date validity = new Date(now + jwtExpirationMs);
 
         return Jwts.builder()
-                .claim(AUTHORITIES_KEY, authorities)
+                .claim(AUTHORITIES_KEY, roles)
+                .claim(USER_ID, id)
+                .claim(USER_EMAIL, email)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(validity)

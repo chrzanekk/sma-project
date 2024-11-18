@@ -1,6 +1,5 @@
 import React from "react";
 import Navbar from "@/layout/Navbar.tsx";
-import Footer from "@/layout/Footer.tsx";
 import {Box} from "@chakra-ui/react";
 import DashboardGrid from "@/layout/DashboardGrid.tsx";
 
@@ -19,7 +18,7 @@ const App: React.FC = () => {
                     bottomRowContent="Informacje o najnowszych aktualizacjach"
                 />
             </Box>
-            <Footer/>
+
         </Box>
     )
 }

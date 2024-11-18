@@ -30,6 +30,7 @@ import {getNavItems} from './nav-items.ts';
 import {getUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {themeColors} from '@/theme/theme-colors.ts'
+import {useAuth} from "@/context/AuthContext.tsx";
 
 
 interface NavItem {
@@ -42,6 +43,7 @@ interface NavItem {
 const Navbar: React.FC = () => {
     const {isOpen, onToggle} = useDisclosure();
     const userMenuItems = getUserMenuItems();
+    const {user} = useAuth();
 
     return (
         <Box bg={themeColors.bgColor()} px={4}>
@@ -99,9 +101,9 @@ const Navbar: React.FC = () => {
                                     spacing="1px"
                                     ml="2">
                                     <Text fontSize="small" color={themeColors.fontColor()}
-                                    >ZALOGOWANY JAKO:</Text>
-                                    <Text fontSize="x-small" color={themeColors.fontColor()}
-                                    >TU BEDZIE USERNAME</Text>
+                                    >Zalogowany:</Text>
+                                    <Text fontSize="small" color={themeColors.fontColor()}
+                                    >{user?.login ?? 'Guest'}</Text>
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
                                     <FiChevronDown/>
@@ -120,8 +122,10 @@ const Navbar: React.FC = () => {
                                               bg: themeColors.highlightBgColor(),
                                               color: themeColors.popoverBgColor(),
                                               border: '1px solid white'
-                                          }}>
-                                    <Link href={item.href} _hover={{textDecoration: 'none'}}>
+                                          }}
+                                onClick={item.onClick ? item.onClick : undefined}
+                                >
+                                    <Link href={item.href}  _hover={{textDecoration: 'none'}}>
                                         {item.label}
                                     </Link>
                                 </MenuItem>

@@ -1,10 +1,11 @@
 'use client'
 
-import {Flex, Image, Stack, Text} from '@chakra-ui/react'
+import {Flex, Link, Stack} from '@chakra-ui/react'
 import {useAuth} from "@/context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import LoginForm from "./LoginForm.jsx";
+import AppBanner from "@/auth/common/AppBanner.tsx";
 
 const Login = () => {
 
@@ -22,30 +23,15 @@ const Login = () => {
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
                 <Stack spacing={4} w={'full'} maxW={'md'}>
                     <LoginForm/>
-                    {/*<Link color={"blue.600"} href="/register" align={'center'}>*/}
-                    {/*    Dont have an account? Register now*/}
-                    {/*</Link>*/}
+                    <Link color={"blue.600"} href="/register" alignSelf={'center'}>
+                        Dont have an account? Register now
+                    </Link>
+                    <Link color={"blue.600"} href="/reset-password" alignSelf={'center'}>
+                        Forget password?
+                    </Link>
                 </Stack>
             </Flex>
-            <Flex flex={1}
-                  p={10}
-                  flexDirection='column'
-                  alignItems={'center'}
-                  justifyContent={'center'}
-                  bgGradient={{sm: 'linear(to-r,blue.200,purple.600)'}}>
-                <Text fontSize={"6xl"} color={'white'} fontWeight={'bold'} mb={5}>
-                    TEST ENVIRONMENT
-                </Text>
-                <Image
-                    alt={'Login Image'}
-                    objectFit="scale-down"
-                    src={
-                        '/img/logo.jpg'
-                    }
-                    width={'600px'}
-                    height={'auto'}
-                />
-            </Flex>
+            <AppBanner/>
         </Stack>
     )
 }
