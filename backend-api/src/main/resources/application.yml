@@ -1,3 +1,4 @@
+#todo add application-docker.yml for docker build
 server:
   port: 8080
   error:
@@ -16,12 +17,10 @@ management:
         include: "health,info"
 
 spring:
-  profiles:
-    active: dev
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5444/sma}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5444/sma}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -48,7 +47,7 @@ spring:
       max-file-size: 20MB
       max-request-size: 25MB
   config:
-    import: "optional:file:.env[.properties]"
+    import: "optional:file:../sma/.env[.properties]"
 
   flyway:
     enabled: true
