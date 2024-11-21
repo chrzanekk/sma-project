@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Box, Button, Flex, Heading, Link, Stack, Text} from "@chakra-ui/react";
 import {confirmAccount} from "@/services/auth-service";
@@ -13,11 +13,12 @@ const ConfirmAccount = () => {
     // Pobieranie tokenu z URL
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");
+    const isCalled = useRef(false);
 
     useEffect(() => {
-        let isCalled = false;
-        if (token && !isCalled) {
-            isCalled = true;
+
+        if (token && !isCalled.current) {
+            isCalled.current = true;
             confirmAccount(token)
                 .then(() => {
                     console.log("Account confirmed successfully.");
@@ -28,10 +29,6 @@ const ConfirmAccount = () => {
                     setConfirmationStatus("error");
                 });
         }
-
-        return () => {
-            isCalled = true;
-        };
     }, [token]);
 
     return (

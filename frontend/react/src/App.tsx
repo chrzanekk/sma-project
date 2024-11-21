@@ -9,7 +9,7 @@ const App: React.FC = () => {
             <Navbar/>
             <Box flex="1" p={8}>
                 <DashboardGrid
-                    topRowContent="Pogoda na dziś: Słonecznie"
+                    topRowContent="Pogoda na dziś: Chujowa"
                     columnsContent={[
                         "Kolumna 1: Wiadomości",
                         "Kolumna 2: Wykresy sprzedaży",

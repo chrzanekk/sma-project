@@ -16,8 +16,7 @@ const ResetPasswordForm = () => {
             validateOnMount={true}
             validationSchema={Yup.object({
                 email: Yup.string()
-                    .min(4, "Password cannot be less than 4 characters")
-                    .max(20, "Password cannot be more than 20 characters")
+                    .email('Invalid email address')
                     .required("New password is required."),
             })}
             initialValues={{email: ""}}
