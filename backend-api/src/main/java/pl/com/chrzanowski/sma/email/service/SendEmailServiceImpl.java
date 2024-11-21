@@ -110,7 +110,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         Context context = new Context(locale);
         context.setVariable(LOGIN_PAGE_URL, scaffoldingAppUrl);
         context.setVariable("passwordResetLink",
-                scaffoldingAppUrl + "/account/password-reset?token=" + userTokenDTO.getToken());
+                scaffoldingAppUrl + "/reset-password?token=" + userTokenDTO.getToken());
         context.setVariable("tokenValidityTime", tokenValidityTimeInMinutes);
         String content = templateEngine.process("mail-password-reset", context);
         String title = chooseTitle(MailEvent.PASSWORD_RESET, locale);

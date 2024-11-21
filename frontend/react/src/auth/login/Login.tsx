@@ -26,7 +26,7 @@ const Login = () => {
                     <Link color={"blue.600"} href="/register" alignSelf={'center'}>
                         Dont have an account? Register now
                     </Link>
-                    <Link color={"blue.600"} href="/reset-password" alignSelf={'center'}>
+                    <Link color={"blue.600"} href="/request-reset-password" alignSelf={'center'}>
                         Forget password?
                     </Link>
                 </Stack>

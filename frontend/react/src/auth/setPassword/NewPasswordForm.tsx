@@ -43,7 +43,7 @@ const NewPasswordForm = () => {
 
                 resetPassword(requestData)
                     .then(() => {
-                        navigate("/login");
+                        navigate("/");
                         console.log("Password successfully reset");
                         successNotification("Success", "Password successfully reset")
                     })
