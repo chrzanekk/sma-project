@@ -4,10 +4,12 @@ import {useEffect} from "react";
 import {Flex, Link, Stack} from "@chakra-ui/react";
 import RegisterForm from "@/auth/register/RegisterForm.tsx";
 import AppBanner from "@/auth/common/AppBanner.tsx";
+import {useTranslation} from "react-i18next";
 
 const Register = () => {
     const {user} = useAuth();
     const navigate = useNavigate();
+    const {t} = useTranslation('auth');
 
     useEffect(() => {
         if (user) {
@@ -24,7 +26,7 @@ const Register = () => {
                     <RegisterForm/>
 
                     <Link color={"purple.600"} href={'/'} alignSelf={'center'}>
-                        Have an account? Login now.
+                        {t('register.haveAccount')}
                     </Link>
                 </Stack>
             </Flex>

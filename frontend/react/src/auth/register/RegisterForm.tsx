@@ -7,8 +7,10 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {MyTextInput} from "@/components/form/CustomFields";
 import {registerUser} from "@/services/auth-service.ts";
 import {RegisterRequest} from "@/types/user-types.ts";
+import {useTranslation} from "react-i18next";
 
 const RegisterForm = () => {
+    const {t} = useTranslation('auth');
     return (
         <Formik
             initialValues={{
@@ -21,22 +23,23 @@ const RegisterForm = () => {
             }}
             validationSchema={Yup.object({
                 login: Yup.string()
-                    .max(15, 'Must be 15 characters or less')
-                    .required('Required'),
+                    .min(5, t('verification.minLength', {count: 5}))
+                    .max(15, t('verification.maxLength',{count: 15}))
+                    .required(t('verification.required')),
                 email: Yup.string()
-                    .email('Invalid email address')
-                    .required('Required'),
+                    .email(t('verification.invalidEmail'))
+                    .required(t('verification.required')),
                 password: Yup.string()
-                    .min(4, 'Must be 4 characters or more')
-                    .max(10, 'Must be 10 characters or less')
-                    .required('Required'),
+                    .min(4, t('verification.minLength', {count: 4}))
+                    .max(10, t('verification.maxLength',{count: 10}))
+                    .required(t('verification.required')),
                 firstName: Yup.string()
-                    .min(1, 'Must be 1 character or more')
-                    .max(30, 'Must be 10 characters or less')
-                    .required('Required'),
+                    .min(2, t('verification.minLength', {count: 2}))
+                    .max(10, t('verification.maxLength',{count: 10}))
+                    .required(t('verification.required')),
                 lastName: Yup.string()
-                    .min(1, 'Must be 1 character or more')
-                    .max(30, 'Must be 10 characters or less')
+                    .min(2, t('verification.minLength', {count: 2}))
+                    .max(10, t('verification.maxLength',{count: 10}))
                     .required('Required')
             })}
             onSubmit={async (register: RegisterRequest, {setSubmitting}) => {
@@ -44,14 +47,14 @@ const RegisterForm = () => {
                 try {
                     await registerUser(register);
                     successNotification(
-                        "User registered successful.",
-                        `${register.login} was successfully saved. Please check your email to activate your account.`
+                        t('notifications.registerSuccess'),
+                        t('notifications.registerSuccessDetails', {login: register.login})
                     );
                 } catch (err: any) {
                     console.error(err);
                     errorNotification(
-                        "Registration failed",
-                        err.response?.data?.message || "An error occurred during registration."
+                        t('notifications.registerError'),
+                        err.response?.data?.message || t('notifications.registerErrorDetails')
                     );
                 } finally {
                     setSubmitting(false)
@@ -70,41 +73,41 @@ const RegisterForm = () => {
                         />
                     </Box>
                     <Box display="flex" justifyContent="center">
-                        <Heading fontSize="2xl" mb={15}>Register new account</Heading>
+                        <Heading fontSize="2xl" mb={15}>{t('register.header')}</Heading>
                     </Box>
                     <Stack spacing="24px">
                         <MyTextInput
-                            label="Login"
+                            label={t('register.login')}
                             name="login"
                             type="text"
                             placeholder="login"
                         />
                         <MyTextInput
-                            label="Email Address"
+                            label={t('register.email')}
                             name="email"
                             type="email"
                             placeholder="example@example.com"
                         />
                         <MyTextInput
-                            label="Password"
+                            label={t('register.password')}
                             name="password"
                             type="password"
-                            placeholder="Pick a secure password"
+                            placeholder={t('register.password')}
                         />
                         <MyTextInput
-                            label="Imię"
+                            label={t('register.firstName')}
                             name="firstName"
                             type="text"
-                            placeholder="Jan"
+                            placeholder={t('register.firstName')}
                         />
                         <MyTextInput
-                            label="Nazwisko"
+                            label={t('register.lastName')}
                             name="lastName"
                             type="text"
-                            placeholder="Kowalski"
+                            placeholder={t('register.lastName')}
                         />
                         <Button isDisabled={!isValid || isSubmitting} type="submit">
-                            Submit
+                            {t('register.submit')}
                         </Button>
                     </Stack>
                 </Form>
