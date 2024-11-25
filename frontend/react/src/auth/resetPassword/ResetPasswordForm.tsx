@@ -5,19 +5,21 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {MyTextInput} from "@/components/form/CustomFields.tsx";
 import {requestPasswordReset} from "@/services/auth-service.ts";
+import {useTranslation} from "react-i18next";
 
 
 const ResetPasswordForm = () => {
 
     const navigate = useNavigate();
+    const {t} = useTranslation('auth');
 
     return (
         <Formik
             validateOnMount={true}
             validationSchema={Yup.object({
                 email: Yup.string()
-                    .email('Invalid email address')
-                    .required("New password is required."),
+                    .email(t('verification.invalidEmail'))
+                    .required(t('verification.required')),
             })}
             initialValues={{email: ""}}
             onSubmit={(values, {setSubmitting}) => {
@@ -31,10 +33,10 @@ const ResetPasswordForm = () => {
                     .then(() => {
                         navigate("/");
                         console.log("Email with password reset link successful sent");
-                        successNotification("Success", "Email with password reset link successful sent");
+                        successNotification("Success", t('resetPassword.success'));
                     })
                     .catch((err) => {
-                        errorNotification("Error", err.response?.data?.message || "Failed to reset password.");
+                        errorNotification("Error", err.response?.data?.message || t('resetPassword.error'));
                     })
                     .finally(() => {
                         setSubmitting(false);
@@ -57,20 +59,20 @@ const ResetPasswordForm = () => {
                         </Box>
                         <Box display="flex" justifyContent="center">
                             <Heading fontSize="2xl" mb={15}>
-                                Request for password reset
+                                {t('resetPassword.header')}
                             </Heading>
                         </Box>
                         <MyTextInput
-                            label="Email"
+                            label={t('resetPassword.email')}
                             name="email"
                             type="email"
-                            placeholder="Enter your email"
+                            placeholder={t('resetPassword.placeholder')}
                         />
                         <Button
                             type="submit"
                             isDisabled={!isValid || isSubmitting}
                         >
-                            Send password reset link
+                            {t('resetPassword.submit')}
                         </Button>
                     </Stack>
                 </Form>
