@@ -2,15 +2,15 @@ import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Box, Button, Flex, Heading, Link, Stack, Text} from "@chakra-ui/react";
 import {confirmAccount} from "@/services/auth-service";
-import {errorNotification} from "@/notifications/notifications.ts";
+import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import AppBanner from "@/auth/common/AppBanner.tsx";
+import {useTranslation} from "react-i18next";
 
 const ConfirmAccount = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [confirmationStatus, setConfirmationStatus] = useState<"success" | "error" | "loading">("loading");
-
-    // Pobieranie tokenu z URL
+    const {t} = useTranslation(['auth', 'common']);
     const searchParams = new URLSearchParams(location.search);
     const token = searchParams.get("token");
     const isCalled = useRef(false);
@@ -21,11 +21,11 @@ const ConfirmAccount = () => {
             isCalled.current = true;
             confirmAccount(token)
                 .then(() => {
-                    console.log("Account confirmed successfully.");
+                    successNotification(t('success', {ns: "common"}), t('notifications.confirmSuccess'))
                     setConfirmationStatus("success");
                 })
                 .catch((err) => {
-                    errorNotification("Error", err.response?.data?.message || "Account confirmation failed.");
+                    errorNotification(t('error', {ns:"common"}), err.response?.data?.message || t('notification.confirmFailed'));
                     setConfirmationStatus("error");
                 });
         }
@@ -37,27 +37,28 @@ const ConfirmAccount = () => {
                 <Flex p={8} flex={1} align={'center'} justify={'center'}>
                     <Stack spacing={4} w={'full'} maxW={'md'}>
                         {confirmationStatus === "loading" && (
-                            <Heading textAlign="center" size="lg">Processing your request...</Heading>
+                            <Heading textAlign="center" size="lg">{t('common.processing')}</Heading>
                         )}
                         {confirmationStatus === "success" && (
                             <>
-                                <Heading textAlign="center" size="lg">Account Confirmed!</Heading>
-                                <Text textAlign="center">Your account has been successfully activated.</Text>
+                                <Heading textAlign="center" size="lg">{t('confirm.header')}</Heading>
+                                <Text textAlign="center">{t('confirm.info')}</Text>
                                 <Button
                                     colorScheme="teal"
                                     onClick={() => navigate("/")}
                                     alignSelf="center"
                                 >
-                                    Go to Login
+                                    {t('shared.goToLogin')}
                                 </Button>
                             </>
                         )}
                         {confirmationStatus === "error" && (
                             <>
-                                <Heading textAlign="center" size="lg" color="red.500">Confirmation Failed</Heading>
-                                <Text textAlign="center">Invalid or expired token. Please try again.</Text>
+                                <Heading textAlign="center" size="lg"
+                                         color="red.500">{t('confirm.headerFailed')}</Heading>
+                                <Text textAlign="center">{t('confirm.infoFailed')}</Text>
                                 <Link color="purple.600" href="/" alignSelf="center">
-                                    Back to Home
+                                    {t('shared.goToLogin')}
                                 </Link>
                             </>
                         )}

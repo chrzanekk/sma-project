@@ -2,35 +2,38 @@ import {useAuth} from "@/context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
-import {errorNotification} from "@/notifications/notifications.ts";
+import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {MyTextInput} from "@/components/form/CustomFields.tsx";
+import {useTranslation} from "react-i18next";
 
 
 const LoginForm = () => {
     const {login} = useAuth();
     const navigate = useNavigate();
+    const {t} = useTranslation(['auth', 'common'])
     return (
         <Formik
             validateOnMount={true}
             validationSchema={
                 Yup.object({
                     login: Yup.string()
-                        .required("Login is required."),
+                        .required(t('verification.required', {field: t('shared.login')})),
                     password: Yup.string()
-                        .min(4, "Password cannot be less than 4 characters")
-                        .max(10, "Password cannot be more than 10 characters")
-                        .required("Password is required.")
+                        .min(4, t('verification.minLength', {field: t('shared.password'), count: 4}))
+                        .max(10, t('verification.maxLength', {field: t('shared.password'), count: 10}))
+                        .required(t('verification.required', {field: t('shared.password')})),
                 })
             }
             initialValues={{login: '', password: '', rememberMe: false}}
             onSubmit={(values, {setSubmitting}) => {
                 setSubmitting(true);
                 login(values).then(() => {
+                    successNotification(t('success', { ns: "common" }), t("notifications.loginSuccess"))
                     navigate("/dashboard")
-                    console.log("Successfully log in")
                 }).catch(err => {
-                    errorNotification(err.code, err.response.data.message)
+                    //todo handle messages from backend and translate it
+                    errorNotification(t("error",{ns: "common"}), err.response?.data?.message || t("notifications.loginFailed"))
                 }).finally(() => {
                     setSubmitting(false)
                 })
@@ -51,17 +54,16 @@ const LoginForm = () => {
                             />
                         </Box>
                         <Box display="flex" justifyContent="center">
-                            <Heading fontSize={'2xl'} mb={15}>Login your to account/Zaloguj się /jeszcze nie zrobiłem
-                                tłumaczeń/</Heading>
+                            <Heading fontSize={'2xl'} mb={15}>{t('login.header')}</Heading>
                         </Box>
                         <MyTextInput
-                            label={"Login"}
+                            label={t('shared.login')}
                             name={"login"}
                             type={"text"}
-                            placeholder={"login"}
+                            placeholder={t('shared.login')}
                         />
                         <MyTextInput
-                            label={"Password"}
+                            label={t('shared.password')}
                             name={"password"}
                             type={"password"}
                             placeholder={"************"}

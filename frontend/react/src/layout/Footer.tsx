@@ -2,8 +2,11 @@
 
 import {Box, HStack, Image, Stack, Text} from '@chakra-ui/react'
 import {themeColors} from "@/theme/theme-colors.ts";
+import {useTranslation} from "react-i18next";
 
 export default function SmallWithLogoLeft() {
+
+    const {t} = useTranslation('footer')
     return (
         <Box bg={themeColors.bgColor()}>
             <Stack
@@ -16,7 +19,7 @@ export default function SmallWithLogoLeft() {
                         alt="Konrad Chrzanowski"
                         boxSize="45px"
                     />
-                    <Text fontWeight={700} color={themeColors.fontColor()}>© 2024 Konrad Chrzanowski. All rights reserved.</Text>
+                    <Text fontWeight={700} color={themeColors.fontColor()}>{t('copyright')}</Text>
                 </HStack>
             </Stack>
         </Box>

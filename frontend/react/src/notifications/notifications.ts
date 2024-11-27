@@ -9,7 +9,7 @@ const notifications = (title: string, description: string, status: "success" | "
         description,
         status,
         isClosable: true,
-        duration: 4000,
+        duration: 8000,
     });
 };
 

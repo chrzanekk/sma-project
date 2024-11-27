@@ -10,7 +10,7 @@ import {RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 
 const RegisterForm = () => {
-    const {t} = useTranslation('auth');
+    const {t} = useTranslation(['auth', 'common']);
     return (
         <Formik
             initialValues={{
@@ -23,37 +23,37 @@ const RegisterForm = () => {
             }}
             validationSchema={Yup.object({
                 login: Yup.string()
-                    .min(5, t('verification.minLength', {count: 5}))
-                    .max(15, t('verification.maxLength',{count: 15}))
-                    .required(t('verification.required')),
+                    .min(5, t('verification.minLength', {field: t('shared.login'), count: 5}))
+                    .max(15, t('verification.maxLength', {field: t('shared.login'), count: 15}))
+                    .required(t('verification.required', {field: t('shared.login')})),
                 email: Yup.string()
                     .email(t('verification.invalidEmail'))
-                    .required(t('verification.required')),
+                    .required(t('verification.required', {field: t('shared.email')})),
                 password: Yup.string()
-                    .min(4, t('verification.minLength', {count: 4}))
-                    .max(10, t('verification.maxLength',{count: 10}))
-                    .required(t('verification.required')),
+                    .min(4, t('verification.minLength', {field: t('shared.password'), count: 4}))
+                    .max(10, t('verification.maxLength', {field: t('shared.password'), count: 10}))
+                    .required(t('verification.required', {field: t('shared.password')})),
                 firstName: Yup.string()
-                    .min(2, t('verification.minLength', {count: 2}))
-                    .max(10, t('verification.maxLength',{count: 10}))
-                    .required(t('verification.required')),
+                    .min(2, t('verification.minLength', {field: t('register.firstName'), count: 2}))
+                    .max(10, t('verification.maxLength', {field: t('register.firstName'), count: 10}))
+                    .required(t('verification.required', {field: t('register.firstName')})),
                 lastName: Yup.string()
-                    .min(2, t('verification.minLength', {count: 2}))
-                    .max(10, t('verification.maxLength',{count: 10}))
-                    .required('Required')
+                    .min(2, t('verification.minLength', {field: t('register.lastName'), count: 2}))
+                    .max(10, t('verification.maxLength', {field: t('register.lastName'), count: 10}))
+                    .required(t('verification.required', {field: t('register.lastName')})),
             })}
             onSubmit={async (register: RegisterRequest, {setSubmitting}) => {
                 setSubmitting(true);
                 try {
                     await registerUser(register);
                     successNotification(
-                        t('notifications.registerSuccess'),
+                        t('success',{ns:"common"}),
                         t('notifications.registerSuccessDetails', {login: register.login})
                     );
                 } catch (err: any) {
                     console.error(err);
                     errorNotification(
-                        t('notifications.registerError'),
+                        t('error',{ns:"common"}),
                         err.response?.data?.message || t('notifications.registerErrorDetails')
                     );
                 } finally {
@@ -77,22 +77,22 @@ const RegisterForm = () => {
                     </Box>
                     <Stack spacing="24px">
                         <MyTextInput
-                            label={t('register.login')}
+                            label={t('shared.login')}
                             name="login"
                             type="text"
-                            placeholder="login"
+                            placeholder={t('shared.login')}
                         />
                         <MyTextInput
-                            label={t('register.email')}
+                            label={t('shared.email')}
                             name="email"
                             type="email"
                             placeholder="example@example.com"
                         />
                         <MyTextInput
-                            label={t('register.password')}
+                            label={t('shared.password')}
                             name="password"
                             type="password"
-                            placeholder={t('register.password')}
+                            placeholder={t('shared.password')}
                         />
                         <MyTextInput
                             label={t('register.firstName')}

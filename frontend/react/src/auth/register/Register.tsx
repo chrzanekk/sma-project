@@ -26,7 +26,7 @@ const Register = () => {
                     <RegisterForm/>
 
                     <Link color={"purple.600"} href={'/'} alignSelf={'center'}>
-                        {t('register.haveAccount')}
+                        {t('shared.haveAccount')}
                     </Link>
                 </Stack>
             </Flex>

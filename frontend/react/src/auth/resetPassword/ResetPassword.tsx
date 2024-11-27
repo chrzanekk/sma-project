@@ -6,11 +6,13 @@ import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import AppBanner from "@/auth/common/AppBanner.tsx";
 import ResetPasswordForm from "@/auth/resetPassword/ResetPasswordForm.tsx";
+import {useTranslation} from "react-i18next";
 
 const ResetPassword = () => {
 
     const {user} = useAuth();
     const navigate = useNavigate();
+    const {t} = useTranslation('auth')
 
     useEffect(() => {
         if (user) {
@@ -24,10 +26,10 @@ const ResetPassword = () => {
                 <Stack spacing={4} w={'full'} maxW={'md'}>
                     <ResetPasswordForm/>
                     <Link color={"blue.600"} href="/register" alignSelf={'center'}>
-                        Dont have an account? Register now
+                        {t('shared.dontHaveAccount')}
                     </Link>
                     <Link color={"blue.600"} href="/" alignSelf={'center'}>
-                        Back to login page.
+                        {t('shared.goToLogin')}
                     </Link>
                 </Stack>
             </Flex>

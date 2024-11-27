@@ -1,4 +1,8 @@
 {
-  "welcome": "Witamy w naszej aplikacji",
-  "logout": "Wyloguj"
+    "welcome": "Witamy w aplikacji SMA",
+    "logout": "Wyloguj",
+    "error": "Błąd",
+    "success": "Sukces",
+    "processing": "Przetwarzam dane..."
+
 }

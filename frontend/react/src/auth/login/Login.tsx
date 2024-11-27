@@ -6,11 +6,13 @@ import {useNavigate} from "react-router-dom";
 import {useEffect} from "react";
 import LoginForm from "./LoginForm.jsx";
 import AppBanner from "@/auth/common/AppBanner.tsx";
+import {useTranslation} from "react-i18next";
 
 const Login = () => {
 
     const {user} = useAuth();
     const navigate = useNavigate();
+    const {t} =useTranslation('auth')
 
     useEffect(() => {
         if (user) {
@@ -24,10 +26,10 @@ const Login = () => {
                 <Stack spacing={4} w={'full'} maxW={'md'}>
                     <LoginForm/>
                     <Link color={"blue.600"} href="/register" alignSelf={'center'}>
-                        Dont have an account? Register now
+                        {t('shared.dontHaveAccount')}
                     </Link>
                     <Link color={"blue.600"} href="/request-reset-password" alignSelf={'center'}>
-                        Forget password?
+                        {t('login.forgetPassword')}
                     </Link>
                 </Stack>
             </Flex>

@@ -5,6 +5,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {MyTextInput} from "@/components/form/CustomFields.tsx";
 import {resetPassword} from "@/services/auth-service.ts";
+import {useTranslation} from "react-i18next";
 
 
 const NewPasswordForm = () => {
@@ -13,9 +14,11 @@ const NewPasswordForm = () => {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const token = queryParams.get('token');
+    const {t} = useTranslation(['auth', 'common']);
+
 
     if (!token) {
-        errorNotification("Error", "Invalid or missing token")
+        errorNotification(t('common.error'), t("newPassword.invalidToken"))
         navigate("/")
         return null;
     }
@@ -24,12 +27,12 @@ const NewPasswordForm = () => {
             validateOnMount={true}
             validationSchema={Yup.object({
                 password: Yup.string()
-                    .min(4, "Password cannot be less than 4 characters")
-                    .max(20, "Password cannot be more than 20 characters")
-                    .required("New password is required."),
+                    .min(6, t('verification.minLength', {field: t('shared.password'), count: 6}))
+                    .max(20, t('verification.maxLength', {field: t('shared.password'), count: 20}))
+                    .required(t('verification.required', {field: t('shared.password')})),
                 confirmPassword: Yup.string()
-                    .oneOf([Yup.ref("password")], "Passwords must match")
-                    .required("Please confirm your new password."),
+                    .oneOf([Yup.ref("password")], t('verification.passwordNotMatch'))
+                    .required(t('verification.required', {field: t('newPassword.confirmPassword')})),
             })}
             initialValues={{password: "", confirmPassword: ""}}
             onSubmit={(values, {setSubmitting}) => {
@@ -44,11 +47,10 @@ const NewPasswordForm = () => {
                 resetPassword(requestData)
                     .then(() => {
                         navigate("/");
-                        console.log("Password successfully reset");
-                        successNotification("Success", "Password successfully reset")
+                        successNotification(t('success', {ns: "common"}), t("notifications.resetPasswordSuccess"));
                     })
                     .catch((err) => {
-                        errorNotification("Error", err.response?.data?.message || "Failed to reset password.");
+                        errorNotification(t('error',{ns: "common"}), err.response?.data?.message || t("notifications.resetPasswordError"));
                     })
                     .finally(() => {
                         setSubmitting(false);
@@ -71,26 +73,26 @@ const NewPasswordForm = () => {
                         </Box>
                         <Box display="flex" justifyContent="center">
                             <Heading fontSize="2xl" mb={15}>
-                                Set New Password
+                                {t("newPassword.header")}
                             </Heading>
                         </Box>
                         <MyTextInput
-                            label="New Password"
+                            label={t("newPassword.newPassword")}
                             name="password"
                             type="password"
-                            placeholder="Enter your new password"
+                            placeholder={t("newPassword.newPassword")}
                         />
                         <MyTextInput
-                            label="Confirm New Password"
+                            label={t("newPassword.confirmPassword")}
                             name="confirmPassword"
                             type="password"
-                            placeholder="Confirm your new password"
+                            placeholder={t("newPassword.confirmPassword")}
                         />
                         <Button
                             type="submit"
                             isDisabled={!isValid || isSubmitting}
                         >
-                            Set New Password
+                            {t("newPassword.submit")}
                         </Button>
                     </Stack>
                 </Form>

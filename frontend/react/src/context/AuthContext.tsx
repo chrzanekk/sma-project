@@ -5,6 +5,7 @@ import {UserFromToken} from "../types/user-types.ts";
 import {AuthContextType} from "@/types/auth-context-types.ts";
 import {JwtPayload} from "@/types/jwt-payload.ts";
 import {useTranslation} from "react-i18next";
+import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -15,7 +16,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({children}: AuthProviderProps) => {
     const [user, setUser] = useState<UserFromToken | null>(null);
 
-    const {t} = useTranslation();
+    const {t} = useTranslation(['auth', 'common']);
 
     const setUserFromToken = () => {
         const token = localStorage.getItem("auth");
@@ -55,29 +56,25 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     }, []);
 
     const login = async (usernameAndPassword: any) => {
-        try {
-            const res = await performLogin(usernameAndPassword, t);
+        const res = await performLogin(usernameAndPassword);
 
-            const jwtToken = res.headers["authorization"];
-            if (!jwtToken) {
-                throw new Error("Authorization token not found in response headers");
-            }
-            localStorage.setItem("auth", jwtToken);
-
-            const decodedToken = jwtDecode<JwtPayload>(jwtToken);
-            setUserData(decodedToken);
-
-            return res;
-        } catch (err) {
-            console.error("ResetPassword error:", err);
-            throw err;
+        const jwtToken = res.headers["authorization"];
+        if (!jwtToken) {
+            errorNotification(t('error', {ns: "common"}), t('notifications.authTokenNotFoundInHeader'))
         }
+        localStorage.setItem("auth", jwtToken);
+
+        const decodedToken = jwtDecode<JwtPayload>(jwtToken);
+        setUserData(decodedToken);
+
+        return res;
     };
 
     const logOut = () => {
         localStorage.removeItem("auth");
         localStorage.removeItem("user");
         setUser(null);
+        successNotification(t('success', {ns: "common"}), t('notifications.logoutSuccess'))
     };
 
     const isAuthenticated = () => {

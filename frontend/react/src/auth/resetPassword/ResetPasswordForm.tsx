@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 const ResetPasswordForm = () => {
 
     const navigate = useNavigate();
-    const {t} = useTranslation('auth');
+    const {t} = useTranslation(['auth','common']);
 
     return (
         <Formik
@@ -19,7 +19,7 @@ const ResetPasswordForm = () => {
             validationSchema={Yup.object({
                 email: Yup.string()
                     .email(t('verification.invalidEmail'))
-                    .required(t('verification.required')),
+                    .required(t('verification.required',{field: t('shared.email')})),
             })}
             initialValues={{email: ""}}
             onSubmit={(values, {setSubmitting}) => {
@@ -32,11 +32,10 @@ const ResetPasswordForm = () => {
                 requestPasswordReset(requestData)
                     .then(() => {
                         navigate("/");
-                        console.log("Email with password reset link successful sent");
-                        successNotification("Success", t('resetPassword.success'));
+                        successNotification(t('success', {ns: "common"}), t('notifications.resetPasswordSuccess'));
                     })
                     .catch((err) => {
-                        errorNotification("Error", err.response?.data?.message || t('resetPassword.error'));
+                        errorNotification(t('error', {ns: "common"}), err.response?.data?.message || t('notifications.resetPasswordError'));
                     })
                     .finally(() => {
                         setSubmitting(false);
@@ -63,7 +62,7 @@ const ResetPasswordForm = () => {
                             </Heading>
                         </Box>
                         <MyTextInput
-                            label={t('resetPassword.email')}
+                            label={t('shared.email')}
                             name="email"
                             type="email"
                             placeholder={t('resetPassword.placeholder')}

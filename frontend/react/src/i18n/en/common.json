@@ -1,4 +1,7 @@
 {
-  "welcome": "Welcome to our application",
-  "logout": "Logout"
+    "welcome": "Welcom in SMA Application",
+    "logout": "Logout",
+    "error": "Error",
+    "success": "Success",
+    "processing": "Processsing..."
 }
