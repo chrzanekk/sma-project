@@ -29,8 +29,9 @@ import {FiChevronDown} from "react-icons/fi";
 import {getNavItems} from './nav-items.ts';
 import {getUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
-import {themeColors} from '@/theme/theme-colors.ts'
-import {useAuth} from "@/context/AuthContext.tsx";
+import {themeColors} from '@/theme/theme-colors.ts';
+import {useTranslation} from "react-i18next";
+import fetchUser from '@/hooks/FetchUser.tsx';
 
 
 interface NavItem {
@@ -43,7 +44,8 @@ interface NavItem {
 const Navbar: React.FC = () => {
     const {isOpen, onToggle} = useDisclosure();
     const userMenuItems = getUserMenuItems();
-    const {user} = useAuth();
+    const user = fetchUser();
+    const {t} = useTranslation('navbar');
 
     return (
         <Box bg={themeColors.bgColor()} px={4}>
@@ -101,9 +103,9 @@ const Navbar: React.FC = () => {
                                     spacing="1px"
                                     ml="2">
                                     <Text fontSize="small" color={themeColors.fontColor()}
-                                    >Zalogowany:</Text>
+                                    >{t('loggedAs')}</Text>
                                     <Text fontSize="small" color={themeColors.fontColor()}
-                                    >{user?.login ?? 'Guest'}</Text>
+                                    >{user ? `${user.firstName} ${user.lastName}` : 'Guest'}</Text>
                                 </VStack>
                                 <Box display={{base: 'none', md: 'flex'}}>
                                     <FiChevronDown/>

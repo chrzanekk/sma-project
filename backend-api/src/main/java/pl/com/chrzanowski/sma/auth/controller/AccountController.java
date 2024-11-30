@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -26,6 +28,9 @@ public class AccountController {
     @GetMapping("/get")
     public ResponseEntity<UserInfoResponse> getAccount() {
         log.debug("REST: Get account information");
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        log.debug("Authenticated user: {}", authentication.getName());
+        log.debug("User authorities: {}", authentication.getAuthorities());
         UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
         return ResponseEntity.ok(userInfoResponse);
     }

@@ -58,7 +58,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     const login = async (usernameAndPassword: any) => {
         const res = await performLogin(usernameAndPassword);
 
-        const jwtToken = res.headers["authorization"];
+        const jwtToken = res.data["id_token"];
         if (!jwtToken) {
             errorNotification(t('error', {ns: "common"}), t('notifications.authTokenNotFoundInHeader'))
         }

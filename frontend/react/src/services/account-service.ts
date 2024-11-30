@@ -16,9 +16,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
         const response = await api.get(`api/account/get`,
             getAuthConfig())
         return response.data;
-    } catch (error) {
-        console.error("Błąd pobierania informacji o użytkowniku:", error);
-        //todo add translation for error here
+    } catch (error: any) {
         throw error;
     }
 }
@@ -27,7 +25,6 @@ export const updateUserAccount = async (user: User): Promise<void> => {
     try {
         await api.put("/api/account/update", user, getAuthConfig());
     } catch (error: any) {
-        console.error("Błąd aktualizacji konta użytkownika:", error);
         throw error;
     }
 };
