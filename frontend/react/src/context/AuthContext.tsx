@@ -31,7 +31,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
             id: decodedToken.id,
             email: decodedToken.email,
             login: decodedToken.sub,
-            roles: decodedToken.authorities,
+            roles: Array.isArray(decodedToken.authorities) ? decodedToken.authorities : Array.from(decodedToken.authorities),
         };
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));

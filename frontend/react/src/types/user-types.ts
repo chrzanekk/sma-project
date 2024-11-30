@@ -52,5 +52,5 @@ export interface UserFromToken {
     id: number;
     login: string;
     email: string;
-    roles: Set<string>;
+    roles: string[];
 }
