@@ -1,12 +1,8 @@
-import {UserFromToken} from "@/types/user-types.ts";
-import {JwtPayload} from "@/types/jwt-payload.ts";
+import {UserInfo} from "@/types/user-types.ts";
 
 export interface AuthContextType {
-    user: UserFromToken | null;
-    login: (usernameAndPassword: any) => Promise<any>;
+    user: UserInfo | null;
+    loginUser: (usernameAndPassword: any) => Promise<any>;
     logOut: () => void;
     isAuthenticated: () => boolean;
-    setUserFromToken: () => void;
-    updateUserData: (updatedData: Partial<UserFromToken>) => void;
-    setUserData: (decodedToken: JwtPayload) => void;
 }

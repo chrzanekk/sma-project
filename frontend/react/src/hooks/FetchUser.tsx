@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
-import { useAuth } from "@/context/AuthContext.tsx";
-import { errorNotification } from "@/notifications/notifications.ts";
-import { getUserInfo } from "@/services/account-service.ts";
-import { isTokenExpired } from "@/utils/token-utils.ts";
-import { UserInfo } from "@/types/user-types.ts";
+import {useEffect, useState} from "react";
+import {useAuth} from "@/context/AuthContext.tsx";
+import {errorNotification} from "@/notifications/notifications.ts";
+import {getUserInfo} from "@/services/account-service.ts";
+import {isTokenExpired} from "@/utils/token-utils.ts";
+import {UserInfo} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 
-const fetchUser = (): UserInfo | null => {
+const fetchUser = (): [UserInfo | null, boolean] => {
     const [user, setUser] = useState<UserInfo | null>(null);
-    const { logOut } = useAuth();
+    const {logOut} = useAuth();
+    const [loading, setLoading] = useState(true);
     const {t} = useTranslation('auth');
 
     useEffect(() => {
@@ -20,6 +21,7 @@ const fetchUser = (): UserInfo | null => {
                     t('notifications.logInAgain')
                 );
                 logOut();
+                setLoading(false);
                 return;
             }
 
@@ -28,13 +30,18 @@ const fetchUser = (): UserInfo | null => {
                     setUser(response);
                 })
                 .catch((error) => {
-                    console.error(error);
-                    errorNotification(t('error', {ns:'common'}), error.response?.data?.message || t('notifications.loginFailed'));
+                    errorNotification(t('error', {ns: 'common'}), error.response?.data?.message || t('notifications.loginFailed'));
+                    logOut();
+                })
+                .finally(() => {
+                    setLoading(false)
                 });
+        } else {
+            setLoading(false);
         }
-    }, [logOut]);
+    }, [logOut, t]);
 
-    return user;
+    return [user, loading];
 };
 
 export default fetchUser;

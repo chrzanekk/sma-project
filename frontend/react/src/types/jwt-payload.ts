@@ -6,3 +6,7 @@ export interface JwtPayload {
     exp: number;
     authorities: string[];
 }
+
+export interface JwtTokenResponse {
+    id_token: string;
+}

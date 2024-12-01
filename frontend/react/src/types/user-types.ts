@@ -24,7 +24,7 @@ export interface RegisterRequest {
     role?: Set<string>;
 }
 
-export interface UserUpdateRequest {
+export interface UserInfo {
     id?: number;
     email: string;
     login: string;
@@ -33,16 +33,6 @@ export interface UserUpdateRequest {
     position: string;
     locked: boolean;
     enabled: boolean;
-    roles?: string[];
-}
-
-export interface UserInfo {
-    id?: number;
-    email: string;
-    login: string;
-    firstName: string;
-    lastName: string;
-    position: string;
     roles?: string[];
 }
 

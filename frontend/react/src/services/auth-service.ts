@@ -1,12 +1,13 @@
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import {LoginRequest, NewPasswordPutRequest, PasswordResetRequest, RegisterRequest} from "@/types/user-types.ts";
+import {JwtTokenResponse} from "@/types/jwt-payload.ts";
 
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-export const login = async (loginRequest: LoginRequest) => {
+export const login = async (loginRequest: LoginRequest): Promise<AxiosResponse<JwtTokenResponse>> => {
     try {
         return await api.post('/api/auth/login', loginRequest);
     } catch (e: any) {

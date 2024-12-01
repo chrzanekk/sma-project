@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 
 
 const LoginForm = () => {
-    const {login} = useAuth();
+    const {loginUser} = useAuth();
     const navigate = useNavigate();
     const {t} = useTranslation(['auth', 'common'])
     return (
@@ -28,7 +28,7 @@ const LoginForm = () => {
             initialValues={{login: '', password: '', rememberMe: false}}
             onSubmit={(values, {setSubmitting}) => {
                 setSubmitting(true);
-                login(values).then(() => {
+                loginUser(values).then(() => {
                     successNotification(t('success', { ns: "common" }), t("notifications.loginSuccess"))
                     navigate("/dashboard")
                 }).catch(err => {

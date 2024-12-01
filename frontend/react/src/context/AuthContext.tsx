@@ -1,11 +1,11 @@
-import {createContext, ReactNode, useContext, useEffect, useState} from "react";
-import {login as performLogin} from "../services/auth-service.ts";
-import {jwtDecode} from "jwt-decode";
-import {UserFromToken} from "../types/user-types.ts";
-import {AuthContextType} from "@/types/auth-context-types.ts";
-import {JwtPayload} from "@/types/jwt-payload.ts";
+import {createContext, ReactNode, useContext} from "react";
 import {useTranslation} from "react-i18next";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import useUser from "@/hooks/UseUser.tsx";
+import {AuthContextType} from "@/types/auth-context-types.ts";
+import {isTokenExpired} from "@/utils/token-utils.ts";
+import {getUserInfo} from "@/services/account-service.ts";
+import {login} from "@/services/auth-service.ts";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -14,67 +14,43 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({children}: AuthProviderProps) => {
-    const [user, setUser] = useState<UserFromToken | null>(null);
-
+    const {user, updateUser, clearUser} = useUser();
     const {t} = useTranslation(['auth', 'common']);
 
-    const setUserFromToken = () => {
-        const token = localStorage.getItem("auth");
-        if (token) {
-            const decodedToken = jwtDecode<JwtPayload>(token);
-            setUserData(decodedToken);
+    const loginUser = async (usernameAndPassword: any): Promise<void> => {
+        try {
+            const res = await login(usernameAndPassword);
+
+            const jwtToken = res.data.id_token;
+            if (!jwtToken) {
+                errorNotification(
+                    t('error', {ns: "common"}),
+                    t('notifications.authTokenNotFoundInHeader')
+                );
+                return;
+            }
+
+            localStorage.setItem("auth", jwtToken);
+
+            const userInfo = await getUserInfo();
+            updateUser(userInfo);
+
+        } catch (error) {
+            errorNotification(
+                t('error', {ns: "common"}),
+                t('notifications.loginFailed')
+            );
+            throw error;
         }
-    };
-
-    const setUserData = (decodedToken: JwtPayload) => {
-        const userData: UserFromToken = {
-            id: decodedToken.id,
-            email: decodedToken.email,
-            login: decodedToken.sub,
-            roles: Array.isArray(decodedToken.authorities) ? decodedToken.authorities : Array.from(decodedToken.authorities),
-        };
-        setUser(userData);
-        localStorage.setItem("user", JSON.stringify(userData));
-    };
-
-    const updateUserData = (updatedData: Partial<UserFromToken>) => {
-        const newUser = {
-            ...user,
-            ...updatedData,
-        } as UserFromToken;
-        setUser(newUser);
-        localStorage.setItem("user", JSON.stringify(newUser));
-    };
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser) as UserFromToken);
-        } else {
-            setUserFromToken();
-        }
-    }, []);
-
-    const login = async (usernameAndPassword: any) => {
-        const res = await performLogin(usernameAndPassword);
-
-        const jwtToken = res.data["id_token"];
-        if (!jwtToken) {
-            errorNotification(t('error', {ns: "common"}), t('notifications.authTokenNotFoundInHeader'))
-        }
-        localStorage.setItem("auth", jwtToken);
-
-        const decodedToken = jwtDecode<JwtPayload>(jwtToken);
-        setUserData(decodedToken);
-
-        return res;
     };
 
     const logOut = () => {
         localStorage.removeItem("auth");
-        localStorage.removeItem("user");
-        setUser(null);
-        successNotification(t('success', {ns: "common"}), t('notifications.logoutSuccess'))
+        clearUser();
+        successNotification(
+            t('success', {ns: "common"}),
+            t('notifications.logoutSuccess')
+        );
     };
 
     const isAuthenticated = () => {
@@ -82,24 +58,16 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         if (!token) {
             return false;
         }
-        const {exp: expiration} = jwtDecode<JwtPayload>(token);
-        if (Date.now() > expiration * 1000) {
-            logOut();
-            return false;
-        }
-        return true;
+        return !isTokenExpired(token);
     };
 
     return (
         <AuthContext.Provider
             value={{
                 user,
-                login,
+                loginUser,
                 logOut,
                 isAuthenticated,
-                setUserFromToken,
-                updateUserData,
-                setUserData,
             }}
         >
             {children}

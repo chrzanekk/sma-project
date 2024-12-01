@@ -1,5 +1,5 @@
 import axios from "axios";
-import {UserInfo, UserPasswordChangeRequest, UserRoleUpdateRequest, UserUpdateRequest} from "@/types/user-types.ts";
+import {UserInfo, UserPasswordChangeRequest, UserRoleUpdateRequest} from "@/types/user-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -21,7 +21,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
     }
 }
 
-export const updateUserAccount = async (user: UserUpdateRequest): Promise<void> => {
+export const updateUserAccount = async (user: UserInfo): Promise<void> => {
     try {
         await api.put("/api/account/update", user, getAuthConfig());
     } catch (error: any) {

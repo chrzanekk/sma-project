@@ -31,8 +31,7 @@ import {getUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {themeColors} from '@/theme/theme-colors.ts';
 import {useTranslation} from "react-i18next";
-import fetchUser from '@/hooks/FetchUser.tsx';
-
+import useUser from "@/hooks/UseUser.tsx";
 
 interface NavItem {
     label: string
@@ -44,7 +43,7 @@ interface NavItem {
 const Navbar: React.FC = () => {
     const {isOpen, onToggle} = useDisclosure();
     const userMenuItems = getUserMenuItems();
-    const user = fetchUser();
+    const {user} = useUser();
     const {t} = useTranslation('navbar');
 
     return (
