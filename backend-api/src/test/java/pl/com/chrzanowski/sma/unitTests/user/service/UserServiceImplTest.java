@@ -306,12 +306,12 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserPassword_Success() {
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "currentPassword", "newPassword");
+        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "password", "newPassword");
         userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toDto(user)).thenReturn(userDTO);
-        when(encoder.matches("currentPassword", userDTO.getPassword())).thenReturn(true);
+        when(encoder.matches("password", userDTO.getPassword())).thenReturn(true);
         when(encoder.encode("newPassword")).thenReturn("encodedNewPassword");
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
 
@@ -337,7 +337,7 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserPassword_EmptyNewPassword() {
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "currentPassword", "");
+        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "password", "");
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toDto(user)).thenReturn(userDTO);

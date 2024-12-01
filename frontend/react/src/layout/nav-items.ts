@@ -11,6 +11,10 @@ export const getNavItems = (): Array<NavItem> => {
     const {t} = useTranslation('navbar');
     return [
         {
+            label: t('dashboard'),
+            href: '/dashboard'
+        },
+        {
             label: t('diary'),
             children: [
                 {

@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
         if (userPasswordChangeRequest.newPassword() == null || userPasswordChangeRequest.newPassword().isEmpty()) {
             throw new IllegalStateException("New password cannot be empty");
         }
-        if (!encoder.matches(userPasswordChangeRequest.currentPassword(), existingUserDTO.getPassword())) {
+        if (!encoder.matches(userPasswordChangeRequest.password(), existingUserDTO.getPassword())) {
             throw new IllegalStateException("Current password does not match");
         }
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();

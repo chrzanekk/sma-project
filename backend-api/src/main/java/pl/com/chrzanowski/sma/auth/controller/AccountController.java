@@ -9,10 +9,14 @@ import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 @RestController
@@ -21,9 +25,11 @@ public class AccountController {
 
     private final Logger log = LoggerFactory.getLogger(AccountController.class);
     private final UserService userService;
+    private final RoleService roleService;
 
-    public AccountController(UserService userService) {
+    public AccountController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/get")
@@ -36,13 +42,14 @@ public class AccountController {
     @PutMapping("/update")
     public ResponseEntity<Void> updateAccount(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
         log.debug("REST: Update account for user: {}", userUpdateRequest.getLogin());
+        Set<RoleDTO> roleDTOList = roleService.findAllByListOfNames(userUpdateRequest.getRoles());
         UserDTO userDTO = UserDTO.builder()
                 .id(userUpdateRequest.getId())
                 .login(userUpdateRequest.getLogin())
                 .email(userUpdateRequest.getEmail())
                 .firstName(userUpdateRequest.getFirstName())
                 .lastName(userUpdateRequest.getLastName())
-                .roles(new HashSet<>(userUpdateRequest.getRoles()))
+                .roles(roleDTOList)
                 .locked(userUpdateRequest.getLocked())
                 .enabled(userUpdateRequest.getEnabled()).build();
         userService.update(userDTO);

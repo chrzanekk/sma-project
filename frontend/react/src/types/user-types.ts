@@ -36,6 +36,18 @@ export interface UserInfo {
     roles?: string[];
 }
 
+export interface UserUpdateRequest {
+    id?: number;
+    email: string;
+    login: string;
+    firstName: string;
+    lastName: string;
+    position: string;
+    locked: boolean;
+    enabled: boolean;
+    roles?: string[];
+}
+
 export interface UserPasswordChangeRequest {
     userId: number;
     password: string;
@@ -44,12 +56,5 @@ export interface UserPasswordChangeRequest {
 
 export interface UserRoleUpdateRequest {
     userId: number;
-    roles: string[];
-}
-
-export interface UserFromToken {
-    id: number;
-    login: string;
-    email: string;
     roles: string[];
 }

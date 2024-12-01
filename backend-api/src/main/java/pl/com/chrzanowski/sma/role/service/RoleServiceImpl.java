@@ -14,6 +14,8 @@ import pl.com.chrzanowski.sma.role.model.Role;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -73,6 +75,12 @@ public class RoleServiceImpl implements RoleService {
         } else {
             throw new RoleException("Error Role not found");
         }
+    }
+
+    @Override
+    public Set<RoleDTO> findAllByListOfNames(List<String> names) {
+        log.debug("Fetching all roles with names {}", names);
+        return names.stream().map(this::findByName).collect(Collectors.toSet());
     }
 
     private boolean isRoleIsBase(Role role) {

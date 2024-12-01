@@ -2,7 +2,6 @@
 
 import React from 'react'
 import {
-    Avatar,
     Box,
     Collapse,
     Flex,
@@ -61,12 +60,15 @@ const Navbar: React.FC = () => {
                 {/* Logo and Desktop Navigation */}
                 <HStack spacing={8} alignItems={'center'}>
                     <Box>
-                        <Image
-                            borderRadius='full'
-                            boxSize='75px'
-                            src='/img/sma-logo.png'
-                            alt='S.M.A.'
-                        />
+                        <Link href="/dashboard">
+                            <Image
+                                borderRadius="full"
+                                boxSize="75px"
+                                src="/img/sma-logo.png"
+                                alt="S.M.A."
+                                cursor="pointer" // Dodano kursor wskazujący, że logo jest klikalne
+                            />
+                        </Link>
                     </Box>
                     <HStack as={'nav'} spacing={1} display={{base: 'none', md: 'flex'}}>
                         <DesktopNav/>
@@ -90,12 +92,6 @@ const Navbar: React.FC = () => {
                             }}
                         >
                             <HStack>
-                                <Avatar
-                                    size={'md'}
-                                    src={
-                                        'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                                    }
-                                />
                                 <VStack
                                     display={{base: 'none', md: 'flex'}}
                                     alignItems="flex-start"
@@ -124,9 +120,9 @@ const Navbar: React.FC = () => {
                                               color: themeColors.popoverBgColor(),
                                               border: '1px solid white'
                                           }}
-                                onClick={item.onClick ? item.onClick : undefined}
+                                          onClick={item.onClick ? item.onClick : undefined}
                                 >
-                                    <Link href={item.href}  _hover={{textDecoration: 'none'}}>
+                                    <Link href={item.href} _hover={{textDecoration: 'none'}}>
                                         {item.label}
                                     </Link>
                                 </MenuItem>

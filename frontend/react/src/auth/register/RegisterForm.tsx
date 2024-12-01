@@ -34,13 +34,13 @@ const RegisterForm = () => {
                     .max(10, t('verification.maxLength', {field: t('shared.password'), count: 10}))
                     .required(t('verification.required', {field: t('shared.password')})),
                 firstName: Yup.string()
-                    .min(2, t('verification.minLength', {field: t('register.firstName'), count: 2}))
-                    .max(10, t('verification.maxLength', {field: t('register.firstName'), count: 10}))
-                    .required(t('verification.required', {field: t('register.firstName')})),
+                    .min(2, t('verification.minLength', {field: t('shared.firstName'), count: 2}))
+                    .max(10, t('verification.maxLength', {field: t('shared.firstName'), count: 10}))
+                    .required(t('verification.required', {field: t('shared.firstName')})),
                 lastName: Yup.string()
-                    .min(2, t('verification.minLength', {field: t('register.lastName'), count: 2}))
-                    .max(10, t('verification.maxLength', {field: t('register.lastName'), count: 10}))
-                    .required(t('verification.required', {field: t('register.lastName')})),
+                    .min(2, t('verification.minLength', {field: t('shared.lastName'), count: 2}))
+                    .max(10, t('verification.maxLength', {field: t('shared.lastName'), count: 10}))
+                    .required(t('verification.required', {field: t('shared.lastName')})),
             })}
             onSubmit={async (register: RegisterRequest, {setSubmitting}) => {
                 setSubmitting(true);

@@ -61,6 +61,11 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         return !isTokenExpired(token);
     };
 
+    const setAuth = (updatedUser: any) => {
+        updateUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -68,6 +73,7 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
                 loginUser,
                 logOut,
                 isAuthenticated,
+                setAuth,
             }}
         >
             {children}

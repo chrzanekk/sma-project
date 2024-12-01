@@ -24,5 +24,5 @@ public class UserUpdateRequest {
     String position;
     Boolean locked;
     Boolean enabled;
-    List<RoleDTO> roles;
+    List<String> roles;
 }

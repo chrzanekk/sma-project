@@ -5,4 +5,5 @@ export interface AuthContextType {
     loginUser: (usernameAndPassword: any) => Promise<any>;
     logOut: () => void;
     isAuthenticated: () => boolean;
+    setAuth: (updatedUser: UserInfo) => void;
 }

@@ -2,6 +2,7 @@ import { useColorModeValue } from '@chakra-ui/react';
 
 export const themeColors = {
     bgColor: () => useColorModeValue('green.300', 'green.900'),
+    bgColorLight: () => useColorModeValue('green.100', 'green.900'),
     popoverBgColor: () => useColorModeValue('white', 'green.300'),
     highlightBgColor: () => useColorModeValue('green.400', 'green.900'),
     borderColor: () => useColorModeValue('green.100','green.100'),
