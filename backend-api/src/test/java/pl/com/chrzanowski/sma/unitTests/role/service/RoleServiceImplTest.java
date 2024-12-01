@@ -170,4 +170,64 @@ class RoleServiceImplTest {
         verify(roleDao, times(0)).deleteById(roleId);
     }
 
+    @Test
+    void testFindAllByListOfNames_Success() {
+        // Arrange
+        List<String> roleNames = List.of(ERole.ROLE_USER.getRoleName(), ERole.ROLE_ADMIN.getRoleName());
+
+        Role roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        Role roleAdmin = Role.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build();
+
+        RoleDTO roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        RoleDTO roleAdminDTO = RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build();
+
+        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.of(roleUser));
+        when(roleDao.findByName(ERole.ROLE_ADMIN.getRoleName())).thenReturn(Optional.of(roleAdmin));
+
+        when(roleMapper.toDto(roleUser)).thenReturn(roleUserDTO);
+        when(roleMapper.toDto(roleAdmin)).thenReturn(roleAdminDTO);
+
+        // Act
+        Set<RoleDTO> result = roleService.findAllByListOfNames(roleNames);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER.getRoleName())));
+        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN.getRoleName())));
+
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
+        verify(roleDao, times(1)).findByName(ERole.ROLE_ADMIN.getRoleName());
+    }
+
+    @Test
+    void testFindAllByListOfNames_RoleNotFound() {
+        // Arrange
+        List<String> roleNames = List.of("INVALID_ROLE");
+
+        when(roleDao.findByName("INVALID_ROLE")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        RoleException exception = assertThrows(RoleException.class, () -> roleService.findAllByListOfNames(roleNames));
+        assertEquals("ErrorRole not found: INVALID_ROLE", exception.getMessage());
+
+        verify(roleDao, times(1)).findByName("INVALID_ROLE");
+    }
+
+    @Test
+    void testFindAllByListOfNames_EmptyInput() {
+        // Arrange
+        List<String> roleNames = Collections.emptyList();
+
+        // Act
+        Set<RoleDTO> result = roleService.findAllByListOfNames(roleNames);
+
+        // Assert
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+
+        verify(roleDao, never()).findByName(anyString());
+    }
+
+
 }

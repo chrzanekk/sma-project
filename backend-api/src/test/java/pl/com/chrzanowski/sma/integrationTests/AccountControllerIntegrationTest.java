@@ -113,11 +113,16 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldUpdateAccountSuccessfully() {
         registeredUser = userRepository.findAll().get(0);
+        Set<Role> roleList = registeredUser.getRoles();
+        List<String> roleNames = new ArrayList<>();
+        for (Role role : roleList) {
+            roleNames.add(role.getName());
+        }
         UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
                 .id(registeredUser.getId())
                 .login("newUsername")
                 .email("newemail@test.com")
-                .roles(new ArrayList<>(roleMapper.toDtoSet(registeredUser.getRoles())))
+                .roles(roleNames)
                 .build();
 
         webTestClient.put()
