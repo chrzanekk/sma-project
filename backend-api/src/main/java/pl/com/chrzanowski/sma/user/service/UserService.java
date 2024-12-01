@@ -2,11 +2,12 @@ package pl.com.chrzanowski.sma.user.service;
 
 
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
 
 import java.util.List;
 import java.util.Set;

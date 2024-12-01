@@ -24,12 +24,16 @@ export interface RegisterRequest {
     role?: Set<string>;
 }
 
-export interface User {
+export interface UserUpdateRequest {
     id?: number;
     email: string;
     login: string;
-    password?: string;
-    roles?: Set<string>;
+    firstName: string;
+    lastName: string;
+    position: string;
+    locked: boolean;
+    enabled: boolean;
+    roles?: string[];
 }
 
 export interface UserInfo {
@@ -39,13 +43,18 @@ export interface UserInfo {
     firstName: string;
     lastName: string;
     position: string;
-    roles?: Set<string>;
+    roles?: string[];
 }
 
 export interface UserPasswordChangeRequest {
     userId: number;
     password: string;
     newPassword: string;
+}
+
+export interface UserRoleUpdateRequest {
+    userId: number;
+    roles: string[];
 }
 
 export interface UserFromToken {

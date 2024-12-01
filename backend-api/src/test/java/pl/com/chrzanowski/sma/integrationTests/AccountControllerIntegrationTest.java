@@ -14,17 +14,25 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserRoleUpdateRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
+import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
+import pl.com.chrzanowski.sma.role.model.Role;
+import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -45,6 +53,12 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleMapper roleMapper;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @MockBean
     private SendEmailService sendEmailService;
@@ -99,17 +113,18 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldUpdateAccountSuccessfully() {
         registeredUser = userRepository.findAll().get(0);
-        UserDTO userDTO = UserDTO.builder()
+        UserUpdateRequest userUpdateRequest = UserUpdateRequest.builder()
                 .id(registeredUser.getId())
                 .login("newUsername")
                 .email("newemail@test.com")
+                .roles(new ArrayList<>(roleMapper.toDtoSet(registeredUser.getRoles())))
                 .build();
 
         webTestClient.put()
                 .uri("/api/account/update")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(userDTO), UserDTO.class)
+                .body(Mono.just(userUpdateRequest), UserDTO.class)
                 .exchange()
                 .expectStatus().isOk();
 
@@ -174,5 +189,33 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .bodyValue(invalidRequest)
                 .exchange()
                 .expectStatus().isBadRequest();
+    }
+
+    @Test
+    void shouldUpdateRolesSuccessfully() {
+        registeredUser = userRepository.findAll().get(0);
+
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        UserRoleUpdateRequest userRoleUpdateRequest = new UserRoleUpdateRequest(registeredUser.getId(), List.of(roleMapper.toDto(userRole)));
+
+        webTestClient.put()
+                .uri("/api/account/update-roles")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(userRoleUpdateRequest), UserRoleUpdateRequest.class)
+                .exchange()
+                .expectStatus().isNoContent();
+
+        User updatedUser = userRepository.findById(registeredUser.getId()).orElseThrow();
+        Set<Role> roleSet = updatedUser.getRoles();
+        assertThat(roleSet).isNotNull();
+        assertThat(roleSet).doesNotContain(adminRole);
+        assertThat(roleSet).contains(userRole);
+
     }
 }

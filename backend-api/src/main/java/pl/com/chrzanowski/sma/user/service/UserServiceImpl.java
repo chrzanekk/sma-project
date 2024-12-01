@@ -19,7 +19,7 @@ import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.user.dto.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;

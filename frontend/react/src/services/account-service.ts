@@ -1,5 +1,5 @@
 import axios from "axios";
-import {User, UserInfo, UserPasswordChangeRequest} from "@/types/user-types.ts";
+import {UserInfo, UserPasswordChangeRequest, UserRoleUpdateRequest, UserUpdateRequest} from "@/types/user-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -21,7 +21,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
     }
 }
 
-export const updateUserAccount = async (user: User): Promise<void> => {
+export const updateUserAccount = async (user: UserUpdateRequest): Promise<void> => {
     try {
         await api.put("/api/account/update", user, getAuthConfig());
     } catch (error: any) {
@@ -29,16 +29,26 @@ export const updateUserAccount = async (user: User): Promise<void> => {
     }
 };
 
-export const changeUserPassword = async (userPasswordChangeRequest: UserPasswordChangeRequest): Promise<boolean> => {
+export const changeUserPassword = async (userPasswordChangeRequest: UserPasswordChangeRequest): Promise<void> => {
     try {
-        const response = await api.put<boolean>(
+        await api.put<boolean>(
             "/api/account/change-password",
             userPasswordChangeRequest,
             getAuthConfig()
         );
-        return response.data;
     } catch (error: any) {
-        console.error("Błąd zmiany hasła użytkownika:", error);
+        throw error;
+    }
+};
+
+export const updateUserRoles = async (userRoleUpdateRequest: UserRoleUpdateRequest): Promise<void> => {
+    try {
+        await api.put<boolean>(
+            "/api/account/update-roles",
+            userRoleUpdateRequest,
+            getAuthConfig()
+        );
+    } catch (error: any) {
         throw error;
     }
 };
