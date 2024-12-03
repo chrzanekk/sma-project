@@ -9,6 +9,7 @@ import ConfirmAccount from "@/auth/register/ConfirmAccount.tsx";
 import UserProfileEdit from "@/auth/profile/UserProfileEdit.tsx";
 import Navbar from "@/layout/Navbar.tsx";
 import React from "react";
+import UserManagement from "@/components/user/UserManagement.tsx";
 
 const Layout = ({children}: { children: React.ReactNode }) => (
     <>
@@ -19,47 +20,55 @@ const Layout = ({children}: { children: React.ReactNode }) => (
 
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Login/>
-    },
-    {
-        path: "register",
-        element: <Register/>,
-    },
-    {
-        path: "confirm",
-        element: <ConfirmAccount/>
-    },
-    {
-        path: "request-reset-password",
-        element: <ResetPassword/>
-    },
-    {
-        path: "reset-password",
-        element: <NewPassword/>
-    },
-    {
-        path: "dashboard",
-        element: <ProtectedRoute>
-            <Layout>
-                <App/>
-            </Layout>
-        </ProtectedRoute>
-    },
-    {
-        path: "profile",
-        element: (
-            <ProtectedRoute>
+        {
+            path: "/",
+            element: <Login/>
+        },
+        {
+            path: "register",
+            element: <Register/>,
+        },
+        {
+            path: "confirm",
+            element: <ConfirmAccount/>
+        },
+        {
+            path: "request-reset-password",
+            element: <ResetPassword/>
+        },
+        {
+            path: "reset-password",
+            element: <NewPassword/>
+        },
+        {
+            path: "dashboard",
+            element: <ProtectedRoute>
                 <Layout>
-                    <UserProfileEdit/>
+                    <App/>
                 </Layout>
             </ProtectedRoute>
-        )
-    }
-
-],
-
-    );
+        },
+        {
+            path: "profile",
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <UserProfileEdit/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "users",
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <UserManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        }
+    ],
+);
 
 export default router;

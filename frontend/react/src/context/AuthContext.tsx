@@ -1,6 +1,6 @@
 import {createContext, ReactNode, useContext} from "react";
 import {useTranslation} from "react-i18next";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {errorNotification} from "@/notifications/notifications.ts";
 import useUser from "@/hooks/UseUser.tsx";
 import {AuthContextType} from "@/types/auth-context-types.ts";
 import {isTokenExpired} from "@/utils/token-utils.ts";
@@ -15,7 +15,7 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({children}: AuthProviderProps) => {
     const {user, updateUser, clearUser} = useUser();
-    const {t} = useTranslation(['auth', 'common']);
+    const {t} = useTranslation('auth');
 
     const loginUser = async (usernameAndPassword: any): Promise<void> => {
         try {
@@ -45,12 +45,12 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     };
 
     const logOut = () => {
-        localStorage.removeItem("auth");
+        localStorage.removeItem('auth');
         clearUser();
-        successNotification(
-            t('success', {ns: "common"}),
-            t('notifications.logoutSuccess')
-        );
+        // successNotification(
+        //     t('success', {ns: "common"}),
+        //     t('notifications.logoutSuccess')
+        // );
     };
 
     const isAuthenticated = () => {

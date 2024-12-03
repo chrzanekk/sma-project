@@ -16,9 +16,9 @@ createRoot(document.getElementById('root')!)
             <ChakraProvider>
                 <AuthProvider>
                     <RouterProvider router={router}/>
+                    <ToastContainer/>
                 </AuthProvider>
                 <Footer/>
-                <ToastContainer/>
             </ChakraProvider>
         </StrictMode>
     );

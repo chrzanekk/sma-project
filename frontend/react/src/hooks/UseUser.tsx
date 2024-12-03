@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { getUserInfo } from "@/services/account-service.ts";
-import { errorNotification } from "@/notifications/notifications.ts";
-import { UserInfo } from "@/types/user-types.ts";
-import { isTokenExpired } from "@/utils/token-utils.ts";
-import { useAuth } from "@/context/AuthContext.tsx";
-import { useTranslation } from "react-i18next";
+import {useEffect, useState} from "react";
+import {getUserInfo} from "@/services/account-service.ts";
+import {errorNotification} from "@/notifications/notifications.ts";
+import {UserInfo} from "@/types/user-types.ts";
+import {isTokenExpired} from "@/utils/token-utils.ts";
+import {useTranslation} from "react-i18next";
 
 const useUser = () => {
     const [user, setUser] = useState<UserInfo | null>(() => {
@@ -12,39 +11,67 @@ const useUser = () => {
         return storedUser ? JSON.parse(storedUser) : null;
     });
 
-    const { logOut } = useAuth();
-    const { t } = useTranslation('auth');
+    const [tokenValid, setTokenValid] = useState(() => {
+        const token = localStorage.getItem("auth");
+        return token && !isTokenExpired(token);
+    });
+
+    const [initialized, setInitialized] = useState(false);
+    const [hasShownNotification, setHasShownNotification] = useState(false);
+
+    const {t} = useTranslation('auth');
 
     useEffect(() => {
+
+        if (initialized) return;
+
         const token = localStorage.getItem("auth");
-        if (token && isTokenExpired(token)) {
-            errorNotification(
-                t('notifications.sessionExpired'),
-                t('notifications.logInAgain')
-            );
-            logOut();
+
+        if (!token || isTokenExpired(token)) {
+            console.warn("Token is missing or expired. Logging out...");
+            // Wyświetlaj powiadomienie tylko raz
+            if (!hasShownNotification) {
+                errorNotification(
+                    t("notifications.sessionExpired"),
+                    t("notifications.logInAgain")
+                );
+                setHasShownNotification(true);
+            }
+            localStorage.removeItem('auth');
+            localStorage.removeItem('user');
+            setUser(null);
+            setTokenValid(false);
+            setInitialized(true);
             return;
         }
 
-        if (!user && token) {
+        if (!user) {
+            console.log("Fetching user information...");
             getUserInfo()
                 .then((response) => {
+                    console.log("User info fetched successfully:", response);
                     setUser(response);
                     localStorage.setItem("user", JSON.stringify(response));
                 })
                 .catch((error) => {
-                    console.error(error);
-                    errorNotification(
-                        t('error', { ns: 'common' }),
-                        error.response?.data?.message || t('notifications.loginFailed')
-                    );
-                    logOut();
-                });
+                    console.error("Error fetching user information:", error);
+                    if (!hasShownNotification) {
+                        errorNotification(
+                            t("error", {ns: "common"}),
+                            error.response?.data?.message || t("notifications.loginFailed")
+                        );
+                        setHasShownNotification(true);
+                    }
+                }).finally(() => {
+                setInitialized(true);
+            });
+        } else {
+            setInitialized(true);
         }
-    }, [user, logOut, t]);
+    }, [initialized, user, hasShownNotification, t]);
 
     const updateUser = (updatedUser: Partial<UserInfo>) => {
-        const newUser = { ...user, ...updatedUser } as UserInfo;
+        const newUser = {...user, ...updatedUser} as UserInfo;
         setUser(newUser);
         localStorage.setItem("user", JSON.stringify(newUser));
     };
@@ -54,7 +81,7 @@ const useUser = () => {
         localStorage.removeItem("user");
     };
 
-    return { user, updateUser, clearUser };
+    return {user, updateUser, clearUser, tokenValid};
 };
 
 export default useUser;

@@ -58,3 +58,18 @@ export interface UserRoleUpdateRequest {
     userId: number;
     roles: string[];
 }
+
+export interface UserDTO {
+    id?: number;
+    email: string;
+    login: string;
+    password?: string;
+    firstName: string;
+    lastName: string;
+    position: string;
+    locked: boolean;
+    enabled: boolean;
+    roles?: Array<any>;
+    createdDatetime?: string;
+    lastModifiedDatetime?: string;
+}

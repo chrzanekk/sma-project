@@ -5,6 +5,9 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
+const ACCOUNT_API_BASE = "/api/account";
+
+
 const getAuthConfig = () => {
     const token = localStorage.getItem("auth");
     if (!token) {
@@ -19,7 +22,7 @@ const getAuthConfig = () => {
 
 export const getUserInfo = async (): Promise<UserInfo> => {
     try {
-        const response = await api.get(`api/account/get`,
+        const response = await api.get(`${ACCOUNT_API_BASE}/get`,
             getAuthConfig())
         return response.data;
     } catch (error: any) {
@@ -29,7 +32,7 @@ export const getUserInfo = async (): Promise<UserInfo> => {
 
 export const updateUserAccount = async (user: UserUpdateRequest): Promise<void> => {
     try {
-        await api.put("/api/account/update", user, getAuthConfig());
+        await api.put(`${ACCOUNT_API_BASE}/update`, user, getAuthConfig());
     } catch (error: any) {
         throw error;
     }
@@ -38,7 +41,7 @@ export const updateUserAccount = async (user: UserUpdateRequest): Promise<void> 
 export const changeUserPassword = async (userPasswordChangeRequest: UserPasswordChangeRequest): Promise<void> => {
     try {
         await api.put<boolean>(
-            "/api/account/change-password",
+            `${ACCOUNT_API_BASE}/change-password`,
             userPasswordChangeRequest,
             getAuthConfig()
         );
@@ -50,7 +53,7 @@ export const changeUserPassword = async (userPasswordChangeRequest: UserPassword
 export const updateUserRoles = async (userRoleUpdateRequest: UserRoleUpdateRequest): Promise<void> => {
     try {
         await api.put<boolean>(
-            "/api/account/update-roles",
+            `${ACCOUNT_API_BASE}/update-roles`,
             userRoleUpdateRequest,
             getAuthConfig()
         );
