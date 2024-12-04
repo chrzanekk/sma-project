@@ -8,10 +8,14 @@ interface Props {
 }
 
 const UserTable: React.FC<Props> = ({ users, onDelete }) => {
+    if(!users || users.length === 0) {
+        return <div>No users found.</div>
+    }
+
     return (
-        <Table variant="striped" colorScheme="gray">
+        <Table variant="striped" colorScheme="gray" size={"xs"}>
             <Thead>
-                <Tr>
+                <Tr sx={{ fontSize: "12px", height: "30px" }}>
                     <Th>Email</Th>
                     <Th>Login</Th>
                     <Th>First Name</Th>
@@ -33,7 +37,7 @@ const UserTable: React.FC<Props> = ({ users, onDelete }) => {
                         <Td>{user.locked ? 'Yes' : 'No'}</Td>
                         <Td>{user.enabled ? 'Yes' : 'No'}</Td>
                         <Td>
-                            <Button colorScheme="red" onClick={() => onDelete(user.id!)}>
+                            <Button colorScheme="red" onClick={() => onDelete(user.id!)} size={"sm"}>
                                 Delete
                             </Button>
                         </Td>

@@ -56,7 +56,7 @@ spring:
 
 jwt:
   jwtSecret: ${JWT_SECRET}
-  jwtExpirationMs: 86400000
+  jwtExpirationMs: 28800000
   tokenValidityTimeInMinutes: 15
 
 platform:

@@ -13,19 +13,19 @@ public class UserQuerySpec {
             if (userFilter.getId() != null) {
                 predicate.and(user.id.eq(userFilter.getId()));
             }
-            if (userFilter.getLoginStartsWith() != null) {
+            if (userFilter.getLoginStartsWith() != null && !userFilter.getLoginStartsWith().isEmpty()) {
                 predicate.and(user.login.startsWithIgnoreCase(userFilter.getLoginStartsWith()));
             }
-            if (userFilter.getEmailStartsWith() != null) {
+            if (userFilter.getEmailStartsWith() != null && !userFilter.getEmailStartsWith().isEmpty()) {
                 predicate.and(user.email.startsWithIgnoreCase(userFilter.getEmailStartsWith()));
             }
-            if(userFilter.getFirstNameStartsWith() != null) {
+            if (userFilter.getFirstNameStartsWith() != null && !userFilter.getFirstNameStartsWith().isEmpty()) {
                 predicate.and(user.firstName.startsWithIgnoreCase(userFilter.getFirstNameStartsWith()));
             }
-            if(userFilter.getLastNameStartsWith() != null) {
+            if (userFilter.getLastNameStartsWith() != null && !userFilter.getLastNameStartsWith().isEmpty()) {
                 predicate.and(user.lastName.startsWithIgnoreCase(userFilter.getLastNameStartsWith()));
             }
-            if(userFilter.getPositionStartsWith() != null) {
+            if (userFilter.getPositionStartsWith() != null && !userFilter.getPositionStartsWith().isEmpty()) {
                 predicate.and(user.position.startsWithIgnoreCase(userFilter.getPositionStartsWith()));
             }
             if (userFilter.getIsEnabled() != null) {

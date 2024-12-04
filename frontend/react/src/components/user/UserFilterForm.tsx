@@ -42,26 +42,47 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
         >
-            {({handleSubmit}) => (
+            {({handleSubmit, resetForm}) => (
                 <Form onSubmit={handleSubmit}>
-                    <Flex gap={4} mb={4}>
-                        <Field name="emailStartsWith" as={Input} placeholder="Email"/>
-                        <Field name="loginStartsWith" as={Input} placeholder="Login"/>
-                        <Field name="firstNameStartsWith" as={Input} placeholder="First Name"/>
-                        <Field name="lastNameStartsWith" as={Input} placeholder="Last Name"/>
-                        <Field name="positionStartsWith" as={Input} placeholder="Position"/>
-                        <Field name="isLocked" as={Select} placeholder="Is Locked?">
+                    <Flex gap={2} mb={1} justifyContent={"center"}>
+                        <Field name="emailStartsWith" as={Input} placeholder="Email" size="sm"
+                               width="150px"/>
+                        <Field name="loginStartsWith" as={Input} placeholder="Login" size="sm"
+                               width="150px"/>
+                        <Field name="firstNameStartsWith" as={Input} placeholder="First Name" size="sm"
+                               width="150px"/>
+                        <Field name="lastNameStartsWith" as={Input} placeholder="Last Name" size="sm"
+                               width="150px"/>
+                        <Field name="positionStartsWith" as={Input} placeholder="Position" size="sm"
+                               width="150px"/>
+                        <Field name="isLocked" as={Select} placeholder="Is Locked?" size="sm"
+                               width="150px">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </Field>
-                        <Field name="isEnabled" as={Select} placeholder="Is Enabled?">
+                        <Field name="isEnabled" as={Select} placeholder="Is Enabled?" size="sm"
+                               width="150px">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </Field>
                     </Flex>
-                    <Button type="submit" colorScheme="blue">
-                        Search
-                    </Button>
+                    <Flex gap={2} justifyContent={"center"}>
+                        <Button type="submit" colorScheme="blue" size={"sm"}>
+                            Search
+                        </Button>
+                        <Button
+                            type="button"
+                            colorScheme="gray"
+                            size="sm"
+                            onClick={() => {
+                                resetForm(); // Resetuje wszystkie wartości pól
+                                onSubmit({}); // Wywołuje `onSubmit` z pustym obiektem
+                            }}
+                        >
+                            Clear Filters
+                        </Button>
+                    </Flex>
+
                 </Form>
             )}
         </Formik>

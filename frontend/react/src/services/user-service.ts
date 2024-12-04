@@ -19,14 +19,20 @@ const getAuthConfig = () => {
 
 const USERS_API_BASE = "/api/users";
 
-export const getAllUsers = async () => {
-    const response = await api.get(`${USERS_API_BASE}/all`, getAuthConfig());
-    return response.data;
-};
-
 export const getUsersByFilter = async (filter: Record<string, any>) => {
-    const response = await api.get(`${USERS_API_BASE}/`, {params: filter, ...getAuthConfig()});
-    return response.data;
+    try {
+        const response = await api.get(`${USERS_API_BASE}/page`,
+            {params: {...filter, size: filter.size || 10, page: filter.page || 0}, ...getAuthConfig(),});
+        const data = response.data;
+        return {
+            users: data || [],
+            totalPages: data.totalPages || 1
+        }
+    } catch (err) {
+        console.error('Error fetching users: ', err);
+        return {users: [], totalPages: 1};
+    }
+
 };
 
 export const addUser = async (user: Record<string, any>) => {

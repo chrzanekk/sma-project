@@ -47,6 +47,7 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> getUsersByFilterAndPage(UserFilter userFilter, Pageable pageable) {
         log.debug("REST request to get all users by filter and page: {},{}", userFilter, pageable);
         Page<UserDTO> result = userQueryService.findByFilter(userFilter, pageable);
+        log.debug("Page content: {}", result.getContent());
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), result);
         return ResponseEntity.ok().headers(headers).body(result.getContent());
     }
