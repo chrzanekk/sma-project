@@ -29,7 +29,6 @@ const useUser = () => {
 
         if (!token || isTokenExpired(token)) {
             console.warn("Token is missing or expired. Logging out...");
-            // Wyświetlaj powiadomienie tylko raz
             if (!hasShownNotification) {
                 errorNotification(
                     t("notifications.sessionExpired"),

@@ -1,0 +1,23 @@
+.custom-table {
+    border-width: 2px;
+    border-color: #a1a1aa; /* gray.300 */
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.custom-table th, .custom-table td {
+    border-right: 2px solid #a1a1aa; /* gray.300 */
+    border-bottom: 2px solid #a1a1aa; /* gray.300 */
+    text-align: left;
+    padding: 3px;
+    height: 15px;
+}
+
+.custom-table th {
+    background-color: #d4d4d8; /* gray.200 */
+    font-size: 14px;
+}
+
+.custom-table td {
+    font-size: 14px;
+}

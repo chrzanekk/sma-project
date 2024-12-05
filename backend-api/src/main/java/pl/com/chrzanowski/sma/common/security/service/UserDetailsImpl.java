@@ -16,6 +16,9 @@ public class UserDetailsImpl implements UserDetails {
 
     private final String username;
 
+    private final String firstName;
+    private final String lastName;
+
     private final String email;
 
     @JsonIgnore
@@ -23,10 +26,12 @@ public class UserDetailsImpl implements UserDetails {
 
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String username, String email, String password, Collection<?
+    public UserDetailsImpl(Long id, String username, String firstName, String lastName, String email, String password, Collection<?
             extends GrantedAuthority> authorities) {
         this.id = id;
         this.username = username;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
@@ -40,6 +45,8 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getId(),
                 user.getLogin(),
+                user.getFirstName(),
+                user.getLastName(),
                 user.getEmail(),
                 user.getPassword(),
                 authorities);
@@ -88,23 +95,24 @@ public class UserDetailsImpl implements UserDetails {
         return true;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(id, user.id);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDetailsImpl that = (UserDetailsImpl) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(email, that.email) && Objects.equals(password, that.password) && Objects.equals(authorities, that.authorities);
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (authorities != null ? authorities.hashCode() : 0);
-        return result;
+        return Objects.hash(id, username, firstName, lastName, email, password, authorities);
     }
 }

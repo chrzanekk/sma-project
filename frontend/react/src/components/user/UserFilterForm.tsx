@@ -2,6 +2,7 @@ import React from 'react';
 import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Button, Flex, Input, Select} from '@chakra-ui/react';
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     emailStartsWith?: string;
@@ -45,38 +46,60 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
             {({handleSubmit, resetForm}) => (
                 <Form onSubmit={handleSubmit}>
                     <Flex gap={2} mb={1} justifyContent={"center"}>
-                        <Field name="emailStartsWith" as={Input} placeholder="Email" size="sm"
+                        <Field name="emailStartsWith" as={Input} placeholder="Email"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px"/>
-                        <Field name="loginStartsWith" as={Input} placeholder="Login" size="sm"
+                        <Field name="loginStartsWith" as={Input} placeholder="Login"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px"/>
-                        <Field name="firstNameStartsWith" as={Input} placeholder="First Name" size="sm"
+                        <Field name="firstNameStartsWith" as={Input} placeholder="First Name"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px"/>
-                        <Field name="lastNameStartsWith" as={Input} placeholder="Last Name" size="sm"
+                        <Field name="lastNameStartsWith" as={Input} placeholder="Last Name"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px"/>
-                        <Field name="positionStartsWith" as={Input} placeholder="Position" size="sm"
+                        <Field name="positionStartsWith" as={Input} placeholder="Position"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px"/>
-                        <Field name="isLocked" as={Select} placeholder="Is Locked?" size="sm"
+                        <Field name="isLocked" as={Select} placeholder="Is Locked?"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </Field>
-                        <Field name="isEnabled" as={Select} placeholder="Is Enabled?" size="sm"
+                        <Field name="isEnabled" as={Select} placeholder="Is Enabled?"
+                               size="sm"
+                               bg={themeColors.bgColorLight()}
+                               borderRadius={"md"}
                                width="150px">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
                         </Field>
                     </Flex>
                     <Flex gap={2} justifyContent={"center"}>
-                        <Button type="submit" colorScheme="blue" size={"sm"}>
+                        <Button type="submit" colorScheme="blue"
+                                size={"sm"}>
                             Search
                         </Button>
                         <Button
                             type="button"
-                            colorScheme="gray"
+                            colorScheme="orange"
                             size="sm"
                             onClick={() => {
-                                resetForm(); // Resetuje wszystkie wartości pól
-                                onSubmit({}); // Wywołuje `onSubmit` z pustym obiektem
+                                resetForm();
+                                onSubmit({});
                             }}
                         >
                             Clear Filters

@@ -1,21 +1,23 @@
 import React from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td, Button } from '@chakra-ui/react';
+import {Button, Table, Tbody, Td, Th, Thead, Tr} from '@chakra-ui/react';
 import {UserDTO} from "@/types/user-types.ts";
+import '@/theme/css/table-styles.css';
 
 interface Props {
     users: UserDTO[];
     onDelete: (id: number) => void;
 }
 
-const UserTable: React.FC<Props> = ({ users, onDelete }) => {
-    if(!users || users.length === 0) {
+const UserTable: React.FC<Props> = ({users, onDelete}) => {
+    if (!users || users.length === 0) {
         return <div>No users found.</div>
     }
 
     return (
-        <Table variant="striped" colorScheme="gray" size={"xs"}>
+        <Table className={"custom-table"}>
             <Thead>
-                <Tr sx={{ fontSize: "12px", height: "30px" }}>
+                <Tr>
+                    <Th>ID</Th>
                     <Th>Email</Th>
                     <Th>Login</Th>
                     <Th>First Name</Th>
@@ -29,6 +31,7 @@ const UserTable: React.FC<Props> = ({ users, onDelete }) => {
             <Tbody>
                 {users.map((user) => (
                     <Tr key={user.id}>
+                        <Td>{user.id}</Td>
                         <Td>{user.email}</Td>
                         <Td>{user.login}</Td>
                         <Td>{user.firstName}</Td>
@@ -37,7 +40,7 @@ const UserTable: React.FC<Props> = ({ users, onDelete }) => {
                         <Td>{user.locked ? 'Yes' : 'No'}</Td>
                         <Td>{user.enabled ? 'Yes' : 'No'}</Td>
                         <Td>
-                            <Button colorScheme="red" onClick={() => onDelete(user.id!)} size={"sm"}>
+                            <Button colorScheme="red" onClick={() => onDelete(user.id!)} size={"xs"}>
                                 Delete
                             </Button>
                         </Td>

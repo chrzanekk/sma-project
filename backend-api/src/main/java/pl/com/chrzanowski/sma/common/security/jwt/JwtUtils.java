@@ -27,6 +27,8 @@ public class JwtUtils {
     private static final String AUTHORITIES_KEY = "authorities";
     private static final String USER_ID = "user_id";
     private static final String USER_EMAIL = "user_email";
+    private static final String USER_FIRST_NAME = "user_firstName";
+    private static final String USER_LAST_NAME = "user_lastName";
 
     @Value(value = "${jwt.jwtSecret}")
     private String jwtSecret;
@@ -58,6 +60,8 @@ public class JwtUtils {
 
         Long id = userDetails.getId();
         String email = userDetails.getEmail();
+        String firstName = userDetails.getFirstName();
+        String lastName = userDetails.getLastName();
 
         Set<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
 
@@ -71,6 +75,8 @@ public class JwtUtils {
                 .claim(AUTHORITIES_KEY, roles)
                 .claim(USER_ID, id)
                 .claim(USER_EMAIL, email)
+                .claim(USER_FIRST_NAME, firstName)
+                .claim(USER_LAST_NAME, lastName)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date())
                 .expiration(validity)

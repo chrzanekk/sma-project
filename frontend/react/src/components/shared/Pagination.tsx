@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Flex, Input, Select, Text} from '@chakra-ui/react';
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface PaginationProps {
     currentPage: number;
@@ -20,25 +21,29 @@ const Pagination: React.FC<PaginationProps> = ({
     const [gotoPage, setGotoPage] = useState("");
 
     const handleGotoPage = () => {
-        const page = parseInt(gotoPage, 10)-1;
+        const page = parseInt(gotoPage, 10) - 1;
         if (page >= 0 && page < totalPages) {
             onPageChange(page);
         }
     };
     return (
-        <Flex justify="space-between"
+        <Flex justify="center"
               align="center"
+              gap={4}
               mt={2}
-              p={2}
-              bg={"green.300"}
+              p={1}
+              bg={themeColors.bgColor()}
               borderRadius={"md"}
               fontSize={"sm"}
         >
             {/* Wybór liczby wierszy */}
             <Select
-                width="100px" // Zmniejszona szerokość
-                size="sm" // Mniejszy rozmiar
+                width="100px"
+                size="sm"
+                borderRadius={"md"}
+                bg={themeColors.bgColorLight()}
                 value={rowsPerPage}
+                isDisabled={currentPage + 1 === totalPages}
                 onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
             >
                 <option value={5}>5</option>
@@ -49,40 +54,43 @@ const Pagination: React.FC<PaginationProps> = ({
             </Select>
 
             {/* Nawigacja między stronami */}
-            <Flex align="center">
                 <Button
                     size={"sm"}
-                    onClick={() => onPageChange(currentPage - 1)}
-                    isDisabled={currentPage === 1}
+                    onClick={() => onPageChange(currentPage)}
+                    isDisabled={currentPage + 1 === totalPages}
                     mr={2}
                 >
                     Previous
                 </Button>
                 <Text>
-                    Page {currentPage} of {totalPages}
+                    Page {currentPage + 1} of {totalPages}
                 </Text>
                 <Button
                     size={"sm"}
-                    onClick={() => onPageChange(currentPage + 1)}
-                    isDisabled={currentPage === totalPages}
+                    onClick={() => onPageChange(currentPage)}
+                    isDisabled={currentPage + 1 === totalPages}
                     ml={2}
                 >
                     Next
                 </Button>
-            </Flex>
 
             {/* Skok do konkretnej strony */}
-            <Flex align="center">
                 <Input
-                    width="70px"
-                    size={"sm"} // Mniejszy input
+                    width="100px"
+                    size={"sm"}
+                    borderRadius={"md"}
+                    bg={themeColors.bgColorLight()}
                     mr={2}
                     value={gotoPage}
+                    isDisabled={currentPage + 1 === totalPages}
                     onChange={(e) => setGotoPage(e.target.value)}
                     placeholder="Go to page"
                 />
-                <Button size={"sm"} onClick={handleGotoPage}>Go</Button>
-            </Flex>
+                <Button size={"sm"}
+                        onClick={handleGotoPage}
+                        isDisabled={currentPage + 1 === totalPages}
+                >Go</Button>
+            {/*</Flex>*/}
         </Flex>
     );
 };

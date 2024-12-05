@@ -47,10 +47,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     const logOut = () => {
         localStorage.removeItem('auth');
         clearUser();
-        // successNotification(
-        //     t('success', {ns: "common"}),
-        //     t('notifications.logoutSuccess')
-        // );
     };
 
     const isAuthenticated = () => {
