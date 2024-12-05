@@ -1,6 +1,9 @@
 package pl.com.chrzanowski.sma.user.service.filter;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityManager;
 import pl.com.chrzanowski.sma.user.model.QUser;
 
 
@@ -36,5 +39,17 @@ public class UserQuerySpec {
             }
         }
         return predicate;
+    }
+
+    public static JPQLQuery<?> buildQuery(BooleanBuilder booleanBuilder, EntityManager entityManager) {
+        QUser user = QUser.user;
+
+        JPQLQuery<?> query = new JPAQuery<>(entityManager).from(user);
+
+        if(booleanBuilder != null) {
+            query.where(booleanBuilder);
+        }
+        query.leftJoin(user.roles).fetchJoin();
+        return query;
     }
 }
