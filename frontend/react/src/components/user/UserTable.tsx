@@ -1,7 +1,11 @@
 import React from 'react';
+import classNames from 'classnames';
 import {Button, Table, Tbody, Td, Th, Thead, Tr} from '@chakra-ui/react';
 import {UserDTO} from "@/types/user-types.ts";
-import '@/theme/css/table-styles.css';
+import '@/theme/css/global-table-styles.css';
+import '@/theme/css/user-table-styles.css';
+
+const tableClass = classNames('custom-table', 'user-table');
 
 interface Props {
     users: UserDTO[];
@@ -14,7 +18,7 @@ const UserTable: React.FC<Props> = ({users, onDelete}) => {
     }
 
     return (
-        <Table className={"custom-table"}>
+        <Table className={tableClass}>
             <Thead>
                 <Tr>
                     <Th>ID</Th>

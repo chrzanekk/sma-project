@@ -1,0 +1,46 @@
+
+/* Dodaj proporcjonalne szerokości */
+.user-table th:nth-child(1),
+.user-table td:nth-child(1) {
+    width: 10%; /* ID */
+}
+
+.user-table th:nth-child(2),
+.user-table td:nth-child(2) {
+    width: 20%; /* Email */
+}
+
+.user-table th:nth-child(3),
+.user-table td:nth-child(3) {
+    width: 15%; /* Login */
+}
+
+.user-table th:nth-child(4),
+.user-table td:nth-child(4) {
+    width: 15%; /* First Name */
+}
+
+.user-table th:nth-child(5),
+.user-table td:nth-child(5) {
+    width: 15%; /* Last Name */
+}
+
+.user-table th:nth-child(6),
+.user-table td:nth-child(6) {
+    width: 10%; /* Position */
+}
+
+.user-table th:nth-child(7),
+.user-table td:nth-child(7) {
+    width: 5%; /* Locked */
+}
+
+.user-table th:nth-child(8),
+.user-table td:nth-child(8) {
+    width: 5%; /* Enabled */
+}
+
+.user-table th:nth-child(9),
+.user-table td:nth-child(9) {
+    width: 5%; /* Actions */
+}

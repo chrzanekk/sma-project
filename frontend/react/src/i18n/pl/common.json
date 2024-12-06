@@ -3,5 +3,14 @@
     "logout": "Wyloguj",
     "error": "Błąd",
     "success": "Sukces",
-    "processing": "Przetwarzam dane..."
+    "processing": "Przetwarzam dane...",
+    "search": "Szukaj",
+    "clearFilters": "Wyczyść filtry",
+    "delete": "Usuń",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "goToPage": "Idz do strony",
+    "go": "Idź",
+    "yes": "Tak",
+    "no": "Nie"
 }

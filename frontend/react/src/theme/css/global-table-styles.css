@@ -3,6 +3,7 @@
     border-color: #a1a1aa; /* gray.300 */
     border-collapse: collapse;
     width: 100%;
+    table-layout: fixed;
 }
 
 .custom-table th, .custom-table td {
