@@ -16,19 +16,18 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec.buildQuery;
-
 @Repository("userJPA")
 public class UserJPADaoImpl implements UserDao {
 
     private final Logger log = LoggerFactory.getLogger(UserJPADaoImpl.class);
 
     private final UserRepository userRepository;
-    private final EntityManager em;
+    private final UserQuerySpec userQuerySpec;
 
-    public UserJPADaoImpl(UserRepository userRepository, EntityManager em) {
+    public UserJPADaoImpl(UserRepository userRepository, UserQuerySpec userQuerySpec) {
         this.userRepository = userRepository;
-        this.em = em;
+        this.userQuerySpec = userQuerySpec;
+
     }
 
     @Override
@@ -75,8 +74,7 @@ public class UserJPADaoImpl implements UserDao {
     @Override
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
-
-        JPQLQuery<User> query = (JPQLQuery<User>) buildQuery(specification, em);
+        JPQLQuery<User> query = userQuerySpec.buildQuery(specification);
         long total = query.fetchCount();
         List<User> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, total);
@@ -85,7 +83,7 @@ public class UserJPADaoImpl implements UserDao {
     @Override
     public List<User> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all users by specification {}", specification);
-        JPQLQuery<User> query = (JPQLQuery<User>) UserQuerySpec.buildQuery(null, em);
+        JPQLQuery<User> query = userQuerySpec.buildQuery(specification);
         return query.fetch();
     }
 

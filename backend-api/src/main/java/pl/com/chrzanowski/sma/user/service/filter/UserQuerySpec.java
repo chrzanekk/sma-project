@@ -4,10 +4,19 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.user.model.QUser;
+import pl.com.chrzanowski.sma.user.model.User;
 
-
+@Component
 public class UserQuerySpec {
+
+    private final EntityManager em;
+
+    public UserQuerySpec(EntityManager em) {
+        this.em = em;
+    }
+
     public static BooleanBuilder buildPredicate(UserFilter userFilter) {
         QUser user = QUser.user;
         BooleanBuilder predicate = new BooleanBuilder();
@@ -41,10 +50,10 @@ public class UserQuerySpec {
         return predicate;
     }
 
-    public static JPQLQuery<?> buildQuery(BooleanBuilder booleanBuilder, EntityManager entityManager) {
+    public JPQLQuery<User> buildQuery(BooleanBuilder booleanBuilder) {
         QUser user = QUser.user;
 
-        JPQLQuery<?> query = new JPAQuery<>(entityManager).from(user);
+        JPQLQuery<User> query = new JPAQuery<>(em).select(user).from(user);
 
         if(booleanBuilder != null) {
             query.where(booleanBuilder);
