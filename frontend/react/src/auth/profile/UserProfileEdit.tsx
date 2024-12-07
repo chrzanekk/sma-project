@@ -58,8 +58,8 @@ const UserProfileEdit: React.FC = () => {
             .max(10, t('verification.maxLength', {field: t('shared.lastName'), count: 10}))
             .required(t('verification.required', {field: t('shared.lastName')})),
         position: Yup.string()
-            .min(2, t('verification.minLength', {field: t('updateProfile.position'), count: 2}))
-            .max(10, t('verification.maxLength', {field: t('updateProfile.position'), count: 10}))
+            .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))
+            .max(10, t('verification.maxLength', {field: t('shared.position'), count: 10}))
     });
 
     const passwordSchema = Yup.object({
@@ -219,7 +219,7 @@ const UserProfileEdit: React.FC = () => {
                                         bgColor={themeColors.bgColorLight()}
                                     />
 
-                                    <FormLabel>{t('updateProfile.position')}</FormLabel>
+                                    <FormLabel>{t('shared.position')}</FormLabel>
                                     <Input
                                         name="position"
                                         value={accountForm.values.position}
@@ -286,8 +286,7 @@ const UserProfileEdit: React.FC = () => {
                                             name="roles"
                                             multiple
                                             value={rolesForm.values.roles}
-                                            onChange={(e) =>
-                                                rolesForm.setFieldValue(
+                                            onChange={(e) => rolesForm.setFieldValue(
                                                     "roles",
                                                     Array.from(
                                                         e.target.selectedOptions,

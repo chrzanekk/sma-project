@@ -1,8 +1,11 @@
 import axios from "axios";
+import {UserDTO} from "@/types/user-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 });
+
+const toBoolean = (value: string | boolean): boolean => value === "true" || value === true;
 
 const getAuthConfig = () => {
 
@@ -35,9 +38,22 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
 
 };
 
-export const addUser = async (user: Record<string, any>) => {
-    const response = await api.post(`${USERS_API_BASE}/add`, user, getAuthConfig());
-    return response.data;
+export const addUser = async (user: UserDTO) => {
+    console.log('AddUser', user)
+    try {
+        const roles = user.roles?.map((role) => ({ name: role }));
+        const payload = {
+            ...user,
+            locked: toBoolean(user.locked),
+            enabled: toBoolean(user.enabled),
+            roles
+        }
+        const response = await api.post(`${USERS_API_BASE}/add`, payload, getAuthConfig());
+        return response.data;
+    } catch (err) {
+        console.error('Error adding user:', err);
+    }
+
 };
 
 export const updateUser = async (user: Record<string, any>) => {

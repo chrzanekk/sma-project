@@ -18,5 +18,13 @@
     "dataNotFound": "Brak wyników",
     "actions": "Akcje",
     "filters": "Wyszukaj po",
-    "userList": "Lista użytkowników"
+    "userList": "Lista użytkowników",
+    "close": "Zamknij",
+    "notifications": {
+        "emailAlreadyExists": "Email {{email}}  już istnieje w bazie",
+        "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
+        "userAddedSuccess": "Użytkownik {{login}} dodany pomyślnie.",
+        "userAddedError": "Błąd dodawania użytkownika"
+
+    }
 }
