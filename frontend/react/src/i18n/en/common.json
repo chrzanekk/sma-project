@@ -9,10 +9,14 @@
     "delete": "Usuń",
     "previous": "Poprzednia",
     "next": "Następna",
+    "page":"Strona",
+    "of" : "z",
     "goToPage": "Idz do strony",
     "go": "Idź",
     "yes": "Tak",
     "no": "Nie",
     "dataNotFound": "Brak wyników",
-    "actions": "Akcje"
+    "actions": "Akcje",
+    "filters": "Wyszukaj po",
+    "userList": "Lista użytkowników"
 }
