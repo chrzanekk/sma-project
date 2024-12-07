@@ -1,7 +1,18 @@
 {
-    "welcome": "Welcom in SMA Application",
-    "logout": "Logout",
-    "error": "Error",
-    "success": "Success",
-    "processing": "Processsing..."
+    "welcome": "Witamy w aplikacji SMA",
+    "logout": "Wyloguj",
+    "error": "Błąd",
+    "success": "Sukces",
+    "processing": "Przetwarzam dane...",
+    "search": "Szukaj",
+    "clearFilters": "Wyczyść filtry",
+    "delete": "Usuń",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "goToPage": "Idz do strony",
+    "go": "Idź",
+    "yes": "Tak",
+    "no": "Nie",
+    "dataNotFound": "Brak wyników",
+    "actions": "Akcje"
 }

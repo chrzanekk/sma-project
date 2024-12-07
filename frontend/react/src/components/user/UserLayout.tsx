@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, GridItem } from "@chakra-ui/react";
+import {Grid, GridItem, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
+import {useTranslation} from "react-i18next";
 
 interface UserLayoutProps {
     filters: React.ReactNode;
@@ -15,24 +16,37 @@ const UserLayout: React.FC<UserLayoutProps> = ({
                                                          addUserButton,
                                                          table,
                                                          pagination,
-                                                         bgColor = "green.300", // Domyślny kolor tła dla każdego elementu
+                                                         bgColor = themeColors.bgColor()
                                                      }) => {
+    const {t} = useTranslation();
     return (
         <Grid
-            templateRows="auto auto 1fr auto"
+            templateRows="auto auto auto 1fr auto"
             bgColor={themeColors.bgColorLight()}
             height="calc(100vh - 140px)"
             gap={2}
-            px={4} // Dodanie marginesów z lewej i prawej strony
-            py={2} // Dodanie odstępów od góry i dołu
+            px={4}
+            py={2}
         >
+            <GridItem
+                w="100%"
+                p={1}
+                bg={bgColor}
+                borderRadius="lg"
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+                {t('userList')}
+            </Heading>
+            </GridItem>
             {/* Wiersz 1: Filtry */}
             <GridItem
                 w="100%"
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            >
+            ><Heading size={"sm"} fontSize={14} mb={2} textAlign={"center"} color={themeColors.fontColor()}>
+                {t('filters')}
+            </Heading>
+
                 {filters}
             </GridItem>
 

@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Flex, Input, Select, Text} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
+import {useTranslation} from "react-i18next";
 
 interface PaginationProps {
     currentPage: number;
@@ -19,6 +20,7 @@ const Pagination: React.FC<PaginationProps> = ({
                                                }) => {
 
     const [gotoPage, setGotoPage] = useState("");
+    const {t} = useTranslation('auth')
 
     const handleGotoPage = () => {
         const page = parseInt(gotoPage, 10) - 1;
@@ -38,7 +40,7 @@ const Pagination: React.FC<PaginationProps> = ({
         >
             {/* Wybór liczby wierszy */}
             <Select
-                width="100px"
+                width="110px"
                 size="sm"
                 borderRadius={"md"}
                 bg={themeColors.bgColorLight()}
@@ -60,10 +62,10 @@ const Pagination: React.FC<PaginationProps> = ({
                     isDisabled={currentPage + 1 === totalPages}
                     mr={2}
                 >
-                    Previous
+                    {t('previous', {ns:'common'})}
                 </Button>
                 <Text>
-                    Page {currentPage + 1} of {totalPages}
+                    {t('page', {ns:'common'})} {currentPage + 1} {t('of', {ns:'common'})} {totalPages}
                 </Text>
                 <Button
                     size={"sm"}
@@ -71,12 +73,12 @@ const Pagination: React.FC<PaginationProps> = ({
                     isDisabled={currentPage + 1 === totalPages}
                     ml={2}
                 >
-                    Next
+                    {t('next', {ns:'common'})}
                 </Button>
 
             {/* Skok do konkretnej strony */}
                 <Input
-                    width="100px"
+                    width="110px"
                     size={"sm"}
                     borderRadius={"md"}
                     bg={themeColors.bgColorLight()}
@@ -84,12 +86,14 @@ const Pagination: React.FC<PaginationProps> = ({
                     value={gotoPage}
                     isDisabled={currentPage + 1 === totalPages}
                     onChange={(e) => setGotoPage(e.target.value)}
-                    placeholder="Go to page"
+                    placeholder={t('goToPage', {ns:'common'})}
                 />
                 <Button size={"sm"}
                         onClick={handleGotoPage}
                         isDisabled={currentPage + 1 === totalPages}
-                >Go</Button>
+                >
+                    {t('go', {ns:'common'})}
+                </Button>
             {/*</Flex>*/}
         </Flex>
     );

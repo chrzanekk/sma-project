@@ -3,6 +3,7 @@ import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Button, Flex, Input, Select} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
+import {useTranslation} from "react-i18next";
 
 interface FilterValues {
     emailStartsWith?: string;
@@ -29,6 +30,7 @@ interface Props {
 }
 
 const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
+    const {t} = useTranslation('auth')
     return (
         <Formik
             initialValues={{
@@ -46,52 +48,52 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
             {({handleSubmit, resetForm}) => (
                 <Form onSubmit={handleSubmit}>
                     <Flex gap={2} mb={1} justifyContent={"center"}>
-                        <Field name="emailStartsWith" as={Input} placeholder="Email"
+                        <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px"/>
-                        <Field name="loginStartsWith" as={Input} placeholder="Login"
+                        <Field name="loginStartsWith" as={Input} placeholder={t('shared.login')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px"/>
-                        <Field name="firstNameStartsWith" as={Input} placeholder="First Name"
+                        <Field name="firstNameStartsWith" as={Input} placeholder={t('shared.firstName')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px"/>
-                        <Field name="lastNameStartsWith" as={Input} placeholder="Last Name"
+                        <Field name="lastNameStartsWith" as={Input} placeholder={t('shared.lastName')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px"/>
-                        <Field name="positionStartsWith" as={Input} placeholder="Position"
+                        <Field name="positionStartsWith" as={Input} placeholder={t('shared.position')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px"/>
-                        <Field name="isLocked" as={Select} placeholder="Is Locked?"
+                        <Field name="isLocked" as={Select} placeholder={t('shared.locked')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
+                            <option value="true">{t('yes', {ns: "common"})}</option>
+                            <option value="false">{t('no', {ns: "common"})}</option>
                         </Field>
-                        <Field name="isEnabled" as={Select} placeholder="Is Enabled?"
+                        <Field name="isEnabled" as={Select} placeholder={t('shared.enabled')}
                                size="sm"
                                bg={themeColors.bgColorLight()}
                                borderRadius={"md"}
                                width="150px">
-                            <option value="true">Yes</option>
-                            <option value="false">No</option>
+                            <option value="true">{t('yes', {ns: "common"})}</option>
+                            <option value="false">{t('no', {ns: "common"})}</option>
                         </Field>
                     </Flex>
                     <Flex gap={2} justifyContent={"center"}>
                         <Button type="submit" colorScheme="blue"
                                 size={"sm"}>
-                            Search
+                            {t('search', {ns: "common"})}
                         </Button>
                         <Button
                             type="button"
@@ -102,7 +104,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 onSubmit({});
                             }}
                         >
-                            Clear Filters
+                            {t('clearFilters', {ns: "common"})}
                         </Button>
                     </Flex>
 

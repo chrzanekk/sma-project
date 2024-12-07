@@ -2,27 +2,27 @@
 /* Dodaj proporcjonalne szerokości */
 .user-table th:nth-child(1),
 .user-table td:nth-child(1) {
-    width: 10%; /* ID */
+    width: 2%; /* ID */
 }
 
 .user-table th:nth-child(2),
 .user-table td:nth-child(2) {
-    width: 20%; /* Email */
+    width: 10%; /* Email */
 }
 
 .user-table th:nth-child(3),
 .user-table td:nth-child(3) {
-    width: 15%; /* Login */
+    width: 10%; /* Login */
 }
 
 .user-table th:nth-child(4),
 .user-table td:nth-child(4) {
-    width: 15%; /* First Name */
+    width: 10%; /* First Name */
 }
 
 .user-table th:nth-child(5),
 .user-table td:nth-child(5) {
-    width: 15%; /* Last Name */
+    width: 20%; /* Last Name */
 }
 
 .user-table th:nth-child(6),
@@ -32,15 +32,15 @@
 
 .user-table th:nth-child(7),
 .user-table td:nth-child(7) {
-    width: 5%; /* Locked */
+    width: 7%; /* Locked */
 }
 
 .user-table th:nth-child(8),
 .user-table td:nth-child(8) {
-    width: 5%; /* Enabled */
+    width: 7%; /* Enabled */
 }
 
 .user-table th:nth-child(9),
 .user-table td:nth-child(9) {
-    width: 5%; /* Actions */
+    width: 10%; /* Actions */
 }

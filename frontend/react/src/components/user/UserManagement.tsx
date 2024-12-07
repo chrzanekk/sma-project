@@ -6,6 +6,7 @@ import {UserDTO} from "@/types/user-types.ts";
 import {deleteUserById, getUsersByFilter} from "@/services/user-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import UserLayout from "@/components/user/UserLayout.tsx";
+import {useTranslation} from "react-i18next";
 
 
 const UserManagement: React.FC = () => {
@@ -13,6 +14,7 @@ const UserManagement: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const {t} = useTranslation('auth')
 
 
     const fetchUsers = async (filter = {}, page = 0, size = rowsPerPage) => {
@@ -68,7 +70,7 @@ const UserManagement: React.FC = () => {
                         onClick={() => console.log("Add User")}
                         size={"sm"}
                         p={1}>
-                    Add User
+                    {t('shared.addUser')}
                 </Button>
             </Flex>
 
