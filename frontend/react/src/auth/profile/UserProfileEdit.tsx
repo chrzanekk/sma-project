@@ -1,22 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
-import {
-    Box,
-    Button,
-    Checkbox,
-    FormLabel,
-    Input,
-    Select,
-    Tab,
-    TabList,
-    TabPanel,
-    TabPanels,
-    Tabs,
-    VStack
-} from "@chakra-ui/react";
+import {Box, Button, FormLabel, Input, Tab, TabList, TabPanel, TabPanels, Tabs, VStack} from "@chakra-ui/react";
 import {useNavigate} from "react-router-dom"; // Import useNavigate
-import {changeUserPassword, updateUserAccount, updateUserRoles,} from "@/services/account-service.ts";
+import {changeUserPassword, updateUserAccount,} from "@/services/account-service.ts";
 import {useAuth} from "@/context/AuthContext.tsx";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {useTranslation} from "react-i18next";
@@ -39,13 +26,6 @@ const UserProfileEdit: React.FC = () => {
         return null;
     }
 
-    const [localState, setLocalState] = useState({
-        enabled: currentUser.enabled ?? false,
-        locked: currentUser.locked ?? false,
-    });
-
-    const canEditRoles = currentUser.roles?.includes("ROLE_ADMIN");
-    const canEditActivation = currentUser.roles?.includes("ROLE_ADMIN");
 
     // Validation schemas
     const accountSchema = Yup.object({
@@ -74,11 +54,6 @@ const UserProfileEdit: React.FC = () => {
         confirmPassword: Yup.string()
             .oneOf([Yup.ref("newPassword")], t('verification.passwordNotMatch'))
             .required(t('verification.required', {field: t('updateProfile.confirmPassword')})),
-    });
-
-    const rolesSchema = Yup.object({
-        roles: Yup.array().of(Yup.string())
-            .min(1, t('updateProfile.roleMissing')),
     });
 
     const accountForm = useFormik({
@@ -140,39 +115,6 @@ const UserProfileEdit: React.FC = () => {
         },
     });
 
-    const rolesForm = useFormik({
-        initialValues: {
-            roles: currentUser.roles || [],
-        },
-        validationSchema: rolesSchema,
-        onSubmit: async (values) => {
-            try {
-                const roleRequest = {
-                    userId: currentUser.id!,
-                    roles: values.roles,
-                };
-                await updateUserRoles(roleRequest);
-                successNotification(t('success', {ns: "common"}), t("notifications.rolesUpdatedSuccess"));
-            } catch (error) {
-                errorNotification(t('error', {ns: "common"}), t("notifications.rolesUpdateFailed"));
-            }
-        },
-    });
-
-    const handleSaveActivationChanges = async () => {
-        try {
-            const updatedUser = {
-                ...currentUser,
-                enabled: localState.enabled,
-                locked: localState.locked,
-            };
-            await updateUserAccount(updatedUser);
-            successNotification(t('success', {ns: "common"}), t('notifications.activationSuccess'));
-        } catch (error) {
-            errorNotification(t('error', {ns: "common"}), t('notifications.activationFailed'));
-        }
-    };
-
     return (
         <Box
             minH="100vh"
@@ -189,12 +131,31 @@ const UserProfileEdit: React.FC = () => {
                 bgColor={themeColors.bgColor()}
                 borderRadius={"lg"}
             >
-                <Tabs>
+                <Tabs
+                    variant="outline"
+                    color={themeColors.fontColor()}
+                >
                     <TabList>
-                        <Tab>{t('updateProfile.accountInfo')}</Tab>
-                        <Tab>{t('updateProfile.changePassword')}</Tab>
-                        {canEditRoles && <Tab>{t('updateProfile.roleUpdates')}</Tab>}
-                        {canEditActivation && <Tab>{t('updateProfile.accountActivation')}</Tab>}
+                        <Tab
+                            borderRadius={"md"}
+                            color={themeColors.fontColor()}
+                            _hover={{
+                                border: '1px solid white',
+                                textDecoration: 'none',
+                                bg: themeColors.highlightBgColor(),
+                                color: themeColors.popoverBgColor()
+                            }}
+                        >{t('updateProfile.accountInfo')}</Tab>
+                        <Tab
+                            color={themeColors.fontColor()}
+                            borderRadius={"md"}
+                            _hover={{
+                                border: '1px solid white',
+                                textDecoration: 'none',
+                                bg: themeColors.highlightBgColor(),
+                                color: themeColors.popoverBgColor()
+                            }}
+                        >{t('updateProfile.changePassword')}</Tab>
                     </TabList>
 
                     <TabPanels>
@@ -276,68 +237,6 @@ const UserProfileEdit: React.FC = () => {
                             </form>
                         </TabPanel>
 
-                        {/* Tab 3: Update Roles */}
-                        {canEditRoles && (
-                            <TabPanel>
-                                <form onSubmit={rolesForm.handleSubmit}>
-                                    <VStack spacing={4}>
-                                        <FormLabel>{t('updateProfile.roles')}</FormLabel>
-                                        <Select
-                                            name="roles"
-                                            multiple
-                                            value={rolesForm.values.roles}
-                                            onChange={(e) => rolesForm.setFieldValue(
-                                                    "roles",
-                                                    Array.from(
-                                                        e.target.selectedOptions,
-                                                        (option) => option.value
-                                                    )
-                                                )
-                                            }
-                                        >
-                                            <option value="USER">USER</option>
-                                            <option value="ADMIN">ADMIN</option>
-                                        </Select>
-
-                                        <Button type="submit" colorScheme="blue">
-                                            {t('updateProfile.submitRoles')}
-                                        </Button>
-                                    </VStack>
-                                </form>
-                            </TabPanel>
-                        )}
-
-                        {/* Tab 4: Account Activation */}
-                        {canEditActivation && (
-                            <TabPanel>
-                                <VStack spacing={4} alignItems="flex-start">
-                                    <Checkbox
-                                        isChecked={currentUser.enabled}
-                                        onChange={(e) => setLocalState({...localState, enabled: e.target.checked})}
-                                    >
-                                        {t('updateProfile.activate')}
-                                    </Checkbox>
-
-                                    <Checkbox
-                                        isChecked={currentUser.locked}
-                                        onChange={(e) => setLocalState({...localState, locked: e.target.checked})}
-                                    >
-                                        {t('updateProfile.lock')}
-                                    </Checkbox>
-
-                                    <Button
-                                        colorScheme="blue"
-                                        onClick={() => handleSaveActivationChanges()}
-                                        isDisabled={
-                                            localState.enabled === currentUser.enabled &&
-                                            localState.locked === currentUser.locked
-                                        }
-                                    >
-                                        {t('updateProfile.saveChanges')}
-                                    </Button>
-                                </VStack>
-                            </TabPanel>
-                        )}
 
                     </TabPanels>
                 </Tabs>

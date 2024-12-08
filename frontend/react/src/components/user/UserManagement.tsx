@@ -6,7 +6,6 @@ import {UserDTO} from "@/types/user-types.ts";
 import {deleteUserById, getUsersByFilter} from "@/services/user-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import UserLayout from "@/components/user/UserLayout.tsx";
-import {useTranslation} from "react-i18next";
 import AddUserDrawer from "@/components/user/AddUserDrawer.tsx";
 
 
@@ -15,8 +14,6 @@ const UserManagement: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
-    const {t} = useTranslation('auth')
-
 
     const fetchUsers = async (filter = {}, page = 0, size = rowsPerPage) => {
         try {

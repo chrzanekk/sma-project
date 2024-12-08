@@ -76,7 +76,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 }
             }}
         >
-            {({isValid, isSubmitting, setFieldValue, values}) => (
+            {({isValid, isSubmitting}) => (
                 <Form>
                     <Stack spacing="24px">
                         <MyTextInput
