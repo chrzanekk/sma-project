@@ -92,13 +92,13 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                     </Flex>
                     <Flex gap={2} justifyContent={"center"}>
                         <Button type="submit" colorScheme="blue"
-                                size={"sm"}>
+                                size={"xs"}>
                             {t('search', {ns: "common"})}
                         </Button>
                         <Button
                             type="button"
                             colorScheme="orange"
-                            size="sm"
+                            size="xs"
                             onClick={() => {
                                 resetForm();
                                 onSubmit({});

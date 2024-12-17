@@ -21,9 +21,9 @@ const UserLayout: React.FC<UserLayoutProps> = ({
     const {t} = useTranslation();
     return (
         <Grid
-            templateRows="auto auto auto 1fr auto"
+            templateRows="auto auto auto 1fr auto" // Ostatni rząd elastyczny
             bgColor={themeColors.bgColorLight()}
-            height="calc(100vh - 140px)"
+            height="100vh" // Pełna wysokość ekranu
             gap={2}
             px={4}
             py={2}
@@ -64,8 +64,8 @@ const UserLayout: React.FC<UserLayoutProps> = ({
             <GridItem
                 w="100%"
                 borderRadius="lg"
-                overflow="auto"
-                p={1}
+                overflowY="auto" // Skrolowanie tylko w tej sekcji
+                p={2}
             >
                 {table}
             </GridItem>

@@ -17,7 +17,6 @@ const App: React.FC = () => {
                     bottomRowContent="Informacje o najnowszych aktualizacjach"
                 />
             </Box>
-
         </Box>
     )
 }

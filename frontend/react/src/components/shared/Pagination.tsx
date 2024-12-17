@@ -41,7 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {/* Wybór liczby wierszy */}
             <Select
                 width="110px"
-                size="sm"
+                size="xs"
                 borderRadius={"md"}
                 bg={themeColors.bgColorLight()}
                 value={rowsPerPage}
@@ -57,7 +57,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
             {/* Nawigacja między stronami */}
                 <Button
-                    size={"sm"}
+                    size={"xs"}
                     onClick={() => onPageChange(currentPage)}
                     isDisabled={currentPage + 1 === totalPages}
                     mr={2}
@@ -68,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     {t('page', {ns:'common'})} {currentPage + 1} {t('of', {ns:'common'})} {totalPages}
                 </Text>
                 <Button
-                    size={"sm"}
+                    size={"xs"}
                     onClick={() => onPageChange(currentPage)}
                     isDisabled={currentPage + 1 === totalPages}
                     ml={2}
@@ -79,7 +79,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {/* Skok do konkretnej strony */}
                 <Input
                     width="110px"
-                    size={"sm"}
+                    size={"xs"}
                     borderRadius={"md"}
                     bg={themeColors.bgColorLight()}
                     mr={2}
@@ -88,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     onChange={(e) => setGotoPage(e.target.value)}
                     placeholder={t('goToPage', {ns:'common'})}
                 />
-                <Button size={"sm"}
+                <Button size={"xs"}
                         onClick={handleGotoPage}
                         isDisabled={currentPage + 1 === totalPages}
                 >

@@ -7,16 +7,10 @@ import ProtectedRoute from "@/routes/ProtectedRoute.tsx";
 import App from "@/App.tsx";
 import ConfirmAccount from "@/auth/register/ConfirmAccount.tsx";
 import UserProfileEdit from "@/auth/profile/UserProfileEdit.tsx";
-import Navbar from "@/layout/Navbar.tsx";
-import React from "react";
 import UserManagement from "@/components/user/UserManagement.tsx";
+import Layout from "@/layout/Layout.tsx";
 
-const Layout = ({children}: { children: React.ReactNode }) => (
-    <>
-        <Navbar/>
-        {children}
-    </>
-)
+
 
 
 const router = createBrowserRouter([

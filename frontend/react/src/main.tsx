@@ -4,9 +4,9 @@ import {ChakraProvider, createStandaloneToast} from "@chakra-ui/react";
 import './i18n/i18n';
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import {RouterProvider} from "react-router-dom";
+// import './index.css'
 
 import router from "@/routes/router.tsx";
-import Footer from "@/layout/Footer.tsx";
 
 const {ToastContainer} = createStandaloneToast();
 
@@ -18,7 +18,6 @@ createRoot(document.getElementById('root')!)
                     <RouterProvider router={router}/>
                     <ToastContainer/>
                 </AuthProvider>
-                <Footer/>
             </ChakraProvider>
         </StrictMode>
     );

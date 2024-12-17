@@ -58,7 +58,7 @@ const UserManagement: React.FC = () => {
         fetchUsers({}, currentPage).then(() => {
             console.log('User fetched successfully')
         });
-    }, [currentPage]);
+    }, [fetchUsers, currentPage]);
 
     return (
         <UserLayout

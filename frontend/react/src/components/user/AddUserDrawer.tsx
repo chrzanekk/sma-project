@@ -29,7 +29,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                 leftIcon={<FaPlus/>}
                 colorScheme="green"
                 onClick={onOpen}
-                size={"sm"}
+                size={"xs"}
                 p={1}
             >
                 {t('shared.addUser')}
