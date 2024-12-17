@@ -49,6 +49,7 @@ public class AccountController {
                 .email(userUpdateRequest.getEmail())
                 .firstName(userUpdateRequest.getFirstName())
                 .lastName(userUpdateRequest.getLastName())
+                .position(userUpdateRequest.getPosition())
                 .roles(roleDTOList)
                 .locked(userUpdateRequest.getLocked())
                 .enabled(userUpdateRequest.getEnabled()).build();
