@@ -33,9 +33,8 @@ interface MySelectProps extends SelectProps {
     children: React.ReactNode;
 }
 
-export const MySelect = ({ label, children, ...props }: MySelectProps) => {
-    const [field, meta, helpers] = useField(props.name); // Pobierz dane z Formik
-    const { setValue } = helpers;
+export const MySelect = ({ label, children, multiple, ...props }: MySelectProps) => {
+    const [field, meta] = useField(props.name); // Pobierz dane z Formik
 
     return (
         <Box>
@@ -43,15 +42,7 @@ export const MySelect = ({ label, children, ...props }: MySelectProps) => {
             <Select
                 {...field}
                 {...props}
-                value={field.value || []} // Ustaw aktualną wartość
-                onChange={(e) => {
-                    const selectedOptions = Array.from(
-                        e.target.selectedOptions,
-                        (option) => option.value
-                    );
-                    setValue(selectedOptions); // Ręczna aktualizacja w Formik
-                }}
-                multiple={props.multiple}
+                multiple={multiple}
             >
                 {children}
             </Select>

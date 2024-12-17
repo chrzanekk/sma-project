@@ -53,8 +53,12 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                     .required(t('verification.required', {field: t('shared.position')})),
                 roles: Yup.array().of(Yup.string())
                     .min(1, t('updateProfile.roleMissing')),
-                locked: Yup.string().required(t("verification.required", {field: t("shared.locked")})),
-                enabled: Yup.string().required(t("verification.required", {field: t("shared.enabled")})),
+                locked: Yup.string()
+                    .oneOf(["true", "false"], t("verification.invalidValue"))
+                    .required(t("verification.required", {field: t("shared.locked")})),
+                enabled: Yup.string()
+                    .oneOf(["true", "false"], t("verification.invalidValue"))
+                    .required(t("verification.required", {field: t("shared.enabled")})),
             })}
             onSubmit={async (newUser: UserDTO, {setSubmitting}) => {
                 setSubmitting(true);
@@ -127,6 +131,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                         <MySelect
                             label={t("shared.locked")}
                             name="locked"
+                            as="select"
                         >
                             <option value="true">{t("yes", {ns: "common"})}</option>
                             <option value="false">{t("no", {ns: "common"})}</option>
@@ -136,6 +141,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                         <MySelect
                             label={t("shared.enabled")}
                             name="enabled"
+                            as="select"
                         >
                             <option value="true">{t("yes", {ns: "common"})}</option>
                             <option value="false">{t("no", {ns: "common"})}</option>
