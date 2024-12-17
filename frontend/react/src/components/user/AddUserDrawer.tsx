@@ -13,6 +13,7 @@ import {useTranslation} from "react-i18next";
 import React from "react";
 import AddUserForm from "@/components/user/AddUserForm.tsx";
 import {FaPlus, FaTimes} from "react-icons/fa";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 
 interface AddUserDrawerProps {
@@ -35,7 +36,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
             </Button>
             <Drawer isOpen={isOpen} onClose={onClose} size={"lg"}>
                 <DrawerOverlay/>
-                <DrawerContent>
+                <DrawerContent bg={themeColors.bgColor()}>
                     <DrawerCloseButton/>
                     <DrawerHeader>{t('shared.userDetails')}</DrawerHeader>
                     <DrawerBody>
@@ -47,7 +48,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                     <DrawerFooter>
                         <Button
                             leftIcon={<FaTimes/>}
-                            colorScheme="facebook"
+                            colorScheme="green"
                             onClick={onClose}
                         >
                             {t('close', {ns: "common"})}

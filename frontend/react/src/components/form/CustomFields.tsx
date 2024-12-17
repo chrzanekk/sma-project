@@ -8,14 +8,15 @@ interface MyTextInputProps {
     type?: string;
     placeholder?: string;
     id?: string;
+    styleProps?: { [key: string]: any }; // Obiekt z dowolnymi stylami
 }
 
-export const MyTextInput = ({label, ...props}: MyTextInputProps) => {
+export const MyTextInput = ({label, styleProps = {}, ...props}: MyTextInputProps) => {
     const [field, meta] = useField(props);
     return (
         <Box>
             <FormLabel htmlFor={props.id || props.name}>{label}</FormLabel>
-            <Input className="text-input" {...field} {...props} />
+            <Input className="text-input" {...field} {...props} {...styleProps}/>
             {meta.touched && meta.error ? (
                 <Alert className="error" status={"error"} mt={2}>
                     <AlertIcon/>
@@ -33,7 +34,7 @@ interface MySelectProps extends SelectProps {
     children: React.ReactNode;
 }
 
-export const MySelect = ({ label, children, multiple, ...props }: MySelectProps) => {
+export const MySelect = ({label, children, multiple, ...props}: MySelectProps) => {
     const [field, meta] = useField(props.name); // Pobierz dane z Formik
 
     return (
@@ -48,7 +49,7 @@ export const MySelect = ({ label, children, multiple, ...props }: MySelectProps)
             </Select>
             {meta.touched && meta.error ? (
                 <Alert className="error" status={"error"} mt={2}>
-                    <AlertIcon />
+                    <AlertIcon/>
                     {meta.error}
                 </Alert>
             ) : null}

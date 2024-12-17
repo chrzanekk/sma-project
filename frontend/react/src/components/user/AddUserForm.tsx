@@ -7,6 +7,7 @@ import {addUser} from "@/services/user-service.ts";
 import {UserDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React from "react";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface AddUserFormProps {
     onSuccess: () => void; // Funkcja, która zostanie wywołana po pomyślnym dodaniu użytkownika
@@ -88,40 +89,48 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             name="login"
                             type="text"
                             placeholder={t('shared.login')}
+                            styleProps={{bg: themeColors.bgColorLight()}}
                         />
                         <MyTextInput
                             label={t('shared.email')}
                             name="email"
                             type="email"
                             placeholder="example@example.com"
+                            styleProps={{bg: themeColors.bgColorLight()}}
                         />
                         <MyTextInput
                             label={t('shared.password')}
                             name="password"
                             type="password"
                             placeholder={t('shared.password')}
+                            styleProps={{bg: themeColors.bgColorLight()}}
                         />
                         <MyTextInput
                             label={t('shared.firstName')}
                             name="firstName"
                             type="text"
                             placeholder={t('shared.firstName')}
+                            styleProps={{bg: themeColors.bgColorLight()}}
                         />
                         <MyTextInput
                             label={t('shared.lastName')}
                             name="lastName"
                             type="text"
                             placeholder={t('shared.lastName')}
-                        /><MyTextInput
+                            styleProps={{bg: themeColors.bgColorLight()}}
+                        />
+                        <MyTextInput
                         label={t('shared.position')}
                         name="position"
                         type="text"
                         placeholder={t('shared.position')}
-                    />
+                        styleProps={{bg: themeColors.bgColorLight()}}
+                        />
                         <MySelect
                             label={t("shared.userRoles")}
                             name="roles"
                             multiple
+                            bgColor={themeColors.bgColorLight()}
                         >
                             <option value="ROLE_USER">USER</option>
                             <option value="ROLE_ADMIN">ADMIN</option>
@@ -132,6 +141,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             label={t("shared.locked")}
                             name="locked"
                             as="select"
+                            bgColor={themeColors.bgColorLight()}
                         >
                             <option value="true">{t("yes", {ns: "common"})}</option>
                             <option value="false">{t("no", {ns: "common"})}</option>
@@ -142,13 +152,14 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             label={t("shared.enabled")}
                             name="enabled"
                             as="select"
+                            bgColor={themeColors.bgColorLight()}
                         >
                             <option value="true">{t("yes", {ns: "common"})}</option>
                             <option value="false">{t("no", {ns: "common"})}</option>
                         </MySelect>
 
-                        <Button isDisabled={!isValid || isSubmitting} type="submit">
-                            {t('register.submit')}
+                        <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme={"green"}>
+                            {t('shared.addUser')}
                         </Button>
                     </Stack>
                 </Form>
