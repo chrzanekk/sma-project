@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.RoleException;
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
 import pl.com.chrzanowski.sma.role.dao.RoleDao;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -45,7 +46,7 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Fetching role {}", name);
         Optional<Role> role = roleDao.findByName(name);
         return role.map(roleMapper::toDto)
-                .orElseThrow(() -> new RoleException("ErrorRole not found: " + name));
+                .orElseThrow(() -> new RoleException("Error: Role not found: " + name));
     }
 
     @Override
@@ -54,6 +55,10 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Adding new role {} to database", roleDTO.getName());
         if (roleDTO.getName() == null) {
             throw new RoleException("Error RoleName not found");
+        }
+        if (!roleDTO.getName().startsWith("ROLE_")) {
+            String roleName = "ROLE_" + roleDTO.getName();
+            roleDTO = roleDTO.toBuilder().name(roleName).build();
         }
         RoleDTO roleDTOToSave = roleDTO.toBuilder().createdDatetime(Instant.now()).build();
         return roleMapper.toDto(roleDao.saveRole(roleMapper.toEntity(roleDTOToSave)));
@@ -67,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
         if (existingRole.isPresent()) {
             Role role = existingRole.get();
             if (isRoleIsBase(role)) {
-                throw new RoleException(String.format("Cannot delete role %s", role.getName()));
+                throw new RoleException(ErrorCode.ROLE_CANNOT_BE_DELETED, String.format("Cannot delete role %s", role.getName()));
             } else {
                 roleDao.deleteById(id);
                 return true;

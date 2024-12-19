@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api")
+@RequestMapping(path = "/api/roles")
 public class RoleController {
 
     private final Logger log = LoggerFactory.getLogger(RoleController.class);
@@ -23,20 +23,19 @@ public class RoleController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/roles")
+    @GetMapping("/all")
     public ResponseEntity<List<RoleDTO>> getRoles() {
         log.debug("REST request to get roles");
         return ResponseEntity.ok().body(roleService.findAll());
     }
 
-    @PostMapping("/roles/save")
+    @PostMapping("/save")
     public ResponseEntity<RoleDTO> saveRole(@RequestBody RoleDTO roleDTO) {
         log.debug("REST request to save Role : {}", roleDTO);
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/role/save").toUriString());
-        return ResponseEntity.created(uri).body(roleService.saveRole(roleDTO));
+        return ResponseEntity.ok().body(roleService.saveRole(roleDTO));
     }
 
-    @DeleteMapping("/roles/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<Boolean> deleteRole(@PathVariable Long id) {
         log.debug("REST request to delete Role : {}", id);
         boolean result = roleService.deleteById(id);

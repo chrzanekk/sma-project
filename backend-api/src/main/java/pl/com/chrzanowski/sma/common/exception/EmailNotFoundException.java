@@ -1,7 +1,9 @@
 package pl.com.chrzanowski.sma.common.exception;
 
-public class EmailNotFoundException extends RuntimeException {
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+
+public class EmailNotFoundException extends CustomException {
     public EmailNotFoundException(String message) {
-        super(message);
+        super(ErrorCode.EMAIL_NOT_FOUND, message);
     }
 }

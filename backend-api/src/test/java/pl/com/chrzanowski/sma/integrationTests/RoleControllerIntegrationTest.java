@@ -80,7 +80,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
         roleService.saveRole(roleDTO);
 
         List<RoleDTO> roles = webTestClient.get()
-                .uri("/api/roles")
+                .uri("/api/roles/all")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -103,7 +103,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(roleDTO)
                 .exchange()
-                .expectStatus().isCreated()
+                .expectStatus().isOk()
                 .expectBody(RoleDTO.class)
                 .returnResult().getResponseBody();
 
@@ -119,7 +119,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
         RoleDTO savedRole = roleService.saveRole(roleDTO);
 
         Boolean response = webTestClient.delete()
-                .uri("/api/roles/" + savedRole.getId())
+                .uri("/api/roles/delete/" + savedRole.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -133,7 +133,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldReturnNoContentWhenDeletingNonExistentRole() {
         webTestClient.delete()
-                .uri("/api/roles/999")
+                .uri("/api/roles/delete/999")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -142,7 +142,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailGetRolesWithoutAuthentication() {
         webTestClient.get()
-                .uri("/api/roles")
+                .uri("/api/roles/all")
                 .exchange()
                 .expectStatus().isBadRequest();
     }
@@ -164,7 +164,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailDeleteRoleWithoutAuthentication() {
         webTestClient.delete()
-                .uri("/api/roles/1")
+                .uri("/api/roles/delete/1")
                 .exchange()
                 .expectStatus().isBadRequest();
     }

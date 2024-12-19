@@ -1,8 +1,10 @@
 package pl.com.chrzanowski.sma.common.exception;
 
-public class EmailAlreadyExistsException extends RuntimeException{
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+
+public class EmailAlreadyExistsException extends CustomException {
 
     public EmailAlreadyExistsException(String message) {
-        super(message);
+        super(ErrorCode.EMAIL_ALREADY_EXISTS, message);
     }
 }

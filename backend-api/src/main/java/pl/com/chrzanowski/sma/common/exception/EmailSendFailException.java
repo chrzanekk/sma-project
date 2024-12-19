@@ -1,9 +1,10 @@
 package pl.com.chrzanowski.sma.common.exception;
 
-public class EmailSendFailException extends RuntimeException {
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+
+public class EmailSendFailException extends CustomException {
 
     public EmailSendFailException(String message) {
-        super(message);
+        super(ErrorCode.EMAIL_SEND_FAIL, message);
     }
-
 }

@@ -5,18 +5,13 @@ import java.util.Objects;
 
 public class ErrorDetails {
     private final LocalDateTime timestamp;
+    private final String code;
     private final String message;
     private final String details;
 
-
-    public ErrorDetails(LocalDateTime timestamp, String message, String details) {
-        this.timestamp = timestamp;
-        this.message = message;
-        this.details = details;
-    }
-
     private ErrorDetails(Builder builder) {
         timestamp = builder.timestamp;
+        code = builder.code;
         message = builder.message;
         details = builder.details;
     }
@@ -28,6 +23,7 @@ public class ErrorDetails {
     public static Builder builder(ErrorDetails copy) {
         Builder builder = new Builder();
         builder.timestamp = copy.getTimestamp();
+        builder.code = copy.getCode();
         builder.message = copy.getMessage();
         builder.details = copy.getDetails();
         return builder;
@@ -35,6 +31,10 @@ public class ErrorDetails {
 
     public LocalDateTime getTimestamp() {
         return timestamp;
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public String getMessage() {
@@ -50,26 +50,30 @@ public class ErrorDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ErrorDetails that = (ErrorDetails) o;
-        return Objects.equals(timestamp, that.timestamp) && Objects.equals(message, that.message) && Objects.equals(details, that.details);
+        return Objects.equals(timestamp, that.timestamp) &&
+                Objects.equals(code, that.code) &&
+                Objects.equals(message, that.message) &&
+                Objects.equals(details, that.details);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, message, details);
+        return Objects.hash(timestamp, code, message, details);
     }
 
     @Override
     public String toString() {
         return "ErrorDetails{" +
                 "timestamp=" + timestamp +
+                ", code='" + code + '\'' +
                 ", message='" + message + '\'' +
                 ", details='" + details + '\'' +
                 '}';
     }
 
-
     public static final class Builder {
         private LocalDateTime timestamp;
+        private String code; // Nowe pole
         private String message;
         private String details;
 
@@ -78,6 +82,11 @@ public class ErrorDetails {
 
         public Builder timestamp(LocalDateTime timestamp) {
             this.timestamp = timestamp;
+            return this;
+        }
+
+        public Builder code(String code) {
+            this.code = code;
             return this;
         }
 

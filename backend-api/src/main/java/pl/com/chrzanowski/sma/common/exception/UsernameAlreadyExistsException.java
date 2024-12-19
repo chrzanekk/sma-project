@@ -1,8 +1,10 @@
 package pl.com.chrzanowski.sma.common.exception;
 
-public class UsernameAlreadyExistsException extends RuntimeException{
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+
+public class UsernameAlreadyExistsException extends CustomException {
 
     public UsernameAlreadyExistsException(String message) {
-        super(message);
+        super(ErrorCode.USERNAME_EXISTS, message);
     }
 }

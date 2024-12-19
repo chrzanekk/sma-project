@@ -1,8 +1,10 @@
 package pl.com.chrzanowski.sma.common.exception;
 
-public class ObjectNotFoundException extends RuntimeException{
+import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+
+public class ObjectNotFoundException extends CustomException {
 
     public ObjectNotFoundException(String message) {
-        super(message);
+        super(ErrorCode.OBJECT_NOT_FOUND, message);
     }
 }
