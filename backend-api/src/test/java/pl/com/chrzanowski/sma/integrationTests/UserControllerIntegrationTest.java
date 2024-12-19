@@ -9,26 +9,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
+import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -58,6 +63,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private UserHelper userHelper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private String jwtToken;
 
@@ -442,5 +450,22 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
         assertThat(users).allMatch(user -> user.getEmail().startsWith("login"));
+    }
+
+    @Test
+    void shouldChangePasswordSuccessfully() {
+        firstUser = userRepository.findAll().get(0);
+        AdminEditPasswordChangeRequest passwordChangeRequest = new AdminEditPasswordChangeRequest(firstUser.getId(), "newPassword");
+
+        webTestClient.put()
+                .uri("/api/users/set-new-password")
+                .header(org.testcontainers.shaded.com.google.common.net.HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Mono.just(passwordChangeRequest), AdminEditPasswordChangeRequest.class)
+                .exchange()
+                .expectStatus().isOk();
+
+        User updatedUser = userRepository.findById(firstUser.getId()).orElseThrow();
+        assertFalse(passwordEncoder.matches(updatedUser.getPassword(), firstUser.getPassword()));
     }
 }
