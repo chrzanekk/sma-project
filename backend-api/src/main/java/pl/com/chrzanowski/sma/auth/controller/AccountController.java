@@ -5,8 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.UserRoleUpdateRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
@@ -15,7 +15,6 @@ import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -58,16 +57,16 @@ public class AccountController {
     }
 
     @PutMapping("/change-password")
-    public ResponseEntity<?> changePassword(@Valid @RequestBody UserPasswordChangeRequest userPasswordChangeRequest) {
-        log.debug("REST: Change password for user id:{}", userPasswordChangeRequest.userId());
-        userService.updateUserPassword(userPasswordChangeRequest);
+    public ResponseEntity<?> changePassword(@Valid @RequestBody UserEditPasswordChangeRequest userEditPasswordChangeRequest) {
+        log.debug("REST: Change password for user id:{}", userEditPasswordChangeRequest.userId());
+        userService.updateUserPassword(userEditPasswordChangeRequest);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/update-roles")
-    public ResponseEntity<?> updateRoles(@RequestBody UserRoleUpdateRequest userRoleUpdateRequest) {
-        log.debug("REST: Update roles for user id:{}", userRoleUpdateRequest.userId());
-        userService.updateUserRoles(userRoleUpdateRequest.userId(), new HashSet<>(userRoleUpdateRequest.roleDTOList()));
+    public ResponseEntity<?> updateRoles(@RequestBody UserEditRoleUpdateRequest userEditRoleUpdateRequest) {
+        log.debug("REST: Update roles for user id:{}", userEditRoleUpdateRequest.userId());
+        userService.updateUserRoles(userEditRoleUpdateRequest.userId(), new HashSet<>(userEditRoleUpdateRequest.roleDTOList()));
         return ResponseEntity.noContent().build();
     }
 }

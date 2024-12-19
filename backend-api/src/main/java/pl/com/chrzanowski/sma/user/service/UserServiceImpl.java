@@ -18,8 +18,9 @@ import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
+import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
@@ -27,10 +28,7 @@ import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -155,25 +153,30 @@ public class UserServiceImpl implements UserService {
             builder.email(userDTO.getEmail());
         }
 
-        if (existingUserDTO.getFirstName() != null && userDTO.getFirstName() != null && !existingUserDTO.getFirstName().equals(userDTO.getFirstName())) {
-            builder.firstName(userDTO.getFirstName());
-        }
-
-        if (existingUserDTO.getLastName() != null && userDTO.getLastName() != null && !existingUserDTO.getLastName().equals(userDTO.getLastName())) {
-            builder.lastName(userDTO.getLastName());
-        }
-
-        if (existingUserDTO.getPosition() != null && userDTO.getPosition() != null && !existingUserDTO.getPosition().equals(userDTO.getPosition())) {
-            builder.position(userDTO.getPosition());
-        }
-
-        if (existingUserDTO.getLocked() != null && userDTO.getLocked() != null && !existingUserDTO.getLocked().equals(userDTO.getLocked())) {
-            builder.locked(userDTO.getLocked());
-        }
-
-        if (existingUserDTO.getEnabled() != null && userDTO.getEnabled() != null && !existingUserDTO.getEnabled().equals(userDTO.getEnabled())) {
-            builder.enabled(userDTO.getEnabled());
-        }
+//        if (!Objects.equals(existingUserDTO.getFirstName(),userDTO.getFirstName())) {
+//            builder.firstName(userDTO.getFirstName());
+//        }
+//
+//        if (!Objects.equals(existingUserDTO.getLastName(),userDTO.getLastName())) {
+//            builder.lastName(userDTO.getLastName());
+//        }
+//
+//        if (!Objects.equals(existingUserDTO.getPosition(),userDTO.getPosition())) {
+//            builder.position(userDTO.getPosition());
+//        }
+//
+//        if (!Objects.equals(existingUserDTO.getEnabled(),userDTO.getEnabled())) {
+//            builder.locked(userDTO.getLocked());
+//        }
+//
+//        if (!Objects.equals(existingUserDTO.getLocked(),userDTO.getLocked())) {
+//            builder.enabled(userDTO.getEnabled());
+//        }
+        builder.firstName(userDTO.getFirstName() != null ? userDTO.getFirstName() : existingUserDTO.getFirstName());
+        builder.lastName(userDTO.getLastName() != null ? userDTO.getLastName() : existingUserDTO.getLastName());
+        builder.position(userDTO.getPosition() != null ? userDTO.getPosition() : existingUserDTO.getPosition());
+        builder.locked(userDTO.getLocked() != null ? userDTO.getLocked() : existingUserDTO.getLocked());
+        builder.enabled(userDTO.getEnabled() != null ? userDTO.getEnabled() : existingUserDTO.getEnabled());
 
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
@@ -183,17 +186,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest) {
-        log.debug("Update user password by id: {}", userPasswordChangeRequest.userId());
-        UserDTO existingUserDTO = findById(userPasswordChangeRequest.userId());
-        if (userPasswordChangeRequest.newPassword() == null || userPasswordChangeRequest.newPassword().isEmpty()) {
+    public void updateUserPassword(UserEditPasswordChangeRequest userEditPasswordChangeRequest) {
+        log.debug("Update user password by id: {}", userEditPasswordChangeRequest.userId());
+        UserDTO existingUserDTO = findById(userEditPasswordChangeRequest.userId());
+        if (userEditPasswordChangeRequest.newPassword() == null || userEditPasswordChangeRequest.newPassword().isEmpty()) {
             throw new IllegalStateException("New password cannot be empty");
         }
-        if (!encoder.matches(userPasswordChangeRequest.password(), existingUserDTO.getPassword())) {
+        if (!encoder.matches(userEditPasswordChangeRequest.password(), existingUserDTO.getPassword())) {
             throw new IllegalStateException("Current password does not match");
         }
         UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
-        String encodedPassword = encoder.encode(userPasswordChangeRequest.newPassword());
+        String encodedPassword = encoder.encode(userEditPasswordChangeRequest.newPassword());
         builder.password(encodedPassword);
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
@@ -281,5 +284,20 @@ public class UserServiceImpl implements UserService {
                 currentUser.getLastName(),
                 currentUser.getPosition(),
                 currentRoles);
+    }
+
+    @Override
+    public void updateUserPasswordByAdmin(AdminEditPasswordChangeRequest adminEditPasswordChangeRequest) {
+        log.debug("Update user password by admin for user: {}",adminEditPasswordChangeRequest.userId());
+        UserDTO existingUserDTO = findById(adminEditPasswordChangeRequest.userId());
+        if (adminEditPasswordChangeRequest.newPassword() == null || adminEditPasswordChangeRequest.newPassword().isEmpty()) {
+            throw new IllegalStateException("New password cannot be empty");
+        }
+        UserDTO.UserDTOBuilder builder = existingUserDTO.toBuilder();
+        String encodedPassword = encoder.encode(adminEditPasswordChangeRequest.newPassword());
+        builder.password(encodedPassword);
+        builder.lastModifiedDatetime(Instant.now());
+        UserDTO updatedUserDTO = builder.build();
+        userDao.save(userMapper.toEntity(updatedUserDTO));
     }
 }

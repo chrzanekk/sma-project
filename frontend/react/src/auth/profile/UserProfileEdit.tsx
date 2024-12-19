@@ -22,7 +22,6 @@ const UserProfileEdit: React.FC = () => {
 
 
     if (!currentUser) {
-
         return null;
     }
 
@@ -73,7 +72,7 @@ const UserProfileEdit: React.FC = () => {
                 position: values.position,
                 locked: currentUser.locked,
                 enabled: currentUser.enabled,
-                roles: currentUser.roles
+                roles: currentUser.roles || []
             }
             try {
                 await updateUserAccount(userUpdateRequest);

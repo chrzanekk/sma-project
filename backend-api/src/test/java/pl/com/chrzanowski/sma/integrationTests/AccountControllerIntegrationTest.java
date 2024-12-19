@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.UserRoleUpdateRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
@@ -24,7 +24,7 @@ import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
@@ -158,13 +158,13 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldChangePasswordSuccessfully() {
         registeredUser = userRepository.findAll().get(0);
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(registeredUser.getId(), "password", "newPassword");
+        UserEditPasswordChangeRequest passwordChangeRequest = new UserEditPasswordChangeRequest(registeredUser.getId(), "password", "newPassword");
 
         webTestClient.put()
                 .uri("/api/account/change-password")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(passwordChangeRequest), UserPasswordChangeRequest.class)
+                .body(Mono.just(passwordChangeRequest), UserEditPasswordChangeRequest.class)
                 .exchange()
                 .expectStatus().isNoContent();
 
@@ -174,7 +174,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFailChangePasswordWithInvalidUserId() {
-        UserPasswordChangeRequest invalidRequest = new UserPasswordChangeRequest(999L, "newPassword", "newPassword");
+        UserEditPasswordChangeRequest invalidRequest = new UserEditPasswordChangeRequest(999L, "newPassword", "newPassword");
 
         webTestClient.put()
                 .uri("/api/account/change-password")
@@ -186,7 +186,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailChangePasswordWithInvalidPassword() {
         registeredUser = userRepository.findAll().get(0);
-        UserPasswordChangeRequest invalidRequest = new UserPasswordChangeRequest(registeredUser.getId(), "", "newPassword");
+        UserEditPasswordChangeRequest invalidRequest = new UserEditPasswordChangeRequest(registeredUser.getId(), "", "newPassword");
 
         webTestClient.put()
                 .uri("/api/account/change-password")
@@ -206,13 +206,13 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        UserRoleUpdateRequest userRoleUpdateRequest = new UserRoleUpdateRequest(registeredUser.getId(), List.of(roleMapper.toDto(userRole)));
+        UserEditRoleUpdateRequest userEditRoleUpdateRequest = new UserEditRoleUpdateRequest(registeredUser.getId(), List.of(roleMapper.toDto(userRole)));
 
         webTestClient.put()
                 .uri("/api/account/update-roles")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just(userRoleUpdateRequest), UserRoleUpdateRequest.class)
+                .body(Mono.just(userEditRoleUpdateRequest), UserEditRoleUpdateRequest.class)
                 .exchange()
                 .expectStatus().isNoContent();
 

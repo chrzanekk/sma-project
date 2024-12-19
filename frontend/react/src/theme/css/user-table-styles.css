@@ -3,44 +3,58 @@
 .user-table th:nth-child(1),
 .user-table td:nth-child(1) {
     width: 2%; /* ID */
+    text-align: center;
 }
 
 .user-table th:nth-child(2),
 .user-table td:nth-child(2) {
     width: 15%; /* Email */
+    text-align: center;
 }
 
 .user-table th:nth-child(3),
 .user-table td:nth-child(3) {
     width: 8%; /* Login */
+    text-align: center;
 }
 
 .user-table th:nth-child(4),
 .user-table td:nth-child(4) {
     width: 10%; /* First Name */
+    text-align: center;
 }
 
 .user-table th:nth-child(5),
 .user-table td:nth-child(5) {
     width: 15%; /* Last Name */
+    text-align: center;
 }
 
 .user-table th:nth-child(6),
 .user-table td:nth-child(6) {
     width: 10%; /* Position */
+    text-align: center;
 }
 
 .user-table th:nth-child(7),
 .user-table td:nth-child(7) {
     width: 7%; /* Locked */
+    text-align: center;
 }
 
 .user-table th:nth-child(8),
 .user-table td:nth-child(8) {
     width: 7%; /* Enabled */
+    text-align: center;
 }
 
 .user-table th:nth-child(9),
 .user-table td:nth-child(9) {
-    width: 10%; /* Actions */
+    width: 6%; /* Actions */
+    text-align: center;
+}
+.user-table th:nth-child(10),
+.user-table td:nth-child(10) {
+    width: 3%; /* Deleting */
+    text-align: center;
 }

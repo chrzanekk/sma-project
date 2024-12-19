@@ -1,5 +1,5 @@
 import axios from "axios";
-import {UserInfo, UserPasswordChangeRequest, UserRoleUpdateRequest, UserUpdateRequest} from "@/types/user-types.ts";
+import {UserInfo, UserEditPasswordChangeRequest, UserEditRoleUpdateRequest, UserUpdateRequest} from "@/types/user-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -38,7 +38,7 @@ export const updateUserAccount = async (user: UserUpdateRequest): Promise<void> 
     }
 };
 
-export const changeUserPassword = async (userPasswordChangeRequest: UserPasswordChangeRequest): Promise<void> => {
+export const changeUserPassword = async (userPasswordChangeRequest: UserEditPasswordChangeRequest): Promise<void> => {
     try {
         await api.put<boolean>(
             `${ACCOUNT_API_BASE}/change-password`,
@@ -50,7 +50,7 @@ export const changeUserPassword = async (userPasswordChangeRequest: UserPassword
     }
 };
 
-export const updateUserRoles = async (userRoleUpdateRequest: UserRoleUpdateRequest): Promise<void> => {
+export const updateUserRoles = async (userRoleUpdateRequest: UserEditRoleUpdateRequest): Promise<void> => {
     try {
         await api.put<boolean>(
             `${ACCOUNT_API_BASE}/update-roles`,

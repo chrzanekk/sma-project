@@ -16,7 +16,7 @@ import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserServiceImpl;
@@ -306,7 +306,7 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserPassword_Success() {
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "password", "newPassword");
+        UserEditPasswordChangeRequest passwordChangeRequest = new UserEditPasswordChangeRequest(1L, "password", "newPassword");
         userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
@@ -322,7 +322,7 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserPassword_IncorrectCurrentPassword() {
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "wrongCurrentPassword", "newPassword");
+        UserEditPasswordChangeRequest passwordChangeRequest = new UserEditPasswordChangeRequest(1L, "wrongCurrentPassword", "newPassword");
         userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
@@ -337,7 +337,7 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserPassword_EmptyNewPassword() {
-        UserPasswordChangeRequest passwordChangeRequest = new UserPasswordChangeRequest(1L, "password", "");
+        UserEditPasswordChangeRequest passwordChangeRequest = new UserEditPasswordChangeRequest(1L, "password", "");
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toDto(user)).thenReturn(userDTO);

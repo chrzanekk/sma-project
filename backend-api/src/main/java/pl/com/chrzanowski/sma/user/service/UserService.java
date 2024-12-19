@@ -2,12 +2,12 @@ package pl.com.chrzanowski.sma.user.service;
 
 
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
+import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserPasswordChangeRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 
 import java.util.List;
 import java.util.Set;
@@ -22,7 +22,7 @@ public interface UserService {
 
     UserDTO updateUserRoles(Long userId, Set<RoleDTO> roles);
 
-    void updateUserPassword(UserPasswordChangeRequest userPasswordChangeRequest);
+    void updateUserPassword(UserEditPasswordChangeRequest userEditPasswordChangeRequest);
 
     UserDTO save(UserDTO userDTO);
 
@@ -39,4 +39,6 @@ public interface UserService {
     Boolean isUserExists(String userName);
 
     Boolean isEmailExists(String email);
+
+    void updateUserPasswordByAdmin(AdminEditPasswordChangeRequest adminEditPasswordChangeRequest);
 }

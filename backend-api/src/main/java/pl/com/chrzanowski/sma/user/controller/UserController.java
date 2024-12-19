@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserQueryService;
 import pl.com.chrzanowski.sma.user.service.UserService;
@@ -77,6 +78,13 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         log.debug("REST request to delete user by id: {}", id);
         userService.delete(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "/set-new-password")
+    public ResponseEntity<Void> setNewPassword(@RequestBody AdminEditPasswordChangeRequest adminEditPasswordChangeRequest) {
+        log.debug("REST request to change user password by admin");
+        userService.updateUserPasswordByAdmin(adminEditPasswordChangeRequest);
         return ResponseEntity.ok().build();
     }
 }

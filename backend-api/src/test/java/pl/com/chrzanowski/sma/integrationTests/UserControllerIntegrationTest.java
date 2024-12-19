@@ -19,6 +19,7 @@ import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
+import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
@@ -53,9 +54,14 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     private UserRepository userRepository;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private UserHelper userHelper;
 
     private String jwtToken;
+
+    private User firstUser;
 
     @BeforeEach
     void setUp() {
@@ -76,9 +82,10 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        LoginRequest firstUserLogin = userHelper.registerFirstUser(webTestClient);
         userHelper.registerSecondUser(webTestClient);
-        this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
+        this.jwtToken = userHelper.authenticateUser(firstUserLogin, webTestClient);
+        firstUser = userDao.findByLogin(firstUserLogin.getLogin()).get();
     }
 
     @Test
@@ -140,6 +147,8 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .id(1L)
                 .login("updateduser")
                 .email("updated@test.com")
+                .firstName(firstUser.getFirstName())
+                .lastName(firstUser.getLastName())
                 .build();
 
         UserDTO updatedUser = webTestClient.put()

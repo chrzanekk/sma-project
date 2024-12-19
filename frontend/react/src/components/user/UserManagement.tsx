@@ -60,7 +60,11 @@ const UserManagement: React.FC = () => {
             </Flex>
 
             }
-            table={<UserTable users={users} onDelete={handleDelete}/>}
+            table={<UserTable
+                users={users}
+                onDelete={handleDelete}
+                fetchUsers={fetchUsers}
+            />}
             pagination={
                 <Pagination
                     currentPage={currentPage}

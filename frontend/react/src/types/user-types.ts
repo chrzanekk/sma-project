@@ -48,15 +48,17 @@ export interface UserUpdateRequest {
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
+    createdDatetime?: string;
+    lastModifiedDatetime?: string;
 }
 
-export interface UserPasswordChangeRequest {
+export interface UserEditPasswordChangeRequest {
     userId: number;
     password: string;
     newPassword: string;
 }
 
-export interface UserRoleUpdateRequest {
+export interface UserEditRoleUpdateRequest {
     userId: number;
     roles: string[];
 }
@@ -75,7 +77,8 @@ export interface UserDTO {
     createdDatetime?: string;
     lastModifiedDatetime?: string;
 }
-export interface AddUserDTO {
+
+export interface UserFormDTO {
     id?: number;
     email: string;
     login: string;
@@ -88,4 +91,9 @@ export interface AddUserDTO {
     roles: string[] | [];
     createdDatetime?: string;
     lastModifiedDatetime?: string;
+}
+
+export interface AdminEditPasswordChangeRequest {
+    userId: number;
+    newPassword: string;
 }

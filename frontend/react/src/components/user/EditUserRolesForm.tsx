@@ -1,26 +1,55 @@
-import {Field, Form, Formik} from 'formik';
-import * as Yup from 'yup';
-import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {addUser} from "@/services/user-service.ts";
-import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
-import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
-import {Select} from 'chakra-react-select';
+import {Field, Form, Formik} from "formik";
+import * as Yup from "yup";
+import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
+import {getUserById, updateUser} from "@/services/user-service.ts";
+import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
+import {Select} from "chakra-react-select";
+import React, {useEffect, useState} from "react";
 
-interface AddUserFormProps {
+interface EditUserFormProps {
     onSuccess: () => void;
+    userId: number;
 }
 
-const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
-    const {t} = useTranslation(['auth', 'common']);
+const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId}) => {
+    const {t} = useTranslation(['auth', 'common'])
+    const [initialValues, setInitialValues] = useState<UserFormDTO | null>(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const user: UserDTO = await getUserById(userId);
+                setInitialValues({
+                    login: user.login,
+                    email: user.email,
+                    password: '', // Password is not pre-filled for security reasons
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    position: user.position,
+                    locked: user.locked,
+                    enabled: user.enabled,
+                    roles: user.roles ? Array.from(user.roles).map(role => role.name) : []
+                });
+            } catch (err) {
+                console.error('Error fetching user:', err);
+            }
+        };
+
+        fetchUser().catch();
+    }, [userId]);
+
+    if (!initialValues) {
+        return <div>Loading...</div>;
+    }
 
     const inputProps = {
         size: "sm",
         bg: themeColors.bgColorLight(),
         borderRadius: "md"
-    };
+    }
 
     const roleOptions = [
         {value: "ROLE_USER", label: "USER"},
@@ -28,23 +57,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     ];
 
     const booleanOptions = [
-        {value: "true", label: t("yes", {ns: "common"})},
-        {value: "false", label: t("no", {ns: "common"})}
+        {value: true, label: t("yes", {ns: "common"})},
+        {value: false, label: t("no", {ns: "common"})}
     ];
 
     return (
         <Formik
-            initialValues={{
-                login: '',
-                email: '',
-                password: '',
-                firstName: '',
-                lastName: '',
-                position: '',
-                locked: true,
-                enabled: false,
-                roles: [] as string[]
-            }}
+            initialValues={initialValues}
             validationSchema={Yup.object({
                 login: Yup.string()
                     .min(5, t('verification.minLength', {field: t('shared.login'), count: 5}))
@@ -71,20 +90,24 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                     .required(t('verification.required', {field: t('shared.position')})),
                 roles: Yup.array().of(Yup.string())
                     .min(1, t('updateProfile.roleMissing')),
-                locked: Yup.string()
-                    .oneOf(["true", "false"], t("verification.invalidValue"))
+                // locked: Yup.string()
+                //     .oneOf(["true", "false"], t("verification.invalidValue"))
+                //     .required(t("verification.required", {field: t("shared.locked")})),
+                // enabled: Yup.string()
+                //     .oneOf(["true", "false"], t("verification.invalidValue"))
+                //     .required(t("verification.required", {field: t("shared.enabled")})),
+                locked: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.locked")})),
-                enabled: Yup.string()
-                    .oneOf(["true", "false"], t("verification.invalidValue"))
+                enabled: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.enabled")})),
             })}
-            onSubmit={async (newUser: UserFormDTO, {setSubmitting}) => {
+            onSubmit={async (user: UserFormDTO, {setSubmitting}) => {
                 setSubmitting(true);
                 try {
-                    await addUser(newUser);
+                    await updateUser(user);
                     successNotification(
                         t('success', {ns: "common"}),
-                        t('notifications.userAddedSuccess', {login: newUser.login, ns: "common"})
+                        t('notifications.userAddedSuccess', {login: user.login, ns: "common"})
                     );
                     onSuccess();
                 } catch (err: any) {
@@ -187,7 +210,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             <Select
                                 options={booleanOptions}
                                 placeholder={t("shared.locked")}
-                                value={booleanOptions.find((option) => option.value === String(values.locked))}
+                                value={booleanOptions.find((option) => option.value === values.locked)}
                                 onChange={(selectedOption) => {
                                     setFieldValue("locked", selectedOption?.value).catch(() => {
                                     });
@@ -211,7 +234,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             <Select
                                 options={booleanOptions}
                                 placeholder={t("shared.enabled")}
-                                value={booleanOptions.find((option) => option.value === String(values.enabled))}
+                                value={booleanOptions.find((option) => option.value === values.enabled)}
                                 onChange={(selectedOption) => {
                                     setFieldValue("enabled", selectedOption?.value).catch(() => {
                                     });
@@ -238,6 +261,6 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
             )}
         </Formik>
     );
-};
+}
 
-export default AddUserForm;
+export default EditUserForm;

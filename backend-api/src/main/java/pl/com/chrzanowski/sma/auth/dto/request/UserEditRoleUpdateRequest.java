@@ -4,6 +4,6 @@ import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 
 import java.util.List;
 
-public record UserRoleUpdateRequest(Long userId,
-                                    List<RoleDTO> roleDTOList) {
+public record UserEditRoleUpdateRequest(Long userId,
+                                        List<RoleDTO> roleDTOList) {
 }
