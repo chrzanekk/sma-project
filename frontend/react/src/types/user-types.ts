@@ -1,3 +1,5 @@
+import {RoleDTO} from "@/types/role-types.ts";
+
 export interface LoginRequest {
     login: string;
     password: string;
@@ -45,7 +47,7 @@ export interface UserUpdateRequest {
     position: string;
     locked: boolean;
     enabled: boolean;
-    roles?: string[];
+    roles: string[] | [];
 }
 
 export interface UserPasswordChangeRequest {
@@ -69,7 +71,21 @@ export interface UserDTO {
     position: string;
     locked: boolean;
     enabled: boolean;
-    roles?: Array<any>;
+    roles?: Array<RoleDTO>;
+    createdDatetime?: string;
+    lastModifiedDatetime?: string;
+}
+export interface AddUserDTO {
+    id?: number;
+    email: string;
+    login: string;
+    password?: string;
+    firstName: string;
+    lastName: string;
+    position: string;
+    locked: boolean;
+    enabled: boolean;
+    roles: string[] | [];
     createdDatetime?: string;
     lastModifiedDatetime?: string;
 }

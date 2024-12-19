@@ -34,7 +34,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
             >
                 {t('shared.addUser')}
             </Button>
-            <Drawer isOpen={isOpen} onClose={onClose} size={"lg"}>
+            <Drawer isOpen={isOpen} onClose={onClose} size={"md"}>
                 <DrawerOverlay/>
                 <DrawerContent bg={themeColors.bgColor()}>
                     <DrawerCloseButton/>

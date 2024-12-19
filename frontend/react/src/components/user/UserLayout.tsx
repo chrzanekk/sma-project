@@ -21,7 +21,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
     const {t} = useTranslation();
     return (
         <Grid
-            templateRows="auto auto auto 1fr auto" // Ostatni rząd elastyczny
+            templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
             bgColor={themeColors.bgColorLight()}
             height="100vh" // Pełna wysokość ekranu
             gap={2}

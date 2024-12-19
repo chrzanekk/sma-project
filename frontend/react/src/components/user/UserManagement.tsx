@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Flex} from '@chakra-ui/react';
 import UserFilterForm from './UserFilterForm';
 import UserTable from './UserTable';
@@ -15,43 +15,35 @@ const UserManagement: React.FC = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const fetchUsers = async (filter = {}, page = 0, size = rowsPerPage) => {
+    const fetchUsers = useCallback(async (filter = {}, page = 0, size = rowsPerPage) => {
         try {
             const response = await getUsersByFilter({...filter, page, size});
             setUsers(response.users);
-            setTotalPages(response.totalPages)
+            setTotalPages(response.totalPages);
         } catch (err) {
             console.error('Error fetching users: ', err);
         }
-    };
+    }, [rowsPerPage]);
 
     const handleRowsPerPageChange = (size: number) => {
         setRowsPerPage(size);
         setCurrentPage(0);
-        fetchUsers({}, 0, size).then(() => {
-            console.log('User fetched successfully')
-        });
+        fetchUsers({}, 0, size).catch(() => {});
     };
 
     const handleDelete = async (id: number) => {
         await deleteUserById(id);
-        fetchUsers().then(() => {
-            console.log('User fetched successfully')
-        });
+        fetchUsers().catch(() => {});
     };
 
     const handleFilterSubmit = (values: Record<string, any>) => {
         setCurrentPage(0);
-        fetchUsers(values, 0, rowsPerPage).then(() => {
-            console.log('User fetched successfully')
-        });
+        fetchUsers(values, 0, rowsPerPage).catch(() => {});
     };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-        fetchUsers({}, page, rowsPerPage).then(() => {
-            console.log('User fetched successfully')
-        });
+        fetchUsers({}, page, rowsPerPage).catch(() => {});
     };
 
     useEffect(() => {
@@ -64,7 +56,7 @@ const UserManagement: React.FC = () => {
         <UserLayout
             filters={<UserFilterForm onSubmit={handleFilterSubmit}/>}
             addUserButton={<Flex justifyContent={"center"}>
-                <AddUserDrawer fetchUsers={fetchUsers}/> {/* Zamiast zwykłego przycisku */}
+                <AddUserDrawer fetchUsers={fetchUsers}/>
             </Flex>
 
             }

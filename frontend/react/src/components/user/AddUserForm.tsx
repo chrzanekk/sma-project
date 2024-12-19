@@ -1,20 +1,37 @@
-import {Form, Formik} from 'formik';
+import {Field, Form, Formik} from 'formik';
 import * as Yup from 'yup';
-import {Button, Stack} from "@chakra-ui/react";
+import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {MySelect, MyTextInput} from "@/components/form/CustomFields";
 import {addUser} from "@/services/user-service.ts";
-import {UserDTO} from "@/types/user-types.ts";
+import {AddUserDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
+import {Select} from 'chakra-react-select';
 
 interface AddUserFormProps {
-    onSuccess: () => void; // Funkcja, która zostanie wywołana po pomyślnym dodaniu użytkownika
+    onSuccess: () => void;
 }
 
 const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['auth', 'common']);
+
+    const inputProps = {
+        size: "sm",
+        bg: themeColors.bgColorLight(),
+        borderRadius: "md"
+    };
+
+    const roleOptions = [
+        {value: "ROLE_USER", label: "USER"},
+        {value: "ROLE_ADMIN", label: "ADMIN"}
+    ];
+
+    const booleanOptions = [
+        {value: "true", label: t("yes", {ns: "common"})},
+        {value: "false", label: t("no", {ns: "common"})}
+    ];
+
     return (
         <Formik
             initialValues={{
@@ -26,7 +43,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 position: '',
                 locked: true,
                 enabled: false,
-                roles: []
+                roles: [] as string[]
             }}
             validationSchema={Yup.object({
                 login: Yup.string()
@@ -61,7 +78,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                     .oneOf(["true", "false"], t("verification.invalidValue"))
                     .required(t("verification.required", {field: t("shared.enabled")})),
             })}
-            onSubmit={async (newUser: UserDTO, {setSubmitting}) => {
+            onSubmit={async (newUser: AddUserDTO, {setSubmitting}) => {
                 setSubmitting(true);
                 try {
                     await addUser(newUser);
@@ -81,84 +98,139 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 }
             }}
         >
-            {({isValid, isSubmitting}) => (
+            {({errors, touched, isValid, isSubmitting, setFieldValue, setFieldTouched, values}) => (
                 <Form>
-                    <Stack spacing="24px">
-                        <MyTextInput
-                            label={t('shared.login')}
-                            name="login"
-                            type="text"
-                            placeholder={t('shared.login')}
-                            styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MyTextInput
-                            label={t('shared.email')}
-                            name="email"
-                            type="email"
-                            placeholder="example@example.com"
-                            styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MyTextInput
-                            label={t('shared.password')}
-                            name="password"
-                            type="password"
-                            placeholder={t('shared.password')}
-                            styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MyTextInput
-                            label={t('shared.firstName')}
-                            name="firstName"
-                            type="text"
-                            placeholder={t('shared.firstName')}
-                            styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MyTextInput
-                            label={t('shared.lastName')}
-                            name="lastName"
-                            type="text"
-                            placeholder={t('shared.lastName')}
-                            styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MyTextInput
-                        label={t('shared.position')}
-                        name="position"
-                        type="text"
-                        placeholder={t('shared.position')}
-                        styleProps={{bg: themeColors.bgColorLight()}}
-                        />
-                        <MySelect
-                            label={t("shared.userRoles")}
-                            name="roles"
-                            multiple
-                            bgColor={themeColors.bgColorLight()}
-                        >
-                            <option value="ROLE_USER">USER</option>
-                            <option value="ROLE_ADMIN">ADMIN</option>
-                        </MySelect>
-
-                        {/* Pole wyboru dla locked */}
-                        <MySelect
-                            label={t("shared.locked")}
-                            name="locked"
-                            as="select"
-                            bgColor={themeColors.bgColorLight()}
-                        >
-                            <option value="true">{t("yes", {ns: "common"})}</option>
-                            <option value="false">{t("no", {ns: "common"})}</option>
-                        </MySelect>
-
-                        {/* Pole wyboru dla enabled */}
-                        <MySelect
-                            label={t("shared.enabled")}
-                            name="enabled"
-                            as="select"
-                            bgColor={themeColors.bgColorLight()}
-                        >
-                            <option value="true">{t("yes", {ns: "common"})}</option>
-                            <option value="false">{t("no", {ns: "common"})}</option>
-                        </MySelect>
-
-                        <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme={"green"}>
+                    <Stack spacing="8px">
+                        <Field name="login">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.login && touched.login}>
+                                    <FormLabel>{t('shared.login')}</FormLabel>
+                                    <Input {...field} placeholder={t('shared.login')} {...inputProps} />
+                                    <FormErrorMessage>{errors.login}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="email">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.email && touched.email}>
+                                    <FormLabel>{t('shared.email')}</FormLabel>
+                                    <Input {...field} placeholder={t('shared.email')} {...inputProps} />
+                                    <FormErrorMessage>{errors.email}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="password">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.password && touched.password}>
+                                    <FormLabel>{t('shared.password')}</FormLabel>
+                                    <Input {...field} type="password"
+                                           placeholder={t('shared.password')} {...inputProps} />
+                                    <FormErrorMessage>{errors.password}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="firstName">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.firstName && touched.firstName}>
+                                    <FormLabel>{t('shared.firstName')}</FormLabel>
+                                    <Input {...field} placeholder={t('shared.firstName')} {...inputProps} />
+                                    <FormErrorMessage>{errors.firstName}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="lastName">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.lastName && touched.lastName}>
+                                    <FormLabel>{t('shared.lastName')}</FormLabel>
+                                    <Input {...field} placeholder={t('shared.lastName')} {...inputProps} />
+                                    <FormErrorMessage>{errors.lastName}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <Field name="position">
+                            {({field}: { field: any }) => (
+                                <FormControl isInvalid={!!errors.position && touched.position}>
+                                    <FormLabel>{t('shared.position')}</FormLabel>
+                                    <Input {...field} placeholder={t('shared.position')} {...inputProps} />
+                                    <FormErrorMessage>{errors.position}</FormErrorMessage>
+                                </FormControl>
+                            )}
+                        </Field>
+                        <FormControl isInvalid={!!errors.roles && touched.roles}>
+                            <FormLabel>{t("shared.userRoles")}</FormLabel>
+                            <Select
+                                isMulti
+                                options={roleOptions}
+                                placeholder={t("shared.userRoles")}
+                                closeMenuOnSelect={false}
+                                onChange={(selectedOptions) => {
+                                    const roles = selectedOptions.map((option) => option.value);
+                                    setFieldValue("roles", roles || []).catch(() => {
+                                    });
+                                    setFieldTouched("roles", true, false).catch(() => {
+                                    });
+                                }}
+                                chakraStyles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: themeColors.bgColorLight(),
+                                        borderColor: themeColors.borderColor(),
+                                        borderRadius: "md",
+                                        boxShadow: "none",
+                                    })
+                                }}
+                            />
+                            <FormErrorMessage>{errors.roles}</FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid={!!errors.locked && touched.locked}>
+                            <FormLabel>{t("shared.locked")}</FormLabel>
+                            <Select
+                                options={booleanOptions}
+                                placeholder={t("shared.locked")}
+                                value={booleanOptions.find((option) => option.value === String(values.locked))}
+                                onChange={(selectedOption) => {
+                                    setFieldValue("locked", selectedOption?.value).catch(() => {
+                                    });
+                                    setFieldTouched("locked", true, false).catch(() => {
+                                    });
+                                }}
+                                chakraStyles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: themeColors.bgColorLight(),
+                                        borderColor: themeColors.borderColor(),
+                                        borderRadius: "md",
+                                        boxShadow: "none",
+                                    })
+                                }}
+                            />
+                            <FormErrorMessage>{errors.locked}</FormErrorMessage>
+                        </FormControl>
+                        <FormControl isInvalid={!!errors.enabled && touched.enabled}>
+                            <FormLabel>{t("shared.enabled")}</FormLabel>
+                            <Select
+                                options={booleanOptions}
+                                placeholder={t("shared.enabled")}
+                                value={booleanOptions.find((option) => option.value === String(values.enabled))}
+                                onChange={(selectedOption) => {
+                                    setFieldValue("enabled", selectedOption?.value).catch(() => {
+                                    });
+                                    setFieldTouched("enabled", true, false).catch(() => {
+                                    });
+                                }}
+                                chakraStyles={{
+                                    control: (provided) => ({
+                                        ...provided,
+                                        backgroundColor: themeColors.bgColorLight(),
+                                        borderColor: themeColors.borderColor(),
+                                        borderRadius: "md",
+                                        boxShadow: "none",
+                                    })
+                                }}
+                            />
+                            <FormErrorMessage>{errors.enabled}</FormErrorMessage>
+                        </FormControl>
+                        <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme="green">
                             {t('shared.addUser')}
                         </Button>
                     </Stack>

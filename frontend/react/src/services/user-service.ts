@@ -1,5 +1,6 @@
 import axios from "axios";
-import {UserDTO} from "@/types/user-types.ts";
+import {AddUserDTO, UserDTO} from "@/types/user-types.ts";
+import {RoleDTO} from "@/types/role-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -38,22 +39,25 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
 
 };
 
-export const addUser = async (user: UserDTO) => {
-    console.log('AddUser', user)
+export const addUser = async (addUser: AddUserDTO) => {
+    console.log('AddUser', addUser)
     try {
-        const roles = user.roles?.map((role) => ({ name: role }));
-        const payload = {
-            ...user,
-            locked: toBoolean(user.locked),
-            enabled: toBoolean(user.enabled),
+        const roles: Array<RoleDTO> = Array.from(
+            addUser.roles.map((role: string) => ({name: role}))
+        );
+        const payload: UserDTO = {
+            ...addUser,
+            locked: toBoolean(addUser.locked),
+            enabled: toBoolean(addUser.enabled),
             roles
         }
+        console.log('Payload', payload)
         const response = await api.post(`${USERS_API_BASE}/add`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         console.error('Error adding user:', err);
+        throw err;
     }
-
 };
 
 export const updateUser = async (user: Record<string, any>) => {
