@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.exception.EmailSendFailException;
 import pl.com.chrzanowski.sma.email.dto.SentEmailDTO;
 
+import java.util.Map;
+
 @Service
 @Transactional
 public class EmailSenderServiceImpl implements EmailSenderService {
@@ -43,7 +45,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
             helper.setText(sentEmailDTO.getContent(), true);
         } catch (MessagingException e) {
             log.error("Failed to send email", e);
-            throw new EmailSendFailException("Failed to send email");
+            throw new EmailSendFailException("Failed to send email", Map.of("email", sentEmailDTO.getUserEmail()));
         }
 
         sendMail(mail);

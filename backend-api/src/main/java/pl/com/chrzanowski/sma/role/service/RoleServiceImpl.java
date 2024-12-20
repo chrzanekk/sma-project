@@ -14,6 +14,7 @@ import pl.com.chrzanowski.sma.role.model.Role;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class RoleServiceImpl implements RoleService {
         log.debug("Fetching role {}", name);
         Optional<Role> role = roleDao.findByName(name);
         return role.map(roleMapper::toDto)
-                .orElseThrow(() -> new RoleException("Error: Role not found: " + name));
+                .orElseThrow(() -> new RoleException("Error: Role not found: " + name, Map.of("roleName", name)));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class RoleServiceImpl implements RoleService {
         if (existingRole.isPresent()) {
             Role role = existingRole.get();
             if (isRoleIsBase(role)) {
-                throw new RoleException(ErrorCode.ROLE_CANNOT_BE_DELETED, String.format("Cannot delete role %s", role.getName()));
+                throw new RoleException(ErrorCode.ROLE_CANNOT_BE_DELETED, String.format("Cannot delete role %s", role.getName()), Map.of("roleName", role.getName()));
             } else {
                 roleDao.deleteById(id);
                 return true;

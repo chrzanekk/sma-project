@@ -131,7 +131,7 @@ public class AuthController {
         log.debug("REST request to set new password for user: {}", passwordResetRequest.getEmail());
 
         if (!isEmailTaken(passwordResetRequest.getEmail())) {
-            throw new EmailNotFoundException("Email not found");
+            throw new EmailNotFoundException("Email not found", Map.of("email", passwordResetRequest.getEmail()));
         }
         UserDTO userDTO = userService.getUser(passwordResetRequest.getEmail());
         String token = userTokenService.generateToken();
