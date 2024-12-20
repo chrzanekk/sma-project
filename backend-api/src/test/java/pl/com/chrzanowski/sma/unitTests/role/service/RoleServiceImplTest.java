@@ -209,7 +209,7 @@ class RoleServiceImplTest {
 
         // Act & Assert
         RoleException exception = assertThrows(RoleException.class, () -> roleService.findAllByListOfNames(roleNames));
-        assertEquals("ErrorRole not found: INVALID_ROLE", exception.getMessage());
+        assertEquals("Error: Role not found: INVALID_ROLE", exception.getMessage());
 
         verify(roleDao, times(1)).findByName("INVALID_ROLE");
     }
