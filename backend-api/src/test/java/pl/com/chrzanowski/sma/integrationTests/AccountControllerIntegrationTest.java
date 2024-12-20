@@ -152,7 +152,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(invalidUserDTO), UserDTO.class)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -180,7 +180,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/account/change-password")
                 .bodyValue(invalidRequest)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -193,7 +193,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidRequest)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test

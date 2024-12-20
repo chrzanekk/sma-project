@@ -298,7 +298,7 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/auth/login")
                 .body(Mono.just(loginRequest), LoginRequest.class)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
 
         verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
         verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
@@ -336,7 +336,7 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/auth/login")
                 .body(Mono.just(loginRequest), LoginRequest.class)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
 
         verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
         verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
@@ -433,7 +433,7 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/auth/authenticate")
                 .header(HttpHeaders.AUTHORIZATION, token + "111")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
 
         verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
         verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());

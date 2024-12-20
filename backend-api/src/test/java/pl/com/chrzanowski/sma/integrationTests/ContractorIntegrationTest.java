@@ -269,7 +269,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateContractor)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -296,7 +296,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         webTestClient.delete()
                 .uri("/api/contractors/delete/1")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -342,7 +342,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         webTestClient.get()
                 .uri("/api/contractors/page?page=0&pageSize=10")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
 }

@@ -192,7 +192,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.get()
                 .uri("/api/users/all")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -208,7 +208,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(newUser)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -216,7 +216,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.delete()
                 .uri("/api/users/delete/1")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -357,7 +357,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.get()
                 .uri("/api/users/")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -365,7 +365,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.get()
                 .uri("/api/users/page?page=0&size=10")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test

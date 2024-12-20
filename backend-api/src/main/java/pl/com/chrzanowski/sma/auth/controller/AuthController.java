@@ -32,7 +32,6 @@ import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
 import pl.com.chrzanowski.sma.common.util.TokenUtil;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.service.UserService;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
@@ -52,21 +51,18 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
-
     private final PasswordResetService passwordResetService;
     private final SendEmailService sendEmailService;
     private final UserService userService;
-    private final UserMapper userMapper;
     private final UserTokenService userTokenService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, PasswordResetService passwordResetService, SendEmailService sendEmailService, UserService userService, UserMapper userMapper, UserTokenService userTokenService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, PasswordResetService passwordResetService, SendEmailService sendEmailService, UserService userService, UserTokenService userTokenService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.passwordResetService = passwordResetService;
         this.sendEmailService = sendEmailService;
         this.userService = userService;
-        this.userMapper = userMapper;
         this.userTokenService = userTokenService;
     }
 
@@ -99,7 +95,7 @@ public class AuthController {
         RegisterRequest updatedRequest = registerRequest.toBuilder()
                 .login(registerRequest.getLogin().toLowerCase()).build();
         if (isUsernameTaken(updatedRequest.getLogin())) {
-            throw new UsernameAlreadyExistsException("Error. Username is already in use.",Map.of("login", updatedRequest.getLogin()));
+            throw new UsernameAlreadyExistsException("Error. Username is already in use.", Map.of("login", updatedRequest.getLogin()));
         }
 
         if (isEmailTaken(updatedRequest.getEmail())) {

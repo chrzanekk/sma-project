@@ -36,10 +36,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
             updateUser(userInfo);
 
         } catch (error) {
-            errorNotification(
-                t('error', {ns: "common"}),
-                t('notifications.loginFailed')
-            );
             throw error;
         }
     };

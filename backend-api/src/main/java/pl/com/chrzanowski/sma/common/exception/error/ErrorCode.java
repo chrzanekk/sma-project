@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.sma.common.exception.error;
 
 public enum ErrorCode {
+    UNAUTHORIZED("unauthorized"),
+    FORBIDDEN("forbidden"),
     EMAIL_NOT_FOUND("emailNotFound"),
     EMAIL_ALREADY_EXISTS("emailAlreadyExists"),
     EMAIL_SEND_FAIL("emailSendFail"),

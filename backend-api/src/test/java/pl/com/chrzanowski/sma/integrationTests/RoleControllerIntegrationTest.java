@@ -144,7 +144,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.get()
                 .uri("/api/roles/all")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -158,7 +158,7 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(roleDTO)
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 
     @Test
@@ -166,6 +166,6 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
         webTestClient.delete()
                 .uri("/api/roles/delete/1")
                 .exchange()
-                .expectStatus().isBadRequest();
+                .expectStatus().isUnauthorized();
     }
 }

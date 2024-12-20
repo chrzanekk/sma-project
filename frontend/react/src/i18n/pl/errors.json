@@ -1,6 +1,8 @@
 {
   "error" : "Błąd",
   "networkError": "Błąd sieci",
+  "unauthorized": "Brak autoryzacji - sprawdź swoje dane logowania",
+  "accessDenied": "Brak dostępu",
   "cannotConnectToServer": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
   "genericError": "Wystąpił błąd",
   "malformedJson": "Nieprawidłowy format JSON",
