@@ -28,14 +28,14 @@ const useUser = () => {
         const token = localStorage.getItem("auth");
 
         if (!token || isTokenExpired(token)) {
-            console.warn("Token is missing or expired. Logging out...");
-            if (!hasShownNotification) {
-                errorNotification(
-                    t("notifications.sessionExpired"),
-                    t("notifications.logInAgain")
-                );
-                setHasShownNotification(true);
-            }
+            // console.warn("Token is missing or expired. Logging out...");
+            // if (!hasShownNotification) {
+            //     errorNotification(
+            //         t("notifications.sessionExpired"),
+            //         t("notifications.logInAgain")
+            //     );
+            //     setHasShownNotification(true);
+            // }
             localStorage.removeItem('auth');
             localStorage.removeItem('user');
             setUser(null);
