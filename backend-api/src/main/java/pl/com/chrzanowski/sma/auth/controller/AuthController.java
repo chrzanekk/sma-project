@@ -99,11 +99,11 @@ public class AuthController {
         RegisterRequest updatedRequest = registerRequest.toBuilder()
                 .login(registerRequest.getLogin().toLowerCase()).build();
         if (isUsernameTaken(updatedRequest.getLogin())) {
-            throw new UsernameAlreadyExistsException("Error. Username is already in use.");
+            throw new UsernameAlreadyExistsException("Error. Username is already in use.",Map.of("login", updatedRequest.getLogin()));
         }
 
         if (isEmailTaken(updatedRequest.getEmail())) {
-            throw new EmailAlreadyExistsException("Error. Email is already in use!");
+            throw new EmailAlreadyExistsException("Error. Email is already in use!", Map.of("email", updatedRequest.getEmail()));
         }
 
         UserDTO savedUser = userService.register(updatedRequest);

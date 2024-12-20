@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.com.chrzanowski.sma.common.exception.CustomException;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code("RUNTIME_EXCEPTION")
                 .message(e.getMessage())
-                .details(request.getDescription(false)).build();
+                .details(Map.of("description",request.getDescription(false))).build();
         log.debug("Error: ",e);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code(ErrorCode.INVALID_ARGUMENT.getCode())
                 .message(e.getMessage())
-                .details(request.getDescription(false))
+                .details(Map.of("description",request.getDescription(false)))
                 .build();
         log.error("IllegalArgumentException: ", e);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
@@ -51,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code(ErrorCode.MALFORMED_JSON.getCode())
                 .message("Invalid JSON format")
-                .details(request.getDescription(false))
+                .details(Map.of("description",request.getDescription(false)))
                 .build();
         log.error("HttpMessageNotReadableException: ", ex);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
@@ -63,7 +64,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code(ErrorCode.GENERIC_ERROR.getCode())
                 .message("An unexpected error occurred")
-                .details(request.getDescription(false))
+                .details(Map.of("description",request.getDescription(false)))
                 .build();
         log.error("Exception: ", e);
         return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -75,7 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .code(e.getErrorCode().getCode())
                 .message(e.getMessage())
-                .details(request.getDescription(false))
+                .details(e.getDetails())
                 .build();
         log.error("CustomException: ", e);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);

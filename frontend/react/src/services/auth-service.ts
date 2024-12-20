@@ -1,11 +1,8 @@
-import axios, {AxiosResponse} from 'axios'
+import {AxiosResponse} from 'axios'
 import {LoginRequest, NewPasswordPutRequest, PasswordResetRequest, RegisterRequest} from "@/types/user-types.ts";
 import {JwtTokenResponse} from "@/types/jwt-payload.ts";
+import {api} from "@/services/axiosConfig.ts";
 
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-});
 
 export const login = async (loginRequest: LoginRequest): Promise<AxiosResponse<JwtTokenResponse>> => {
     try {
@@ -22,6 +19,7 @@ export const registerUser = async (registerRequest: RegisterRequest) => {
         throw e;
     }
 };
+
 export const confirmAccount = async (token: string) => {
     try {
         return await api.get(`/api/auth/confirm?token=${token}`);

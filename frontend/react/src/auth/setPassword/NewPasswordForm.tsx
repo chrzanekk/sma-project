@@ -49,8 +49,7 @@ const NewPasswordForm = () => {
                         navigate("/");
                         successNotification(t('success', {ns: "common"}), t("notifications.resetPasswordSuccess"));
                     })
-                    .catch((err) => {
-                        errorNotification(t('error',{ns: "common"}), err.response?.data?.message || t("notifications.resetPasswordError"));
+                    .catch(() => {
                     })
                     .finally(() => {
                         setSubmitting(false);

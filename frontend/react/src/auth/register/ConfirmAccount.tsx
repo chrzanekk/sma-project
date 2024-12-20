@@ -2,7 +2,7 @@ import {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {Box, Button, Flex, Heading, Link, Stack, Text} from "@chakra-ui/react";
 import {confirmAccount} from "@/services/auth-service";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {successNotification} from "@/notifications/notifications.ts";
 import AppBanner from "@/auth/common/AppBanner.tsx";
 import {useTranslation} from "react-i18next";
 
@@ -24,9 +24,7 @@ const ConfirmAccount = () => {
                     successNotification(t('success', {ns: "common"}), t('notifications.confirmSuccess'))
                     setConfirmationStatus("success");
                 })
-                .catch((err) => {
-                    errorNotification(t('error', {ns:"common"}), err.response?.data?.message || t('notification.confirmFailed'));
-                    setConfirmationStatus("error");
+                .catch(() => {
                 });
         }
     }, [token]);

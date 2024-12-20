@@ -2,7 +2,7 @@ import {useAuth} from "@/context/AuthContext.tsx";
 import {useNavigate} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {MyTextInput} from "@/components/form/CustomFields.tsx";
 import {useTranslation} from "react-i18next";
@@ -29,11 +29,9 @@ const LoginForm = () => {
             onSubmit={(values, {setSubmitting}) => {
                 setSubmitting(true);
                 loginUser(values).then(() => {
-                    successNotification(t('success', { ns: "common" }), t("notifications.loginSuccess"))
+                    successNotification(t('success', {ns: "common"}), t("notifications.loginSuccess"))
                     navigate("/dashboard")
-                }).catch(err => {
-                    //todo handle messages from backend and translate it
-                    errorNotification(t("error",{ns: "common"}), err.response?.data?.message || t("notifications.loginFailed"))
+                }).catch(() => {
                 }).finally(() => {
                     setSubmitting(false)
                 })

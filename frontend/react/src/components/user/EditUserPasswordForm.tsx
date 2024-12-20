@@ -7,6 +7,7 @@ import {setNewUserPassword} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
 import React from "react";
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
 interface EditUserPasswordFormProps {
     onSuccess: () => void;
@@ -50,14 +51,17 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
                     await setNewUserPassword(payload);
                     successNotification(
                         t('success', {ns: "common"}),
-                        t('notifications.userPasswordSetSuccess', {login: login, ns: "common"})
+                        formatMessage('notifications.userPasswordSetSuccess', {login: login})
                     );
                     onSuccess();
                 } catch (err: any) {
                     console.error(err);
                     errorNotification(
                         t('error', {ns: "common"}),
-                        err.response?.data?.message || t('notifications.userPasswordSetError', {login: login, ns: "common"})
+                        err.response?.data?.message || t('notifications.userPasswordSetError', {
+                            login: login,
+                            ns: "common"
+                        })
                     );
                 } finally {
                     setSubmitting(false)

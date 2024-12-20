@@ -8,6 +8,7 @@ import {useTranslation} from "react-i18next";
 import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {Select} from 'chakra-react-select';
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
 interface AddUserFormProps {
     onSuccess: () => void;
@@ -84,7 +85,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                     await addUser(newUser);
                     successNotification(
                         t('success', {ns: "common"}),
-                        t('notifications.userAddedSuccess', {login: newUser.login, ns: "common"})
+                        formatMessage('notifications.userAddedSuccess',{login: newUser.login})
                     );
                     onSuccess();
                 } catch (err: any) {

@@ -5,7 +5,7 @@ import {Box, Button, FormLabel, Input, Tab, TabList, TabPanel, TabPanels, Tabs, 
 import {useNavigate} from "react-router-dom"; // Import useNavigate
 import {changeUserPassword, updateUserAccount,} from "@/services/account-service.ts";
 import {useAuth} from "@/context/AuthContext.tsx";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {successNotification} from "@/notifications/notifications.ts";
 import {useTranslation} from "react-i18next";
 import {themeColors} from "@/theme/theme-colors.ts";
 
@@ -86,7 +86,7 @@ const UserProfileEdit: React.FC = () => {
                 }
                 successNotification(t('success', {ns: "common"}), t("notifications.accountUpdatedSuccess"));
             } catch (error) {
-                errorNotification(t('error', {ns: "common"}), t("notifications.accountUpdateFailed"));
+                console.error(error);
             }
         },
     });
@@ -99,18 +99,17 @@ const UserProfileEdit: React.FC = () => {
         },
         validationSchema: passwordSchema,
         onSubmit: async (values) => {
-            try {
-                const passwordRequest = {
-                    userId: currentUser.id!,
-                    password: values.password,
-                    newPassword: values.newPassword,
-                };
-                await changeUserPassword(passwordRequest);
-                successNotification(t('success', {ns: "common"}), t("notifications.changePasswordSuccess"));
-                logOut();
-            } catch (error) {
-                errorNotification(t('error', {ns: "common"}), t("notifications.changePasswordFailed"));
-            }
+            const passwordRequest = {
+                userId: currentUser.id!,
+                password: values.password,
+                newPassword: values.newPassword,
+            };
+            await changeUserPassword(passwordRequest).then(
+                () => {
+                    successNotification(t('success', {ns: "common"}), t("notifications.changePasswordSuccess"));
+                    logOut();
+                }
+            );
         },
     });
 

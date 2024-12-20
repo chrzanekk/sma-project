@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {MyTextInput} from "@/components/form/CustomFields.tsx";
 import {requestPasswordReset} from "@/services/auth-service.ts";
@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 const ResetPasswordForm = () => {
 
     const navigate = useNavigate();
-    const {t} = useTranslation(['auth','common']);
+    const {t} = useTranslation(['auth', 'common']);
 
     return (
         <Formik
@@ -19,7 +19,7 @@ const ResetPasswordForm = () => {
             validationSchema={Yup.object({
                 email: Yup.string()
                     .email(t('verification.invalidEmail'))
-                    .required(t('verification.required',{field: t('shared.email')})),
+                    .required(t('verification.required', {field: t('shared.email')})),
             })}
             initialValues={{email: ""}}
             onSubmit={(values, {setSubmitting}) => {
@@ -34,8 +34,7 @@ const ResetPasswordForm = () => {
                         navigate("/");
                         successNotification(t('success', {ns: "common"}), t('notifications.resetPasswordSuccess'));
                     })
-                    .catch((err) => {
-                        errorNotification(t('error', {ns: "common"}), err.response?.data?.message || t('notifications.resetPasswordError'));
+                    .catch(() => {
                     })
                     .finally(() => {
                         setSubmitting(false);

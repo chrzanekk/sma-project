@@ -3,7 +3,7 @@
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
-import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {successNotification} from "@/notifications/notifications.ts";
 import {MyTextInput} from "@/components/form/CustomFields";
 import {registerUser} from "@/services/auth-service.ts";
 import {RegisterRequest} from "@/types/user-types.ts";
@@ -44,21 +44,16 @@ const RegisterForm = () => {
             })}
             onSubmit={async (register: RegisterRequest, {setSubmitting}) => {
                 setSubmitting(true);
-                try {
-                    await registerUser(register);
+
+                registerUser(register).then(() => {
                     successNotification(
-                        t('success',{ns:"common"}),
+                        t('success', {ns: "common"}),
                         t('notifications.registerSuccessDetails', {login: register.login})
-                    );
-                } catch (err: any) {
-                    console.error(err);
-                    errorNotification(
-                        t('error',{ns:"common"}),
-                        err.response?.data?.message || t('notifications.registerErrorDetails')
-                    );
-                } finally {
-                    setSubmitting(false)
-                }
+                    )
+                }).catch(() => {
+                }).finally(() => {
+                    setSubmitting(false);
+                });
             }}
         >
             {({isValid, isSubmitting}) => (

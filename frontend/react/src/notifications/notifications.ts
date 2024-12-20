@@ -1,9 +1,9 @@
-// src/notifications/notifications.ts
-import { createStandaloneToast } from '@chakra-ui/react';
+import {createStandaloneToast} from '@chakra-ui/react';
+import React from "react";
 
-const { toast } = createStandaloneToast();
+const {toast} = createStandaloneToast();
 
-const notifications = (title: string, description: string, status: "success" | "error" | "info" | "warning") => {
+const notifications = (title: string, description: React.ReactNode, status: "success" | "error" | "info" | "warning") => {
     toast({
         title,
         description,
@@ -13,10 +13,10 @@ const notifications = (title: string, description: string, status: "success" | "
     });
 };
 
-export const successNotification = (title: string, description: string) => {
+export const successNotification = (title: string, description: React.ReactNode) => {
     notifications(title, description, "success");
 };
 
-export const errorNotification = (title: string, description: string) => {
+export const errorNotification = (title: string, description: React.ReactNode) => {
     notifications(title, description, "error");
 };

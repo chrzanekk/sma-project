@@ -1,25 +1,6 @@
-import axios from "axios";
 import {AdminEditPasswordChangeRequest, UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {RoleDTO} from "@/types/role-types.ts";
-
-const api = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
-});
-
-const toBoolean = (value: string | boolean): boolean => value === "true" || value === true;
-
-const getAuthConfig = () => {
-
-    const token = localStorage.getItem("auth");
-    if (!token) {
-        console.error("Token JWT nie jest dostępny w localStorage");
-    }
-    return {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    };
-};
+import {api, getAuthConfig, toBoolean} from "@/services/axiosConfig.ts";
 
 const USERS_API_BASE = "/api/users";
 

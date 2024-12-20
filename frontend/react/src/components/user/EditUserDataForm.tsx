@@ -8,6 +8,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
 import {Select} from "chakra-react-select";
 import React, {useEffect, useState} from "react";
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
 interface EditUserDataFormProps {
     onSuccess: () => void;
@@ -84,7 +85,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     await updateUser(user);
                     successNotification(
                         t('success', {ns: "common"}),
-                        t('notifications.userEditedSuccess', {login: user.login, ns: "common"})
+                        formatMessage('notifications.userEditedSuccess',{login: user.login})
                     );
                     onSuccess();
                 } catch (err: any) {

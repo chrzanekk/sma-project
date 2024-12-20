@@ -8,12 +8,16 @@ public enum ErrorCode {
     OBJECT_NOT_FOUND("objectNotFound"),
     PASSWORD_NOT_MATCH("passwordNotMatch"),
     USERNAME_EXISTS("usernameExists"),
+    LOGIN_ALREADY_EXISTS("loginAlreadyExists"),
     INVALID_ARGUMENT("invalidArgument"),
     ROLE_NOT_FOUND("roleNotFound"),
     ROLE_CANNOT_BE_DELETED("roleCannotBeDeleted"),
     INVALID_PASSWORD("invalidPassword"),
     GENERIC_ERROR("genericError"),
-    MALFORMED_JSON("malformedJson");
+    MALFORMED_JSON("malformedJson"),
+    USER_ADDED_ERROR("userAddedError"),
+    USER_PASSWORD_SET_ERROR("userPasswordSetError"),
+    USER_EDITED_ERROR("userEditedError");
 
     private final String code;
 

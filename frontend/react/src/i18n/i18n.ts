@@ -10,6 +10,8 @@ import authEn from './en/auth.json';
 import authPl from './pl/auth.json';
 import footerEn from './en/footer.json'
 import footerPl from './pl/footer.json'
+import errorsEn from './en/errors.json'
+import errorsPl from './pl/errors.json'
 
 i18n.use(initReactI18next).init({
     resources: {
@@ -19,13 +21,15 @@ i18n.use(initReactI18next).init({
             userMenu: userMenuEn,
             auth: authEn,
             footer: footerEn,
+            errors: errorsEn
         },
         pl: {
             common: commonPl,
             navbar: navbarPl,
             userMenu: userMenuPl,
             auth: authPl,
-            footer: footerPl
+            footer: footerPl,
+            errors: errorsPl
         },
     },
     lng: 'pl',

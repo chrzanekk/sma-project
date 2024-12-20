@@ -1,0 +1,23 @@
+{
+  "error" : "Błąd",
+  "networkError": "Błąd sieci",
+  "cannotConnectToServer": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
+  "genericError": "Wystąpił błąd",
+  "malformedJson": "Nieprawidłowy format JSON",
+  "jwtTokenNotAvailable": "Brak autoryzacji",
+  "emailNotFound": "Nie znaleziono użytkownika o podanym adresie e-mail",
+  "emailAlreadyExists": "Adres e-mail {{email}} już istnieje w bazie",
+  "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
+  "emailSendFail" :  "Wysyłanie e-maila nie powiodło się",
+  "expiredToken": "Token wygasł",
+  "objectNotFound": "Nie znaleziono obiektu",
+  "passwordNotMatch": "Hasła nie pasują do siebie",
+  "usernameExists": "Login {{login}} istnieje już w bazie",
+  "invalidArgument": "Nieprawidłowy argument",
+  "roleNotFound": "Nie znaleziono roli",
+  "roleCannotBeDeleted": "Rola {{role}} nie może zostać usunięta",
+  "invalidPassword": "Nieprawidłowe hasło",
+  "userAddedError": "Błąd dodawania użytkownika",
+  "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
+  "userEditedError": "Błąd edycji użytkownika {{login}}."
+}

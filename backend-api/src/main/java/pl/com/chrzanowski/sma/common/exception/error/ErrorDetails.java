@@ -1,13 +1,14 @@
 package pl.com.chrzanowski.sma.common.exception.error;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Objects;
 
 public class ErrorDetails {
     private final LocalDateTime timestamp;
     private final String code;
     private final String message;
-    private final String details;
+    private final Map<String, Object> details; // Zmiana z String na Map<String, Object>
 
     private ErrorDetails(Builder builder) {
         timestamp = builder.timestamp;
@@ -41,7 +42,7 @@ public class ErrorDetails {
         return message;
     }
 
-    public String getDetails() {
+    public Map<String, Object> getDetails() {
         return details;
     }
 
@@ -67,15 +68,15 @@ public class ErrorDetails {
                 "timestamp=" + timestamp +
                 ", code='" + code + '\'' +
                 ", message='" + message + '\'' +
-                ", details='" + details + '\'' +
+                ", details=" + details +
                 '}';
     }
 
     public static final class Builder {
         private LocalDateTime timestamp;
-        private String code; // Nowe pole
+        private String code;
         private String message;
-        private String details;
+        private Map<String, Object> details; // Zmiana typu na Map<String, Object>
 
         private Builder() {
         }
@@ -95,7 +96,7 @@ public class ErrorDetails {
             return this;
         }
 
-        public Builder details(String details) {
+        public Builder details(Map<String, Object> details) {
             this.details = details;
             return this;
         }
