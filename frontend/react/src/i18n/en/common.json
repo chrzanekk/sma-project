@@ -25,6 +25,8 @@
     "cancel": "Anuluj",
     "save": "Zapisz",
     "data": "Dane",
+    "createDate": "Data utworzenia",
+    "lastModifiedDate": "Data ostatniej modyfikacji",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
         "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",

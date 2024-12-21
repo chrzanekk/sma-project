@@ -10,6 +10,7 @@ import {useAuth} from "@/context/AuthContext.tsx";
 import EditUserPasswordDrawer from "@/components/user/EditUserPasswordDrawer.tsx";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditUserRolesDrawer from "@/components/user/EditUserRolesDrawer.tsx";
+import DateFormatter from "@/utils/date-formatter.ts";
 
 const tableClass = classNames('custom-table', 'user-table');
 
@@ -55,6 +56,8 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                         <Th>{t('shared.roles')}</Th>
                         <Th>{t('shared.locked')}</Th>
                         <Th>{t('shared.enabled')}</Th>
+                        <Th>{t('createDate', {ns: "common"})}</Th>
+                        <Th>{t('lastModifiedDate', {ns: "common"})}</Th>
                         <Th>{t('edit', {ns: "common"})}</Th>
                         <Th>{t('delete', {ns: "common"})}</Th>
                     </Tr>
@@ -69,12 +72,12 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             <Td>{user.lastName}</Td>
                             <Td>{user.position}</Td>
                             <Td>
-                                <HStack spacing={2} wrap="wrap">
+                                <HStack spacing={1} wrap="wrap">
                                     {user.roles?.map((role, index) => (
                                         <Button
                                             key={index}
-                                            size="xs"
-                                            fontSize={"xs"}
+                                            size={"xs"}
+                                            fontSize={"x-small"}
                                             variant="solid"
                                             colorScheme="teal"
                                             borderRadius="md"
@@ -87,6 +90,8 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             </Td>
                             <Td>{user.locked ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
                             <Td>{user.enabled ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
+                            <Td>{DateFormatter.formatDateTime(user.createdDatetime!)}</Td>
+                            <Td>{DateFormatter.formatDateTime(user.lastModifiedDatetime!)}</Td>
                             <Td>
                                 <HStack spacing={2} alignContent={"center"}>
                                     <EditUserDataDrawer

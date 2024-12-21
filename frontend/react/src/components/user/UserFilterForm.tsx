@@ -1,7 +1,7 @@
 import React from 'react';
 import {Field, Form, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
-import {Button, Flex, Input, Select as ChakraSelect} from '@chakra-ui/react';
+import {Button, Flex, Input} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Select} from "chakra-react-select";
@@ -40,6 +40,35 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
         value: role,
         label: role.replace("ROLE_", "")
     }));
+
+    const booleanOptions = [
+        {value: undefined, label: t("empty", {ns: "common"})},
+        {value: true, label: t("yes", {ns: "common"})},
+        {value: false, label: t("no", {ns: "common"})}
+    ];
+
+    const selectStyles = {
+        control: (provided: any) => ({
+            ...provided,
+            backgroundColor: themeColors.bgColorLight(),
+            borderColor: themeColors.borderColor(),
+            borderRadius: "md",
+            boxShadow: "none",
+            minHeight: "2rem",
+            height: "2rem",
+            fontSize: "0.875rem",
+            width: "150px",
+        }),
+        valueContainer: (provided: any) => ({
+            ...provided,
+            padding: "0 0.5rem",
+        }),
+        indicatorsContainer: (provided: any) => ({
+            ...provided,
+            height: "2rem",
+        })
+    };
+
 
     return (
         <Formik<FilterValues>
@@ -92,22 +121,26 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                    bg={themeColors.bgColorLight()}
                                    borderRadius={"md"}
                                    width="150px"/>
-                            <Field name="isLocked" as={ChakraSelect} placeholder={t('shared.locked')}
-                                   size="sm"
-                                   bg={themeColors.bgColorLight()}
-                                   borderRadius={"md"}
-                                   width="150px">
-                                <option value="true">{t('yes', {ns: "common"})}</option>
-                                <option value="false">{t('no', {ns: "common"})}</option>
-                            </Field>
-                            <Field name="isEnabled" as={ChakraSelect} placeholder={t('shared.enabled')}
-                                   size="sm"
-                                   bg={themeColors.bgColorLight()}
-                                   borderRadius={"md"}
-                                   width="150px">
-                                <option value="true">{t('yes', {ns: "common"})}</option>
-                                <option value="false">{t('no', {ns: "common"})}</option>
-                            </Field>
+                            <Select
+                                options={booleanOptions}
+                                placeholder={t("shared.locked")}
+                                value={booleanOptions.find((option) => option.value === values.isLocked)}
+                                onChange={(selectedOption) => {
+                                    setFieldValue("isLocked", selectedOption?.value).catch(() => {
+                                    });
+                                }}
+                                chakraStyles={selectStyles}
+                            />
+                            <Select
+                                options={booleanOptions}
+                                placeholder={t("shared.enabled")}
+                                value={booleanOptions.find((option) => option.value === values.isEnabled)}
+                                onChange={(selectedOption) => {
+                                    setFieldValue("isEnabled", selectedOption?.value).catch(() => {
+                                    });
+                                }}
+                                chakraStyles={selectStyles}
+                            />
                             <Select
                                 isMulti
                                 options={roleOptions}
@@ -119,23 +152,25 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                     setFieldValue("roles", roles).catch();
                                 }}
                                 chakraStyles={{
-                                    control: (provided) => ({
+                                    control: (provided: any) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),
                                         borderColor: themeColors.borderColor(),
                                         borderRadius: "md",
                                         boxShadow: "none",
-                                        minHeight: "2rem", // Wysokość odpowiadająca `size="sm"`
-                                        height: "2rem",    // Wysokość odpowiadająca innym polom
+                                        minHeight: "2rem",
+                                        height: "2rem",
+                                        fontSize: "0.875rem",
+                                        minWidth: "150px",
                                     }),
-                                    valueContainer: (provided) => ({
+                                    valueContainer: (provided: any) => ({
                                         ...provided,
-                                        padding: "0 0.5rem", // Dopasowanie paddingu
+                                        padding: "0 0.5rem",
                                     }),
-                                    indicatorsContainer: (provided) => ({
+                                    indicatorsContainer: (provided: any) => ({
                                         ...provided,
-                                        height: "2rem", // Dopasowanie wysokości wskaźników
-                                    }),
+                                        height: "2rem",
+                                    })
                                 }}
                             />
                         </Flex>

@@ -14,30 +14,30 @@
 
 .user-table th:nth-child(3),
 .user-table td:nth-child(3) {
-    width: 8%; /* Login */
+    width: 6%; /* Login */
     text-align: center;
 }
 
 .user-table th:nth-child(4),
 .user-table td:nth-child(4) {
-    width: 10%; /* First Name */
+    width: 8%; /* First Name */
     text-align: center;
 }
 
 .user-table th:nth-child(5),
 .user-table td:nth-child(5) {
-    width: 15%; /* Last Name */
+    width: 10%; /* Last Name */
     text-align: center;
 }
 
 .user-table th:nth-child(6),
 .user-table td:nth-child(6) {
-    width: 10%; /* Position */
+    width: 9%; /* Position */
     text-align: center;
 }
 .user-table th:nth-child(7),
 .user-table td:nth-child(7) {
-    width: 10%; /* Position */
+    width: 10%; /* Role */
     text-align: center;
 }
 
@@ -52,14 +52,35 @@
     width: 7%; /* Enabled */
     text-align: center;
 }
-
-.user-table th:nth-child(10),
-.user-table td:nth-child(10) {
-    width: 6%; /* Actions */
+.user-table th:nth-child(10){
+    width: 7%; /* Create date */
     text-align: center;
 }
-.user-table th:nth-child(11),
+
+.user-table td:nth-child(10) {
+    width: 7%; /* Create date */
+    text-align: center;
+    font-size: x-small;
+}
+.user-table th:nth-child(11){
+    width: 7%; /* Modify date */
+    text-align: center;
+}
 .user-table td:nth-child(11) {
+    width: 7%; /* Modify date */
+    text-align: center;
+    font-size: x-small;
+}
+
+.user-table th:nth-child(12),
+.user-table td:nth-child(12) {
+    width: 7%; /* Actions */
+    text-align: center;
+    align-content: center;
+}
+.user-table th:nth-child(13),
+.user-table td:nth-child(13) {
     width: 3%; /* Deleting */
     text-align: center;
+    align-content: center;
 }

@@ -16,6 +16,7 @@
     "go": "Idź",
     "yes": "Tak",
     "no": "Nie",
+    "empty": "Brak",
     "dataNotFound": "Brak wyników",
     "edit": "Edycja",
     "deleting": "Usuwanie",
@@ -25,6 +26,8 @@
     "cancel": "Anuluj",
     "save": "Zapisz",
     "data": "Dane",
+    "createDate": "Data utworzenia",
+    "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
         "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
