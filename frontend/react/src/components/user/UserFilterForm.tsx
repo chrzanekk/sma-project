@@ -57,7 +57,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
             minHeight: "2rem",
             height: "2rem",
             fontSize: "0.875rem",
-            width: "150px",
+            minWidth: "150px",
         }),
         valueContainer: (provided: any) => ({
             ...provided,
@@ -151,27 +151,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                     const roles = selectedOptions.map(option => option.value);
                                     setFieldValue("roles", roles).catch();
                                 }}
-                                chakraStyles={{
-                                    control: (provided: any) => ({
-                                        ...provided,
-                                        backgroundColor: themeColors.bgColorLight(),
-                                        borderColor: themeColors.borderColor(),
-                                        borderRadius: "md",
-                                        boxShadow: "none",
-                                        minHeight: "2rem",
-                                        height: "2rem",
-                                        fontSize: "0.875rem",
-                                        minWidth: "150px",
-                                    }),
-                                    valueContainer: (provided: any) => ({
-                                        ...provided,
-                                        padding: "0 0.5rem",
-                                    }),
-                                    indicatorsContainer: (provided: any) => ({
-                                        ...provided,
-                                        height: "2rem",
-                                    })
-                                }}
+                                chakraStyles={selectStyles}
                             />
                         </Flex>
                         <Flex gap={2} justifyContent={"center"}>
