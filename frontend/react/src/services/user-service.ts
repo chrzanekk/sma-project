@@ -1,13 +1,19 @@
 import {AdminEditPasswordChangeRequest, UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {RoleDTO} from "@/types/role-types.ts";
 import {api, getAuthConfig, toBoolean} from "@/services/axios-config.ts";
+import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 
 const USERS_API_BASE = "/api/users";
 
 export const getUsersByFilter = async (filter: Record<string, any>) => {
     try {
-        const response = await api.get(`${USERS_API_BASE}/page`,
-            {params: {...filter, size: filter.size || 10, page: filter.page || 0}, ...getAuthConfig(),});
+        const queryParams = serializeQueryParams({
+            ...filter,
+            size: filter.size || 10,
+            page: filter.page || 0,
+        });
+        const response = await api.get(`${USERS_API_BASE}/page?${queryParams}`,
+            getAuthConfig());
         const data = response.data;
         return {
             users: data || [],

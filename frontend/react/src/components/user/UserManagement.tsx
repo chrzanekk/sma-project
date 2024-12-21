@@ -28,22 +28,26 @@ const UserManagement: React.FC = () => {
     const handleRowsPerPageChange = (size: number) => {
         setRowsPerPage(size);
         setCurrentPage(0);
-        fetchUsers({}, 0, size).catch(() => {});
+        fetchUsers({}, 0, size).catch(() => {
+        });
     };
 
     const handleDelete = async (id: number) => {
         await deleteUserById(id);
-        fetchUsers().catch(() => {});
+        fetchUsers().catch(() => {
+        });
     };
 
     const handleFilterSubmit = (values: Record<string, any>) => {
         setCurrentPage(0);
-        fetchUsers(values, 0, rowsPerPage).catch(() => {});
+        fetchUsers(values, 0, rowsPerPage).catch(() => {
+        });
     };
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-        fetchUsers({}, page, rowsPerPage).catch(() => {});
+        fetchUsers({}, page, rowsPerPage).catch(() => {
+        });
     };
 
     useEffect(() => {

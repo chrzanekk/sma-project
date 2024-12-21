@@ -102,3 +102,14 @@ export interface AdminEditRoleUpdateRequest {
     userId?: number;
     roles: string[];
 }
+
+export interface UserFilter {
+    emailStartsWith?: string;
+    loginStartsWith?: string;
+    firstNameStartsWith?: string;
+    lastNameStartsWith?: string;
+    positionStartsWith?: string;
+    isLocked?: boolean;
+    isEnabled?: boolean;
+    roles: string[];
+}
