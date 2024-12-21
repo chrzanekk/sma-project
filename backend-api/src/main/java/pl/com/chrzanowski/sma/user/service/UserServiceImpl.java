@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .position(request.getPosition())
-                .enabled(false).locked(false).password(request.getPassword())
+                .enabled(false).locked(true).password(request.getPassword())
                 .build();
         return save(newUser);
     }
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
 
         UserTokenDTO confirmedDTO = userTokenService.updateToken(userTokenDTO);
         UserDTO user = getUser(confirmedDTO.getEmail());
-        update(user.toBuilder().enabled(true).locked(false).build());
+        update(user.toBuilder().enabled(true).locked(true).build());
         return new MessageResponse("Confirmed");
     }
 
@@ -152,26 +152,6 @@ public class UserServiceImpl implements UserService {
             }
             builder.email(userDTO.getEmail());
         }
-
-//        if (!Objects.equals(existingUserDTO.getFirstName(),userDTO.getFirstName())) {
-//            builder.firstName(userDTO.getFirstName());
-//        }
-//
-//        if (!Objects.equals(existingUserDTO.getLastName(),userDTO.getLastName())) {
-//            builder.lastName(userDTO.getLastName());
-//        }
-//
-//        if (!Objects.equals(existingUserDTO.getPosition(),userDTO.getPosition())) {
-//            builder.position(userDTO.getPosition());
-//        }
-//
-//        if (!Objects.equals(existingUserDTO.getEnabled(),userDTO.getEnabled())) {
-//            builder.locked(userDTO.getLocked());
-//        }
-//
-//        if (!Objects.equals(existingUserDTO.getLocked(),userDTO.getLocked())) {
-//            builder.enabled(userDTO.getEnabled());
-//        }
         builder.firstName(userDTO.getFirstName() != null ? userDTO.getFirstName() : existingUserDTO.getFirstName());
         builder.lastName(userDTO.getLastName() != null ? userDTO.getLastName() : existingUserDTO.getLastName());
         builder.position(userDTO.getPosition() != null ? userDTO.getPosition() : existingUserDTO.getPosition());
