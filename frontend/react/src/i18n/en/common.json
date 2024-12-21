@@ -33,7 +33,9 @@
         "userPasswordSetSuccess": "Pomyślnie zmieniono hasło użytkownika {{login}}",
         "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
         "userEditedSuccess": "Dane użytkownika {{login}} zmieniono pomyślnie",
-        "userEditedError": "Błąd edycji użytkownika {{login}}"
+        "userEditedError": "Błąd edycji użytkownika {{login}}",
+        "userRolesEditedSuccess": "Role użytkownika {{login}} zmieniono pomyślnie",
+        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}"
     },
     "deleteConfirmation": {
         "title": "Potwierdź usunięcie",
