@@ -7,10 +7,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
@@ -20,7 +22,6 @@ import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
@@ -91,7 +92,7 @@ public class UserServiceImpl implements UserService {
         }
 
         UserTokenDTO confirmedDTO = userTokenService.updateToken(userTokenDTO);
-        UserDTO user = getUser(confirmedDTO.getEmail());
+        UserDTO user = getUserByEmail(confirmedDTO.getEmail());
         update(user.toBuilder().enabled(true).locked(true).build());
         return new MessageResponse("Confirmed");
     }
@@ -228,10 +229,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO getUser(String email) {
-        log.debug("Fetching user {} ", email);
+    public UserDTO getUserByEmail(String email) {
+        log.debug("Fetching user by email: {} ", email);
         User user = userDao.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_WITH_EMAIL_NOT_FOUND, email)));
+                .orElseThrow(() -> new UserNotFoundException("User not found", Map.of("email", email)));
+        return userMapper.toDto(user);
+    }
+
+    @Override
+    public UserDTO getUserByLogin(String login) {
+        log.debug("Fetching user by login: {} ", login);
+        User user = userDao.findByLogin(login)
+                .orElseThrow(() -> new UserNotFoundException("User not found", Map.of("login", login)));
         return userMapper.toDto(user);
     }
 
@@ -268,7 +277,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPasswordByAdmin(AdminEditPasswordChangeRequest adminEditPasswordChangeRequest) {
-        log.debug("Update user password by admin for user: {}",adminEditPasswordChangeRequest.userId());
+        log.debug("Update user password by admin for user: {}", adminEditPasswordChangeRequest.userId());
         UserDTO existingUserDTO = findById(adminEditPasswordChangeRequest.userId());
         if (adminEditPasswordChangeRequest.newPassword() == null || adminEditPasswordChangeRequest.newPassword().isEmpty()) {
             throw new IllegalStateException("New password cannot be empty");

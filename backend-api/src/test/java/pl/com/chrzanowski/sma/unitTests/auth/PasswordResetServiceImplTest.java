@@ -66,7 +66,7 @@ class PasswordResetServiceImplTest {
 
     @Test
     void testSaveNewPasswordSuccess() {
-        when(userService.getUser(anyString())).thenReturn(userDTO);
+        when(userService.getUserByEmail(anyString())).thenReturn(userDTO);
         when(userService.save(any(UserDTO.class))).thenReturn(userDTO.toBuilder().password("encodedNewPassword").build());
         userTokenService.updateToken(any(UserTokenDTO.class));
 
@@ -75,14 +75,14 @@ class PasswordResetServiceImplTest {
         assertNotNull(result);
         assertEquals("Password changed successfully", result.getMessage());
 
-        verify(userService, times(1)).getUser(anyString());
+        verify(userService, times(1)).getUserByEmail(anyString());
         verify(userService, times(1)).save(any(UserDTO.class));
         verify(userTokenService, times(1)).updateToken(any(UserTokenDTO.class));
     }
 
     @Test
     void testSaveNewPasswordUserNotFound() {
-        when(userService.getUser(anyString())).thenThrow(new IllegalArgumentException("User not found"));
+        when(userService.getUserByEmail(anyString())).thenThrow(new IllegalArgumentException("User not found"));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             passwordResetService.saveNewPassword(userTokenDTO, request);
@@ -90,7 +90,7 @@ class PasswordResetServiceImplTest {
 
         assertEquals("User not found", exception.getMessage());
 
-        verify(userService, times(1)).getUser(anyString());
+        verify(userService, times(1)).getUserByEmail(anyString());
         verify(passwordEncoder, times(0)).encode(anyString());  // Nie powinno zakodować hasła
         verify(userService, times(0)).save(any(UserDTO.class)); // Nie powinno zapisać użytkownika
         verify(userTokenService, times(0)).updateToken(any(UserTokenDTO.class)); // Nie powinno zaktualizować tokenu
@@ -98,7 +98,7 @@ class PasswordResetServiceImplTest {
 
     @Test
     void testSaveNewPasswordTokenUpdateFailed() {
-        when(userService.getUser(anyString())).thenReturn(userDTO);
+        when(userService.getUserByEmail(anyString())).thenReturn(userDTO);
         when(userService.save(any(UserDTO.class))).thenReturn(userDTO.toBuilder().password("encodedNewPassword").build());
         doThrow(new IllegalStateException("Token update failed")).when(userTokenService).updateToken(any(UserTokenDTO.class));
 
@@ -108,7 +108,7 @@ class PasswordResetServiceImplTest {
 
         assertEquals("Token update failed", exception.getMessage());
 
-        verify(userService, times(1)).getUser(anyString());
+        verify(userService, times(1)).getUserByEmail(anyString());
         verify(userService, times(1)).save(any(UserDTO.class));
         verify(userTokenService, times(1)).updateToken(any(UserTokenDTO.class)); // Powinna próbować zaktualizować token
     }

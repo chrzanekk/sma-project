@@ -2,6 +2,7 @@
   "error" : "Błąd",
   "networkError": "Błąd sieci",
   "unauthorized": "Brak autoryzacji - sprawdź swoje dane logowania",
+  "accessDenied": "Brak dostępu",
   "cannotConnectToServer": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
   "genericError": "Wystąpił błąd",
   "malformedJson": "Nieprawidłowy format JSON",
@@ -20,5 +21,7 @@
   "invalidPassword": "Nieprawidłowe hasło",
   "userAddedError": "Błąd dodawania użytkownika",
   "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
-  "userEditedError": "Błąd edycji użytkownika {{login}}."
+  "userEditedError": "Błąd edycji użytkownika {{login}}.",
+  "userNotFound": "Nie znaleziono użytkownika",
+  "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją."
 }

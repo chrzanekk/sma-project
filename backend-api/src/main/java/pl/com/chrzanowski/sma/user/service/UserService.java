@@ -34,7 +34,9 @@ public interface UserService {
 
     void delete(Long id);
 
-    UserDTO getUser(String email);
+    UserDTO getUserByEmail(String email);
+
+    UserDTO getUserByLogin(String login);
 
     Boolean isUserExists(String userName);
 

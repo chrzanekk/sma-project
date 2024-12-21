@@ -23,10 +23,7 @@ import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.service.PasswordResetService;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
-import pl.com.chrzanowski.sma.common.exception.EmailAlreadyExistsException;
-import pl.com.chrzanowski.sma.common.exception.EmailNotFoundException;
-import pl.com.chrzanowski.sma.common.exception.PasswordNotMatchException;
-import pl.com.chrzanowski.sma.common.exception.UsernameAlreadyExistsException;
+import pl.com.chrzanowski.sma.common.exception.*;
 import pl.com.chrzanowski.sma.common.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
 import pl.com.chrzanowski.sma.common.util.TokenUtil;
@@ -72,6 +69,10 @@ public class AuthController {
         log.debug("REST request to login user {}", loginRequest);
         LoginRequest updatedRequest =
                 loginRequest.toBuilder().login(loginRequest.getLogin().toLowerCase()).build();
+        UserDTO userDTO = userService.getUserByLogin(updatedRequest.getLogin());
+        if (!userDTO.getEnabled() || userDTO.getLocked()) {
+            throw new AccountException("User is not active: " + updatedRequest.getLogin(), Map.of("login", updatedRequest.getLogin()));
+        }
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(updatedRequest.getLogin(), updatedRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(token);
@@ -129,7 +130,7 @@ public class AuthController {
         if (!isEmailTaken(passwordResetRequest.getEmail())) {
             throw new EmailNotFoundException("Email not found", Map.of("email", passwordResetRequest.getEmail()));
         }
-        UserDTO userDTO = userService.getUser(passwordResetRequest.getEmail());
+        UserDTO userDTO = userService.getUserByEmail(passwordResetRequest.getEmail());
         String token = userTokenService.generateToken();
         UserTokenDTO userTokenDTO = userTokenService.saveToken(token, userDTO, TokenType.PASSWORD_RESET_TOKEN);
         MessageResponse response = sendEmailService.sendPasswordResetMail(userTokenDTO, new Locale("pl"));

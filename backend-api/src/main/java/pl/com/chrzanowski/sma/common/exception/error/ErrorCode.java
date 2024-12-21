@@ -19,7 +19,9 @@ public enum ErrorCode {
     MALFORMED_JSON("malformedJson"),
     USER_ADDED_ERROR("userAddedError"),
     USER_PASSWORD_SET_ERROR("userPasswordSetError"),
-    USER_EDITED_ERROR("userEditedError");
+    USER_EDITED_ERROR("userEditedError"),
+    ACCOUNT_NOT_ACTIVE("accountNotActive"),
+    USER_NOT_FOUND("userNotFound");
 
     private final String code;
 

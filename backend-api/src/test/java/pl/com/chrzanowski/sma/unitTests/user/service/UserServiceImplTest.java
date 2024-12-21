@@ -189,11 +189,11 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUser_UserExists() {
+    void testGetUser_UserByEmailExists() {
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
 
-        UserDTO result = userService.getUser("test@example.com");
+        UserDTO result = userService.getUserByEmail("test@example.com");
 
         assertNotNull(result);
         assertEquals("testUser", result.getLogin());
@@ -201,10 +201,10 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUser_UserNotFound() {
+    void testGetUser_UserByEmailNotFound() {
         when(userDao.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.getUser("nonexistent@example.com"));
+        assertThrows(UsernameNotFoundException.class, () -> userService.getUserByEmail("nonexistent@example.com"));
     }
 
     @Test
@@ -271,7 +271,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUserWithAuthoritiesSuccess() {
+    void testGetUserByEmailWithAuthoritiesSuccess() {
 
         try (MockedStatic<SecurityUtils> securityUtilsMockedStatic = mockStatic(SecurityUtils.class)) {
             securityUtilsMockedStatic.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.of("testUser"));
@@ -292,7 +292,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    void testGetUserWithAuthoritiesUserNotFound() {
+    void testGetUserWithAuthoritiesUserByEmailNotFound() {
         try (MockedStatic<SecurityUtils> securityUtilsMockedStatic = mockStatic(SecurityUtils.class)) {
             securityUtilsMockedStatic.when(SecurityUtils::getCurrentUserLogin).thenReturn(Optional.of("nonexistentUser"));
             when(userDao.findByLogin("nonexistentUser")).thenReturn(Optional.empty());
