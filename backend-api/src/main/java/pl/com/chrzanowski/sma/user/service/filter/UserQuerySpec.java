@@ -5,6 +5,7 @@ import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.role.model.QRole;
 import pl.com.chrzanowski.sma.user.model.QUser;
 import pl.com.chrzanowski.sma.user.model.User;
 
@@ -19,6 +20,7 @@ public class UserQuerySpec {
 
     public static BooleanBuilder buildPredicate(UserFilter userFilter) {
         QUser user = QUser.user;
+        QRole role = QRole.role;
         BooleanBuilder predicate = new BooleanBuilder();
 
         if (userFilter != null) {
@@ -45,6 +47,9 @@ public class UserQuerySpec {
             }
             if (userFilter.getIsLocked() != null) {
                 predicate.and(user.locked.eq(userFilter.getIsLocked()));
+            }
+            if(userFilter.getRoles() != null && !userFilter.getRoles().isEmpty()) {
+                predicate.and(user.roles.any().name.in(userFilter.getRoles()));
             }
         }
         return predicate;

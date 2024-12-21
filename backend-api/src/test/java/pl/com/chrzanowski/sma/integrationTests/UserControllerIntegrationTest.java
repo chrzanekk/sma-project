@@ -15,7 +15,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
@@ -30,6 +29,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -468,4 +468,73 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         User updatedUser = userRepository.findById(firstUser.getId()).orElseThrow();
         assertFalse(passwordEncoder.matches(updatedUser.getPassword(), firstUser.getPassword()));
     }
+
+    @Test
+    void shouldGetUsersByRolesSuccessfully() {
+        // Dodaj role USER i ADMIN do bazy danych
+        Role userRole = roleRepository.findByName("ROLE_USER").get();
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+
+        // Filtrowanie po roli ADMIN
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("roles", "ROLE_ADMIN");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(1);
+        assertThat(users).anyMatch(user -> user.getLogin().equals("login"));
+    }
+
+    @Test
+    void shouldGetUsersByMultipleRolesSuccessfully() {
+        // Dodaj role USER i ADMIN do bazy danych
+        Role userRole = roleRepository.findByName("ROLE_USER").get();
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
+
+        // Filtrowanie po rolach ADMIN i USER
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("roles", "ROLE_ADMIN");
+        queryParams.add("roles", "ROLE_USER");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isNotEmpty();
+        assertThat(users.size()).isEqualTo(2);
+        assertThat(users).anyMatch(user -> user.getLogin().equals("login"));
+        assertThat(users).anyMatch(user -> user.getLogin().equals("second"));
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoUsersMatchRoles() {
+        // Filtrowanie po nieistniejącej roli
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("roles", "ROLE_NON_EXISTENT");
+
+        List<UserDTO> users = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/users/")
+                        .queryParams(queryParams).build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(users).isEmpty();
+    }
+
 }

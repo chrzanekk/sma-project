@@ -35,26 +35,31 @@
     width: 10%; /* Position */
     text-align: center;
 }
-
 .user-table th:nth-child(7),
 .user-table td:nth-child(7) {
-    width: 7%; /* Locked */
+    width: 10%; /* Position */
     text-align: center;
 }
 
 .user-table th:nth-child(8),
 .user-table td:nth-child(8) {
-    width: 7%; /* Enabled */
+    width: 7%; /* Locked */
     text-align: center;
 }
 
 .user-table th:nth-child(9),
 .user-table td:nth-child(9) {
+    width: 7%; /* Enabled */
+    text-align: center;
+}
+
+.user-table th:nth-child(10),
+.user-table td:nth-child(10) {
     width: 6%; /* Actions */
     text-align: center;
 }
-.user-table th:nth-child(10),
-.user-table td:nth-child(10) {
+.user-table th:nth-child(11),
+.user-table td:nth-child(11) {
     width: 3%; /* Deleting */
     text-align: center;
 }

@@ -52,6 +52,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                         <Th>{t('shared.firstName')}</Th>
                         <Th>{t('shared.lastName')}</Th>
                         <Th>{t('shared.position')}</Th>
+                        <Th>{t('shared.roles')}</Th>
                         <Th>{t('shared.locked')}</Th>
                         <Th>{t('shared.enabled')}</Th>
                         <Th>{t('edit', {ns: "common"})}</Th>
@@ -67,10 +68,27 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             <Td>{user.firstName}</Td>
                             <Td>{user.lastName}</Td>
                             <Td>{user.position}</Td>
+                            <Td>
+                                <HStack spacing={2} wrap="wrap">
+                                    {user.roles?.map((role, index) => (
+                                        <Button
+                                            key={index}
+                                            size="xs"
+                                            fontSize={"xs"}
+                                            variant="solid"
+                                            colorScheme="teal"
+                                            borderRadius="md"
+                                            textTransform="uppercase"
+                                        >
+                                            {role.name.replace("ROLE_", "")}
+                                        </Button>
+                                    ))}
+                                </HStack>
+                            </Td>
                             <Td>{user.locked ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
                             <Td>{user.enabled ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
                             <Td>
-                                <HStack spacing={1} align={"center"}>
+                                <HStack spacing={2} alignContent={"center"}>
                                     <EditUserDataDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}/>

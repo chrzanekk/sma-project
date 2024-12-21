@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor(force = true)
@@ -19,4 +21,5 @@ public class UserFilter {
     private String positionStartsWith;
     private Boolean isLocked;
     private Boolean isEnabled;
+    private List<String> roles;
 }

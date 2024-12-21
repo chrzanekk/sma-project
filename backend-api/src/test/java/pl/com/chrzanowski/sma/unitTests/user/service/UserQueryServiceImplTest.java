@@ -225,4 +225,100 @@ class UserQueryServiceImplTest {
         verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
         verify(userMapper, times(0)).toDto(any(User.class));
     }
+
+    @Test
+    void testFindByFilter_SuccessWithRoles_ADMIN() {
+        UserFilter filter = UserFilter.builder()
+                .roles(List.of("ROLE_ADMIN"))
+                .build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Dodajemy użytkownika z rolą ADMIN
+        Role roleAdmin = Role.builder().id(2L).name("ROLE_ADMIN").build();
+        User userWithAdminRole = User.builder()
+                .id(2L)
+                .login("adminUser")
+                .email("admin@example.com")
+                .roles(Set.of(roleAdmin))
+                .build();
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(userWithAdminRole)));
+        when(userMapper.toDto(userWithAdminRole)).thenReturn(
+                UserDTO.builder().login("adminUser").email("admin@example.com").build()
+        );
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(1, result.getTotalElements());
+        assertEquals("adminUser", result.getContent().get(0).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(1)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_SuccessWithRoles_USER_AND_ADMIN() {
+        UserFilter filter = UserFilter.builder()
+                .roles(List.of("ROLE_USER", "ROLE_ADMIN"))
+                .build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        // Dodajemy użytkowników z rolami USER i ADMIN
+        Role roleAdmin = Role.builder().id(2L).name("ROLE_ADMIN").build();
+        User userWithAdminRole = User.builder()
+                .id(2L)
+                .login("adminUser")
+                .email("admin@example.com")
+                .roles(Set.of(roleAdmin))
+                .build();
+
+        Role roleUser = Role.builder().id(1L).name("ROLE_USER").build();
+        User userWithUserRole = User.builder()
+                .id(3L)
+                .login("testUser")
+                .email("test@example.com")
+                .roles(Set.of(roleUser))
+                .build();
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(new PageImpl<>(List.of(userWithAdminRole, userWithUserRole)));
+        when(userMapper.toDto(userWithAdminRole)).thenReturn(
+                UserDTO.builder().login("adminUser").email("admin@example.com").build()
+        );
+        when(userMapper.toDto(userWithUserRole)).thenReturn(
+                UserDTO.builder().login("testUser").email("test@example.com").build()
+        );
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+        assertEquals("adminUser", result.getContent().get(0).getLogin());
+        assertEquals("testUser", result.getContent().get(1).getLogin());
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(2)).toDto(any(User.class));
+    }
+
+    @Test
+    void testFindByFilter_NoResultsWithRoles() {
+        UserFilter filter = UserFilter.builder()
+                .roles(List.of("ROLE_NON_EXISTENT"))
+                .build();
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(userDao.findAll(any(BooleanBuilder.class), eq(pageable)))
+                .thenReturn(Page.empty(pageable));
+
+        Page<UserDTO> result = userQueryService.findByFilter(filter, pageable);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty(), "Result should be empty");
+
+        verify(userDao, times(1)).findAll(any(BooleanBuilder.class), eq(pageable));
+        verify(userMapper, times(0)).toDto(any(User.class));
+    }
+
 }
