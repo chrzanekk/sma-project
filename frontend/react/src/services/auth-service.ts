@@ -1,7 +1,7 @@
 import {AxiosResponse} from 'axios'
 import {LoginRequest, NewPasswordPutRequest, PasswordResetRequest, RegisterRequest} from "@/types/user-types.ts";
 import {JwtTokenResponse} from "@/types/jwt-payload.ts";
-import {api} from "@/services/axiosConfig.ts";
+import {api} from "@/services/axios-config.ts";
 
 
 export const login = async (loginRequest: LoginRequest): Promise<AxiosResponse<JwtTokenResponse>> => {

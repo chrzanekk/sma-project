@@ -1,5 +1,12 @@
 import axios from "axios";
-import {UserInfo, UserEditPasswordChangeRequest, UserEditRoleUpdateRequest, UserUpdateRequest} from "@/types/user-types.ts";
+import {
+    AdminEditRoleUpdateRequest,
+    RoleUpdateRequest,
+    UserEditPasswordChangeRequest,
+    UserInfo,
+    UserUpdateRequest
+} from "@/types/user-types.ts";
+import {RoleDTO} from "@/types/role-types.ts";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -50,11 +57,18 @@ export const changeUserPassword = async (userPasswordChangeRequest: UserEditPass
     }
 };
 
-export const updateUserRoles = async (userRoleUpdateRequest: UserEditRoleUpdateRequest): Promise<void> => {
+export const updateUserRoles = async (userRoleUpdateRequest: AdminEditRoleUpdateRequest): Promise<void> => {
+    const roles: Array<RoleDTO> = Array.from(
+        userRoleUpdateRequest.roles.map((role: string) => ({name: role}))
+    );
+    const payload: RoleUpdateRequest = {
+        userId: userRoleUpdateRequest.userId,
+        roles
+    }
     try {
         await api.put<boolean>(
             `${ACCOUNT_API_BASE}/update-roles`,
-            userRoleUpdateRequest,
+            payload,
             getAuthConfig()
         );
     } catch (error: any) {

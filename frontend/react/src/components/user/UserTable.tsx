@@ -9,6 +9,7 @@ import EditUserDataDrawer from "@/components/user/EditUserDataDrawer.tsx";
 import {useAuth} from "@/context/AuthContext.tsx";
 import EditUserPasswordDrawer from "@/components/user/EditUserPasswordDrawer.tsx";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
+import EditUserRolesDrawer from "@/components/user/EditUserRolesDrawer.tsx";
 
 const tableClass = classNames('custom-table', 'user-table');
 
@@ -74,6 +75,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}/>
                                     <EditUserPasswordDrawer
+                                        fetchUsers={fetchUsers}
+                                        userId={user.id!}
+                                        currentUserId={currentUser?.id!}
+                                        login={user.login}/>
+                                    <EditUserRolesDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}
                                         currentUserId={currentUser?.id!}

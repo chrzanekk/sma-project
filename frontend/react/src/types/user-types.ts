@@ -58,9 +58,9 @@ export interface UserEditPasswordChangeRequest {
     newPassword: string;
 }
 
-export interface UserEditRoleUpdateRequest {
+export interface RoleUpdateRequest {
     userId: number;
-    roles: string[];
+    roles: Array<RoleDTO>;
 }
 
 export interface UserDTO {
@@ -96,4 +96,9 @@ export interface UserFormDTO {
 export interface AdminEditPasswordChangeRequest {
     userId: number;
     newPassword: string;
+}
+
+export interface AdminEditRoleUpdateRequest {
+    userId?: number;
+    roles: string[];
 }

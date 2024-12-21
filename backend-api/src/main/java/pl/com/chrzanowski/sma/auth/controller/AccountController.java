@@ -66,7 +66,7 @@ public class AccountController {
     @PutMapping("/update-roles")
     public ResponseEntity<?> updateRoles(@RequestBody UserEditRoleUpdateRequest userEditRoleUpdateRequest) {
         log.debug("REST: Update roles for user id:{}", userEditRoleUpdateRequest.userId());
-        userService.updateUserRoles(userEditRoleUpdateRequest.userId(), new HashSet<>(userEditRoleUpdateRequest.roleDTOList()));
+        userService.updateUserRoles(userEditRoleUpdateRequest.userId(), new HashSet<>(userEditRoleUpdateRequest.roles()));
         return ResponseEntity.noContent().build();
     }
 }

@@ -1,6 +1,6 @@
 import {AdminEditPasswordChangeRequest, UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {RoleDTO} from "@/types/role-types.ts";
-import {api, getAuthConfig, toBoolean} from "@/services/axiosConfig.ts";
+import {api, getAuthConfig, toBoolean} from "@/services/axios-config.ts";
 
 const USERS_API_BASE = "/api/users";
 
