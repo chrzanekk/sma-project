@@ -93,19 +93,19 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             <Td>{DateFormatter.formatDateTime(user.createdDatetime!)}</Td>
                             <Td>{DateFormatter.formatDateTime(user.lastModifiedDatetime!)}</Td>
                             <Td>
-                                <HStack spacing={2} alignContent={"center"}>
+                                <HStack spacing={1} alignContent={"center"}>
                                     <EditUserDataDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}/>
                                     <EditUserPasswordDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}
-                                        currentUserId={currentUser?.id!}
+                                        currentUserId={currentUser?.id}
                                         login={user.login}/>
                                     <EditUserRolesDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}
-                                        currentUserId={currentUser?.id!}
+                                        currentUserId={currentUser?.id}
                                         login={user.login}/>
                                 </HStack>
                             </Td>

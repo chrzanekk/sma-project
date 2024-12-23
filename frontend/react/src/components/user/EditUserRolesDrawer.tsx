@@ -19,7 +19,7 @@ import EditUserRolesForm from "@/components/user/EditUserRolesForm.tsx";
 interface EditUserRolesDrawerProps {
     fetchUsers: () => void;
     userId: number;
-    currentUserId: number;
+    currentUserId?: number;
     login: string;
 }
 

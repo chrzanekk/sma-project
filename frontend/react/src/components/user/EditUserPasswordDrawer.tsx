@@ -19,7 +19,7 @@ import EditUserPasswordForm from "@/components/user/EditUserPasswordForm.tsx";
 interface EditUserPasswordDrawerProps {
     fetchUsers: () => void;
     userId: number;
-    currentUserId: number;
+    currentUserId?: number;
     login: string;
 }
 
@@ -34,7 +34,6 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                 size={"xs"}
                 p={1}
                 isDisabled={currentUserId === userId}>
-
                 {t('shared.password')}
             </Button>
             <Drawer isOpen={isOpen} onClose={onClose} size={"md"}>
