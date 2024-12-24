@@ -18,6 +18,8 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
+import pl.com.chrzanowski.sma.user.model.User;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -39,6 +41,10 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private Flyway flyway;
+
+    @Autowired
+    private UserHelper userHelper;
+
 
     @BeforeEach
     void setUp() {
@@ -246,6 +252,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isOk();
 
+        userHelper.activateUser(existingUser.getLogin());
+
         LoginRequest loginRequest = LoginRequest.builder()
                 .login(existingUser.getLogin())
                 .password(existingUser.getPassword())
@@ -289,6 +297,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isOk();
 
+        userHelper.activateUser(existingUser.getLogin());
+
         LoginRequest loginRequest = LoginRequest.builder()
                 .login(existingUser.getLogin())
                 .password(existingUser.getPassword() + "999")
@@ -327,6 +337,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isOk();
 
+        userHelper.activateUser(existingUser.getLogin());
+
         LoginRequest loginRequest = LoginRequest.builder()
                 .login(existingUser.getLogin() + "222")
                 .password(existingUser.getPassword())
@@ -336,7 +348,7 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri("/api/auth/login")
                 .body(Mono.just(loginRequest), LoginRequest.class)
                 .exchange()
-                .expectStatus().isUnauthorized();
+                .expectStatus().isBadRequest();
 
         verify(sendEmailService, times(1)).sendAfterRegistration(any(), any());
         verify(sendEmailService, times(1)).sendAfterEmailConfirmation(any(), any());
@@ -364,6 +376,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
                 .exchange()
                 .expectStatus().isOk();
+
+        userHelper.activateUser(existingUser.getLogin());
 
         LoginRequest loginRequest = LoginRequest.builder()
                 .login(existingUser.getLogin())
@@ -415,6 +429,9 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .uri(uriBuilder -> uriBuilder.path("/api/auth/confirm").queryParam("token", existingResponse).build())
                 .exchange()
                 .expectStatus().isOk();
+
+        userHelper.activateUser(existingUser.getLogin());
+
 
         LoginRequest loginRequest = LoginRequest.builder()
                 .login(existingUser.getLogin())

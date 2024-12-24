@@ -13,6 +13,7 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -204,7 +205,7 @@ class UserServiceImplTest {
     void testGetUser_UserByEmailNotFound() {
         when(userDao.findByEmail(anyString())).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.getUserByEmail("nonexistent@example.com"));
+        assertThrows(UserNotFoundException.class, () -> userService.getUserByEmail("nonexistent@example.com"));
     }
 
     @Test

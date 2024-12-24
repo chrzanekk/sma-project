@@ -471,11 +471,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldGetUsersByRolesSuccessfully() {
-        // Dodaj role USER i ADMIN do bazy danych
         Role userRole = roleRepository.findByName("ROLE_USER").get();
         Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
 
-        // Filtrowanie po roli ADMIN
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("roles", "ROLE_ADMIN");
 
@@ -521,7 +519,6 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldReturnEmptyListWhenNoUsersMatchRoles() {
-        // Filtrowanie po nieistniejącej roli
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("roles", "ROLE_NON_EXISTENT");
 

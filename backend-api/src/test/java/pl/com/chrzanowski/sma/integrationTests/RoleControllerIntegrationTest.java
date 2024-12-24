@@ -168,4 +168,21 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
+
+    @Test
+    void shouldGetRolesByNameFilterSuccessfully() {
+
+        List<RoleDTO> roles = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/roles/filter")
+                        .queryParam("name", "ADMIN")
+                        .build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(RoleDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(roles).isNotEmpty();
+        assertThat(roles).anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+    }
 }

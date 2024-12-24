@@ -1,10 +1,16 @@
 package pl.com.chrzanowski.sma.role.dao;
 
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
+import pl.com.chrzanowski.sma.role.service.filter.RoleQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +22,11 @@ public class RoleJPADaoImpl implements RoleDao {
 
     private final RoleRepository roleRepository;
 
-    public RoleJPADaoImpl(RoleRepository roleRepository) {
+    private final RoleQuerySpec roleQuerySpec;
+
+    public RoleJPADaoImpl(RoleRepository roleRepository, RoleQuerySpec roleQuerySpec) {
         this.roleRepository = roleRepository;
+        this.roleQuerySpec = roleQuerySpec;
     }
 
     @Override
@@ -48,5 +57,21 @@ public class RoleJPADaoImpl implements RoleDao {
     public Optional<Role> findById(Long id) {
         log.debug("JPA DAO: Finding role with id {}", id);
         return roleRepository.findById(id);
+    }
+
+    @Override
+    public List<Role> findAll(BooleanBuilder specification) {
+        log.debug("JPA DAO: Fetching all roles by specification {}", specification);
+        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification);
+        return query.fetch();
+    }
+
+    @Override
+    public Page<Role> findAll(BooleanBuilder specification, Pageable pageable) {
+        log.debug("JPA DAO: Fetching all roles by specification {}", specification);
+        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification);
+        long totalElements = query.fetchCount();
+        List<Role> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        return new PageImpl<>(content, pageable, totalElements);
     }
 }

@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
         UserTokenDTO confirmedDTO = userTokenService.updateToken(userTokenDTO);
         UserDTO user = getUserByEmail(confirmedDTO.getEmail());
-        update(user.toBuilder().enabled(true).locked(true).build());
+        update(user.toBuilder().enabled(true).locked(lockUserWithoutAdminRole(user)).build());
         return new MessageResponse("Confirmed");
     }
 
@@ -288,5 +288,12 @@ public class UserServiceImpl implements UserService {
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
         userDao.save(userMapper.toEntity(updatedUserDTO));
+    }
+
+    private boolean lockUserWithoutAdminRole(UserDTO userDTO) {
+        if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
+            return true;
+        } else
+            return userDTO.getRoles().stream().noneMatch(roleDTO -> roleDTO.getName().equals(ERole.ROLE_ADMIN.getRoleName()));
     }
 }
