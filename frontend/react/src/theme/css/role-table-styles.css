@@ -1,0 +1,69 @@
+
+/* Dodaj proporcjonalne szerokości */
+.user-table th:nth-child(1){
+    width: 2%; /* ID */
+    text-align: center;
+    font-size: x-small;
+}
+.user-table td:nth-child(1) {
+    width: 2%; /* ID */
+    text-align: center;
+}
+
+.user-table th:nth-child(2){
+    width: 15%; /* Name */
+    text-align: center;
+    font-size: x-small;
+}
+.user-table td:nth-child(2) {
+    width: 15%; /* Name */
+    text-align: center;
+}
+
+.user-table th:nth-child(3){
+    width: 7%; /* Create date */
+    text-align: center;
+    font-size: x-small;
+}
+
+.user-table td:nth-child(3) {
+    width: 7%; /* Create date */
+    text-align: center;
+    font-size: x-small;
+}
+
+
+.user-table th:nth-child(4){
+    width: 7%; /* Modify date */
+    text-align: center;
+    font-size: x-small;
+}
+.user-table td:nth-child(4) {
+    width: 7%; /* Modify date */
+    text-align: center;
+    font-size: x-small;
+}
+
+/*.user-table th:nth-child(5){*/
+/*    width: 8%; !* Actions *!*/
+/*    text-align: center;*/
+/*    align-content: center;*/
+/*    font-size: x-small;*/
+/*}*/
+/*.user-table td:nth-child(5) {*/
+/*    width: 8%; !* Actions *!*/
+/*    text-align: center;*/
+/*    align-content: center;*/
+/*}*/
+
+.user-table th:nth-child(5){
+    width: 4%; /* Deleting */
+    text-align: center;
+    align-content: center;
+    font-size: x-small;
+}
+.user-table td:nth-child(5) {
+    width: 4%; /* Deleting */
+    text-align: center;
+    align-content: center;
+}

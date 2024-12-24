@@ -69,7 +69,6 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
         })
     };
 
-
     return (
         <Formik<FilterValues>
             initialValues={{

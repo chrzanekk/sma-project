@@ -9,8 +9,7 @@ import ConfirmAccount from "@/auth/register/ConfirmAccount.tsx";
 import UserProfileEdit from "@/auth/profile/UserProfileEdit.tsx";
 import UserManagement from "@/components/user/UserManagement.tsx";
 import Layout from "@/layout/Layout.tsx";
-
-
+import RoleManagement from "@/components/role/RoleManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -61,6 +60,15 @@ const router = createBrowserRouter([
                     </Layout>
                 </ProtectedRoute>
             )
+        },
+        {
+            path: "roles",
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <RoleManagement/>
+                    </Layout>
+                </ProtectedRoute>)
         }
     ],
 );

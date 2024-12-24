@@ -11,7 +11,7 @@ export const getUserMenuItems = (): UserMenuItem[] => {
     return [
         {label: t('profile'), href: '/profile'},
         {label: t('settings'), href: '/users'},
-        ...(hasRole('ROLE_ADMIN') ? [{label: t('adminPanel'), href: '#'}] :[]),
+        ...(hasRole('ROLE_ADMIN') ? [{label: t('adminPanel'), href: '/roles'}] :[]),
         {label: t('logout'), href: '#', onClick: logOut},
     ];
 };
