@@ -10,6 +10,7 @@ import UserProfileEdit from "@/auth/profile/UserProfileEdit.tsx";
 import UserManagement from "@/components/user/UserManagement.tsx";
 import Layout from "@/layout/Layout.tsx";
 import RoleManagement from "@/components/role/RoleManagement.tsx";
+import AdminPanel from "@/components/admin/AdminPanel.tsx";
 
 
 const router = createBrowserRouter([
@@ -69,6 +70,16 @@ const router = createBrowserRouter([
                         <RoleManagement/>
                     </Layout>
                 </ProtectedRoute>)
+        },
+        {
+            path: "adminPanel",
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <AdminPanel/>
+                    </Layout>
+                </ProtectedRoute>
+            )
         }
     ],
 );

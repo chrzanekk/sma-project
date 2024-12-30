@@ -25,8 +25,6 @@ const UserLayout: React.FC<UserLayoutProps> = ({
             bgColor={themeColors.bgColorLight()}
             height="100vh" // Pełna wysokość ekranu
             gap={2}
-            px={4}
-            py={2}
         >
             <GridItem
                 w="100%"

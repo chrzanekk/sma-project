@@ -12,6 +12,8 @@ import footerEn from './en/footer.json'
 import footerPl from './pl/footer.json'
 import errorsEn from './en/errors.json'
 import errorsPl from './pl/errors.json'
+import adminPanelMenuPl from './pl/adminPanelMenu.json'
+import adminPanelMenuEn from './en/adminPanelMenu.json'
 
 i18n.use(initReactI18next).init({
     resources: {
@@ -21,7 +23,8 @@ i18n.use(initReactI18next).init({
             userMenu: userMenuEn,
             auth: authEn,
             footer: footerEn,
-            errors: errorsEn
+            errors: errorsEn,
+            adminPanelMenu: adminPanelMenuEn
         },
         pl: {
             common: commonPl,
@@ -29,12 +32,13 @@ i18n.use(initReactI18next).init({
             userMenu: userMenuPl,
             auth: authPl,
             footer: footerPl,
-            errors: errorsPl
+            errors: errorsPl,
+            adminPanelMenu: adminPanelMenuPl
         },
     },
     lng: 'pl',
     fallbackLng: 'en',
-    ns: ['common', 'navbar', 'userMenu', 'auth', 'footer'],
+    ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu'],
     defaultNS: 'common',
     interpolation: {
         escapeValue: false,
