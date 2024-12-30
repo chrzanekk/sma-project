@@ -36,7 +36,7 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                         await addNewRole(newRole);
                         successNotification(
                             t('success', {ns: "common"}),
-                            formatMessage('notifications.addRoleSuccess', {ns: "common",login: newRole.name})
+                            formatMessage('notifications.addRoleSuccess', {ns: "common", role: newRole.name})
                         );
                         onSuccess();
                     } catch (err: any) {

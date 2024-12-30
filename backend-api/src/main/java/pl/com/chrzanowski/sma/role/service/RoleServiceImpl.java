@@ -61,6 +61,7 @@ public class RoleServiceImpl implements RoleService {
             String roleName = "ROLE_" + roleDTO.getName();
             roleDTO = roleDTO.toBuilder().name(roleName).build();
         }
+        roleDTO = roleDTO.toBuilder().name(roleDTO.getName().toUpperCase()).build();
         RoleDTO roleDTOToSave = roleDTO.toBuilder().createdDatetime(Instant.now()).build();
         return roleMapper.toDto(roleDao.saveRole(roleMapper.toEntity(roleDTOToSave)));
     }
