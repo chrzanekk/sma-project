@@ -2,6 +2,7 @@ import {AdminEditPasswordChangeRequest, UserDTO, UserFormDTO} from "@/types/user
 import {RoleDTO} from "@/types/role-types.ts";
 import {api, getAuthConfig, toBoolean} from "@/services/axios-config.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
+import {parsePaginationResponse} from "@/utils/api-utils.ts";
 
 const USERS_API_BASE = "/api/users";
 
@@ -14,11 +15,11 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
         });
         const response = await api.get(`${USERS_API_BASE}/page?${queryParams}`,
             getAuthConfig());
-        const data = response.data;
+        const {items, totalPages} = parsePaginationResponse(response);
         return {
-            users: data || [],
-            totalPages: data.totalPages || 1
-        }
+            users: items,
+            totalPages,
+        };
     } catch (err) {
         console.error('Error fetching users: ', err);
         return {users: [], totalPages: 1};

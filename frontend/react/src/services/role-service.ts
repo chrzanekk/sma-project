@@ -1,6 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {RoleDTO} from "@/types/role-types.ts";
+import {parsePaginationResponse} from "@/utils/api-utils.ts";
 
 const API_ROLES_BASE = "/api/roles"
 
@@ -23,11 +24,11 @@ export const getRoleByFilterAndPage = async(filter: Record<string,any>) => {
             page: filter.page || 0,
         });
         const response = await api.get(`${API_ROLES_BASE}/page?${queryParams}`, getAuthConfig());
-        const data = response.data;
+        const {items, totalPages} = parsePaginationResponse(response);
         return {
-            roles: data || [],
-            totalPages: data.totalPages || 1
-        }
+            users: items,
+            totalPages,
+        };
     } catch (err) {
         console.error('Error fetching roles: ', err);
         return {roles: [], totalPages: 1};

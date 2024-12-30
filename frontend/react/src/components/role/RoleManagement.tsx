@@ -38,10 +38,11 @@ const RoleManagement: React.FC = () => {
     }
 
     const handlePageChange = (page: number) => {
-        setCurrentPage(page);
-        fetchRoles({}, page, rowsPerPage).catch(() => {
-        });
-    }
+        if (page >= 0 && page < totalPages) {
+            setCurrentPage(page); // Ustawiamy bieżącą stronę
+            fetchRoles({}, page, rowsPerPage).catch(() => {});
+        }
+    };
 
     const handleFilterSubmit = (values: Record<string, any>) => {
         setCurrentPage(0);

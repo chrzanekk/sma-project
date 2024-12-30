@@ -56,25 +56,25 @@ const Pagination: React.FC<PaginationProps> = ({
             </Select>
 
             {/* Nawigacja między stronami */}
-                <Button
-                    size={"xs"}
-                    onClick={() => onPageChange(currentPage)}
-                    isDisabled={currentPage + 1 === totalPages}
-                    mr={2}
-                >
-                    {t('previous', {ns:'common'})}
-                </Button>
-                <Text>
-                    {t('page', {ns:'common'})} {currentPage + 1} {t('of', {ns:'common'})} {totalPages}
-                </Text>
-                <Button
-                    size={"xs"}
-                    onClick={() => onPageChange(currentPage)}
-                    isDisabled={currentPage + 1 === totalPages}
-                    ml={2}
-                >
-                    {t('next', {ns:'common'})}
-                </Button>
+            <Button
+                size={"xs"}
+                onClick={() => onPageChange(currentPage - 1)}
+                isDisabled={currentPage === 0} // Poprawka: Blokuj tylko, jeśli to pierwsza strona
+                mr={2}
+            >
+                {t('previous', { ns: 'common' })}
+            </Button>
+            <Text>
+                {t('page', { ns: 'common' })} {currentPage + 1} {t('of', { ns: 'common' })} {totalPages}
+            </Text>
+            <Button
+                size={"xs"}
+                onClick={() => onPageChange(currentPage + 1)}
+                isDisabled={currentPage + 1 === totalPages} // Poprawka: Blokuj tylko, jeśli to ostatnia strona
+                ml={2}
+            >
+                {t('next', { ns: 'common' })}
+            </Button>
 
             {/* Skok do konkretnej strony */}
                 <Input
