@@ -63,8 +63,7 @@ const RoleManagement: React.FC = () => {
             </Flex>}
             table={<RoleTable
                 roles={roles}
-                onDelete={handleDelete}
-                fetchRoles={fetchRoles}/>
+                onDelete={handleDelete}/>
             }
             pagination={
                 <Pagination

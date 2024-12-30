@@ -32,6 +32,6 @@ public class RoleQuerySpec {
 
     public JPQLQuery<Role> buildQuery(BooleanBuilder builder) {
         QRole role = QRole.role;
-        return new JPAQuery<Role>(em).select(role).from(role);
+        return new JPAQuery<Role>(em).select(role).from(role).where(builder);
     }
 }

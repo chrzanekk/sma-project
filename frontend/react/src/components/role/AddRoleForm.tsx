@@ -6,7 +6,7 @@ import React from "react";
 import {addNewRole} from "@/services/role-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
+import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
 import {RoleDTO} from "@/types/role-types.ts";
 
 interface AddRoleFormProps {
@@ -36,21 +36,21 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                         await addNewRole(newRole);
                         successNotification(
                             t('success', {ns: "common"}),
-                            formatMessage('notifications.RoleAddedSuccess', {login: newRole.name})
+                            formatMessage('notifications.addRoleSuccess', {ns: "common",login: newRole.name})
                         );
                         onSuccess();
                     } catch (err: any) {
                         console.error(err);
                         errorNotification(
                             t('error', {ns: "common"}),
-                            err.response?.data?.message || t('notifications.roleAddedError', {ns: "common"})
+                            err.response?.data?.message || t('notifications.roleAddedError', {ns: "errors"})
                         );
                     } finally {
                         setSubmitting(false);
                     }
                 }}
         >
-            {({errors, touched}) => (
+            {({errors, touched, isValid, isSubmitting}) => (
                 <Form>
                     <Stack spacing="8px">
                         <Field name="name">
@@ -63,6 +63,9 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                             )}
                         </Field>
                     </Stack>
+                    <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                        {t('shared.addRole')}
+                    </Button>
                 </Form>
             )}
         </Formik>

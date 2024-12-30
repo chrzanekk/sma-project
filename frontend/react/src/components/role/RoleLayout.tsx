@@ -63,20 +63,15 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
             {/* Wiersz 3: Tabela */}
             <GridItem
                 w="100%"
-                p={1}
-                bg={bgColor}
                 borderRadius="lg"
+                overflowY="auto" // Skrolowanie tylko w tej sekcji
+                p={2}
             >
                 {table}
             </GridItem>
 
             {/* Wiersz 4: Paginacja */}
-            <GridItem
-                w="100%"
-                p={1}
-                bg={bgColor}
-                borderRadius="lg"
-            >
+            <GridItem>
                 {pagination}
             </GridItem>
         </Grid>

@@ -22,6 +22,7 @@
     "deleting": "Usuwanie",
     "filters": "Wyszukaj po",
     "userList": "Lista użytkowników",
+    "roleList": "Lista ról",
     "close": "Zamknij",
     "cancel": "Anuluj",
     "save": "Zapisz",
@@ -38,7 +39,8 @@
         "userEditedSuccess": "Dane użytkownika {{login}} zmieniono pomyślnie",
         "userEditedError": "Błąd edycji użytkownika {{login}}",
         "userRolesEditedSuccess": "Role użytkownika {{login}} zmieniono pomyślnie",
-        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}"
+        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}",
+        "addRoleSuccess": "Rola {{role}} dodana pomyślnie"
     },
     "deleteConfirmation": {
         "title": "Potwierdź usunięcie",

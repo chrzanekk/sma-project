@@ -23,5 +23,6 @@
   "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
   "userEditedError": "Błąd edycji użytkownika {{login}}.",
   "userNotFound": "Nie znaleziono użytkownika",
-  "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją."
+  "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją.",
+  "roleAddedError": "Błąd dodawania roli"
 }

@@ -16,17 +16,19 @@
     "go": "Idź",
     "yes": "Tak",
     "no": "Nie",
+    "empty": "Brak",
     "dataNotFound": "Brak wyników",
     "edit": "Edycja",
     "deleting": "Usuwanie",
     "filters": "Wyszukaj po",
     "userList": "Lista użytkowników",
+    "roleList": "Lista ról",
     "close": "Zamknij",
     "cancel": "Anuluj",
     "save": "Zapisz",
     "data": "Dane",
     "createDate": "Data utworzenia",
-    "lastModifiedDate": "Data ostatniej modyfikacji",
+    "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
         "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
@@ -37,7 +39,8 @@
         "userEditedSuccess": "Dane użytkownika {{login}} zmieniono pomyślnie",
         "userEditedError": "Błąd edycji użytkownika {{login}}",
         "userRolesEditedSuccess": "Role użytkownika {{login}} zmieniono pomyślnie",
-        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}"
+        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}",
+        "addRoleSuccess": "Rola {{role}} dodana pomyślnie"
     },
     "deleteConfirmation": {
         "title": "Potwierdź usunięcie",

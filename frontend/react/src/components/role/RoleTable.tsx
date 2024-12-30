@@ -12,10 +12,9 @@ const tableClass = classNames('custom-table', 'role-table');
 interface Props {
     roles: RoleDTO[];
     onDelete: (id: number) => void;
-    fetchRoles: () => void;
 }
 
-const RoleTable: React.FC<Props> = ({roles, onDelete, fetchRoles}) => {
+const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
     const {t} = useTranslation('auth')
     const {isOpen, onOpen, onClose} = useDisclosure();
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
@@ -45,7 +44,6 @@ const RoleTable: React.FC<Props> = ({roles, onDelete, fetchRoles}) => {
                         <Th>{t('shared.roleName')}</Th>
                         <Th>{t('createDate', {ns: "common"})}</Th>
                         <Th>{t('lastModifiedDate', {ns: "common"})}</Th>
-                        {/*<Th>{t('edit', {ns: "common"})}</Th>*/}
                         <Th>{t('delete', {ns: "common"})}</Th>
                     </Tr>
                 </Thead>
@@ -56,9 +54,6 @@ const RoleTable: React.FC<Props> = ({roles, onDelete, fetchRoles}) => {
                             <Td>{role.name}</Td>
                             <Td>{DateFormatter.formatDateTime(role.createdDatetime!)}</Td>
                             <Td>{DateFormatter.formatDateTime(role.lastModifiedDatetime!)}</Td>
-                            {/*<Td>*/}
-                            {/*    <EditRoleDrawer fetchRoles={fetchRoles} roleId={role.id}/>*/}
-                            {/*</Td>*/}
                             <Td>
                                 <Button leftIcon={<FaTrash/>} colorScheme="red" size={"xs"}
                                         onClick={() => handleDeleteClick(role.id!)}>
@@ -74,8 +69,10 @@ const RoleTable: React.FC<Props> = ({roles, onDelete, fetchRoles}) => {
                 isOpen={isOpen}
                 onClose={onClose}
                 onConfirm={confirmDelete}
-                title={t('deleteRole', {ns: "auth"})}
-                message={t('deleteRoleMessage', {ns: "auth"})}
+                title={t('deleteConfirmation.title', {ns: "common"})}
+                message={t('deleteConfirmation.message', {ns: "common"})}
+                confirmText={t('delete', {ns: "common"})}
+                cancelText={t('cancel', {ns: "common"})}
             />
         </>
     );

@@ -1,8 +1,9 @@
 import {useTranslation} from "react-i18next";
 import {Field, Form, Formik, FormikHelpers} from "formik";
-import {Button, Grid, GridItem, Input} from "@chakra-ui/react";
+import {Button, Flex, Input} from "@chakra-ui/react";
 import React from "react";
 import * as Yup from 'yup';
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     name?: string;
@@ -27,30 +28,37 @@ const RoleFilterForm: React.FC<Props> = ({onSubmit}) => {
                 onSubmit(values);
             }}
         >
-            {({handleSubmit, isSubmitting}) => {
+            {({handleSubmit, resetForm}) => {
                 return (
                     <Form onSubmit={handleSubmit}>
-                        <Grid
-                            templateColumns="repeat(3, 1fr)"
-                            gap={4}
-                        >
-                            <GridItem colSpan={2}>
-                                <Field
-                                    name="name"
-                                    as={Input}
-                                    placeholder={t('roleName')}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={1}>
-                                <Button
-                                    type="submit"
-                                    colorScheme="blue"
-                                    isLoading={isSubmitting}
-                                >
-                                    {t('search')}
-                                </Button>
-                            </GridItem>
-                        </Grid>
+                        <Flex gap={2} mb={1} justifyContent={"center"}>
+                            <Field
+                                name="name"
+                                as={Input}
+                                placeholder={t('shared.roleName')}
+                                size="sm"
+                                bg={themeColors.bgColorLight()}
+                                borderRadius={"md"}
+                                width="150px"
+                            />
+                        </Flex>
+                        <Flex gap={2} justifyContent={"center"}>
+                            <Button type="submit" colorScheme="blue"
+                                    size={"xs"}>
+                                {t('search', {ns: "common"})}
+                            </Button>
+                            <Button
+                                type="button"
+                                colorScheme="orange"
+                                size="xs"
+                                onClick={() => {
+                                    resetForm();
+                                    onSubmit({});
+                                }}
+                            >
+                                {t('clearFilters', {ns: "common"})}
+                            </Button>
+                        </Flex>
                     </Form>
                 );
             }}
