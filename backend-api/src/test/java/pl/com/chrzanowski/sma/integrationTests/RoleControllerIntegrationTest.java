@@ -10,9 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
@@ -184,5 +185,22 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(roles).isNotEmpty();
         assertThat(roles).anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+    }
+
+    @Test
+    void shouldGetRolesByNameFilterAndPageSuccessfully() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("name", "admin");
+        webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/roles/page")
+                        .queryParams(queryParams)
+                        .build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$.numberOfElements").isEqualTo(1)
+                .jsonPath("$.content[0].id").isNotEmpty()
+                .jsonPath("$.content[0].name").isEqualTo("ROLE_ADMIN");
     }
 }

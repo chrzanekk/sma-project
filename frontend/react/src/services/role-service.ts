@@ -26,7 +26,7 @@ export const getRoleByFilterAndPage = async(filter: Record<string,any>) => {
         const response = await api.get(`${API_ROLES_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return {
-            users: items,
+            roles: items as RoleDTO[],
             totalPages,
         };
     } catch (err) {

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +31,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -321,19 +323,17 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
-        List<UserDTO> users = webTestClient.get()
+        webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserDTO.class)
-                .returnResult().getResponseBody();
-
-        assertThat(users).isNotEmpty();
-        assertThat(users.size()).isEqualTo(1);
-        assertThat(users).anyMatch(user -> "login".equals(user.getLogin()));
+                .expectBody()
+                .jsonPath("$.numberOfElements").isEqualTo(1)
+                .jsonPath("$.content[0].id").isNotEmpty()
+                .jsonPath("$.content[0].login").isEqualTo("login");
     }
 
     @Test
@@ -415,19 +415,17 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
-        List<UserDTO> users = webTestClient.get()
+        webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserDTO.class)
-                .returnResult().getResponseBody();
-
-        assertThat(users).isNotEmpty();
-        assertThat(users.size()).isEqualTo(1);
-        assertThat(users).allMatch(user -> user.getLogin().startsWith("log"));
+                .expectBody()
+                .jsonPath("$.numberOfElements").isEqualTo(1)
+                .jsonPath("$.content[0].id").isNotEmpty()
+                .jsonPath("$.content[0].login").isEqualTo("login");
     }
 
     @Test
@@ -437,19 +435,17 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
-        List<UserDTO> users = webTestClient.get()
+        webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/users/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(UserDTO.class)
-                .returnResult().getResponseBody();
-
-        assertThat(users).isNotEmpty();
-        assertThat(users.size()).isEqualTo(1);
-        assertThat(users).allMatch(user -> user.getEmail().startsWith("login"));
+                .expectBody()
+                .jsonPath("$.numberOfElements").isEqualTo(1)
+                .jsonPath("$.content[0].id").isNotEmpty()
+                .jsonPath("$.content[0].login").isEqualTo("login");
     }
 
     @Test

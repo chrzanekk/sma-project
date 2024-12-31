@@ -37,11 +37,11 @@ public class RoleController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<RoleDTO>> getRolesPage(RoleFilter roleFilter, Pageable pageable) {
+    public ResponseEntity<Page<RoleDTO>> getRolesPage(RoleFilter roleFilter, Pageable pageable) {
         log.debug("REST request to get roles by page: {}", pageable);
         Page<RoleDTO> result = roleQueryService.findByFilter(roleFilter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), result);
-        return ResponseEntity.ok().headers(headers).body(result.getContent());
+        return ResponseEntity.ok().headers(headers).body(result);
     }
 
     @GetMapping("/filter")

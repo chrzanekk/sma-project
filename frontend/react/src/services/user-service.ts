@@ -17,7 +17,7 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
             getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return {
-            users: items,
+            users: items as UserDTO[],
             totalPages,
         };
     } catch (err) {

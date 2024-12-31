@@ -45,11 +45,11 @@ public class UserController {
     }
 
     @GetMapping(path = "/page")
-    public ResponseEntity<List<UserDTO>> getUsersByFilterAndPage(UserFilter userFilter, Pageable pageable) {
+    public ResponseEntity<Page<UserDTO>> getUsersByFilterAndPage(UserFilter userFilter, Pageable pageable) {
         log.debug("REST request to get all users by filter and page: {},{}", userFilter, pageable);
         Page<UserDTO> result = userQueryService.findByFilter(userFilter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), result);
-        return ResponseEntity.ok().headers(headers).body(result.getContent());
+        return ResponseEntity.ok().headers(headers).body(result);
     }
 
     @GetMapping(path = "/getById/{id}")
