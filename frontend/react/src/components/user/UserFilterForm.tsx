@@ -5,6 +5,7 @@ import {Button, Flex, Input} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Select} from "chakra-react-select";
+import useRoles from "@/hooks/UseRoles.tsx";
 
 interface FilterValues {
     emailStartsWith?: string;
@@ -34,12 +35,10 @@ interface Props {
 
 const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
     const {t} = useTranslation('auth');
-    const allRoles = ["ROLE_USER", "ROLE_ADMIN"];
+    const { roles: roleOptions, isLoading, error } = useRoles();
 
-    const roleOptions = allRoles.map(role => ({
-        value: role,
-        label: role.replace("ROLE_", "")
-    }));
+    if (isLoading) return <div>{t('processing', { ns: "common" })}</div>;
+    if (error) return <div>{t('error', { ns: "common" })}: {error}</div>;
 
     const booleanOptions = [
         {value: undefined, label: t("empty", {ns: "common"})},
@@ -68,7 +67,6 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
             height: "2rem",
         })
     };
-
     return (
         <Formik<FilterValues>
             initialValues={{

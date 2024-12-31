@@ -9,17 +9,19 @@ import {Button, FormControl, FormErrorMessage, FormLabel, Stack} from "@chakra-u
 import {Select} from "chakra-react-select";
 import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
+import useRoles from "@/hooks/UseRoles.tsx";
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
-interface EditUserFormProps {
+interface EditUserRolesFormProps {
     onSuccess: () => void;
     userId: number;
     login: string;
 }
 
-const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) => {
+const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId, login}) => {
     const {t} = useTranslation(['auth', 'common'])
     const [initialValues, setInitialValues] = useState<AdminEditRoleUpdateRequest | null>(null);
-    const allRoles = ["ROLE_USER", "ROLE_ADMIN"]; // Wszystkie możliwe role
+    const {roles: roleOptions, isLoading, error} = useRoles();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -27,7 +29,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) =
                 const user: UserDTO = await getUserById(userId);
                 setInitialValues({
                     userId: user.id,
-                    roles: user.roles ? Array.from(user.roles).map(role => role.name) : []
+                    roles: user.roles ? Array.from(user.roles).map(role => role.name) : [],
                 });
             } catch (err) {
                 console.error('Error fetching user:', err);
@@ -41,10 +43,9 @@ const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) =
         return <div>{t('processing', {ns: "common"})}</div>;
     }
 
-    const roleOptions = allRoles.map(role => ({
-        value: role,
-        label: role.replace("ROLE_", "")
-    }));
+    if (isLoading) return <div>{t('processing', {ns: "common"})}</div>;
+    if (error) return <div>{t('error', {ns: "common"})}: {error}</div>;
+    if (!initialValues) return null;
 
     return (
         <Formik
@@ -60,7 +61,7 @@ const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) =
                     await updateUserRoles(userRoles);
                     successNotification(
                         t('success', {ns: "common"}),
-                        t('notifications.userRolesEditedSuccess', {login: login, ns: "common"})
+                        formatMessage('notifications.userRolesEditedSuccess', {login: login, ns: "common"})
                     );
                     onSuccess();
                 } catch (err: any) {
@@ -109,7 +110,8 @@ const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) =
                                 />
                                 <FormErrorMessage>{errors.roles}</FormErrorMessage>
                             </FormControl>
-                            <Button isDisabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit" colorScheme="green">
+                            <Button isDisabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit"
+                                    colorScheme="green">
                                 {t('shared.changerRoles')}
                             </Button>
                         </Stack>
@@ -120,4 +122,4 @@ const EditUserForm: React.FC<EditUserFormProps> = ({onSuccess, userId, login}) =
     );
 }
 
-export default EditUserForm;
+export default EditUserRolesForm;
