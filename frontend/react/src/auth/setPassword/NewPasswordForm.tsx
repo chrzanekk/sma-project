@@ -3,7 +3,7 @@ import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
-import {MyTextInput} from "@/components/form/CustomFields.tsx";
+import {MyTextInput} from "@/components/shared/CustomFields.tsx";
 import {resetPassword} from "@/services/auth-service.ts";
 import {useTranslation} from "react-i18next";
 

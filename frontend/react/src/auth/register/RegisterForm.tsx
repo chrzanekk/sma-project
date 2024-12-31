@@ -4,7 +4,7 @@ import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
 import {successNotification} from "@/notifications/notifications.ts";
-import {MyTextInput} from "@/components/form/CustomFields";
+import {MyTextInput} from "@/components/shared/CustomFields.tsx";
 import {registerUser} from "@/services/auth-service.ts";
 import {RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
