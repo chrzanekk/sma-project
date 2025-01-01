@@ -21,9 +21,9 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
     const {t} = useTranslation();
     return (
         <Grid
-            templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
+            templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorLight()}
-            height="100vh" // Pełna wysokość ekranu
+            height="100vh"
             gap={2}
         >
             <GridItem
@@ -62,7 +62,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
             <GridItem
                 w="100%"
                 borderRadius="lg"
-                overflowY="auto" // Skrolowanie tylko w tej sekcji
+                overflowY="auto"
                 p={2}
             >
                 {table}

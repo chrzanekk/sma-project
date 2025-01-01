@@ -1,5 +1,6 @@
 {
     "welcome": "Witamy w aplikacji SMA",
+    "main": "Strona główna",
     "logout": "Wyloguj",
     "generic": "Brak wiadomości",
     "error": "Błąd",
@@ -45,5 +46,9 @@
     "deleteConfirmation": {
         "title": "Potwierdź usunięcie",
         "message": "Czy napewno chcesz usunąć?"
+    },
+    "underConstruction": {
+        "title": "Site under construction",
+        "message": "Sorry, the page {{name}} is under construction."
     }
 }

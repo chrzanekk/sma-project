@@ -10,5 +10,7 @@
   "mainWarehouse": "Główny",
   "mainWarehouseSubLabel": "Magazyn główny",
   "constructionSites": "Budowy",
-  "constructionSitesSubLabel": "Przeglądaj stany magazynowe na budowach"
+  "constructionSitesSubLabel": "Przeglądaj stany magazynowe na budowach",
+  "contractors": "Kontrahenci",
+  "contractorsList": "Lista kontrahentów"
 }

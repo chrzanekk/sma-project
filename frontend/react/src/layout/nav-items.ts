@@ -44,5 +44,9 @@ export const getNavItems = (): Array<NavItem> => {
                 },
             ],
         },
+        {
+            label: t('contractors'),
+            href: '/contractors',
+        }
     ];
 }

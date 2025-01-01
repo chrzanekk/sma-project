@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
                                 boxSize="75px"
                                 src="/img/sma-logo.png"
                                 alt="S.M.A."
-                                cursor="pointer" // Dodano kursor wskazujący, że logo jest klikalne
+                                cursor="pointer"
                             />
                         </Link>
                     </Box>

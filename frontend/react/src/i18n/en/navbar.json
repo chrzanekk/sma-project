@@ -1,14 +1,16 @@
 {
-  "dashboard": "Main page",
-  "loggedAs": "Logged as:",
-  "diary": "Scaffold Diary",
-  "diaryList": "Diary List",
-  "diaryListSubLabel": "Browse created scaffold diaries",
-  "diaryAddNew": "Add New",
-  "diaryAddNewSubLabel": "Create a new scaffold diary",
-  "warehouse": "Warehouse",
-  "mainWarehouse": "Main Warehouse",
-  "mainWarehouseSubLabel": "Main warehouse",
-  "constructionSites": "Construction Sites",
-  "constructionSitesSubLabel": "View warehouse states on construction sites"
+  "dashboard": "Stronga główna",
+  "loggedAs": "Zalogowany jako:",
+  "diary": "Dziennik rusztowań",
+  "diaryList": "Lista dzienników",
+  "diaryListSubLabel": "Przeglądaj utworzone dzienniki rusztowań",
+  "diaryAddNew": "Dodaj nowy",
+  "diaryAddNewSubLabel": "Stworzenie nowego dziennika rusztowań",
+  "warehouse": "Magazyn",
+  "mainWarehouse": "Główny",
+  "mainWarehouseSubLabel": "Magazyn główny",
+  "constructionSites": "Budowy",
+  "constructionSitesSubLabel": "Przeglądaj stany magazynowe na budowach",
+  "contractors": "Kontrahenci",
+  "contractorsList": "Lista kontrahentów"
 }
