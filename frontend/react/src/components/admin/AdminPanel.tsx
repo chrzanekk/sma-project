@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
-import {Button, Flex, Grid, GridItem, Heading, Menu, MenuButton, MenuItem, MenuList,} from '@chakra-ui/react';
+import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
 import {ChevronDownIcon} from '@chakra-ui/icons';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {getAdminPanelMenuItems} from "@/layout/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
+import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
 
 export type AdminPanelView = 'roles' | 'users';
 
@@ -50,44 +51,50 @@ const AdminPanel: React.FC = () => {
                     </Heading>
 
                     {/* Menu wyboru widoku */}
-                    <Menu>
-                        <MenuButton
-                            bg={themeColors.bgColor()}
-                            color={themeColors.fontColor()}
-                            _hover={{
-                                textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
-                                color: themeColors.popoverBgColor()
-                            }}
-                            as={Button}
-                            rightIcon={<ChevronDownIcon/>}
-                            variant="outline"
-                            size="sm"
-                            p={2}
-                        >
-                            {t("selectView")}
-                        </MenuButton>
-                        <MenuList bg={themeColors.bgColor()} p={1}>
-                            {adminMenuItems.map((item, index) => (
+                    <MenuRoot>
+                        <MenuTrigger asChild>
+                            <Button
+                                bg={themeColors.bgColor()}
+                                color={themeColors.fontColor()}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: themeColors.highlightBgColor(),
+                                    color: themeColors.popoverBgColor()
+                                }}
+
+                                variant="outline"
+                                size="sm"
+                                p={2}
+                            >
+                                <ChevronDownIcon/>
+                                {t("selectView")}
+                            </Button>
+                        </MenuTrigger>
+                        <MenuContent>
+                            {adminMenuItems.map((item) => (
                                 <MenuItem
-                                    bg={themeColors.bgColor()}
-                                    rounded={'md'}
-                                    color={themeColors.fontColor()}
-                                    p={2}
-                                    _hover={{
-                                        textDecoration: 'none',
-                                        bg: themeColors.highlightBgColor(),
-                                        color: themeColors.popoverBgColor(),
-                                        border: '1px solid white'
-                                    }}
-                                    key={index}
+                                    // bg={themeColors.bgColor()}
+                                    // rounded={'md'}
+                                    // colorPalette={themeColors.fontColor()}
+                                    // p={2}
+                                    // _hover={{
+                                    //     textDecoration: 'none',
+                                    //     bg: themeColors.highlightBgColor(),
+                                    //     color: themeColors.popoverBgColor(),
+                                    //     border: '1px solid white'
+                                    // }}
+                                    // key={index}
+                                    // onClick={item.onClick}
+                                    value={item.label}
+                                    valueText={item.label}
                                     onClick={item.onClick}
+                                    closeOnSelect={true}
                                 >
                                     {item.label}
                                 </MenuItem>
                             ))}
-                        </MenuList>
-                    </Menu>
+                        </MenuContent>
+                    </MenuRoot>
                 </Flex>
             </GridItem>
 

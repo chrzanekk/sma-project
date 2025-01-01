@@ -1,16 +1,19 @@
-import {createStandaloneToast} from '@chakra-ui/react';
 import React from "react";
+import {createToaster} from "@chakra-ui/react";
 
-const {toast} = createStandaloneToast();
+const toaster = createToaster({
+    max: 3,
+    duration: 3000,
+    placement: "bottom",
+    overlap: true
+});
 
 const notifications = (title: string, description: React.ReactNode, status: "success" | "error" | "info" | "warning") => {
-    toast({
+    toaster.create(({
         title,
         description,
-        status,
-        isClosable: true,
-        duration: 8000,
-    });
+        type: status
+    }));
 };
 
 export const successNotification = (title: string, description: React.ReactNode) => {
