@@ -1,20 +1,20 @@
 import {useTranslation} from "react-i18next";
-import {
-    Button,
-    Drawer,
-    DrawerBody,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    useDisclosure
-} from "@chakra-ui/react";
+import {Button, useDisclosure} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditUserPasswordForm from "@/components/user/EditUserPasswordForm.tsx";
-
+import {
+    DrawerActionTrigger,
+    DrawerBackdrop,
+    DrawerBody,
+    DrawerCloseTrigger,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerRoot,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
 
 interface EditUserPasswordDrawerProps {
     fetchUsers: () => void;
@@ -25,21 +25,23 @@ interface EditUserPasswordDrawerProps {
 
 const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUsers, userId, currentUserId, login}) => {
     const {t} = useTranslation('auth');
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {onClose} = useDisclosure();
     return (
         <>
-            <Button
-                colorScheme="orange"
-                onClick={onOpen}
-                size={"xs"}
-                p={1}
-                isDisabled={currentUserId === userId}>
-                {t('shared.password')}
-            </Button>
-            <Drawer isOpen={isOpen} onClose={onClose} size={"md"}>
-                <DrawerOverlay/>
+
+            <DrawerRoot size={"md"}>
+                <DrawerBackdrop/>
+                <DrawerTrigger asChild>
+                    <Button
+                        colorScheme="orange"
+                        size={"xs"}
+                        p={1}
+                        disabled={currentUserId === userId}>
+                        {t('shared.password')}
+                    </Button>
+                </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
-                    <DrawerCloseButton/>
+                    <DrawerCloseTrigger/>
                     <DrawerHeader>{t('newPassword.header')}</DrawerHeader>
                     <DrawerBody>
                         <EditUserPasswordForm
@@ -52,16 +54,17 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                         />
                     </DrawerBody>
                     <DrawerFooter>
-                        <Button
-                            leftIcon={<FaTimes/>}
-                            colorScheme="green"
-                            onClick={onClose}
-                        >
-                            {t('close', {ns: "common"})}
-                        </Button>
+                        <DrawerActionTrigger asChild>
+                            <Button
+                                colorScheme="green"
+                            ><FaTimes/>
+                                {t('close', {ns: "common"})}
+                            </Button>
+                        </DrawerActionTrigger>
+
                     </DrawerFooter>
                 </DrawerContent>
-            </Drawer>
+            </DrawerRoot>
         </>
     )
 }
