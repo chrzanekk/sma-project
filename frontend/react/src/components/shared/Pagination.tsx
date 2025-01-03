@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Button, Flex, Input, Select, Text} from '@chakra-ui/react';
+import {Button, Flex, Input, NativeSelectField, NativeSelectRoot, Text} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 
@@ -39,61 +39,66 @@ const Pagination: React.FC<PaginationProps> = ({
               fontSize={"sm"}
         >
             {/* Wybór liczby wierszy */}
-            <Select
+            <NativeSelectRoot
                 width="110px"
                 size="xs"
                 borderRadius={"md"}
                 bg={themeColors.bgColorLight()}
-                value={rowsPerPage}
-                isDisabled={currentPage + 1 === totalPages}
-                onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
+                disabled={currentPage + 1 === totalPages}
             >
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-            </Select>
+                <NativeSelectField
+                    value={rowsPerPage}
+                    onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
+                >
+                    <option value={5}>5</option>
+                    <option value={10}>10</option>
+                    <option value={20}>20</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                </NativeSelectField>
+
+
+            </NativeSelectRoot>
 
             {/* Nawigacja między stronami */}
             <Button
                 size={"xs"}
                 onClick={() => onPageChange(currentPage - 1)}
-                isDisabled={currentPage === 0} // Poprawka: Blokuj tylko, jeśli to pierwsza strona
+                disabled={currentPage === 0} // Poprawka: Blokuj tylko, jeśli to pierwsza strona
                 mr={2}
             >
-                {t('previous', { ns: 'common' })}
+                {t('previous', {ns: 'common'})}
             </Button>
             <Text>
-                {t('page', { ns: 'common' })} {currentPage + 1} {t('of', { ns: 'common' })} {totalPages}
+                {t('page', {ns: 'common'})} {currentPage + 1} {t('of', {ns: 'common'})} {totalPages}
             </Text>
             <Button
                 size={"xs"}
                 onClick={() => onPageChange(currentPage + 1)}
-                isDisabled={currentPage + 1 === totalPages} // Poprawka: Blokuj tylko, jeśli to ostatnia strona
+                disabled={currentPage + 1 === totalPages} // Poprawka: Blokuj tylko, jeśli to ostatnia strona
                 ml={2}
             >
-                {t('next', { ns: 'common' })}
+                {t('next', {ns: 'common'})}
             </Button>
 
             {/* Skok do konkretnej strony */}
-                <Input
-                    width="110px"
-                    size={"xs"}
-                    borderRadius={"md"}
-                    bg={themeColors.bgColorLight()}
-                    mr={2}
-                    value={gotoPage}
-                    isDisabled={currentPage + 1 === totalPages}
-                    onChange={(e) => setGotoPage(e.target.value)}
-                    placeholder={t('goToPage', {ns:'common'})}
-                />
-                <Button size={"xs"}
-                        onClick={handleGotoPage}
-                        isDisabled={currentPage + 1 === totalPages}
-                >
-                    {t('go', {ns:'common'})}
-                </Button>
+            <Input
+                width="110px"
+                size={"xs"}
+                borderRadius={"md"}
+                bg={themeColors.bgColorLight()}
+                mr={2}
+                value={gotoPage}
+                disabled={currentPage + 1 === totalPages}
+                onChange={(e) => setGotoPage(e.target.value)}
+                placeholder={t('goToPage', {ns: 'common'})}
+            />
+            <Button size={"xs"}
+                    onClick={handleGotoPage}
+                    disabled={currentPage + 1 === totalPages}
+            >
+                {t('go', {ns: 'common'})}
+            </Button>
             {/*</Flex>*/}
         </Flex>
     );

@@ -1,4 +1,3 @@
-// DashboardGrid.tsx
 import React from "react";
 import { Grid, GridItem, Text } from "@chakra-ui/react";
 
@@ -6,14 +5,14 @@ interface DashboardGridProps {
     topRowContent: string;
     columnsContent: string[];
     bottomRowContent: string;
-    bgColor?: string; // Dla większej elastyczności, domyślnie green.300
+    bgColor?: string;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = "green.300", // Domyślny kolor tła dla każdego elementu
+                                                         bgColor = "green.300",
                                                      }) => {
     return (
         <Grid templateRows="1fr 2fr 1fr"

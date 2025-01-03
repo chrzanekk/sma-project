@@ -19,7 +19,7 @@ export default function SmallWithLogoLeft() {
             <Stack
                 align="center"
                 justify="center">
-                <HStack spacing={2}>
+                <HStack gap={2}>
                     <Image
                         src="/img/author-logo.png"
                         alt="Konrad Chrzanowski"

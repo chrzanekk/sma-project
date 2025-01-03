@@ -1,8 +1,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Button, Menu, MenuButton, MenuItem, MenuList} from "@chakra-ui/react";
+import {Button} from "@chakra-ui/react";
 import {ChevronDownIcon} from "@chakra-ui/icons";
 import {themeColors} from "@/theme/theme-colors.ts";
+import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
 
 const LanguageSwitcher: React.FC = () => {
     const {i18n} = useTranslation();
@@ -15,29 +16,31 @@ const LanguageSwitcher: React.FC = () => {
     };
 
     return (
-        <Menu>
-            <MenuButton
-                bg={themeColors.bgColor()}
-                ml={4}
-                color={themeColors.fontColor()}
-                _hover={{
-                    textDecoration: 'none',
-                    bg: themeColors.highlightBgColor(),
-                    color: themeColors.popoverBgColor()
-                }}
-                as={Button}
-                rightIcon={<ChevronDownIcon/>}
-                variant="outline"
-                size="sm"
-                p={2}
-            >
-                {i18n.language === 'pl' ? 'Polski' : 'English'}
-            </MenuButton>
-            <MenuList bg={themeColors.bgColor()} mt={4} p={1}>
+        <MenuRoot>
+            <MenuTrigger asChild>
+                <Button
+                    bg={themeColors.bgColor()}
+                    ml={4}
+                    color={themeColors.fontColor()}
+                    _hover={{
+                        textDecoration: 'none',
+                        bg: themeColors.highlightBgColor(),
+                        color: themeColors.popoverBgColor()
+                    }}
+                    as={Button}
+                    variant="outline"
+                    size="sm"
+                    p={2}
+                >
+                    <ChevronDownIcon/>
+                    {i18n.language === 'pl' ? 'Polski' : 'English'}
+                </Button>
+            </MenuTrigger>
+            <MenuContent bg={themeColors.bgColor()} mt={4} p={1}>
                 <MenuItem
                     bg={themeColors.bgColor()}
                     p={2}
-                    color={themeColors.fontColor()}
+                    // color={themeColors.fontColor()}
                     rounded={'md'}
                     _hover={{
                         textDecoration: 'none',
@@ -45,7 +48,11 @@ const LanguageSwitcher: React.FC = () => {
                         color: themeColors.popoverBgColor(),
                         border: '1px solid white'
                     }}
-                    onClick={() => changeLanguage('pl')}>🇵🇱 Polski</MenuItem>
+                    value={'pl'}
+                    valueText={'🇵🇱 Polski'}
+                    onClick={() => changeLanguage('pl')}>
+                    {/*🇵🇱 Polski*/}
+                </MenuItem>
                 <MenuItem
                     bg={themeColors.bgColor()}
                     rounded={'md'}
@@ -56,9 +63,13 @@ const LanguageSwitcher: React.FC = () => {
                         color: themeColors.popoverBgColor(),
                         border: '1px solid white'
                     }}
-                    onClick={() => changeLanguage('en')}>🇬🇧 English</MenuItem>
-            </MenuList>
-        </Menu>
+                    value={'en'}
+                    valueText={'🇬🇧 English'}
+                    onClick={() => changeLanguage('en')}>
+                    {/*🇬🇧 English*/}
+                </MenuItem>
+            </MenuContent>
+        </MenuRoot>
     );
 };
 

@@ -3,21 +3,15 @@
 import React from 'react'
 import {
     Box,
-    Collapse,
+    Collapsible,
     Flex,
     HStack,
     Icon,
-    IconButton,
     Image,
     Link,
-    Menu,
-    MenuButton,
-    MenuDivider,
+    LinkBox,
+    LinkOverlay,
     MenuItem,
-    MenuList,
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
     Stack,
     Text,
     useDisclosure,
@@ -31,6 +25,9 @@ import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {themeColors} from '@/theme/theme-colors.ts';
 import {useTranslation} from "react-i18next";
 import useUser from "@/hooks/UseUser.tsx";
+import {MenuContent, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
+import {Button} from "@/components/ui/button.tsx";
+import {PopoverContent, PopoverRoot, PopoverTrigger,} from "@/components/ui/popover.tsx";
 
 interface NavItem {
     label: string
@@ -40,7 +37,7 @@ interface NavItem {
 }
 
 const Navbar: React.FC = () => {
-    const {isOpen, onToggle} = useDisclosure();
+    const {onToggle} = useDisclosure();
     const userMenuItems = getUserMenuItems();
     const {user} = useUser();
     const {t} = useTranslation('navbar');
@@ -49,16 +46,18 @@ const Navbar: React.FC = () => {
         <Box bg={themeColors.bgColor()} px={4}>
             <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
                 {/* Hamburger Icon */}
-                <IconButton
+                <Button
                     size={'md'}
-                    icon={isOpen ? <CloseIcon/> : <HamburgerIcon/>}
+
                     aria-label={'Toggle Navigation'}
                     display={{md: 'none'}}
                     onClick={onToggle}
-                />
+                >
+                    open ? <CloseIcon/> : <HamburgerIcon/>
+                </Button>
 
                 {/* Logo and Desktop Navigation */}
-                <HStack spacing={8} alignItems={'center'}>
+                <HStack gap={8} alignItems={'center'}>
                     <Box>
                         <Link href="/dashboard">
                             <Image
@@ -70,74 +69,82 @@ const Navbar: React.FC = () => {
                             />
                         </Link>
                     </Box>
-                    <HStack as={'nav'} spacing={1} display={{base: 'none', md: 'flex'}}>
+                    <HStack as={'nav'} gap={1} display={{base: 'none', md: 'flex'}}>
                         <DesktopNav/>
                     </HStack>
                 </HStack>
 
                 {/* User Menu */}
                 <Flex alignItems={'center'}>
-                    <Menu>
-                        <MenuButton
-                            py={2}
-                            transition="all 0.3s"
-                            _focus={{boxShadow: 'none'}}
-                            rounded={'md'}
-                            p={2}
-                            _hover={{
-                                border: '1px solid white',
-                                textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
-                                color: themeColors.popoverBgColor()
-                            }}
-                        >
-                            <HStack>
-                                <VStack
-                                    display={{base: 'none', md: 'flex'}}
-                                    alignItems="flex-start"
-                                    spacing="1px"
-                                    ml="2">
-                                    <Text fontSize="small" color={themeColors.fontColor()}
-                                    >{t('loggedAs')}</Text>
-                                    <Text fontSize="small" color={themeColors.fontColor()}
-                                    >{user ? `${user.firstName} ${user.lastName}` : 'Guest'}</Text>
-                                </VStack>
-                                <Box display={{base: 'none', md: 'flex'}}>
-                                    <FiChevronDown/>
-                                </Box>
-                            </HStack>
-                        </MenuButton>
-                        <MenuList bg={themeColors.bgColor()} p={1}>
+                    <MenuRoot>
+                        <MenuTrigger asChild>
+                            <Button
+                                py={2}
+                                transition="all 0.3s"
+                                _focus={{boxShadow: 'none'}}
+                                rounded={'md'}
+                                p={2}
+                                _hover={{
+                                    border: '1px solid white',
+                                    textDecoration: 'none',
+                                    bg: themeColors.highlightBgColor(),
+                                    color: themeColors.popoverBgColor()
+                                }}
+                            >
+                                <HStack>
+                                    <VStack
+                                        display={{base: 'none', md: 'flex'}}
+                                        alignItems="flex-start"
+                                        gap="1px"
+                                        ml="2">
+                                        <Text fontSize="small" color={themeColors.fontColor()}
+                                        >{t('loggedAs')}</Text>
+                                        <Text fontSize="small" color={themeColors.fontColor()}
+                                        >{user ? `${user.firstName} ${user.lastName}` : 'Guest'}</Text>
+                                    </VStack>
+                                    <Box display={{base: 'none', md: 'flex'}}>
+                                        <FiChevronDown/>
+                                    </Box>
+                                </HStack>
+                            </Button>
+                        </MenuTrigger>
+                        <MenuContent bg={themeColors.bgColor()} p={1}>
                             {userMenuItems.map((item) => (
-                                <MenuItem key={item.label}
-                                          bg={themeColors.bgColor()}
-                                          rounded={'md'}
-                                          color={themeColors.fontColor()}
-                                          p={2}
-                                          _hover={{
-                                              textDecoration: 'none',
-                                              bg: themeColors.highlightBgColor(),
-                                              color: themeColors.popoverBgColor(),
-                                              border: '1px solid white'
-                                          }}
-                                          onClick={item.onClick ? item.onClick : undefined}
+                                <MenuItem
+                                    key={item.label}
+                                    bg={themeColors.bgColor()}
+                                    rounded={'md'}
+                                    color={themeColors.fontColor()}
+                                    p={2}
+                                    _hover={{
+                                        textDecoration: 'none',
+                                        bg: themeColors.highlightBgColor(),
+                                        color: themeColors.popoverBgColor(),
+                                        border: '1px solid white'
+                                    }}
+                                    value={item.label}
+                                    valueText={item.label}
+                                    closeOnSelect={true}
+                                    onClick={item.onClick ? item.onClick : undefined}
                                 >
                                     <Link href={item.href} _hover={{textDecoration: 'none'}}>
                                         {item.label}
                                     </Link>
                                 </MenuItem>
                             ))}
-                            <MenuDivider/>
-                        </MenuList>
-                    </Menu>
+                        </MenuContent>
+                    </MenuRoot>
                     <LanguageSwitcher/>
                 </Flex>
             </Flex>
 
             {/* Mobile Navigation */}
-            <Collapse in={isOpen} animateOpacity>
-                <MobileNav/>
-            </Collapse>
+            <Collapsible.Root>
+                <Collapsible.Trigger asChild/>
+                <Collapsible.Content>
+                    <MobileNav/>
+                </Collapsible.Content>
+            </Collapsible.Root>
         </Box>
     )
 }
@@ -145,15 +152,15 @@ const Navbar: React.FC = () => {
 const DesktopNav: React.FC = () => {
     const navItems = getNavItems();
     return (
-        <Stack direction={'row'} spacing={4}>
+        <Stack direction={'row'} gap={4}>
             {navItems.map((navItem) => (
                 <Box key={navItem.label}>
-                    <Popover trigger={'hover'} placement={'bottom-start'}>
+                    <PopoverRoot>
                         <PopoverTrigger>
-                            <Box
+                            <LinkBox
                                 as="a"
                                 p={2}
-                                href={navItem.href ?? '#'}
+
                                 fontSize={'sm'}
                                 fontWeight={500}
                                 color={themeColors.fontColor()}
@@ -164,8 +171,10 @@ const DesktopNav: React.FC = () => {
                                     bg: themeColors.highlightBgColor(),
                                     color: themeColors.popoverBgColor()
                                 }}>
-                                {navItem.label}
-                            </Box>
+                                <LinkOverlay href={navItem.href ?? '#'}>
+                                    {navItem.label}
+                                </LinkOverlay>
+                            </LinkBox>
                         </PopoverTrigger>
 
                         {navItem.children && (
@@ -185,7 +194,7 @@ const DesktopNav: React.FC = () => {
                                 </Stack>
                             </PopoverContent>
                         )}
-                    </Popover>
+                    </PopoverRoot>
                 </Box>
             ))}
         </Stack>
@@ -194,9 +203,9 @@ const DesktopNav: React.FC = () => {
 
 const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
     return (
-        <Box
+        <LinkBox
             as="a"
-            href={href}
+
             role={'group'}
             display={'block'}
             p={1}
@@ -209,16 +218,19 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
                 color: themeColors.popoverBgColor()
             }}
         >
-            <Stack direction={'row'} align={'center'}>
-                <Box>
-                    <Text fontWeight={500}>
-                        {label}
-                    </Text>
-                    <Text fontSize={'xs'}>{subLabel}</Text>
-                </Box>
-                <Icon w={5} h={5} as={ChevronRightIcon}/>
-            </Stack>
-        </Box>
+            <LinkOverlay href={href}>
+                <Stack direction={'row'} align={'center'}>
+                    <Box>
+                        <Text fontWeight={500}>
+                            {label}
+                        </Text>
+                        <Text fontSize={'xs'}>{subLabel}</Text>
+                    </Box>
+                    <Icon w={5} h={5} as={ChevronRightIcon}/>
+                </Stack>
+            </LinkOverlay>
+
+        </LinkBox>
     )
 }
 
@@ -234,35 +246,39 @@ const MobileNav: React.FC = () => {
 }
 
 const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
-    const {isOpen, onToggle} = useDisclosure()
+    const {onToggle} = useDisclosure()
 
     return (
-        <Stack spacing={4} onClick={children && onToggle}>
-            <Box py={2} as="a" href={href ?? '#'} _hover={{textDecoration: 'none'}}>
-                <Text fontWeight={600} color={themeColors.fontColor()}>
-                    {label}
-                </Text>
-            </Box>
-
-            <Collapse in={isOpen} animateOpacity>
-                <Stack pl={4} borderLeft={1} borderStyle={'solid'}
-                       borderColor={themeColors.borderColor()}>
-                    {children &&
-                        children.map((child) => (
-                            <Box as="a"
-                                 key={child.label}
-                                 py={2}
-                                 borderBottom={1}
-                                 borderStyle={'solid'}
-                                 borderColor={themeColors.borderColor()}
-                                 href={child.href}>
-                                <Text fontWeight={700} color={themeColors.fontColorChildMenu()}>
-                                    {child.label}
-                                </Text>
-                            </Box>
-                        ))}
-                </Stack>
-            </Collapse>
+        <Stack gap={4} onClick={children && onToggle}>
+            <LinkBox py={2} as="a" _hover={{textDecoration: 'none'}}>
+                <LinkOverlay href={href ?? '#'}>
+                    <Text fontWeight={600} color={themeColors.fontColor()}>
+                        {label}
+                    </Text>
+                </LinkOverlay>
+            </LinkBox>
+            <Collapsible.Root>
+                <Collapsible.Trigger asChild/>
+                <Collapsible.Content>
+                    <Stack pl={4} borderLeft={1} borderStyle={'solid'}
+                           borderColor={themeColors.borderColor()}>
+                        {children &&
+                            children.map((child) => (
+                                <Link as="a"
+                                      key={child.label}
+                                      py={2}
+                                      borderBottom={1}
+                                      borderStyle={'solid'}
+                                      borderColor={themeColors.borderColor()}
+                                      href={child.href}>
+                                    <Text fontWeight={700} color={themeColors.fontColorChildMenu()}>
+                                        {child.label}
+                                    </Text>
+                                </Link>
+                            ))}
+                    </Stack>
+                </Collapsible.Content>
+            </Collapsible.Root>
         </Stack>
     )
 }

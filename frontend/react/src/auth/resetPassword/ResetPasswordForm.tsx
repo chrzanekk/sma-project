@@ -43,7 +43,7 @@ const ResetPasswordForm = () => {
         >
             {({isValid, isSubmitting}) => (
                 <Form>
-                    <Stack spacing={15}>
+                    <Stack gap={15}>
                         <Box display="flex" justifyContent="center">
                             <Image
                                 alt={'ResetPassword Image'}
@@ -68,7 +68,7 @@ const ResetPasswordForm = () => {
                         />
                         <Button
                             type="submit"
-                            isDisabled={!isValid || isSubmitting}
+                            disabled={!isValid || isSubmitting}
                         >
                             {t('resetPassword.submit')}
                         </Button>

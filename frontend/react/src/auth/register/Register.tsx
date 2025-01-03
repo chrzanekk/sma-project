@@ -21,7 +21,7 @@ const Register = () => {
         <Stack minH={'100vh'} direction={{base: 'column', md: 'row'}}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
 
-                <Stack spacing={4} w={'full'} maxW={'md'}>
+                <Stack gap={4} w={'full'} maxW={'md'}>
 
                     <RegisterForm/>
 

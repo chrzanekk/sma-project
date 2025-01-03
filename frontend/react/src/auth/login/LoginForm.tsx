@@ -39,7 +39,7 @@ const LoginForm = () => {
 
             {({isValid, isSubmitting}) => (
                 <Form>
-                    <Stack spacing={15}>
+                    <Stack gap={15}>
                         <Box display="flex" justifyContent="center">
                             <Image
                                 alt={'ResetPassword Image'}
@@ -68,7 +68,7 @@ const LoginForm = () => {
                         />
                         <Button
                             type="submit"
-                            isDisabled={!isValid || isSubmitting}>
+                            disabled={!isValid || isSubmitting}>
                             Login
                         </Button>
                     </Stack>
