@@ -15,6 +15,7 @@ const App: React.FC = () => {
                         "Kolumna 3: Statystyki użytkowników",
                     ]}
                     bottomRowContent="Informacje o najnowszych aktualizacjach"
+                    bgColor={themeColors.bgColor()}
                 />
             </Box>
         </Box>

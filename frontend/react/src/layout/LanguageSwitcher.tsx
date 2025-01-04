@@ -17,7 +17,7 @@ const LanguageSwitcher: React.FC = () => {
 
     return (
         <MenuRoot>
-            <MenuTrigger>
+            <MenuTrigger asChild>
                 <Button
                     bg={themeColors.bgColor()}
                     ml={4}
@@ -51,7 +51,7 @@ const LanguageSwitcher: React.FC = () => {
                     value={'pl'}
                     valueText={'🇵🇱 Polski'}
                     onClick={() => changeLanguage('pl')}>
-                    {/*🇵🇱 Polski*/}
+                    🇵🇱 Polski
                 </MenuItem>
                 <MenuItem
                     bg={themeColors.bgColor()}
@@ -66,7 +66,7 @@ const LanguageSwitcher: React.FC = () => {
                     value={'en'}
                     valueText={'🇬🇧 English'}
                     onClick={() => changeLanguage('en')}>
-                    {/*🇬🇧 English*/}
+                    🇬🇧 English
                 </MenuItem>
             </MenuContent>
         </MenuRoot>

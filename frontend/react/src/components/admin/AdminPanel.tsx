@@ -51,7 +51,7 @@ const AdminPanel: React.FC = () => {
 
                     {/* Menu wyboru widoku */}
                     <MenuRoot>
-                        <MenuTrigger>
+                        <MenuTrigger asChild>
                             <Button
                                 bg={themeColors.bgColor()}
                                 color={themeColors.fontColor()}

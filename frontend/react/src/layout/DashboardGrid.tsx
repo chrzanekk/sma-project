@@ -12,7 +12,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = "green.300",
+                                                         bgColor = "green.400",
                                                      }) => {
     return (
         <Grid templateRows="1fr 2fr 1fr"

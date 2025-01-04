@@ -6,18 +6,15 @@ import './i18n/i18n';
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import {RouterProvider} from "react-router-dom";
 import router from "@/routes/router.tsx";
-import {ColorModeProvider} from "@/components/ui/color-mode.tsx";
 
 createRoot(document.getElementById('root')!)
     .render(
         <StrictMode>
             <Provider>
-                <ColorModeProvider>
-                    <AuthProvider>
-                        <RouterProvider router={router}/>
-                        <Toaster/>
-                    </AuthProvider>
-                </ColorModeProvider>
+                <AuthProvider>
+                    <RouterProvider router={router}/>
+                    <Toaster/>
+                </AuthProvider>
             </Provider>
         </StrictMode>
     );
