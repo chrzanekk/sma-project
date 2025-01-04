@@ -6,7 +6,7 @@ import React from "react";
 import {addNewRole} from "@/services/role-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
+import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
 import {RoleDTO} from "@/types/role-types.ts";
 
 interface AddRoleFormProps {
@@ -16,11 +16,12 @@ interface AddRoleFormProps {
 const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
 
     const {t} = useTranslation('auth');
-    const inputProps = {
+
+    const inputProps: InputProps = {
         size: "sm",
         bg: themeColors.bgColorLight(),
         borderRadius: "md"
-    }
+    };
 
     return (
         <Formik initialValues={{name: ''}}
@@ -50,20 +51,25 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                     }
                 }}
         >
-            {({errors, touched, isValid, isSubmitting}) => (
+            {({errors, touched, values, handleChange, isValid, isSubmitting}) => (
                 <Form>
-                    <Stack spacing="8px">
-                        <Field name="name">
-                            {({field}: { field: any }) => (
-                                <FormControl isInvalid={!!errors.name && touched.name}>
-                                    <FormLabel>{t('shared.roleName')}</FormLabel>
-                                    <Input {...field} placeholder={t('shared.roleName')} {...inputProps} />
-                                    <FormErrorMessage>{errors.name}</FormErrorMessage>
-                                </FormControl>
-                            )}
+                    <Stack gap="8px">
+                        <Field
+                            label={t('shared.roleName')} // Etykieta dla pola
+                            invalid={!!errors.name && touched.name} // Walidacja błędu
+                            errorText={errors.name} // Wyświetlenie komunikatu błędu
+                        >
+                            <Input
+                                type="text"
+                                name="name"
+                                value={values.name}
+                                onChange={handleChange}
+                                placeholder={t('shared.roleName')}
+                                {...inputProps}
+                            />
                         </Field>
                     </Stack>
-                    <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                    <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
                         {t('shared.addRole')}
                     </Button>
                 </Form>

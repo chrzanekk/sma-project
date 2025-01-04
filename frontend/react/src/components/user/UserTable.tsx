@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import classNames from 'classnames';
-import {Button, HStack, Table, Tbody, Td, Text, Th, Thead, Tr, useDisclosure} from '@chakra-ui/react';
+import {Button, HStack, Table, Text, useDisclosure} from '@chakra-ui/react';
 import {UserDTO} from "@/types/user-types.ts";
 import '@/theme/css/global-table-styles.css';
 import '@/theme/css/user-table-styles.css';
@@ -11,6 +11,7 @@ import EditUserPasswordDrawer from "@/components/user/EditUserPasswordDrawer.tsx
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditUserRolesDrawer from "@/components/user/EditUserRolesDrawer.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
+import {Field} from "@/components/ui/field.tsx";
 
 const tableClass = classNames('custom-table', 'user-table');
 
@@ -23,7 +24,7 @@ interface Props {
 const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
     const {t} = useTranslation('auth')
     const {user: currentUser} = useAuth();
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {open, onOpen, onClose} = useDisclosure();
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
 
     const handleDeleteClick = (id: number) => {
@@ -39,40 +40,43 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
     };
 
     if (!users || users.length === 0) {
-        return <Text fontSize={20} align={"center"}>{t('dataNotFound', {ns: "common"})}</Text>
+        return (
+            <Field alignContent={"center"}>
+                <Text fontSize={20}>{t('dataNotFound', {ns: "common"})}</Text>
+            </Field>)
     }
 
     return (
         <>
-            <Table className={tableClass}>
-                <Thead>
-                    <Tr>
-                        <Th>ID</Th>
-                        <Th>{t('shared.email')}</Th>
-                        <Th>{t('shared.login')}</Th>
-                        <Th>{t('shared.firstName')}</Th>
-                        <Th>{t('shared.lastName')}</Th>
-                        <Th>{t('shared.position')}</Th>
-                        <Th>{t('shared.roles')}</Th>
-                        <Th>{t('shared.locked')}</Th>
-                        <Th>{t('shared.enabled')}</Th>
-                        <Th>{t('createDate', {ns: "common"})}</Th>
-                        <Th>{t('lastModifiedDate', {ns: "common"})}</Th>
-                        <Th>{t('edit', {ns: "common"})}</Th>
-                        <Th>{t('delete', {ns: "common"})}</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
+            <Table.Root className={tableClass}>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeader>ID</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.email')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.login')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.firstName')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.lastName')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.position')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.roles')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.locked')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.enabled')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('createDate', {ns: "common"})}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('lastModifiedDate', {ns: "common"})}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('edit', {ns: "common"})}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('delete', {ns: "common"})}</Table.ColumnHeader>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
                     {users.map((user) => (
-                        <Tr key={user.id}>
-                            <Td>{user.id}</Td>
-                            <Td>{user.email}</Td>
-                            <Td>{user.login}</Td>
-                            <Td>{user.firstName}</Td>
-                            <Td>{user.lastName}</Td>
-                            <Td>{user.position}</Td>
-                            <Td>
-                                <HStack spacing={1} wrap="wrap">
+                        <Table.Row key={user.id}>
+                            <Table.Cell>{user.id}</Table.Cell>
+                            <Table.Cell>{user.email}</Table.Cell>
+                            <Table.Cell>{user.login}</Table.Cell>
+                            <Table.Cell>{user.firstName}</Table.Cell>
+                            <Table.Cell>{user.lastName}</Table.Cell>
+                            <Table.Cell>{user.position}</Table.Cell>
+                            <Table.Cell>
+                                <HStack gap={1} wrap="wrap">
                                     {user.roles?.map((role, index) => (
                                         <Button
                                             key={index}
@@ -87,13 +91,13 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                                         </Button>
                                     ))}
                                 </HStack>
-                            </Td>
-                            <Td>{user.locked ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
-                            <Td>{user.enabled ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Td>
-                            <Td>{DateFormatter.formatDateTime(user.createdDatetime!)}</Td>
-                            <Td>{DateFormatter.formatDateTime(user.lastModifiedDatetime!)}</Td>
-                            <Td>
-                                <HStack spacing={1} alignContent={"center"}>
+                            </Table.Cell>
+                            <Table.Cell>{user.locked ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Table.Cell>
+                            <Table.Cell>{user.enabled ? t('yes', {ns: "common"}) : t('no', {ns: "common"})}</Table.Cell>
+                            <Table.Cell>{DateFormatter.formatDateTime(user.createdDatetime!)}</Table.Cell>
+                            <Table.Cell>{DateFormatter.formatDateTime(user.lastModifiedDatetime!)}</Table.Cell>
+                            <Table.Cell>
+                                <HStack gap={1} alignContent={"center"}>
                                     <EditUserDataDrawer
                                         fetchUsers={fetchUsers}
                                         userId={user.id!}/>
@@ -108,23 +112,23 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                                         currentUserId={currentUser?.id}
                                         login={user.login}/>
                                 </HStack>
-                            </Td>
-                            <Td>
+                            </Table.Cell>
+                            <Table.Cell>
                                 <Button
                                     colorScheme="red"
                                     size={"xs"}
                                     onClick={() => handleDeleteClick(user.id!)}
-                                    isDisabled={currentUser?.id === user.id}>
+                                    disabled={currentUser?.id === user.id}>
                                     {t('delete', {ns: "common"})}
                                 </Button>
-                            </Td>
-                        </Tr>
+                            </Table.Cell>
+                        </Table.Row>
                     ))}
-                </Tbody>
-            </Table>
+                </Table.Body>
+            </Table.Root>
 
             <ConfirmModal
-                isOpen={isOpen}
+                isOpen={open}
                 onClose={onClose}
                 onConfirm={confirmDelete}
                 title={t("deleteConfirmation.title", {ns: "common"})}

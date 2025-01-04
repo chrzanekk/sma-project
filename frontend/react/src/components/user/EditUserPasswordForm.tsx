@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import {AdminEditPasswordChangeRequest} from "@/types/user-types.ts";
 import {setNewUserPassword} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
+import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
 import React from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
@@ -18,7 +18,7 @@ interface EditUserPasswordFormProps {
 const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, userId, login}) => {
     const {t} = useTranslation(['auth', 'common'])
 
-    const inputProps = {
+    const inputProps: InputProps = {
         size: "sm",
         bg: themeColors.bgColorLight(),
         borderRadius: "md"
@@ -68,38 +68,31 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
                 }
             }}
         >
-            {({errors, touched, isValid, isSubmitting}) => (
+            {({errors, touched, handleChange, isValid, isSubmitting}) => (
                 <Form>
-                    <Stack spacing="8px">
-                        <Field name="newPassword">
-                            {({field}: { field: any }) => (
-                                <FormControl isInvalid={!!errors.newPassword && touched.newPassword}>
-                                    <FormLabel>{t('newPassword.newPassword')}</FormLabel>
-                                    <Input {...field}
-                                           type="password"
-                                           placeholder="********"
-                                           {...inputProps} />
-                                    <FormErrorMessage>{errors.newPassword}</FormErrorMessage>
-                                </FormControl>
-                            )}
+                    <Stack gap="8px">
+                        <Field
+                            label={t('newPassword.newPassword')}
+                            invalid={!!errors.newPassword && touched.newPassword}
+                            errorMessage={errors.newPassword}>
+                            <Input name="newPassword"
+                                   type="password"
+                                   placeholder="********"
+                                   onChange={handleChange}
+                                   {...inputProps} />
                         </Field>
-                        <Field name="confirmPassword">
-                            {({field}: { field: any }) => (
-                                <FormControl
-                                    isInvalid={!!errors.confirmPassword && touched.confirmPassword}
-                                >
-                                    <FormLabel>{t("newPassword.confirmPassword")}</FormLabel>
-                                    <Input
-                                        {...field}
-                                        type="password"
-                                        placeholder="********"
-                                        {...inputProps}
-                                    />
-                                    <FormErrorMessage>{errors.confirmPassword}</FormErrorMessage>
-                                </FormControl>
-                            )}
+                        <Field
+                            label={t('newPassword.confirmPassword')}
+                            invalid={!!errors.confirmPassword && touched.confirmPassword}
+                            errorMessage={errors.confirmPassword}>
+                            <Input
+                                name={"confirmPassword"}
+                                type="password"
+                                placeholder="********"
+                                {...inputProps}
+                            />
                         </Field>
-                        <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                        <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
                             {t('newPassword.submit')}
                         </Button>
                     </Stack>

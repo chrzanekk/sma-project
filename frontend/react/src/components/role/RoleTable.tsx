@@ -1,11 +1,12 @@
 import classNames from "classnames";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import React, {useState} from "react";
-import {Button, Table, Tbody, Td, Text, Th, Thead, Tr, useDisclosure} from "@chakra-ui/react";
+import {Button, Table, Text, useDisclosure} from "@chakra-ui/react";
 import {FaTrash} from "react-icons/fa6";
 import {RoleDTO} from "@/types/role-types.ts";
 import {useTranslation} from "react-i18next";
 import DateFormatter from "@/utils/date-formatter.ts";
+import {Field} from "@/components/ui/field.tsx";
 
 const tableClass = classNames('custom-table', 'role-table');
 
@@ -16,7 +17,7 @@ interface Props {
 
 const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
     const {t} = useTranslation('auth')
-    const {isOpen, onOpen, onClose} = useDisclosure();
+    const {open, onOpen, onClose} = useDisclosure();
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
 
     const handleDeleteClick = (id: number) => {
@@ -32,41 +33,45 @@ const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
     }
 
     if (!roles || roles.length === 0) {
-        return <Text fontSize={20} align={"center"}>{t('dataNotFound', {ns: "common"})}</Text>
+        return (
+            <Field alignContent={"center"}>
+                <Text fontSize={20}>{t('dataNotFound', {ns: "common"})}</Text>
+            </Field>)
     }
 
     return (
         <>
-            <Table className={tableClass}>
-                <Thead>
-                    <Tr>
-                        <Th>ID</Th>
-                        <Th>{t('shared.roleName')}</Th>
-                        <Th>{t('createDate', {ns: "common"})}</Th>
-                        <Th>{t('lastModifiedDate', {ns: "common"})}</Th>
-                        <Th>{t('delete', {ns: "common"})}</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
+            <Table.Root className={tableClass}>
+                <Table.Header>
+                    <Table.Row>
+                        <Table.ColumnHeader>ID</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('shared.roleName')}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('createDate', {ns: "common"})}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('lastModifiedDate', {ns: "common"})}</Table.ColumnHeader>
+                        <Table.ColumnHeader>{t('delete', {ns: "common"})}</Table.ColumnHeader>
+                    </Table.Row>
+                </Table.Header>
+                <Table.Body>
                     {roles.map((role) => (
-                        <Tr key={role.id}>
-                            <Td>{role.id}</Td>
-                            <Td>{role.name}</Td>
-                            <Td>{DateFormatter.formatDateTime(role.createdDatetime!)}</Td>
-                            <Td>{DateFormatter.formatDateTime(role.lastModifiedDatetime!)}</Td>
-                            <Td>
-                                <Button leftIcon={<FaTrash/>} colorScheme="red" size={"xs"}
+                        <Table.Row key={role.id}>
+                            <Table.Cell>{role.id}</Table.Cell>
+                            <Table.Cell>{role.name}</Table.Cell>
+                            <Table.Cell>{DateFormatter.formatDateTime(role.createdDatetime!)}</Table.Cell>
+                            <Table.Cell>{DateFormatter.formatDateTime(role.lastModifiedDatetime!)}</Table.Cell>
+                            <Table.Cell>
+                                <Button colorScheme="red" size={"xs"}
                                         onClick={() => handleDeleteClick(role.id!)}>
+                                    <FaTrash/>
                                     {t('delete', {ns: "common"})}
                                 </Button>
-                            </Td>
-                        </Tr>
+                            </Table.Cell>
+                        </Table.Row>
                     ))}
-                </Tbody>
-            </Table>
+                </Table.Body>
+            </Table.Root>
 
             <ConfirmModal
-                isOpen={isOpen}
+                isOpen={open}
                 onClose={onClose}
                 onConfirm={confirmDelete}
                 title={t('deleteConfirmation.title', {ns: "common"})}

@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, FormControl, FormErrorMessage, FormLabel, Input, Stack} from "@chakra-ui/react";
+import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
 import {Select} from "chakra-react-select";
 import React, {useEffect, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
@@ -44,10 +44,10 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
     }, [userId]);
 
     if (!initialValues) {
-        return <div>Loading...</div>;
+        return <div>{t('processing', {ns: "common"})}</div>;
     }
 
-    const inputProps = {
+    const inputProps: InputProps = {
         size: "sm",
         bg: themeColors.bgColorLight(),
         borderRadius: "md"
@@ -85,7 +85,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     await updateUser(user);
                     successNotification(
                         t('success', {ns: "common"}),
-                        formatMessage('notifications.userEditedSuccess',{login: user.login})
+                        formatMessage('notifications.userEditedSuccess', {login: user.login})
                     );
                     onSuccess();
                 } catch (err: any) {
@@ -99,38 +99,47 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                 }
             }}
         >
-            {({errors, touched, isValid, isSubmitting, setFieldValue, setFieldTouched, values}) => (
+            {({errors, touched, handleChange, isValid, isSubmitting, setFieldValue, setFieldTouched, values}) => (
                 <Form>
-                    <Stack spacing="8px">
-                        <Field name="firstName">
+                    <Stack gap="8px">
+                        <Field
+                            label={t('shared.firstName')}
+                            invalid={!!errors.firstName && touched.firstName}
+                            errorText={errors.firstName}>
                             {({field}: { field: any }) => (
-                                <FormControl isInvalid={!!errors.firstName && touched.firstName}>
-                                    <FormLabel>{t('shared.firstName')}</FormLabel>
-                                    <Input {...field} placeholder={t('shared.firstName')} {...inputProps} />
-                                    <FormErrorMessage>{errors.firstName}</FormErrorMessage>
-                                </FormControl>
+                                <Input
+                                    {...field}
+                                    placeholder={t('shared.firstName')}
+                                    onChange={handleChange}
+                                    {...inputProps} />
                             )}
                         </Field>
-                        <Field name="lastName">
+                        <Field
+                            label={t('shared.lastName')}
+                            invalid={!!errors.lastName && touched.lastName}
+                            errorText={errors.lastName}>
                             {({field}: { field: any }) => (
-                                <FormControl isInvalid={!!errors.lastName && touched.lastName}>
-                                    <FormLabel>{t('shared.lastName')}</FormLabel>
-                                    <Input {...field} placeholder={t('shared.lastName')} {...inputProps} />
-                                    <FormErrorMessage>{errors.lastName}</FormErrorMessage>
-                                </FormControl>
+                                <Input {...field}
+                                       placeholder={t('shared.lastName')}
+                                       onChange={handleChange}
+                                       {...inputProps} />
                             )}
                         </Field>
-                        <Field name="position">
+                        <Field
+                            label={t('shared.position')}
+                            invalid={!!errors.position && touched.position}
+                            errorText={errors.position}>
                             {({field}: { field: any }) => (
-                                <FormControl isInvalid={!!errors.position && touched.position}>
-                                    <FormLabel>{t('shared.position')}</FormLabel>
-                                    <Input {...field} placeholder={t('shared.position')} {...inputProps} />
-                                    <FormErrorMessage>{errors.position}</FormErrorMessage>
-                                </FormControl>
+                                <Input {...field}
+                                       placeholder={t('shared.position')}
+                                       onChange={handleChange}
+                                       {...inputProps} />
                             )}
                         </Field>
-                        <FormControl isInvalid={!!errors.locked && touched.locked}>
-                            <FormLabel>{t("shared.locked")}</FormLabel>
+                        <Field
+                            label={t('shared.locked')}
+                            invalid={!!errors.locked && touched.locked}
+                            errorText={errors.locked}>
                             <Select
                                 options={booleanOptions}
                                 placeholder={t("shared.locked")}
@@ -151,10 +160,11 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                     })
                                 }}
                             />
-                            <FormErrorMessage>{errors.locked}</FormErrorMessage>
-                        </FormControl>
-                        <FormControl isInvalid={!!errors.enabled && touched.enabled}>
-                            <FormLabel>{t("shared.enabled")}</FormLabel>
+                        </Field>
+                        <Field
+                            label={t('shared.enabled')}
+                            invalid={!!errors.enabled && touched.enabled}
+                            errorText={errors.enabled}>
                             <Select
                                 options={booleanOptions}
                                 placeholder={t("shared.enabled")}
@@ -175,9 +185,8 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                     })
                                 }}
                             />
-                            <FormErrorMessage>{errors.enabled}</FormErrorMessage>
-                        </FormControl>
-                        <Button isDisabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                        </Field>
+                        <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
                             {t('save', {ns: "common"})}
                         </Button>
                     </Stack>
