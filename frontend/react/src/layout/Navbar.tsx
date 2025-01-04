@@ -316,7 +316,7 @@ interface NavItem {
 }
 
 const Navbar: React.FC = () => {
-    const {onToggle} = useDisclosure();
+    const {open, onToggle} = useDisclosure();
     const userMenuItems = getUserMenuItems();
     const {user} = useUser();
     const {t} = useTranslation('navbar');
@@ -330,8 +330,7 @@ const Navbar: React.FC = () => {
                     aria-label={'Toggle Navigation'}
                     display={{md: 'none'}}
                     onClick={onToggle}
-                >
-                    <FaBars/>
+                ><FaBars/>
                 </Button>
 
                 {/* Logo and Desktop Navigation */}
@@ -347,7 +346,7 @@ const Navbar: React.FC = () => {
                             />
                         </Link>
                     </Box>
-                    <HStack as={'nav'} gap={1} display={{base: 'none', md: 'flex'}}>
+                    <HStack as={'nav'} display={{base: 'none', md: 'flex'}}>
                         <DesktopNav/>
                     </HStack>
                 </HStack>
@@ -368,7 +367,7 @@ const Navbar: React.FC = () => {
                                 transition="all 0.3s"
                                 as={Button}
                                 variant="outline"
-                                size="sm"
+                                size="md"
                                 p={2}
                             >
                                 <HStack>
@@ -377,10 +376,11 @@ const Navbar: React.FC = () => {
                                         alignItems="flex-start"
                                         gap="1px"
                                         ml="2">
-                                        <Text fontSize="small" color={themeColors.fontColor()}>
+                                        <Text fontSize="xs"
+                                              fontWeight="bold">
                                             {t('loggedAs')}
                                         </Text>
-                                        <Text fontSize="small" color={themeColors.fontColor()}>
+                                        <Text fontSize="xs">
                                             {user ? `${user.firstName} ${user.lastName}` : 'Guest'}
                                         </Text>
                                     </VStack>
@@ -407,7 +407,7 @@ const Navbar: React.FC = () => {
                                     }}
                                     as="div"
                                 >
-                                    <Link href={item.href} style={{ textDecoration: 'none', display: 'block', width: '100%' }}>
+                                    <Link href={item.href}>
                                         {item.label}
                                     </Link>
                                 </MenuItem>
@@ -420,10 +420,8 @@ const Navbar: React.FC = () => {
             </Flex>
 
             {/* Mobile Navigation */}
-            <Collapsible.Root>
-                <Collapsible.Trigger asChild>
-                    <Button>MENU</Button>
-                </Collapsible.Trigger>
+            <Collapsible.Root open={open} onOpenChange={onToggle}>
+                <Collapsible.Trigger/>
                 <Collapsible.Content>
                     <MobileNav/>
                 </Collapsible.Content>
@@ -435,15 +433,16 @@ const Navbar: React.FC = () => {
 const DesktopNav: React.FC = () => {
     const navItems = getNavItems();
     return (
-        <Stack direction={'row'} gap={4}>
+        <Stack
+            direction={'row'}
+            gap={4}>
             {navItems.map((navItem) => (
                 <PopoverRoot key={navItem.label}>
                     <PopoverTrigger asChild>
                         <Box
-                            p={2}
+                            p={1}
                             fontSize={'sm'}
                             fontWeight={500}
-                            color={themeColors.fontColor()}
                             rounded={'lg'}
                             _hover={{
                                 border: '1px solid white',
@@ -452,7 +451,10 @@ const DesktopNav: React.FC = () => {
                                 color: themeColors.popoverBgColor()
                             }}
                         >
-                            <Link href={navItem.href ?? '#'}>{navItem.label}</Link>
+                            <Link
+                                color={themeColors.fontColor()}
+                                href={navItem.href ?? '#'}>{navItem.label}
+                            </Link>
                         </Box>
                     </PopoverTrigger>
 
@@ -519,7 +521,7 @@ const MobileNav: React.FC = () => {
 }
 
 const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
-    const {onToggle} = useDisclosure()
+    const {open, onToggle} = useDisclosure()
 
     return (
         <Stack gap={4} onClick={children && onToggle}>
@@ -531,10 +533,8 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
                 </Link>
             </Box>
             {children && (
-                <Collapsible.Root>
-                    <Collapsible.Trigger asChild>
-                        <Button size="sm">Toggle</Button>
-                    </Collapsible.Trigger>
+                <Collapsible.Root open={open} onOpenChange={onToggle}>
+                    <Collapsible.Trigger/>
                     <Collapsible.Content>
                         <Stack pl={4} borderLeft={1} borderStyle={'solid'} borderColor={themeColors.borderColor()}>
                             {children.map((child) => (

@@ -1,18 +1,21 @@
 import React from "react";
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import {Grid, GridItem, Text} from "@chakra-ui/react";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface DashboardGridProps {
     topRowContent: string;
     columnsContent: string[];
     bottomRowContent: string;
     bgColor?: string;
+    fontColor?: string;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = "green.400",
+                                                         bgColor = themeColors.bgColor(),
+                                                         fontColor = themeColors.fontColor()
                                                      }) => {
     return (
         <Grid templateRows="1fr 2fr 1fr"
@@ -27,7 +30,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                 p={4}
                 borderRadius="lg"
             >
-                <Text color="white" fontWeight="bold">
+                <Text color={fontColor} fontWeight="bold">
                     {topRowContent}
                 </Text>
             </GridItem>
@@ -42,7 +45,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                         p={4}
                         borderRadius="lg"
                     >
-                        <Text color="white" fontWeight="bold">
+                        <Text color={fontColor} fontWeight="bold">
                             {content}
                         </Text>
                     </GridItem>
@@ -56,7 +59,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                 p={4}
                 borderRadius="lg"
             >
-                <Text color="white" fontWeight="bold">
+                <Text color={fontColor} fontWeight="bold">
                     {bottomRowContent}
                 </Text>
             </GridItem>

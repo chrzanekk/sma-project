@@ -16,6 +16,7 @@ const App: React.FC = () => {
                     ]}
                     bottomRowContent="Informacje o najnowszych aktualizacjach"
                     bgColor={themeColors.bgColor()}
+                    fontColor={themeColors.fontColor()}
                 />
             </Box>
         </Box>
