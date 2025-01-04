@@ -7,7 +7,7 @@ import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
-import {Select} from 'chakra-react-select';
+import Select from 'react-select';
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
 
@@ -185,7 +185,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                     setFieldTouched("roles", true, false).catch(() => {
                                     });
                                 }}
-                                chakraStyles={{
+                                styles={{
                                     control: (provided) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),
@@ -210,7 +210,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                     setFieldTouched("locked", true, false).catch(() => {
                                     });
                                 }}
-                                chakraStyles={{
+                                styles={{
                                     control: (provided) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),
@@ -235,7 +235,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                     setFieldTouched("enabled", true, false).catch(() => {
                                     });
                                 }}
-                                chakraStyles={{
+                                styles={{
                                     control: (provided) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),

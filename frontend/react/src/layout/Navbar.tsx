@@ -17,7 +17,6 @@ import {
     useDisclosure,
     VStack
 } from '@chakra-ui/react'
-import {ChevronRightIcon, CloseIcon, HamburgerIcon,} from '@chakra-ui/icons'
 import {FiChevronDown} from "react-icons/fi";
 import {getNavItems} from './nav-items.ts';
 import {getUserMenuItems} from './user-menu-items.ts';
@@ -28,6 +27,7 @@ import useUser from "@/hooks/UseUser.tsx";
 import {MenuContent, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PopoverContent, PopoverRoot, PopoverTrigger,} from "@/components/ui/popover.tsx";
+import {FaBars, FaChevronRight, FaX} from "react-icons/fa6";
 
 interface NavItem {
     label: string
@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
                     display={{md: 'none'}}
                     onClick={onToggle}
                 >
-                    open ? <CloseIcon/> : <HamburgerIcon/>
+                    open ? <FaX/> : <FaBars/>
                 </Button>
 
                 {/* Logo and Desktop Navigation */}
@@ -77,7 +77,7 @@ const Navbar: React.FC = () => {
                 {/* User Menu */}
                 <Flex alignItems={'center'}>
                     <MenuRoot>
-                        <MenuTrigger asChild>
+                        <MenuTrigger>
                             <Button
                                 py={2}
                                 transition="all 0.3s"
@@ -140,7 +140,7 @@ const Navbar: React.FC = () => {
 
             {/* Mobile Navigation */}
             <Collapsible.Root>
-                <Collapsible.Trigger asChild/>
+                <Collapsible.Trigger/>
                 <Collapsible.Content>
                     <MobileNav/>
                 </Collapsible.Content>
@@ -171,9 +171,9 @@ const DesktopNav: React.FC = () => {
                                     bg: themeColors.highlightBgColor(),
                                     color: themeColors.popoverBgColor()
                                 }}>
-                                <LinkOverlay href={navItem.href ?? '#'}>
+                                <Text>
                                     {navItem.label}
-                                </LinkOverlay>
+                                </Text>
                             </LinkBox>
                         </PopoverTrigger>
 
@@ -226,7 +226,7 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
                         </Text>
                         <Text fontSize={'xs'}>{subLabel}</Text>
                     </Box>
-                    <Icon w={5} h={5} as={ChevronRightIcon}/>
+                    <Icon w={5} h={5} as={FaChevronRight}/>
                 </Stack>
             </LinkOverlay>
 
@@ -250,15 +250,17 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
 
     return (
         <Stack gap={4} onClick={children && onToggle}>
-            <LinkBox py={2} as="a" _hover={{textDecoration: 'none'}}>
-                <LinkOverlay href={href ?? '#'}>
-                    <Text fontWeight={600} color={themeColors.fontColor()}>
-                        {label}
-                    </Text>
-                </LinkOverlay>
-            </LinkBox>
+
             <Collapsible.Root>
-                <Collapsible.Trigger asChild/>
+                <Collapsible.Trigger asChild>
+                    <LinkBox py={2} as="a" _hover={{textDecoration: 'none'}}>
+                        <LinkOverlay href={href ?? '#'}>
+                            <Text fontWeight={600} color={themeColors.fontColor()}>
+                                {label}
+                            </Text>
+                        </LinkOverlay>
+                    </LinkBox>
+                </Collapsible.Trigger>
                 <Collapsible.Content>
                     <Stack pl={4} borderLeft={1} borderStyle={'solid'}
                            borderColor={themeColors.borderColor()}>

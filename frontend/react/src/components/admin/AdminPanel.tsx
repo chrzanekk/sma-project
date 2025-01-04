@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
-import {ChevronDownIcon} from '@chakra-ui/icons';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {themeColors} from "@/theme/theme-colors.ts";
@@ -52,7 +51,7 @@ const AdminPanel: React.FC = () => {
 
                     {/* Menu wyboru widoku */}
                     <MenuRoot>
-                        <MenuTrigger asChild>
+                        <MenuTrigger>
                             <Button
                                 bg={themeColors.bgColor()}
                                 color={themeColors.fontColor()}
@@ -66,25 +65,22 @@ const AdminPanel: React.FC = () => {
                                 size="sm"
                                 p={2}
                             >
-                                <ChevronDownIcon/>
                                 {t("selectView")}
                             </Button>
                         </MenuTrigger>
                         <MenuContent>
                             {adminMenuItems.map((item) => (
                                 <MenuItem
-                                    // bg={themeColors.bgColor()}
-                                    // rounded={'md'}
-                                    // colorPalette={themeColors.fontColor()}
-                                    // p={2}
-                                    // _hover={{
-                                    //     textDecoration: 'none',
-                                    //     bg: themeColors.highlightBgColor(),
-                                    //     color: themeColors.popoverBgColor(),
-                                    //     border: '1px solid white'
-                                    // }}
-                                    // key={index}
-                                    // onClick={item.onClick}
+                                    bg={themeColors.bgColor()}
+                                    rounded={'md'}
+                                    colorPalette={themeColors.fontColor()}
+                                    p={2}
+                                    _hover={{
+                                        textDecoration: 'none',
+                                        bg: themeColors.highlightBgColor(),
+                                        color: themeColors.popoverBgColor(),
+                                        border: '1px solid white'
+                                    }}
                                     value={item.label}
                                     valueText={item.label}
                                     onClick={item.onClick}

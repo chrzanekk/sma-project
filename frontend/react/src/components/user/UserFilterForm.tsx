@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import {Button, Flex, Input} from '@chakra-ui/react';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
-import {Select} from "chakra-react-select";
+import Select from "react-select";
 import useRoles from "@/hooks/UseRoles.tsx";
 
 interface FilterValues {
@@ -126,7 +126,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                     setFieldValue("isLocked", selectedOption?.value).catch(() => {
                                     });
                                 }}
-                                chakraStyles={selectStyles}
+                                styles={selectStyles}
                             />
                             <Select
                                 options={booleanOptions}
@@ -136,7 +136,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                     setFieldValue("isEnabled", selectedOption?.value).catch(() => {
                                     });
                                 }}
-                                chakraStyles={selectStyles}
+                                styles={selectStyles}
                             />
                             <Select
                                 isMulti
@@ -148,7 +148,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                     const roles = selectedOptions.map(option => option.value);
                                     setFieldValue("roles", roles).catch();
                                 }}
-                                chakraStyles={selectStyles}
+                                styles={selectStyles}
                             />
                         </Flex>
                         <Flex gap={2} justifyContent={"center"}>

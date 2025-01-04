@@ -30,7 +30,7 @@ const EditUserDataDrawer: React.FC<EditUserDrawerProps> = ({fetchUsers, userId})
 
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger asChild>
+                <DrawerTrigger>
                     <Button
                         colorScheme="green"
                         size={"xs"}
@@ -53,7 +53,7 @@ const EditUserDataDrawer: React.FC<EditUserDrawerProps> = ({fetchUsers, userId})
                         />
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger asChild>
+                        <DrawerActionTrigger>
                             <Button colorScheme="green"><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>

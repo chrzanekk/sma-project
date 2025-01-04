@@ -1,9 +1,9 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Button} from "@chakra-ui/react";
-import {ChevronDownIcon} from "@chakra-ui/icons";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
+import {FaChevronDown} from "react-icons/fa6";
 
 const LanguageSwitcher: React.FC = () => {
     const {i18n} = useTranslation();
@@ -17,7 +17,7 @@ const LanguageSwitcher: React.FC = () => {
 
     return (
         <MenuRoot>
-            <MenuTrigger asChild>
+            <MenuTrigger>
                 <Button
                     bg={themeColors.bgColor()}
                     ml={4}
@@ -32,7 +32,7 @@ const LanguageSwitcher: React.FC = () => {
                     size="sm"
                     p={2}
                 >
-                    <ChevronDownIcon/>
+                    <FaChevronDown/>
                     {i18n.language === 'pl' ? 'Polski' : 'English'}
                 </Button>
             </MenuTrigger>

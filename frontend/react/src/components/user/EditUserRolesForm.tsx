@@ -6,7 +6,7 @@ import {AdminEditRoleUpdateRequest, UserDTO} from "@/types/user-types.ts";
 import {getUserById} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Button, Stack} from "@chakra-ui/react";
-import {Select} from "chakra-react-select";
+import Select from "react-select";
 import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
@@ -101,7 +101,7 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                                         const roles = selectedOptions.map(option => option.value);
                                         setFieldValue("roles", roles).catch();
                                     }}
-                                    chakraStyles={{
+                                    styles={{
                                         control: (provided) => ({
                                             ...provided,
                                             backgroundColor: themeColors.bgColorLight(),

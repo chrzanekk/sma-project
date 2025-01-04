@@ -43,7 +43,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                     >
                         {confirmText}
                     </Button>
-                    <DialogCloseTrigger asChild>
+                    <DialogCloseTrigger>
                         <Button colorScheme="green">{cancelText}</Button>
                     </DialogCloseTrigger>
                 </DialogFooter>

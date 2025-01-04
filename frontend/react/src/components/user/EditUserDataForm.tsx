@@ -6,7 +6,7 @@ import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
-import {Select} from "chakra-react-select";
+import Select from "react-select";
 import React, {useEffect, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
@@ -150,7 +150,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                     setFieldTouched("locked", true, false).catch(() => {
                                     });
                                 }}
-                                chakraStyles={{
+                                styles={{
                                     control: (provided) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),
@@ -175,7 +175,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                     setFieldTouched("enabled", true, false).catch(() => {
                                     });
                                 }}
-                                chakraStyles={{
+                                styles={{
                                     control: (provided) => ({
                                         ...provided,
                                         backgroundColor: themeColors.bgColorLight(),

@@ -26,7 +26,7 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
         <>
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger asChild>
+                <DrawerTrigger>
                     <Button colorScheme="green" size={"xs"} p={1}>
                         <FaPlus/>
                         {t('shared.addRole')}
@@ -42,7 +42,7 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                         }}/>
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger asChild>
+                        <DrawerActionTrigger>
                             <Button colorScheme="green">
                                 {t('close', {ns: "common"})}
                             </Button><FaTimes/>

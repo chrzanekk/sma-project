@@ -31,7 +31,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
 
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger asChild>
+                <DrawerTrigger>
                     <Button
                         colorScheme="blue"
                         size={"xs"}
@@ -55,7 +55,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                         />
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger asChild>
+                        <DrawerActionTrigger>
                             <Button colorScheme="green"><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>
