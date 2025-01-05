@@ -1,51 +1,36 @@
+
 "use client";
 
-import React from "react";
-import {Button} from "@chakra-ui/react";
-import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
+import React, {useEffect, useState} from "react";
+import {HStack, Icon} from "@chakra-ui/react";
 import {useTheme} from "next-themes";
-import {FaMoon, FaSun} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {FaMoon, FaSun} from "react-icons/fa6";
+import {Switch} from "@/components/ui/switch.tsx";
 
 export const ThemeToggle: React.FC = () => {
-    const {setTheme} = useTheme();
+    const {theme, setTheme} = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
 
     return (
-        <MenuRoot>
-            <MenuTrigger asChild>
-                <Button
-                    bg={themeColors.bgColor()}
-                    ml={1}
-                    color={themeColors.fontColor()}
-                    _hover={{
-                        textDecoration: 'none',
-                        bg: themeColors.highlightBgColor(),
-                        color: themeColors.popoverBgColor()
-                    }}
-                    as={Button}
-                    variant="outline"
-                    size="sm"
-                >
-                    <FaSun/>
-                </Button>
-            </MenuTrigger>
-            <MenuContent>
-                <MenuItem
-                    value="light-theme"
-                    onClick={() => setTheme("light")}
-                >
-                    <FaSun/>
-                    Jasny motyw
-                </MenuItem>
-                <MenuItem
-                    value="dark-theme"
-                    onClick={() => setTheme("dark")}
-                >
-                    <FaMoon/>
-                    Ciemny motyw
-                </MenuItem>
-            </MenuContent>
-
-        </MenuRoot>
+        <HStack>
+            <Icon color="gray.500">
+                <FaSun/>
+            </Icon>
+            <Switch
+                colorScheme="green"
+                checked={theme === "dark"}
+                onChange={() => setTheme(theme === "light" ? "dark" : "light")}
+                size="sm"
+            />
+            <Icon color="gray.500">
+                <FaMoon/>
+            </Icon>
+        </HStack>
     );
 };
