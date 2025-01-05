@@ -13,7 +13,7 @@ import {ThemeProvider} from "next-themes";
 createRoot(document.getElementById('root')!)
     .render(
         <StrictMode>
-            <ThemeProvider attribute="class" defaultTheme={"dark"} enableSystem={true} themes={['light', 'dark']}>
+            <ThemeProvider>
                 <ChakraProvider value={system}>
                     <AuthProvider>
                         <RouterProvider router={router}/>

@@ -1,6 +1,6 @@
 import {Button, useDisclosure} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {FaPlus, FaTimes} from "react-icons/fa";
+import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import AddRoleForm from "@/components/role/AddRoleForm.tsx";
 import React from "react";
@@ -9,7 +9,8 @@ import {
     DrawerBackdrop,
     DrawerBody,
     DrawerCloseTrigger,
-    DrawerContent, DrawerFooter,
+    DrawerContent,
+    DrawerFooter,
     DrawerHeader,
     DrawerRoot,
     DrawerTrigger,
@@ -26,8 +27,8 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
         <>
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger>
-                    <Button colorScheme="green" size={"xs"} p={1}>
+                <DrawerTrigger asChild>
+                    <Button colorPalette="green" size={"xs"} p={1}>
                         <FaPlus/>
                         {t('shared.addRole')}
                     </Button>
@@ -43,9 +44,9 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                     </DrawerBody>
                     <DrawerFooter>
                         <DrawerActionTrigger>
-                            <Button colorScheme="green">
+                            <Button colorPalette="green">
                                 {t('close', {ns: "common"})}
-                            </Button><FaTimes/>
+                            </Button>
                         </DrawerActionTrigger>
                     </DrawerFooter>
                 </DrawerContent>

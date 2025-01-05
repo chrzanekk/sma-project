@@ -55,21 +55,25 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                 <Form>
                     <Stack gap="8px">
                         <Field
-                            label={t('shared.roleName')} // Etykieta dla pola
-                            invalid={!!errors.name && touched.name} // Walidacja błędu
-                            errorText={errors.name} // Wyświetlenie komunikatu błędu
+                            label={t('shared.roleName')}
+                            invalid={!!errors.name && touched.name}
+                            errorText={errors.name}
+                            name={"name"}
                         >
-                            <Input
-                                type="text"
-                                name="name"
-                                value={values.name}
-                                onChange={handleChange}
-                                placeholder={t('shared.roleName')}
-                                {...inputProps}
-                            />
+                            {({field}: any) => (
+                                <Input
+                                    {...field}
+                                    type="text"
+                                    name="name"
+                                    value={values.name}
+                                    onChange={handleChange}
+                                    placeholder={t('shared.roleName')}
+                                    {...inputProps}
+                                />
+                            )}
                         </Field>
                     </Stack>
-                    <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                    <Button disabled={!isValid || isSubmitting} type="submit" colorPalette="green">
                         {t('shared.addRole')}
                     </Button>
                 </Form>

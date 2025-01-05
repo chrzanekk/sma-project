@@ -18,7 +18,6 @@ const useRoles = () => {
                     label: role.name.replace("ROLE_", ""),
                 }));
                 setRoles(formattedRoles);
-                console.log("Roles" + formattedRoles);
             } catch (err) {
                 console.error("Error fetching roles:", err);
                 setError("Failed to fetch roles");

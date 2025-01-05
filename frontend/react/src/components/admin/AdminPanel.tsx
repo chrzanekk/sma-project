@@ -60,7 +60,6 @@ const AdminPanel: React.FC = () => {
                                     bg: themeColors.highlightBgColor(),
                                     color: themeColors.popoverBgColor()
                                 }}
-
                                 variant="outline"
                                 size="sm"
                                 p={2}
@@ -69,11 +68,11 @@ const AdminPanel: React.FC = () => {
                             </Button>
                         </MenuTrigger>
                         <MenuContent>
-                            {adminMenuItems.map((item) => (
+                            {adminMenuItems.map((item, index) => (
                                 <MenuItem
+                                    key={item.label || index}
                                     bg={themeColors.bgColor()}
                                     rounded={'md'}
-                                    colorPalette={themeColors.fontColor()}
                                     p={2}
                                     _hover={{
                                         textDecoration: 'none',

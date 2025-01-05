@@ -2,13 +2,12 @@ import classNames from "classnames";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import React, {useState} from "react";
 import {Button, Table, Text, useDisclosure} from "@chakra-ui/react";
-import {FaTrash} from "react-icons/fa6";
 import {RoleDTO} from "@/types/role-types.ts";
 import {useTranslation} from "react-i18next";
 import DateFormatter from "@/utils/date-formatter.ts";
 import {Field} from "@/components/ui/field.tsx";
+import {useTheme} from "next-themes";
 
-const tableClass = classNames('custom-table', 'role-table');
 
 interface Props {
     roles: RoleDTO[];
@@ -19,6 +18,12 @@ const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
     const {t} = useTranslation('auth')
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
+    const {theme} = useTheme();
+
+    const tableClass = classNames('custom-table', 'role-table', {
+        'dark-theme': theme === 'dark'
+    });
+
 
     const handleDeleteClick = (id: number) => {
         setSelectedRoleId(id);
@@ -59,9 +64,8 @@ const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
                             <Table.Cell>{DateFormatter.formatDateTime(role.createdDatetime!)}</Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(role.lastModifiedDatetime!)}</Table.Cell>
                             <Table.Cell>
-                                <Button colorScheme="red" size={"xs"}
+                                <Button colorPalette="red" size={"xs"}
                                         onClick={() => handleDeleteClick(role.id!)}>
-                                    <FaTrash/>
                                     {t('delete', {ns: "common"})}
                                 </Button>
                             </Table.Cell>
