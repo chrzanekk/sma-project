@@ -67,7 +67,7 @@ const AdminPanel: React.FC = () => {
                                 {t("selectView")}
                             </Button>
                         </MenuTrigger>
-                        <MenuContent>
+                        <MenuContent bgColor={themeColors.bgColor()}>
                             {adminMenuItems.map((item, index) => (
                                 <MenuItem
                                     key={item.label || index}

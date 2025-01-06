@@ -2,9 +2,9 @@ import React from 'react';
 import {Field, Form, Formik, FormikHelpers} from 'formik';
 import * as Yup from 'yup';
 import {Button, Flex, Input} from '@chakra-ui/react';
-import {themeColors} from "@/theme/theme-colors.ts";
+import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
-import Select from "react-select";
+import Select, {StylesConfig} from "react-select";
 import useRoles from "@/hooks/UseRoles.tsx";
 
 interface FilterValues {
@@ -35,10 +35,10 @@ interface Props {
 
 const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
     const {t} = useTranslation('auth');
-    const { roles: roleOptions, isLoading, error } = useRoles();
+    const {roles: roleOptions, isLoading, error} = useRoles();
 
-    if (isLoading) return <div>{t('processing', { ns: "common" })}</div>;
-    if (error) return <div>{t('error', { ns: "common" })}: {error}</div>;
+    if (isLoading) return <div>{t('processing', {ns: "common"})}</div>;
+    if (error) return <div>{t('error', {ns: "common"})}: {error}</div>;
 
     const booleanOptions = [
         {value: undefined, label: t("empty", {ns: "common"})},
@@ -46,27 +46,42 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
         {value: false, label: t("no", {ns: "common"})}
     ];
 
-    const selectStyles = {
-        control: (provided: any) => ({
+    const selectStyles: StylesConfig<any, boolean> = {
+        control: (provided) => ({
             ...provided,
-            backgroundColor: themeColors.bgColorLight(),
-            borderColor: themeColors.borderColor(),
-            borderRadius: "md",
+            backgroundColor: themeColorsHex.bgColorLight(),
+            color: themeColorsHex.fontColor(),
+            borderRadius: "5px",
             boxShadow: "none",
             minHeight: "2rem",
-            height: "2rem",
+            height: "36px",
             fontSize: "0.875rem",
             minWidth: "150px",
         }),
-        valueContainer: (provided: any) => ({
+        placeholder: (provided: any) => ({
             ...provided,
-            padding: "0 0.5rem",
+            color: themeColorsHex.fontColor(),
         }),
-        indicatorsContainer: (provided: any) => ({
+        singleValue: (provided) => ({
             ...provided,
-            height: "2rem",
-        })
+            color: themeColorsHex.fontColor()
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            padding: 0,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? themeColorsHex.popoverBgColor() : themeColorsHex.bgColorLight(),
+            color: state.isSelected ? themeColorsHex.fontColor() : themeColorsHex.fontColor(),
+            cursor: "pointer",
+            "&:hover": {
+                backgroundColor: themeColorsHex.popoverBgColor(),
+                color: themeColorsHex.popoverBgColor(),
+            },
+        }),
     };
+
     return (
         <Formik<FilterValues>
             initialValues={{
