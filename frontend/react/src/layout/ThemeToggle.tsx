@@ -18,18 +18,14 @@ export const ThemeToggle: React.FC = () => {
 
     return (
         <HStack>
-            <Box as={FaSun} color="gray.500"/>
-            {/*    <FaSun/>*/}
-            {/*</Box>*/}
+            <Box as={FaSun} color="green.500"/>
             <Switch
                 colorScheme="green"
                 checked={theme === "dark"}
                 onChange={() => setTheme(theme === "light" ? "dark" : "light")}
                 size="sm"
             />
-            <Box as={FaMoon} color="gray.500"/>
-            {/*<FaMoon/>*/}
-            {/*</Box>*/}
+            <Box as={FaMoon} color="green.500"/>
         </HStack>
     );
 };

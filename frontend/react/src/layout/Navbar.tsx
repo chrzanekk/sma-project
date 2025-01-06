@@ -124,10 +124,16 @@ const Navbar: React.FC = () => {
                                         border: '1px solid white'
                                     }}
                                     as="div"
+                                    onClick={item.onClick ? item.onClick : undefined}
                                 >
-                                    <Link href={item.href}>
-                                        {item.label}
-                                    </Link>
+                                    {item.href ? (
+                                        <Link href={item.href}
+                                              onClick={item.onClick ? (e) => e.preventDefault() : undefined}>
+                                            {item.label}
+                                        </Link>
+                                    ) : (
+                                        <Text>{item.label}</Text>
+                                    )}
                                 </MenuItem>
 
                             ))}

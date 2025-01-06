@@ -68,8 +68,9 @@ const LoginForm = () => {
                         />
                         <Button
                             type="submit"
+                            colorPalette={"green"}
                             disabled={!isValid || isSubmitting}>
-                            Login
+                            {t('login.header')}
                         </Button>
                     </Stack>
                 </Form>

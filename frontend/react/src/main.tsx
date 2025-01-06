@@ -5,8 +5,7 @@ import './i18n/i18n';
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import {RouterProvider} from "react-router-dom";
 import router from "@/routes/router.tsx";
-import {system} from "@/theme/theme.ts";
-import {ChakraProvider} from "@chakra-ui/react";
+import {ChakraProvider, defaultSystem} from "@chakra-ui/react";
 import {ThemeProvider} from "next-themes";
 
 
@@ -14,7 +13,7 @@ createRoot(document.getElementById('root')!)
     .render(
         <StrictMode>
             <ThemeProvider>
-                <ChakraProvider value={system}>
+                <ChakraProvider value={defaultSystem}>
                     <AuthProvider>
                         <RouterProvider router={router}/>
                         <Toaster/>
