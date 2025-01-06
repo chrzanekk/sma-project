@@ -1,29 +1,32 @@
 import React from "react";
 import Navbar from "@/layout/Navbar.tsx";
 import Footer from "@/layout/Footer.tsx";
-import {Box, Flex} from "@chakra-ui/react";
+import {Box} from "@chakra-ui/react";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 const Layout = ({children}: { children: React.ReactNode }) => (
-    <Flex
-        direction="column"
-        minHeight="100vh" // Pełna wysokość ekranu
-        overflow="hidden" // Ukrycie dodatkowego scrolla
+    <Box
+        // direction="column"
+        h={"100vh"}
+        overflow={"hidden"}
+        bg={themeColors.bgColorLight()}
     >
-        {/* Pasek nawigacyjny */}
-        <Box as="header" w="100%">
+
+        <Box as="header" w="100%" position="sticky" top="0" zIndex="10">
             <Navbar/>
         </Box>
 
-        {/* Główna zawartość */}
-        <Box as="main" flex="1" w="100%" overflowY="auto">
-            {children} {/* Dynamiczna treść */}
+        <Box as="main"  w="100%"
+             overflowY="auto"
+             height="calc(100vh-100px)"
+        >
+            {children}
         </Box>
 
-        {/* Stopka */}
-        <Box as="footer" w="100%">
+        <Box as="footer" w="100%" height="50px" position="sticky" bottom="0" zIndex="10">
             <Footer/>
         </Box>
-    </Flex>
+    </Box>
 )
 
 export default Layout;

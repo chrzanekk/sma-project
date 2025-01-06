@@ -28,9 +28,8 @@ const AdminPanel: React.FC = () => {
 
     return (
         <Grid
-            templateRows="auto 1fr" // Pierwszy rząd na tytuł i menu, drugi elastyczny na widok
+            templateRows="5% 95%"
             bgColor={themeColors.bgColorLight()}
-            height="100vh"
             gap={2}
             px={2}
             py={2}
@@ -44,12 +43,9 @@ const AdminPanel: React.FC = () => {
                 color="white"
             >
                 <Flex justifyContent="space-between" alignItems="center">
-                    {/* Tytuł */}
                     <Heading size="sm" fontSize={14} color={themeColors.fontColor()}>
                         {t('adminPanel')}
                     </Heading>
-
-                    {/* Menu wyboru widoku */}
                     <MenuRoot>
                         <MenuTrigger asChild>
                             <Button
@@ -93,11 +89,11 @@ const AdminPanel: React.FC = () => {
                 </Flex>
             </GridItem>
 
-            {/* Wiersz 2: Renderowany widok */}
             <GridItem
                 w="100%"
-                bg="white"
+                bg={themeColors.bgColor()}
                 borderRadius="lg"
+                overflowY={"auto"}
             >
                 {renderActiveView()}
             </GridItem>

@@ -39,11 +39,14 @@ const Navbar: React.FC = () => {
     const {t} = useTranslation('navbar');
 
     return (
-        <Box bg={themeColors.bgColor()} px={4}>
-            <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <Box bg={themeColors.bgColor()} h={"50px"}>
+            <Flex h={"50px"}
+                  alignItems={'center'}
+                  justifyContent={'space-between'}
+                  p={2}>
                 {/* Hamburger Icon */}
                 <Button
-                    size={'md'}
+                    size={'sm'}
                     aria-label={'Toggle Navigation'}
                     display={{md: 'none'}}
                     onClick={onToggle}
@@ -52,12 +55,12 @@ const Navbar: React.FC = () => {
                 </Button>
 
                 {/* Logo and Desktop Navigation */}
-                <HStack gap={8} alignItems={'center'}>
+                <HStack gap={1}>
                     <Box>
                         <Link href="/dashboard">
                             <Image
                                 borderRadius="full"
-                                boxSize="75px"
+                                boxSize="50px"
                                 src="/img/sma-logo.png"
                                 alt="S.M.A."
                                 cursor="pointer"
@@ -85,8 +88,8 @@ const Navbar: React.FC = () => {
                                 transition="all 0.3s"
                                 as={Button}
                                 variant="outline"
-                                size="md"
-                                p={2}
+                                size="sm"
+                                p={1}
                             >
                                 <HStack>
                                     <VStack
@@ -112,7 +115,7 @@ const Navbar: React.FC = () => {
                             {userMenuItems.map((item) => (
                                 <MenuItem
                                     key={item.label}
-                                    value={item.label} // Dodanie wymaganego 'value'
+                                    value={item.label}
                                     bg={themeColors.bgColor()}
                                     rounded="md"
                                     color={themeColors.fontColor()}
@@ -162,15 +165,17 @@ const DesktopNav: React.FC = () => {
     return (
         <Stack
             direction={'row'}
-            gap={4}>
+            gap={2}
+        >
             {navItems.map((navItem) => (
                 <PopoverRoot key={navItem.label}>
                     <PopoverTrigger asChild>
                         <Box
-                            p={1}
+                            p={2}
                             fontSize={'sm'}
                             fontWeight={500}
                             rounded={'lg'}
+                            lineHeight="1.5"
                             _hover={{
                                 border: '1px solid white',
                                 textDecoration: 'none',
@@ -190,7 +195,7 @@ const DesktopNav: React.FC = () => {
                             border="1px solid white"
                             boxShadow={'xl'}
                             bg={themeColors.bgColor()}
-                            color={themeColors.fontColor()}
+                            color={themeColors.popoverBgColor()}
                             p={2}
                             rounded={'xl'}
                             minW={'sm'}
@@ -227,7 +232,7 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
             <Link href={href}>
                 <Stack direction={'row'} align={'center'}>
                     <Box>
-                        <Text fontWeight={500}>{label}</Text>
+                        <Text fontWeight={500} lineHeight="1.5">{label}</Text>
                         {subLabel && <Text fontSize={'xs'}>{subLabel}</Text>}
                     </Box>
                 </Stack>
@@ -252,7 +257,7 @@ const MobileNavItem: React.FC<NavItem> = ({label, children, href}) => {
 
     return (
         <Stack gap={4} onClick={children && onToggle}>
-            <Box py={2} _hover={{textDecoration: 'none'}}>
+            <Box py={2} textAlign="center" _hover={{textDecoration: 'none'}}>
                 <Link href={href ?? '#'}>
                     <Text fontWeight={600} color={themeColors.fontColor()}>
                         {label}

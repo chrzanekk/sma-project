@@ -18,17 +18,19 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          fontColor = themeColors.fontColor()
                                                      }) => {
     return (
-        <Grid templateRows="1fr 2fr 1fr"
-              height="calc(100vh - 140px)"
-              gap={6}
-
+        <Grid
+            templateRows="30% 40% 30%"
+            height="80vh"
+            gap={2}
         >
             {/* Górny wiersz */}
             <GridItem
                 w="100%"
                 bg={bgColor}
-                p={4}
+                p={2}
                 borderRadius="lg"
+                minHeight={"30%"}
+                overflowY={"auto"}
             >
                 <Text color={fontColor} fontWeight="bold">
                     {topRowContent}
@@ -36,14 +38,17 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
             </GridItem>
 
             {/* Środkowy wiersz - 3 kolumny */}
-            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={3}>
                 {columnsContent.map((content, index) => (
                     <GridItem
                         key={index}
                         w="100%"
+                        h={"100%"}
                         bg={bgColor}
-                        p={4}
+                        p={2}
                         borderRadius="lg"
+                        minHeight={"40%"}
+                        overflowY="auto"
                     >
                         <Text color={fontColor} fontWeight="bold">
                             {content}
@@ -56,8 +61,10 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
             <GridItem
                 w="100%"
                 bg={bgColor}
-                p={4}
+                p={2}
                 borderRadius="lg"
+                minHeight={"30%"}
+                overflow="auto"
             >
                 <Text color={fontColor} fontWeight="bold">
                     {bottomRowContent}
