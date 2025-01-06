@@ -16,45 +16,43 @@ import {
     DrawerTrigger,
 } from "@/components/ui/drawer"
 
-interface EditUserDrawerProps {
+interface EditUserDataDrawerProps {
     fetchUsers: () => void;
     userId: number;
 }
 
-const EditUserDataDrawer: React.FC<EditUserDrawerProps> = ({fetchUsers, userId}) => {
+const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, userId}) => {
     const {t} = useTranslation('auth');
     const {onClose} = useDisclosure();
 
     return (
         <>
-
-            <DrawerRoot size={"md"}>
+            <DrawerRoot size={"md"} onOpenChange={onClose}>
                 <DrawerBackdrop/>
-                <DrawerTrigger>
+                <DrawerTrigger asChild>
                     <Button
-                        colorScheme="green"
+                        colorPalette="green"
                         size={"xs"}
                         p={1}
                     >
                         {t('data', {ns: "common"})}
-
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
                     <DrawerCloseTrigger/>
                     <DrawerHeader>{t('shared.editUserDetails')}</DrawerHeader>
                     <DrawerBody>
-                        <EditUserDataForm
-                            onSuccess={() => {
-                                fetchUsers();
-                                onClose();
-                            }}
-                            userId={userId}
-                        />
+                            <EditUserDataForm
+                                onSuccess={() => {
+                                    fetchUsers();
+                                    onClose();
+                                }}
+                                userId={userId}
+                            />
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger>
-                            <Button colorScheme="green"><FaTimes/>
+                        <DrawerActionTrigger asChild>
+                            <Button colorPalette="red"><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>
                         </DrawerActionTrigger>

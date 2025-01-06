@@ -1,19 +1,13 @@
 import React from "react";
-import {createToaster} from "@chakra-ui/react";
-
-const toaster = createToaster({
-    max: 3,
-    duration: 3000,
-    placement: "bottom",
-    overlap: true
-});
+import {toaster} from "@/components/ui/toaster.tsx"
 
 const notifications = (title: string, description: React.ReactNode, status: "success" | "error" | "info" | "warning") => {
-    toaster.create(({
+    toaster.create({
         title,
         description,
-        type: status
-    }));
+        type: status,
+        duration: 2000,
+    });
 };
 
 export const successNotification = (title: string, description: React.ReactNode) => {

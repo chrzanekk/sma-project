@@ -5,7 +5,7 @@ import * as Yup from "yup";
 import {AdminEditPasswordChangeRequest} from "@/types/user-types.ts";
 import {setNewUserPassword} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
+import {Button, Input, InputProps, Stack, Text} from "@chakra-ui/react";
 import React from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
@@ -71,26 +71,49 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
             {({errors, touched, handleChange, isValid, isSubmitting}) => (
                 <Form>
                     <Stack gap="8px">
-                        <Field
-                            label={t('newPassword.newPassword')}
-                            invalid={!!errors.newPassword && touched.newPassword}
-                            errorMessage={errors.newPassword}>
-                            <Input name="newPassword"
-                                   type="password"
-                                   placeholder="********"
-                                   onChange={handleChange}
-                                   {...inputProps} />
+                        <Field name="newPassword">
+                            {({field}: any) => (
+                                <div>
+                                    <Text fontSize="sm" fontWeight="bold" mb="1">
+                                        {t('updateProfile.newPassword')}
+                                    </Text>
+                                    <Input
+                                        {...field}
+                                        type="password"
+                                        placeholder="********"
+                                        onChange={handleChange}
+                                        {...inputProps}
+                                    />
+                                    {touched.newPassword && errors.newPassword && (
+                                        <Text color="red.500" fontSize="xs" mt="1">
+                                            {errors.newPassword}
+                                        </Text>
+                                    )}
+                                </div>
+                            )}
                         </Field>
-                        <Field
-                            label={t('newPassword.confirmPassword')}
-                            invalid={!!errors.confirmPassword && touched.confirmPassword}
-                            errorMessage={errors.confirmPassword}>
-                            <Input
-                                name={"confirmPassword"}
-                                type="password"
-                                placeholder="********"
-                                {...inputProps}
-                            />
+
+                        {/* Confirm Password Field */}
+                        <Field name="confirmPassword">
+                            {({field}: any) => (
+                                <div>
+                                    <Text fontSize="sm" fontWeight="bold" mb="1">
+                                        {t('updateProfile.confirmPassword')}
+                                    </Text>
+                                    <Input
+                                        {...field}
+                                        type="password"
+                                        placeholder="********"
+                                        onChange={handleChange}
+                                        {...inputProps}
+                                    />
+                                    {touched.confirmPassword && errors.confirmPassword && (
+                                        <Text color="red.500" fontSize="xs" mt="1">
+                                            {errors.confirmPassword}
+                                        </Text>
+                                    )}
+                                </div>
+                            )}
                         </Field>
                         <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
                             {t('newPassword.submit')}

@@ -28,12 +28,11 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
     const {onClose} = useDisclosure();
     return (
         <>
-
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger>
+                <DrawerTrigger asChild>
                     <Button
-                        colorScheme="blue"
+                        colorPalette="blue"
                         size={"xs"}
                         p={1}
                         disabled={currentUserId === userId}>
@@ -56,7 +55,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                     </DrawerBody>
                     <DrawerFooter>
                         <DrawerActionTrigger>
-                            <Button colorScheme="green"><FaTimes/>
+                            <Button colorPalette="red"><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>
                         </DrawerActionTrigger>

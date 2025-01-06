@@ -5,13 +5,12 @@ import * as Yup from "yup";
 import {AdminEditRoleUpdateRequest, UserDTO} from "@/types/user-types.ts";
 import {getUserById} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Stack} from "@chakra-ui/react";
+import {Button, Stack, Text} from "@chakra-ui/react";
 import Select from "react-select";
 import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {Field} from "@/components/ui/field.tsx";
 
 interface EditUserRolesFormProps {
     onSuccess: () => void;
@@ -87,10 +86,10 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                 return (
                     <Form>
                         <Stack gap="8px">
-                            <Field
-                                label={t('shared.chooseRoles')}
-                                invalid={!!errors.roles && touched.roles}
-                                errorText={errors.roles}>
+                            <div>
+                                <Text fontSize="sm" fontWeight="bold" mb="1">
+                                    {t('shared.chooseRoles')}
+                                </Text>
                                 <Select
                                     isMulti
                                     options={roleOptions}
@@ -111,9 +110,14 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                                         })
                                     }}
                                 />
-                            </Field>
+                                {touched.roles && errors.roles && (
+                                    <Text color="red.500" fontSize="xs" mt="1">
+                                        {errors.roles}
+                                    </Text>
+                                )}
+                            </div>
                             <Button disabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit"
-                                    colorScheme="green">
+                                    colorPalette="green">
                                 {t('shared.changerRoles')}
                             </Button>
                         </Stack>

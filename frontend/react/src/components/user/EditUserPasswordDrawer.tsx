@@ -31,9 +31,9 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
 
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger>
+                <DrawerTrigger asChild>
                     <Button
-                        colorScheme="orange"
+                        colorPalette="orange"
                         size={"xs"}
                         p={1}
                         disabled={currentUserId === userId}>
@@ -56,7 +56,7 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                     <DrawerFooter>
                         <DrawerActionTrigger>
                             <Button
-                                colorScheme="green"
+                                colorPalette="green"
                             ><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>

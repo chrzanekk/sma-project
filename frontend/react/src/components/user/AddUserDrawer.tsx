@@ -2,7 +2,7 @@ import {Button, useDisclosure} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import AddUserForm from "@/components/user/AddUserForm.tsx";
-import {FaPlus, FaTimes} from "react-icons/fa";
+import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {
     DrawerActionTrigger,
@@ -28,9 +28,9 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
 
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
-                <DrawerTrigger>
+                <DrawerTrigger asChild>
                     <Button
-                        colorScheme="green"
+                        colorPalette="green"
                         size={"xs"}
                         p={1}
                     ><FaPlus/>
@@ -49,9 +49,9 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                     <DrawerFooter>
                         <DrawerActionTrigger>
                             <Button
-                                colorScheme="green">
+                                colorPalette="red">
                                 {t('close', {ns: "common"})}
-                            </Button><FaTimes/>
+                            </Button>
                         </DrawerActionTrigger>
 
                     </DrawerFooter>

@@ -12,8 +12,8 @@ import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditUserRolesDrawer from "@/components/user/EditUserRolesDrawer.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import {Field} from "@/components/ui/field.tsx";
+import {useTheme} from "next-themes";
 
-const tableClass = classNames('custom-table', 'user-table');
 
 interface Props {
     users: UserDTO[];
@@ -26,6 +26,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
     const {user: currentUser} = useAuth();
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
+    const {theme} = useTheme();
+
+    const tableClass = classNames('custom-table', 'user-table', {
+        'dark-theme': theme === 'dark'
+    });
 
     const handleDeleteClick = (id: number) => {
         setSelectedUserId(id);
@@ -83,7 +88,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                                             size={"xs"}
                                             fontSize={"x-small"}
                                             variant="solid"
-                                            colorScheme="teal"
+                                            colorPalette="teal"
                                             borderRadius="md"
                                             textTransform="uppercase"
                                         >
@@ -115,7 +120,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             </Table.Cell>
                             <Table.Cell>
                                 <Button
-                                    colorScheme="red"
+                                    colorPalette="red"
                                     size={"xs"}
                                     onClick={() => handleDeleteClick(user.id!)}
                                     disabled={currentUser?.id === user.id}>
