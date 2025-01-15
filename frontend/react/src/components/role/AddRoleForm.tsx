@@ -51,7 +51,7 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                     }
                 }}
         >
-            {({errors, touched, values, handleChange, isValid, isSubmitting}) => (
+            {({errors, touched, values, handleChange, isValid, isSubmitting, dirty}) => (
                 <Form>
                     <Stack gap="8px">
                         <Field
@@ -72,10 +72,10 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                                 />
                             )}
                         </Field>
+                        <Button disabled={!isValid || isSubmitting ||!dirty} type="submit" colorPalette="green">
+                            {t('shared.addRole')}
+                        </Button>
                     </Stack>
-                    <Button disabled={!isValid || isSubmitting} type="submit" colorPalette="green">
-                        {t('shared.addRole')}
-                    </Button>
                 </Form>
             )}
         </Formik>

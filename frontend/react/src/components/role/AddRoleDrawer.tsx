@@ -43,7 +43,7 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                         }}/>
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger>
+                        <DrawerActionTrigger asChild>
                             <Button colorPalette="green">
                                 {t('close', {ns: "common"})}
                             </Button>

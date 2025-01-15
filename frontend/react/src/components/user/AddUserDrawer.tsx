@@ -47,7 +47,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                         }}/>
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger>
+                        <DrawerActionTrigger asChild>
                             <Button
                                 colorPalette="red">
                                 {t('close', {ns: "common"})}

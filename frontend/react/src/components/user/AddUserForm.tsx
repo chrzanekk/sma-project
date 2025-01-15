@@ -100,7 +100,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 }
             }}
         >
-            {({touched, errors,isValid, isSubmitting, setFieldValue, setFieldTouched, values}) => (
+            {({touched, errors,isValid, isSubmitting, setFieldValue, setFieldTouched, values, dirty}) => (
                 <Form>
                     <Stack gap="8px">
                         {/* Login Field */}
@@ -308,7 +308,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                 </div>
                             )}
                         </Field>
-                        <Button disabled={!isValid || isSubmitting} type="submit" colorPalette="green">
+                        <Button disabled={!isValid || isSubmitting ||!dirty} type="submit" colorPalette="green">
                             {t('shared.addUser')}
                         </Button>
                     </Stack>
