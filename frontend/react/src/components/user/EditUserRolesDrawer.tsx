@@ -54,7 +54,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                         />
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger>
+                        <DrawerActionTrigger asChild>
                             <Button colorPalette="red"><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>

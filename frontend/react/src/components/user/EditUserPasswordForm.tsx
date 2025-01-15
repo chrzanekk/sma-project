@@ -68,7 +68,7 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
                 }
             }}
         >
-            {({errors, touched, handleChange, isValid, isSubmitting}) => (
+            {({errors, touched, handleChange, isValid, isSubmitting, dirty}) => (
                 <Form>
                     <Stack gap="8px">
                         <Field name="newPassword">
@@ -115,7 +115,7 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
                                 </div>
                             )}
                         </Field>
-                        <Button disabled={!isValid || isSubmitting} type="submit" colorScheme="green">
+                        <Button disabled={!isValid || isSubmitting || !dirty} type="submit" colorScheme="green">
                             {t('newPassword.submit')}
                         </Button>
                     </Stack>

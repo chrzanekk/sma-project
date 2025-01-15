@@ -54,14 +54,13 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                         />
                     </DrawerBody>
                     <DrawerFooter>
-                        <DrawerActionTrigger>
+                        <DrawerActionTrigger asChild>
                             <Button
                                 colorPalette="green"
                             ><FaTimes/>
                                 {t('close', {ns: "common"})}
                             </Button>
                         </DrawerActionTrigger>
-
                     </DrawerFooter>
                 </DrawerContent>
             </DrawerRoot>

@@ -85,7 +85,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                                     {user.roles?.map((role, index) => (
                                         <Button
                                             key={index}
-                                            size={"xs"}
+                                            size={"2xs"}
                                             fontSize={"x-small"}
                                             variant="solid"
                                             colorPalette="teal"
