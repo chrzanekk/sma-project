@@ -95,13 +95,14 @@ const Navbar: React.FC = () => {
                                     <VStack
                                         display={{base: 'none', md: 'flex'}}
                                         alignItems="flex-start"
-                                        gap="1px"
+                                        gap="0px"
                                         ml="2">
                                         <Text fontSize="xs"
-                                              fontWeight="bold">
+                                              fontWeight="bold"
+                                              lineHeight="1.2">
                                             {t('loggedAs')}
                                         </Text>
-                                        <Text fontSize="xs">
+                                        <Text fontSize="xs" lineHeight="1.2">
                                             {user ? `${user.firstName} ${user.lastName}` : 'Guest'}
                                         </Text>
                                     </VStack>
