@@ -122,17 +122,20 @@ const UserProfileEdit: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
             padding={4}
-            bgColor={themeColors.bgColorLight()}
+            // bgColor={themeColors.bgColorLight()}
         >
             <Box
                 maxWidth="600px"
                 width="100%"
-                bgColor={themeColors.bgColor()}
+                // bgColor={themeColors.bgColor()}
                 borderRadius={"lg"}
             >
                 <Tabs.Root
-                    variant="outline"
+                    variant="enclosed"
                     color={themeColors.fontColor()}
+                    defaultValue={"account"}
+                    fitted
+                    background={themeColors.bgColor()}
                 >
                     <Tabs.List>
                         <Tabs.Trigger
@@ -145,6 +148,7 @@ const UserProfileEdit: React.FC = () => {
                                 bg: themeColors.highlightBgColor(),
                                 color: themeColors.popoverBgColor()
                             }}
+                            background={themeColors.bgColor()}
                         >{t('updateProfile.accountInfo')}
                         </Tabs.Trigger>
                         <Tabs.Trigger
