@@ -13,9 +13,9 @@ import {Field} from "@/components/ui/field.tsx";
 const UserProfileEdit: React.FC = () => {
     const {user: currentUser, setAuth, logOut} = useAuth();
     const navigate = useNavigate();
-    const {t} = useTranslation('auth')
+    const {t} = useTranslation("auth");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         if (!currentUser) {
@@ -24,50 +24,60 @@ const UserProfileEdit: React.FC = () => {
             setIsLoading(false);
         }
     }, [currentUser, navigate]);
+    // useEffect(() => {
+    //     if (!currentUser) {
+    //         const storedUser = localStorage.getItem("currentUser");
+    //         if (storedUser) {
+    //             setAuth(JSON.parse(storedUser));
+    //         } else {
+    //             navigate("/", {replace: true});
+    //         }
+    //     }
+    // }, [currentUser, navigate, setAuth]);
 
-    if (isLoading || !currentUser) {
-        return <Box>{t('loading', { ns: 'common' })}...</Box>;
-    }
 
-    // Validation schemas
     const accountSchema = Yup.object({
         firstName: Yup.string()
-            .min(2, t('verification.minLength', {field: t('shared.firstName'), count: 2}))
-            .max(10, t('verification.maxLength', {field: t('shared.firstName'), count: 10}))
-            .required(t('verification.required', {field: t('shared.firstName')})),
+            .min(2, t("verification.minLength", {field: t("shared.firstName"), count: 2}))
+            .max(10, t("verification.maxLength", {field: t("shared.firstName"), count: 10}))
+            .required(t("verification.required", {field: t("shared.firstName")})),
         lastName: Yup.string()
-            .min(2, t('verification.minLength', {field: t('shared.lastName'), count: 2}))
-            .max(25, t('verification.maxLength', {field: t('shared.lastName'), count: 25}))
-            .required(t('verification.required', {field: t('shared.lastName')})),
+            .min(2, t("verification.minLength", {field: t("shared.lastName"), count: 2}))
+            .max(25, t("verification.maxLength", {field: t("shared.lastName"), count: 25}))
+            .required(t("verification.required", {field: t("shared.lastName")})),
         position: Yup.string()
-            .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))
-            .max(25, t('verification.maxLength', {field: t('shared.position'), count: 25}))
+            .min(2, t("verification.minLength", {field: t("shared.position"), count: 2}))
+            .max(25, t("verification.maxLength", {field: t("shared.position"), count: 25})),
     });
 
     const passwordSchema = Yup.object({
         password: Yup.string()
-            .min(6, t('verification.minLength', {field: t('shared.password'), count: 6}))
-            .max(20, t('verification.maxLength', {field: t('shared.password'), count: 20}))
-            .required(t('verification.required', {field: t('shared.password')})),
+            .min(6, t("verification.minLength", {field: t("shared.password"), count: 6}))
+            .max(20, t("verification.maxLength", {field: t("shared.password"), count: 20}))
+            .required(t("verification.required", {field: t("shared.password")})),
         newPassword: Yup.string()
-            .min(6, t('verification.minLength', {field: t('updateProfile.newPassword'), count: 6}))
-            .max(20, t('verification.maxLength', {field: t('updateProfile.newPassword'), count: 20}))
-            .required(t('verification.required', {field: t('updateProfile.newPassword')})),
+            .min(6, t("verification.minLength", {field: t("updateProfile.newPassword"), count: 6}))
+            .max(20, t("verification.maxLength", {field: t("updateProfile.newPassword"), count: 20}))
+            .required(t("verification.required", {field: t("updateProfile.newPassword")})),
         confirmPassword: Yup.string()
-            .oneOf([Yup.ref("newPassword")], t('verification.passwordNotMatch'))
-            .required(t('verification.required', {field: t('updateProfile.confirmPassword')})),
+            .oneOf([Yup.ref("newPassword")], t("verification.passwordNotMatch"))
+            .required(t("verification.required", {field: t("updateProfile.confirmPassword")})),
     });
 
     const accountForm = useFormik({
         initialValues: {
-            firstName: currentUser?.firstName || "",
-            lastName: currentUser?.lastName || "",
-            position: currentUser?.position || "",
+            firstName: currentUser!.firstName || "",
+            lastName: currentUser!.lastName || "",
+            position: currentUser!.position || "",
         },
         validationSchema: accountSchema,
         onSubmit: async (values) => {
+            if (!currentUser || !currentUser.email || !currentUser.id) {
+                console.error("Brak wymaganych danych użytkownika!");
+                return;
+            }
             const userUpdateRequest = {
-                id: currentUser?.id,
+                id: currentUser?.id!,
                 email: currentUser?.email,
                 login: currentUser?.login,
                 firstName: values.firstName,
@@ -75,11 +85,11 @@ const UserProfileEdit: React.FC = () => {
                 position: values.position,
                 locked: currentUser?.locked,
                 enabled: currentUser?.enabled,
-                roles: currentUser?.roles || []
-            }
+                roles: currentUser?.roles || [],
+            };
             try {
                 await updateUserAccount(userUpdateRequest);
-                if (userUpdateRequest.id === currentUser.id) {
+                if (userUpdateRequest.id === currentUser!.id) {
                     setAuth({
                         ...currentUser,
                         firstName: values.firstName,
@@ -87,7 +97,7 @@ const UserProfileEdit: React.FC = () => {
                         position: values.position,
                     });
                 }
-                successNotification(t('success', {ns: "common"}), t("notifications.accountUpdatedSuccess"));
+                successNotification(t("success", {ns: "common"}), t("notifications.accountUpdatedSuccess"));
             } catch (error) {
                 console.error(error);
             }
@@ -102,19 +112,28 @@ const UserProfileEdit: React.FC = () => {
         },
         validationSchema: passwordSchema,
         onSubmit: async (values) => {
+            if (!currentUser?.id) {
+                console.error("Brak ID użytkownika! Nie można zmienić hasła.");
+                return;
+            }
             const passwordRequest = {
-                userId: currentUser.id!,
+                userId: currentUser.id,
                 password: values.password,
                 newPassword: values.newPassword,
             };
-            await changeUserPassword(passwordRequest).then(
-                () => {
-                    successNotification(t('success', {ns: "common"}), t("notifications.changePasswordSuccess"));
-                    logOut();
-                }
-            );
+            try {
+                await changeUserPassword(passwordRequest);
+                successNotification(t("success", {ns: "common"}), t("notifications.changePasswordSuccess"));
+                logOut();
+            } catch (error) {
+                console.error(error);
+            }
         },
     });
+
+    if (isLoading) {
+        return <Box>{t("loading", { ns: "common" })}...</Box>;
+    }
 
     return (
         <Box
@@ -148,7 +167,7 @@ const UserProfileEdit: React.FC = () => {
                                 border: '1px solid white',
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
-                                color: themeColors.popoverBgColor()
+                                color: themeColors.fontColor()
                             }}
                             background={themeColors.bgColor()}
                         >{t('updateProfile.accountInfo')}
@@ -179,6 +198,7 @@ const UserProfileEdit: React.FC = () => {
                                         value={accountForm.values.firstName}
                                         onChange={accountForm.handleChange}
                                         bgColor={themeColors.bgColorLight()}
+                                        color={themeColors.bgColor()}
                                     />
                                 </Field>
 
@@ -192,6 +212,7 @@ const UserProfileEdit: React.FC = () => {
                                         value={accountForm.values.lastName}
                                         onChange={accountForm.handleChange}
                                         bgColor={themeColors.bgColorLight()}
+                                        color={themeColors.bgColor()}
                                     />
                                 </Field>
 
@@ -204,6 +225,7 @@ const UserProfileEdit: React.FC = () => {
                                     value={accountForm.values.position}
                                     onChange={accountForm.handleChange}
                                     bgColor={themeColors.bgColorLight()}
+                                    color={themeColors.bgColor()}
                                 />
                                 </Field>
 
