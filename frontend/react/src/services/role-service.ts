@@ -11,7 +11,6 @@ export const getAllRoles = async () => {
         const data = response.data;
         return data || [];
     } catch (err) {
-        console.error('Error fetching roles: ', err);
         return [];
     }
 }
@@ -30,7 +29,6 @@ export const getRoleByFilterAndPage = async(filter: Record<string,any>) => {
             totalPages,
         };
     } catch (err) {
-        console.error('Error fetching roles: ', err);
         return {roles: [], totalPages: 1};
     }
 }
@@ -40,7 +38,6 @@ export const addNewRole = async (role: RoleDTO) => {
         const response = await api.post(`${API_ROLES_BASE}/save`, role, getAuthConfig());
         return response.data;
     } catch (err) {
-        console.error('Error adding role:', err);
         throw err;
     }
 }
@@ -50,7 +47,6 @@ export const deleteRoleById = async (id: number) => {
         const response = await api.delete(`${API_ROLES_BASE}/delete/${id}`, getAuthConfig());
         return response.data;
     } catch (err) {
-        console.error('Error deleting role:', err);
         throw err;
     }
 }

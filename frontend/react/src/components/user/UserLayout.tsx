@@ -62,7 +62,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
             <GridItem
                 w="100%"
                 borderRadius="lg"
-                overflowY="auto" // Skrolowanie tylko w tej sekcji
+                overflowY="auto"
                 p={2}
             >
                 {table}

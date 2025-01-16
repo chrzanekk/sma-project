@@ -12,18 +12,17 @@ export default function SmallWithLogoLeft() {
             as="footer"
             bg={themeColors.bgColor()}
             color={themeColors.fontColor()}
-            py={2}
             width="100%"
-            textAlign="center" // Minimalna wysokość stopki
+            textAlign="center"
         >
             <Stack
                 align="center"
                 justify="center">
-                <HStack spacing={2}>
+                <HStack gap={2}>
                     <Image
                         src="/img/author-logo.png"
                         alt="Konrad Chrzanowski"
-                        boxSize="40px"
+                        boxSize="50px"
                     />
                     <Text fontWeight={700} color={themeColors.fontColor()}>{t('copyright')}</Text>
                 </HStack>

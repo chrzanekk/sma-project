@@ -1,15 +1,12 @@
-import {createStandaloneToast} from '@chakra-ui/react';
 import React from "react";
-
-const {toast} = createStandaloneToast();
+import {toaster} from "@/components/ui/toaster.tsx"
 
 const notifications = (title: string, description: React.ReactNode, status: "success" | "error" | "info" | "warning") => {
-    toast({
+    toaster.create({
         title,
         description,
-        status,
-        isClosable: true,
-        duration: 8000,
+        type: status,
+        duration: 2000,
     });
 };
 

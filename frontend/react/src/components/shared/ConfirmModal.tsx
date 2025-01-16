@@ -1,6 +1,15 @@
 import React from "react";
-import {Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, ModalOverlay,} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {
+    Button,
+    DialogRoot,
+    DialogBackdrop,
+    DialogContent,
+    DialogHeader,
+    DialogBody,
+    DialogFooter,
+    DialogCloseTrigger,
+} from "@chakra-ui/react";
+import { themeColors } from "@/theme/theme-colors.ts";
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -10,7 +19,6 @@ interface ConfirmModalProps {
     message: string;
     confirmText?: string;
     cancelText?: string;
-    isLoading?: boolean;
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -20,25 +28,27 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                        title,
                                                        message,
                                                        confirmText = "Confirm",
-                                                       cancelText = "Cancel",
-                                                       isLoading = false,
-                                                   }) => {
+                                                       cancelText = "Cancel"}) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} isCentered>
-            <ModalOverlay/>
-            <ModalContent bg={themeColors.bgColor()}>
-                <ModalHeader>{title}</ModalHeader>
-                <ModalBody>{message}</ModalBody>
-                <ModalFooter>
-                    <Button colorScheme="red" onClick={onConfirm} mr={3} isLoading={isLoading}>
+        <DialogRoot open={isOpen} onOpenChange={(open) => !open && onClose()}>
+            <DialogBackdrop />
+            <DialogContent backgroundColor={themeColors.bgColor()}>
+                <DialogHeader>{title}</DialogHeader>
+                <DialogBody>{message}</DialogBody>
+                <DialogFooter>
+                    <Button
+                        colorScheme="red"
+                        onClick={onConfirm}
+                        mr={3}
+                    >
                         {confirmText}
                     </Button>
-                    <Button
-                        colorScheme="green"
-                        onClick={onClose}>{cancelText}</Button>
-                </ModalFooter>
-            </ModalContent>
-        </Modal>
+                    <DialogCloseTrigger>
+                        <Button colorScheme="green">{cancelText}</Button>
+                    </DialogCloseTrigger>
+                </DialogFooter>
+            </DialogContent>
+        </DialogRoot>
     );
 };
 

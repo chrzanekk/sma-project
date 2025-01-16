@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {Button, Flex, Grid, GridItem, Heading, Menu, MenuButton, MenuItem, MenuList,} from '@chakra-ui/react';
-import {ChevronDownIcon} from '@chakra-ui/icons';
+import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {themeColors} from "@/theme/theme-colors.ts";
 import {getAdminPanelMenuItems} from "@/layout/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
+import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
 
 export type AdminPanelView = 'roles' | 'users';
 
@@ -28,9 +28,8 @@ const AdminPanel: React.FC = () => {
 
     return (
         <Grid
-            templateRows="auto 1fr" // Pierwszy rząd na tytuł i menu, drugi elastyczny na widok
+            templateRows="5% 95%"
             bgColor={themeColors.bgColorLight()}
-            height="100vh"
             gap={2}
             px={2}
             py={2}
@@ -44,35 +43,32 @@ const AdminPanel: React.FC = () => {
                 color="white"
             >
                 <Flex justifyContent="space-between" alignItems="center">
-                    {/* Tytuł */}
                     <Heading size="sm" fontSize={14} color={themeColors.fontColor()}>
                         {t('adminPanel')}
                     </Heading>
-
-                    {/* Menu wyboru widoku */}
-                    <Menu>
-                        <MenuButton
-                            bg={themeColors.bgColor()}
-                            color={themeColors.fontColor()}
-                            _hover={{
-                                textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
-                                color: themeColors.popoverBgColor()
-                            }}
-                            as={Button}
-                            rightIcon={<ChevronDownIcon/>}
-                            variant="outline"
-                            size="sm"
-                            p={2}
-                        >
-                            {t("selectView")}
-                        </MenuButton>
-                        <MenuList bg={themeColors.bgColor()} p={1}>
+                    <MenuRoot>
+                        <MenuTrigger asChild>
+                            <Button
+                                bg={themeColors.bgColor()}
+                                color={themeColors.fontColor()}
+                                _hover={{
+                                    textDecoration: 'none',
+                                    bg: themeColors.highlightBgColor(),
+                                    color: themeColors.popoverBgColor()
+                                }}
+                                variant="outline"
+                                size="sm"
+                                p={2}
+                            >
+                                {t("selectView")}
+                            </Button>
+                        </MenuTrigger>
+                        <MenuContent bgColor={themeColors.bgColor()}>
                             {adminMenuItems.map((item, index) => (
                                 <MenuItem
+                                    key={item.label || index}
                                     bg={themeColors.bgColor()}
                                     rounded={'md'}
-                                    color={themeColors.fontColor()}
                                     p={2}
                                     _hover={{
                                         textDecoration: 'none',
@@ -80,22 +76,24 @@ const AdminPanel: React.FC = () => {
                                         color: themeColors.popoverBgColor(),
                                         border: '1px solid white'
                                     }}
-                                    key={index}
+                                    value={item.label}
+                                    valueText={item.label}
                                     onClick={item.onClick}
+                                    closeOnSelect={true}
                                 >
                                     {item.label}
                                 </MenuItem>
                             ))}
-                        </MenuList>
-                    </Menu>
+                        </MenuContent>
+                    </MenuRoot>
                 </Flex>
             </GridItem>
 
-            {/* Wiersz 2: Renderowany widok */}
             <GridItem
                 w="100%"
-                bg="white"
+                bg={themeColors.bgColor()}
                 borderRadius="lg"
+                overflowY={"auto"}
             >
                 {renderActiveView()}
             </GridItem>

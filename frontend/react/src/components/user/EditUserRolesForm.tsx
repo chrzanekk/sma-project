@@ -5,8 +5,8 @@ import * as Yup from "yup";
 import {AdminEditRoleUpdateRequest, UserDTO} from "@/types/user-types.ts";
 import {getUserById} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, FormControl, FormErrorMessage, FormLabel, Stack} from "@chakra-ui/react";
-import {Select} from "chakra-react-select";
+import {Button, Stack, Text} from "@chakra-ui/react";
+import Select from "react-select";
 import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
@@ -85,9 +85,11 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                     JSON.stringify(selectedRoles.sort()) === JSON.stringify(initialValues.roles.sort());
                 return (
                     <Form>
-                        <Stack spacing="8px">
-                            <FormControl isInvalid={!!errors.roles && touched.roles}>
-                                <FormLabel>{t('shared.chooseRoles')}</FormLabel>
+                        <Stack gap="8px">
+                            <div>
+                                <Text fontSize="sm" fontWeight="bold" mb="1">
+                                    {t('shared.chooseRoles')}
+                                </Text>
                                 <Select
                                     isMulti
                                     options={roleOptions}
@@ -98,7 +100,7 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                                         const roles = selectedOptions.map(option => option.value);
                                         setFieldValue("roles", roles).catch();
                                     }}
-                                    chakraStyles={{
+                                    styles={{
                                         control: (provided) => ({
                                             ...provided,
                                             backgroundColor: themeColors.bgColorLight(),
@@ -108,10 +110,14 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                                         })
                                     }}
                                 />
-                                <FormErrorMessage>{errors.roles}</FormErrorMessage>
-                            </FormControl>
-                            <Button isDisabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit"
-                                    colorScheme="green">
+                                {touched.roles && errors.roles && (
+                                    <Text color="red.500" fontSize="xs" mt="1">
+                                        {errors.roles}
+                                    </Text>
+                                )}
+                            </div>
+                            <Button disabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit"
+                                    colorPalette="green">
                                 {t('shared.changerRoles')}
                             </Button>
                         </Stack>

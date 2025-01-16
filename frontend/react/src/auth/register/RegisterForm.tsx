@@ -70,7 +70,7 @@ const RegisterForm = () => {
                     <Box display="flex" justifyContent="center">
                         <Heading fontSize="2xl" mb={15}>{t('register.header')}</Heading>
                     </Box>
-                    <Stack spacing="24px">
+                    <Stack gap="24px">
                         <MyTextInput
                             label={t('shared.login')}
                             name="login"
@@ -101,7 +101,7 @@ const RegisterForm = () => {
                             type="text"
                             placeholder={t('shared.lastName')}
                         />
-                        <Button isDisabled={!isValid || isSubmitting} type="submit">
+                        <Button disabled={!isValid || isSubmitting} type="submit">
                             {t('register.submit')}
                         </Button>
                     </Stack>

@@ -1,49 +1,56 @@
-// DashboardGrid.tsx
 import React from "react";
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import {Grid, GridItem, Text} from "@chakra-ui/react";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface DashboardGridProps {
     topRowContent: string;
     columnsContent: string[];
     bottomRowContent: string;
-    bgColor?: string; // Dla większej elastyczności, domyślnie green.300
+    bgColor?: string;
+    fontColor?: string;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = "green.300", // Domyślny kolor tła dla każdego elementu
+                                                         bgColor = themeColors.bgColor(),
+                                                         fontColor = themeColors.fontColor()
                                                      }) => {
     return (
-        <Grid templateRows="1fr 2fr 1fr"
-              height="calc(100vh - 140px)"
-              gap={6}
-
+        <Grid
+            templateRows="30% 40% 30%"
+            height="80vh"
+            gap={2}
         >
             {/* Górny wiersz */}
             <GridItem
                 w="100%"
                 bg={bgColor}
-                p={4}
+                p={2}
                 borderRadius="lg"
+                minHeight={"30%"}
+                overflowY={"auto"}
             >
-                <Text color="white" fontWeight="bold">
+                <Text color={fontColor} fontWeight="bold">
                     {topRowContent}
                 </Text>
             </GridItem>
 
             {/* Środkowy wiersz - 3 kolumny */}
-            <Grid templateColumns="repeat(3, 1fr)" gap={6}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={3}>
                 {columnsContent.map((content, index) => (
                     <GridItem
                         key={index}
                         w="100%"
+                        h={"100%"}
                         bg={bgColor}
-                        p={4}
+                        p={2}
                         borderRadius="lg"
+                        minHeight={"40%"}
+                        overflowY="auto"
                     >
-                        <Text color="white" fontWeight="bold">
+                        <Text color={fontColor} fontWeight="bold">
                             {content}
                         </Text>
                     </GridItem>
@@ -54,10 +61,12 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
             <GridItem
                 w="100%"
                 bg={bgColor}
-                p={4}
+                p={2}
                 borderRadius="lg"
+                minHeight={"30%"}
+                overflow="auto"
             >
-                <Text color="white" fontWeight="bold">
+                <Text color={fontColor} fontWeight="bold">
                     {bottomRowContent}
                 </Text>
             </GridItem>

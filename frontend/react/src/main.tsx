@@ -1,23 +1,24 @@
 import {StrictMode} from 'react'
 import {createRoot} from 'react-dom/client'
-import {ChakraProvider, createStandaloneToast} from "@chakra-ui/react";
+import {Toaster} from "@/components/ui/toaster"
 import './i18n/i18n';
 import {AuthProvider} from "@/context/AuthContext.tsx";
 import {RouterProvider} from "react-router-dom";
-// import './index.css'
-
 import router from "@/routes/router.tsx";
+import {ChakraProvider, defaultSystem} from "@chakra-ui/react";
+import {ThemeProvider} from "next-themes";
 
-const {ToastContainer} = createStandaloneToast();
 
 createRoot(document.getElementById('root')!)
     .render(
         <StrictMode>
-            <ChakraProvider>
-                <AuthProvider>
-                    <RouterProvider router={router}/>
-                    <ToastContainer/>
-                </AuthProvider>
-            </ChakraProvider>
+            <ThemeProvider>
+                <ChakraProvider value={defaultSystem}>
+                    <AuthProvider>
+                        <RouterProvider router={router}/>
+                        <Toaster/>
+                    </AuthProvider>
+                </ChakraProvider>
+            </ThemeProvider>
         </StrictMode>
     );

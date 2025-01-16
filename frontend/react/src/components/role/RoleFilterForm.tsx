@@ -43,13 +43,13 @@ const RoleFilterForm: React.FC<Props> = ({onSubmit}) => {
                             />
                         </Flex>
                         <Flex gap={2} justifyContent={"center"}>
-                            <Button type="submit" colorScheme="blue"
+                            <Button type="submit" colorPalette="blue"
                                     size={"xs"}>
                                 {t('search', {ns: "common"})}
                             </Button>
                             <Button
                                 type="button"
-                                colorScheme="orange"
+                                colorPalette="orange"
                                 size="xs"
                                 onClick={() => {
                                     resetForm();

@@ -13,7 +13,8 @@ const AppBanner = () => {
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            bgGradient={{ sm: "linear(to-r,white,green.500)" }}
+            // bgGradient={{ sm: "linear(to-r,white,green.500)" }}
+            backgroundImage="linear-gradient(to right, white, #38a169)"
         >
             <Text fontSize="6xl" color={themeColors.fontColor()} fontWeight="bold" mb={5}>
                 {t('welcome')}

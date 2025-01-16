@@ -23,7 +23,7 @@ const ResetPassword = () => {
     return (
         <Stack minH={'100vh'} direction={{base: 'column', md: 'row'}}>
             <Flex p={8} flex={1} align={'center'} justify={'center'}>
-                <Stack spacing={4} w={'full'} maxW={'md'}>
+                <Stack gap={4} w={'full'} maxW={'md'}>
                     <ResetPasswordForm/>
                     <Link color={"blue.600"} href="/register" alignSelf={'center'}>
                         {t('shared.dontHaveAccount')}

@@ -39,7 +39,7 @@ const LoginForm = () => {
 
             {({isValid, isSubmitting}) => (
                 <Form>
-                    <Stack spacing={15}>
+                    <Stack gap={15}>
                         <Box display="flex" justifyContent="center">
                             <Image
                                 alt={'ResetPassword Image'}
@@ -68,8 +68,9 @@ const LoginForm = () => {
                         />
                         <Button
                             type="submit"
-                            isDisabled={!isValid || isSubmitting}>
-                            Login
+                            colorPalette={"green"}
+                            disabled={!isValid || isSubmitting}>
+                            {t('login.header')}
                         </Button>
                     </Stack>
                 </Form>

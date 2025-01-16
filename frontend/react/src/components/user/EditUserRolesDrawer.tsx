@@ -1,20 +1,20 @@
 import {useTranslation} from "react-i18next";
-import {
-    Button,
-    Drawer,
-    DrawerBody,
-    DrawerCloseButton,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerOverlay,
-    useDisclosure
-} from "@chakra-ui/react";
+import {Button, DrawerContext} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditUserRolesForm from "@/components/user/EditUserRolesForm.tsx";
-
+import {
+    DrawerActionTrigger,
+    DrawerBackdrop,
+    DrawerBody,
+    DrawerCloseTrigger,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerRoot,
+    DrawerTrigger,
+} from "@/components/ui/drawer"
 
 interface EditUserRolesDrawerProps {
     fetchUsers: () => void;
@@ -25,44 +25,54 @@ interface EditUserRolesDrawerProps {
 
 const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, userId, currentUserId, login}) => {
     const {t} = useTranslation('auth');
-    const {isOpen, onOpen, onClose} = useDisclosure();
     return (
         <>
-            <Button
-                colorScheme="blue"
-                onClick={onOpen}
-                size={"xs"}
-                p={1}
-                isDisabled={currentUserId === userId}>
+            <DrawerRoot size={"md"}>
+                <DrawerBackdrop/>
+                <DrawerTrigger asChild>
+                    <Button
+                        colorPalette="blue"
+                        size={"xs"}
+                        p={1}
+                        disabled={currentUserId === userId}>
 
-                {t('shared.roles')}
-            </Button>
-            <Drawer isOpen={isOpen} onClose={onClose} size={"md"}>
-                <DrawerOverlay/>
+                        {t('shared.roles')}
+                    </Button>
+                </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
-                    <DrawerCloseButton/>
-                    <DrawerHeader>{t('shared.userRoles', {login: login})}</DrawerHeader>
-                    <DrawerBody>
-                        <EditUserRolesForm
-                            onSuccess={() => {
-                                fetchUsers();
-                                onClose();
-                            }}
-                            userId={userId}
-                            login={login}
-                        />
-                    </DrawerBody>
-                    <DrawerFooter>
-                        <Button
-                            leftIcon={<FaTimes/>}
-                            colorScheme="green"
-                            onClick={onClose}
-                        >
-                            {t('close', {ns: "common"})}
-                        </Button>
-                    </DrawerFooter>
+                    <DrawerContext>
+                        {(store) => (
+                            <>
+                                <DrawerCloseTrigger/>
+                                <DrawerHeader>
+                                    {t("shared.userRoles", {login: login})}
+                                </DrawerHeader>
+                                <DrawerBody>
+                                    <EditUserRolesForm
+                                        onSuccess={() => {
+                                            fetchUsers();
+                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                        }}
+                                        userId={userId}
+                                        login={login}
+                                    />
+                                </DrawerBody>
+                                <DrawerFooter>
+                                    <DrawerActionTrigger asChild>
+                                        <Button
+                                            colorPalette="red"
+                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                        >
+                                            <FaTimes/>
+                                            {t("close", {ns: "common"})}
+                                        </Button>
+                                    </DrawerActionTrigger>
+                                </DrawerFooter>
+                            </>
+                        )}
+                    </DrawerContext>
                 </DrawerContent>
-            </Drawer>
+            </DrawerRoot>
         </>
     )
 }
