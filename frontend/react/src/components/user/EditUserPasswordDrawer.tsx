@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, useDisclosure} from "@chakra-ui/react";
+import {Button, DrawerContext} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
@@ -25,7 +25,6 @@ interface EditUserPasswordDrawerProps {
 
 const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUsers, userId, currentUserId, login}) => {
     const {t} = useTranslation('auth');
-    const {onClose} = useDisclosure();
     return (
         <>
 
@@ -41,27 +40,35 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
-                    <DrawerCloseTrigger/>
-                    <DrawerHeader>{t('newPassword.header')}</DrawerHeader>
-                    <DrawerBody>
-                        <EditUserPasswordForm
-                            onSuccess={() => {
-                                fetchUsers();
-                                onClose();
-                            }}
-                            userId={userId}
-                            login={login}
-                        />
-                    </DrawerBody>
-                    <DrawerFooter>
-                        <DrawerActionTrigger asChild>
-                            <Button
-                                colorPalette="green"
-                            ><FaTimes/>
-                                {t('close', {ns: "common"})}
-                            </Button>
-                        </DrawerActionTrigger>
-                    </DrawerFooter>
+                    <DrawerContext>
+                        {(store) => (
+                            <>
+                                <DrawerCloseTrigger/>
+                                <DrawerHeader>{t("newPassword.header")}</DrawerHeader>
+                                <DrawerBody>
+                                    <EditUserPasswordForm
+                                        onSuccess={() => {
+                                            fetchUsers();
+                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                        }}
+                                        userId={userId}
+                                        login={login}
+                                    />
+                                </DrawerBody>
+                                <DrawerFooter>
+                                    <DrawerActionTrigger asChild>
+                                        <Button
+                                            colorPalette="green"
+                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                        >
+                                            <FaTimes/>
+                                            {t("close", {ns: "common"})}
+                                        </Button>
+                                    </DrawerActionTrigger>
+                                </DrawerFooter>
+                            </>
+                        )}
+                    </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
         </>

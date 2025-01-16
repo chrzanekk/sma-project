@@ -21,7 +21,6 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
             totalPages,
         };
     } catch (err) {
-        console.error('Error fetching users: ', err);
         return {users: [], totalPages: 1};
     }
 };
@@ -32,13 +31,11 @@ export const getUserById = async (id: number) => {
         const userDTO: UserDTO = response.data;
         return userDTO;
     } catch (err) {
-        console.error('Error fetching user by id:', err)
         throw err;
     }
 }
 
 export const addUser = async (addUser: UserFormDTO) => {
-    console.log('AddUser', addUser)
     try {
         const roles: Array<RoleDTO> = Array.from(
             addUser.roles.map((role: string) => ({name: role}))
@@ -49,11 +46,9 @@ export const addUser = async (addUser: UserFormDTO) => {
             enabled: toBoolean(addUser.enabled),
             roles
         }
-        console.log('Payload', payload)
         const response = await api.post(`${USERS_API_BASE}/add`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
-        console.error('Error adding user:', err);
         throw err;
     }
 };
@@ -72,7 +67,6 @@ export const updateUser = async (user: UserFormDTO) => {
         const response = await api.put(`${USERS_API_BASE}/update`, userDTO, getAuthConfig());
         return response.data;
     } catch (err) {
-        console.error('Error updating user', err)
         throw err;
     }
 };
@@ -83,7 +77,6 @@ export const deleteUserById = async (id: number) => {
 
 export const setNewUserPassword = async (setNewPassword: AdminEditPasswordChangeRequest): Promise<void> => {
     try {
-        console.log("Sending request with payload:", setNewPassword);
         await api.put<boolean>(
             `${USERS_API_BASE}/set-new-password`,
             setNewPassword,

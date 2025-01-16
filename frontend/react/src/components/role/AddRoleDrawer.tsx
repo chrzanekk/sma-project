@@ -1,4 +1,4 @@
-import {Button, useDisclosure} from "@chakra-ui/react";
+import {Button, DrawerContext} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
@@ -22,7 +22,6 @@ interface AddRoleDrawerProps {
 
 const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
     const {t} = useTranslation('auth');
-    const {onClose} = useDisclosure();
     return (
         <>
             <DrawerRoot size={"md"}>
@@ -34,21 +33,32 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
-                    <DrawerCloseTrigger/>
-                    <DrawerHeader>{t('shared.roleDetails')}</DrawerHeader>
-                    <DrawerBody>
-                        <AddRoleForm onSuccess={() => {
-                            fetchRoles();
-                            onClose();
-                        }}/>
-                    </DrawerBody>
-                    <DrawerFooter>
-                        <DrawerActionTrigger asChild>
-                            <Button colorPalette="green">
-                                {t('close', {ns: "common"})}
-                            </Button>
-                        </DrawerActionTrigger>
-                    </DrawerFooter>
+                    <DrawerContext>
+                        {(store) => (
+                            <>
+                                <DrawerCloseTrigger/>
+                                <DrawerHeader>{t("shared.roleDetails")}</DrawerHeader>
+                                <DrawerBody>
+                                    <AddRoleForm
+                                        onSuccess={() => {
+                                            fetchRoles();
+                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                        }}
+                                    />
+                                </DrawerBody>
+                                <DrawerFooter>
+                                    <DrawerActionTrigger asChild>
+                                        <Button
+                                            colorPalette="green"
+                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                        >
+                                            {t("close", {ns: "common"})}
+                                        </Button>
+                                    </DrawerActionTrigger>
+                                </DrawerFooter>
+                            </>
+                        )}
+                    </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
         </>

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Input, Tabs, VStack} from "@chakra-ui/react";
@@ -15,17 +15,19 @@ const UserProfileEdit: React.FC = () => {
     const navigate = useNavigate();
     const {t} = useTranslation('auth')
 
+    const [isLoading, setIsLoading] = useState<boolean>(true);
+
     useEffect(() => {
         if (!currentUser) {
             navigate("/", {replace: true});
+        } else {
+            setIsLoading(false);
         }
     }, [currentUser, navigate]);
 
-
-    if (!currentUser) {
-        return null;
+    if (isLoading || !currentUser) {
+        return <Box>{t('loading', { ns: 'common' })}...</Box>;
     }
-
 
     // Validation schemas
     const accountSchema = Yup.object({
@@ -58,22 +60,22 @@ const UserProfileEdit: React.FC = () => {
 
     const accountForm = useFormik({
         initialValues: {
-            firstName: currentUser.firstName || "",
-            lastName: currentUser.lastName || "",
-            position: currentUser.position || "",
+            firstName: currentUser?.firstName || "",
+            lastName: currentUser?.lastName || "",
+            position: currentUser?.position || "",
         },
         validationSchema: accountSchema,
         onSubmit: async (values) => {
             const userUpdateRequest = {
-                id: currentUser.id,
-                email: currentUser.email,
-                login: currentUser.login,
+                id: currentUser?.id,
+                email: currentUser?.email,
+                login: currentUser?.login,
                 firstName: values.firstName,
                 lastName: values.lastName,
                 position: values.position,
-                locked: currentUser.locked,
-                enabled: currentUser.enabled,
-                roles: currentUser.roles || []
+                locked: currentUser?.locked,
+                enabled: currentUser?.enabled,
+                roles: currentUser?.roles || []
             }
             try {
                 await updateUserAccount(userUpdateRequest);

@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, useDisclosure} from "@chakra-ui/react";
+import {Button, DrawerContext} from "@chakra-ui/react";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
@@ -23,11 +23,10 @@ interface EditUserDataDrawerProps {
 
 const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, userId}) => {
     const {t} = useTranslation('auth');
-    const {onClose} = useDisclosure();
 
     return (
         <>
-            <DrawerRoot size={"md"} onOpenChange={onClose}>
+            <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
                     <Button
@@ -39,24 +38,35 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColor()}>
-                    <DrawerCloseTrigger/>
-                    <DrawerHeader>{t('shared.editUserDetails')}</DrawerHeader>
-                    <DrawerBody>
-                            <EditUserDataForm
-                                onSuccess={() => {
-                                    fetchUsers();
-                                    onClose();
-                                }}
-                                userId={userId}
-                            />
-                    </DrawerBody>
-                    <DrawerFooter>
-                        <DrawerActionTrigger asChild>
-                            <Button colorPalette="red"><FaTimes/>
-                                {t('close', {ns: "common"})}
-                            </Button>
-                        </DrawerActionTrigger>
-                    </DrawerFooter>
+                    <DrawerContext>
+                        {(store) => (
+                            <>
+                                <DrawerCloseTrigger/>
+                                <DrawerHeader>{t("shared.editUserDetails")}</DrawerHeader>
+                                <DrawerBody>
+                                    <EditUserDataForm
+                                        onSuccess={() => {
+                                            fetchUsers();
+                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                        }}
+                                        userId={userId}
+                                    />
+                                </DrawerBody>
+                                <DrawerFooter>
+                                    <DrawerActionTrigger asChild>
+                                        <Button
+                                            colorPalette="red"
+                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                        >
+                                            <FaTimes/>
+                                            {t("close", {ns: "common"})}
+                                        </Button>
+                                    </DrawerActionTrigger>
+                                </DrawerFooter>
+                            </>
+
+                        )}
+                    </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
         </>
