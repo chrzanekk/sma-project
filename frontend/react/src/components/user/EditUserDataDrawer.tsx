@@ -31,7 +31,7 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                 <DrawerTrigger asChild>
                     <Button
                         colorPalette="green"
-                        size={"xs"}
+                        size={"2xs"}
                         p={1}
                     >
                         {t('data', {ns: "common"})}

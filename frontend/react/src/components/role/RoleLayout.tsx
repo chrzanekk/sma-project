@@ -24,7 +24,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
             templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorLight()}
             height="100vh"
-            gap={2}
+            gap={1}
         >
             <GridItem
                 w="100%"
@@ -41,7 +41,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} mb={2} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
                 {t('filters')}
             </Heading>
 
@@ -53,7 +53,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                 w="100%"
                 bg={bgColor}
                 p={1}
-                borderRadius="lg"
+                borderRadius="md"
             >
                 {addRoleButton}
             </GridItem>

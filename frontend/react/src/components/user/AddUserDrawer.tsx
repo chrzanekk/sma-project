@@ -30,7 +30,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                 <DrawerTrigger asChild>
                     <Button
                         colorPalette="green"
-                        size={"xs"}
+                        size={"2xs"}
                         p={1}
                     ><FaPlus/>
                         {t('shared.addUser')}

@@ -121,7 +121,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                             <Table.Cell>
                                 <Button
                                     colorPalette="red"
-                                    size={"xs"}
+                                    size={"2xs"}
                                     onClick={() => handleDeleteClick(user.id!)}
                                     disabled={currentUser?.id === user.id}>
                                     {t('delete', {ns: "common"})}

@@ -64,7 +64,7 @@ const RoleTable: React.FC<Props> = ({roles, onDelete}) => {
                             <Table.Cell>{DateFormatter.formatDateTime(role.createdDatetime!)}</Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(role.lastModifiedDatetime!)}</Table.Cell>
                             <Table.Cell>
-                                <Button colorPalette="red" size={"xs"}
+                                <Button colorPalette="red" size={"2xs"}
                                         onClick={() => handleDeleteClick(role.id!)}>
                                     {t('delete', {ns: "common"})}
                                 </Button>

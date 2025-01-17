@@ -33,7 +33,7 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                 <DrawerTrigger asChild>
                     <Button
                         colorPalette="orange"
-                        size={"xs"}
+                        size={"2xs"}
                         p={1}
                         disabled={currentUserId === userId}>
                         {t('shared.password')}

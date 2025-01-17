@@ -29,6 +29,7 @@ const AdminPanel: React.FC = () => {
     return (
         <Grid
             templateRows="6% 94%"
+            height={"90%"}
             bgColor={themeColors.bgColorLight()}
             gap={1}
             px={1}
@@ -39,8 +40,8 @@ const AdminPanel: React.FC = () => {
                 w="100%"
                 p={1}
                 bg={themeColors.bgColor()}
-                borderRadius="lg"
-                color="white"
+                borderRadius={"lg"}
+                color={"white"}
             >
                 <Flex
                     justifyContent="space-between"

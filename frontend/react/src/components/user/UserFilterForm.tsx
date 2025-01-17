@@ -111,7 +111,6 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             gap={1}
                             px={1}
                             py={1}
-                            mb={1}
                             justifyContent={"center"}
                         >
                             <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
@@ -174,13 +173,13 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
-                                    size={"xs"}>
+                                    size={"2xs"}>
                                 {t('search', {ns: "common"})}
                             </Button>
                             <Button
                                 type="button"
                                 colorPalette="orange"
-                                size="xs"
+                                size={"2xs"}
                                 onClick={() => {
                                     resetForm();
                                     onSubmit({});

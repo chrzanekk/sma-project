@@ -32,7 +32,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                 <DrawerTrigger asChild>
                     <Button
                         colorPalette="blue"
-                        size={"xs"}
+                        size={"2xs"}
                         p={1}
                         disabled={currentUserId === userId}>
 

@@ -56,15 +56,13 @@ const Pagination: React.FC<PaginationProps> = ({
                     <option value={50}>50</option>
                     <option value={100}>100</option>
                 </NativeSelectField>
-
-
             </NativeSelectRoot>
 
             {/* Nawigacja między stronami */}
             <Button
-                size={"xs"}
+                size={"2xs"}
                 onClick={() => onPageChange(currentPage - 1)}
-                disabled={currentPage === 0} // Poprawka: Blokuj tylko, jeśli to pierwsza strona
+                disabled={currentPage === 0}
                 mr={2}
             >
                 {t('previous', {ns: 'common'})}
@@ -73,9 +71,9 @@ const Pagination: React.FC<PaginationProps> = ({
                 {t('page', {ns: 'common'})} {currentPage + 1} {t('of', {ns: 'common'})} {totalPages}
             </Text>
             <Button
-                size={"xs"}
+                size={"2xs"}
                 onClick={() => onPageChange(currentPage + 1)}
-                disabled={currentPage + 1 === totalPages} // Poprawka: Blokuj tylko, jeśli to ostatnia strona
+                disabled={currentPage + 1 === totalPages}
                 ml={2}
             >
                 {t('next', {ns: 'common'})}
@@ -84,7 +82,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {/* Skok do konkretnej strony */}
             <Input
                 width="110px"
-                size={"xs"}
+                size={"2xs"}
                 borderRadius={"md"}
                 bg={themeColors.bgColorLight()}
                 mr={2}
@@ -93,7 +91,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 onChange={(e) => setGotoPage(e.target.value)}
                 placeholder={t('goToPage', {ns: 'common'})}
             />
-            <Button size={"xs"}
+            <Button size={"2xs"}
                     onClick={handleGotoPage}
                     disabled={currentPage + 1 === totalPages}
             >
