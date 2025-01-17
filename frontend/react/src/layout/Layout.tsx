@@ -6,8 +6,9 @@ import {themeColors} from "@/theme/theme-colors.ts";
 
 const Layout = ({children}: { children: React.ReactNode }) => (
     <Box
-        // direction="column"
         h={"100vh"}
+        display="flex"
+        flexDirection="column"
         overflow={"hidden"}
         bg={themeColors.bgColorLight()}
     >
@@ -16,9 +17,11 @@ const Layout = ({children}: { children: React.ReactNode }) => (
             <Navbar/>
         </Box>
 
-        <Box as="main"  w="100%"
+        <Box as="main"
+             flex={"1"}
+             w="100%"
              overflowY="auto"
-             height="calc(100vh-100px)"
+             px={[2, 4, 6]}
         >
             {children}
         </Box>

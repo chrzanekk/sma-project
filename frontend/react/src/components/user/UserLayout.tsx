@@ -24,7 +24,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
             templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
             bgColor={themeColors.bgColorLight()}
             height="100vh" // Pełna wysokość ekranu
-            gap={2}
+            gap={1}
         >
             <GridItem
                 w="100%"
@@ -41,7 +41,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} mb={2} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} mb={1} textAlign={"center"} color={themeColors.fontColor()}>
                 {t('filters')}
             </Heading>
 

@@ -59,10 +59,10 @@ const UserManagement: React.FC = () => {
     return (
         <UserLayout
             filters={<UserFilterForm onSubmit={handleFilterSubmit}/>}
-            addUserButton={<Flex justifyContent={"center"}>
+            addUserButton={
+            <Flex justifyContent={"center"}>
                 <AddUserDrawer fetchUsers={fetchUsers}/>
             </Flex>
-
             }
             table={<UserTable
                 users={users}

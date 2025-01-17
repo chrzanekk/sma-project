@@ -107,7 +107,13 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
 
                 return (
                     <Form onSubmit={handleSubmit}>
-                        <Flex gap={2} mb={1} justifyContent={"center"}>
+                        <Flex
+                            gap={1}
+                            px={1}
+                            py={1}
+                            mb={1}
+                            justifyContent={"center"}
+                        >
                             <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
                                    size="sm"
                                    bg={themeColors.bgColorLight()}
@@ -166,7 +172,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 styles={selectStyles}
                             />
                         </Flex>
-                        <Flex gap={2} justifyContent={"center"}>
+                        <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
                                     size={"xs"}>
                                 {t('search', {ns: "common"})}

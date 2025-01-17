@@ -28,11 +28,11 @@ const AdminPanel: React.FC = () => {
 
     return (
         <Grid
-            templateRows="5% 95%"
+            templateRows="6% 94%"
             bgColor={themeColors.bgColorLight()}
-            gap={2}
-            px={2}
-            py={2}
+            gap={1}
+            px={1}
+            py={1}
         >
             {/* Wiersz 1: Tytuł i menu wyboru */}
             <GridItem
@@ -42,14 +42,21 @@ const AdminPanel: React.FC = () => {
                 borderRadius="lg"
                 color="white"
             >
-                <Flex justifyContent="space-between" alignItems="center">
-                    <Heading size="sm" fontSize={14} color={themeColors.fontColor()}>
+                <Flex
+                    justifyContent="space-between"
+                    alignSelf="center"
+                >
+                    <Heading size="sm"
+                             fontSize="clamp(12px, 2vw, 14px)"
+                             alignSelf="center"
+                             color={themeColors.fontColor()}>
                         {t('adminPanel')}
                     </Heading>
                     <MenuRoot>
                         <MenuTrigger asChild>
                             <Button
                                 bg={themeColors.bgColor()}
+                                p={2}
                                 color={themeColors.fontColor()}
                                 _hover={{
                                     textDecoration: 'none',
@@ -57,8 +64,12 @@ const AdminPanel: React.FC = () => {
                                     color: themeColors.popoverBgColor()
                                 }}
                                 variant="outline"
-                                size="sm"
-                                p={2}
+                                size="2xs"
+                                fontSize="clamp(10px, 1.5vw, 12px)"
+                                textAlign="center"
+                                w="auto" // Szerokość automatyczna
+                                h="100%" // Dostosowanie wysokości do rodzica
+                                maxH="40px"
                             >
                                 {t("selectView")}
                             </Button>
@@ -69,7 +80,7 @@ const AdminPanel: React.FC = () => {
                                     key={item.label || index}
                                     bg={themeColors.bgColor()}
                                     rounded={'md'}
-                                    p={2}
+                                    p={[2, 3]}
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: themeColors.highlightBgColor(),
