@@ -115,27 +115,27 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                         >
                             <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
                                    size="sm"
-                                   bg={themeColors.bgColorLight()}
+                                   bg={themeColors.bgColor()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="loginStartsWith" as={Input} placeholder={t('shared.login')}
                                    size="sm"
-                                   bg={themeColors.bgColorLight()}
+                                   bg={themeColors.bgColor()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="firstNameStartsWith" as={Input} placeholder={t('shared.firstName')}
                                    size="sm"
-                                   bg={themeColors.bgColorLight()}
+                                   bg={themeColors.bgColor()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="lastNameStartsWith" as={Input} placeholder={t('shared.lastName')}
                                    size="sm"
-                                   bg={themeColors.bgColorLight()}
+                                   bg={themeColors.bgColor()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="positionStartsWith" as={Input} placeholder={t('shared.position')}
                                    size="sm"
-                                   bg={themeColors.bgColorLight()}
+                                   bg={themeColors.bgColor()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Select

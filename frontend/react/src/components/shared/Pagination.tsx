@@ -43,7 +43,8 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size="xs"
                 borderRadius={"md"}
-                bg={themeColors.bgColorLight()}
+                bg={themeColors.bgColor()}
+                color={themeColors.fontColor()}
                 disabled={currentPage + 1 === totalPages}
             >
                 <NativeSelectField
@@ -84,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size={"2xs"}
                 borderRadius={"md"}
-                bg={themeColors.bgColorLight()}
+                bg={themeColors.bgColor()}
                 mr={2}
                 value={gotoPage}
                 disabled={currentPage + 1 === totalPages}

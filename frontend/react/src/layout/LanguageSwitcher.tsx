@@ -36,16 +36,16 @@ const LanguageSwitcher: React.FC = () => {
                     {i18n.language === 'pl' ? 'Polski' : 'English'}
                 </Button>
             </MenuTrigger>
-            <MenuContent bg={themeColors.bgColor()} mt={4} p={1}>
+            <MenuContent bg={themeColors.bgColorLight()} mt={2} p={1}>
                 <MenuItem
-                    bg={themeColors.bgColor()}
+                    bg={themeColors.bgColorLight()}
                     p={2}
-                    // color={themeColors.fontColor()}
+                    color={themeColors.fontColor()}
                     rounded={'md'}
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
-                        color: themeColors.popoverBgColor(),
+                        color: themeColors.fontColorChildMenu(),
                         border: '1px solid white'
                     }}
                     value={'pl'}

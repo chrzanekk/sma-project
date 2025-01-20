@@ -1,17 +1,5 @@
 import React from 'react'
-import {
-    Box,
-    Collapsible,
-    Flex,
-    HStack,
-    Image,
-    Link,
-    MenuItem,
-    Stack,
-    Text,
-    useDisclosure,
-    VStack
-} from '@chakra-ui/react'
+import {Box, Collapsible, Flex, HStack, Image, Link, Stack, Text, useDisclosure, VStack} from '@chakra-ui/react'
 import {FiChevronDown} from "react-icons/fi";
 import {getNavItems} from './nav-items.ts';
 import {getUserMenuItems} from './user-menu-items.ts';
@@ -19,7 +7,7 @@ import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {themeColors} from '@/theme/theme-colors.ts';
 import {useTranslation} from "react-i18next";
 import useUser from "@/hooks/UseUser.tsx";
-import {MenuContent, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
+import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import {PopoverContent, PopoverRoot, PopoverTrigger,} from "@/components/ui/popover.tsx";
 import {FaBars} from "react-icons/fa6";
@@ -82,14 +70,13 @@ const Navbar: React.FC = () => {
                                 color={themeColors.fontColor()}
                                 _hover={{
                                     textDecoration: 'none',
-                                    bg: themeColors.highlightBgColor(),
-                                    color: themeColors.popoverBgColor()
+                                    bg: themeColors.bgColorLight(),
+                                    color: themeColors.fontColorChildMenu()
                                 }}
                                 transition="all 0.3s"
-                                as={Button}
                                 variant="outline"
                                 size="sm"
-                                p={1}
+                                p={2}
                             >
                                 <HStack>
                                     <VStack
@@ -112,34 +99,42 @@ const Navbar: React.FC = () => {
                                 </HStack>
                             </Button>
                         </MenuTrigger>
-                        <MenuContent bg={themeColors.bgColor()} p={1}>
+                        <MenuContent
+                            bg={themeColors.bgColorLight()}
+                            mt={2}
+                            p={1}>
                             {userMenuItems.map((item) => (
                                 <MenuItem
                                     key={item.label}
-                                    value={item.label}
-                                    bg={themeColors.bgColor()}
+                                    value={item.href}
+                                    bg={themeColors.bgColorLight()}
                                     rounded="md"
-                                    color={themeColors.fontColor()}
                                     p={2}
                                     _hover={{
                                         textDecoration: 'none',
-                                        bg: themeColors.bgColorLight(),
-                                        color: themeColors.popoverBgColor(),
+                                        bg: themeColors.highlightBgColor(),
+                                        // color: themeColors.fontColorChildMenu(),
                                         border: '1px solid white'
                                     }}
-                                    as="div"
-                                    onClick={item.onClick ? item.onClick : undefined}
+                                    // onClick={item.onClick ? item.onClick : undefined}
                                 >
-                                    {item.href ? (
-                                        <Link href={item.href}
-                                              onClick={item.onClick ? (e) => e.preventDefault() : undefined}>
-                                            {item.label}
-                                        </Link>
-                                    ) : (
-                                        <Text>{item.label}</Text>
-                                    )}
+                                    <a
+                                        href={item.href}
+                                        onClick={item.onClick}
+                                        color={themeColors.fontColor()}
+                                    >
+                                        {item.label}
+                                    </a>
+                                    {/*{item.href ? (*/}
+                                    {/*    <Link href={item.href}*/}
+                                    {/*          color={themeColors.fontColor()}*/}
+                                    {/*          onClick={item.onClick ? (e) => e.preventDefault() : undefined}>*/}
+                                    {/*        {item.label}*/}
+                                    {/*    </Link>*/}
+                                    {/*) : (*/}
+                                    {/*    <Text>{item.label}</Text>*/}
+                                    {/*)}*/}
                                 </MenuItem>
-
                             ))}
                         </MenuContent>
                     </MenuRoot>
@@ -174,20 +169,21 @@ const DesktopNav: React.FC = () => {
                         <Box
                             p={2}
                             fontSize={'sm'}
+                            color={themeColors.fontColor()}
                             fontWeight={500}
                             rounded={'lg'}
                             lineHeight="1.5"
                             _hover={{
                                 border: '1px solid white',
                                 textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
+                                bg: themeColors.bgColorLight(),
                                 color: themeColors.popoverBgColor()
                             }}
                         >
-                            <Link
-                                color={themeColors.fontColor()}
+                            <a
+                                color={themeColors.fontColorChildMenu()}
                                 href={navItem.href ?? '#'}>{navItem.label}
-                            </Link>
+                            </a>
                         </Box>
                     </PopoverTrigger>
 
