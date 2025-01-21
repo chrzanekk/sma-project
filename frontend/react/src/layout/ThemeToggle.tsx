@@ -20,7 +20,7 @@ export const ThemeToggle: React.FC = () => {
         <HStack>
             <Box as={FaSun} color="green.500"/>
             <Switch
-                colorScheme="green"
+                colorPalette="green"
                 checked={theme === "dark"}
                 onChange={() => setTheme(theme === "light" ? "dark" : "light")}
                 size="sm"

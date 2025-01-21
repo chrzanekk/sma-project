@@ -29,6 +29,9 @@
     "save": "Zapisz",
     "data": "Dane",
     "createDate": "Data utworzenia",
+    "currentLanguage": "Język:",
+    "polish": "Polski",
+    "english": "Angielski",
     "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",

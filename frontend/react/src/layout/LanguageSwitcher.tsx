@@ -1,12 +1,12 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {Button} from "@chakra-ui/react";
+import {Box, Button, HStack, Text, VStack} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
-import {FaChevronDown} from "react-icons/fa6";
+import {FiChevronDown} from "react-icons/fi";
 
 const LanguageSwitcher: React.FC = () => {
-    const {i18n} = useTranslation();
+    const {t, i18n} = useTranslation();
     const changeLanguage = (lang: string): void => {
         i18n.changeLanguage(lang).then(() => {
             console.log(`Język zmieniony na: ${lang}`);
@@ -30,8 +30,24 @@ const LanguageSwitcher: React.FC = () => {
                     size="sm"
                     p={2}
                 >
-                    <FaChevronDown/>
-                    {i18n.language === 'pl' ? 'Polski' : 'English'}
+                    <HStack>
+                        <VStack
+                            display={{base: 'none', md: 'flex'}}
+                            alignItems="flex-start"
+                            gap="0px"
+                            ml="2">
+                            <Text fontSize="xs" lineHeight="1.2">
+                                {t("currentLanguage")}
+                            </Text>
+                            <Text fontSize="xs" lineHeight="1.2">
+                                {i18n.language === 'pl' ? t('polish') : t('english')}
+                            </Text>
+                        </VStack>
+
+                        <Box display={{base: 'none', md: 'flex'}}>
+                            <FiChevronDown/>
+                        </Box>
+                    </HStack>
                 </Button>
             </MenuTrigger>
             <MenuContent bg={themeColors.bgColorSecondary()} mt={2} p={1}>

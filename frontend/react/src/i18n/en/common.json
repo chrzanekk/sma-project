@@ -29,6 +29,9 @@
     "save": "Zapisz",
     "data": "Dane",
     "createDate": "Data utworzenia",
+    "currentLanguage": "Language:",
+    "polish": "Polish",
+    "english": "English",
     "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
@@ -48,7 +51,7 @@
         "message": "Czy napewno chcesz usunąć?"
     },
     "underConstruction": {
-        "title": "Site under construction",
-        "message": "Sorry, the page {{name}} is under construction."
+        "title": "Strona w budowie",
+        "message": "Przepraszamy, strona {{name}} jest w trakcie budowy."
     }
 }
