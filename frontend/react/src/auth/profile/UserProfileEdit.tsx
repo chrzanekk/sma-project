@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useFormik} from "formik";
 import * as Yup from "yup";
 import {Box, Button, Input, Tabs, VStack} from "@chakra-ui/react";
-import {useNavigate} from "react-router-dom"; // Import useNavigate
+import {useNavigate} from "react-router-dom";
 import {changeUserPassword, updateUserAccount,} from "@/services/account-service.ts";
 import {useAuth} from "@/context/AuthContext.tsx";
 import {successNotification} from "@/notifications/notifications.ts";
@@ -24,17 +24,6 @@ const UserProfileEdit: React.FC = () => {
             setIsLoading(false);
         }
     }, [currentUser, navigate]);
-    // useEffect(() => {
-    //     if (!currentUser) {
-    //         const storedUser = localStorage.getItem("currentUser");
-    //         if (storedUser) {
-    //             setAuth(JSON.parse(storedUser));
-    //         } else {
-    //             navigate("/", {replace: true});
-    //         }
-    //     }
-    // }, [currentUser, navigate, setAuth]);
-
 
     const accountSchema = Yup.object({
         firstName: Yup.string()
@@ -143,13 +132,10 @@ const UserProfileEdit: React.FC = () => {
             alignItems="center"
             justifyContent="space-between"
             padding={4}
-            // bgColor={themeColors.bgColorLight()}
         >
             <Box
                 maxWidth="600px"
                 width="100%"
-                // bgColor={themeColors.bgColor()}
-                borderRadius={"lg"}
             >
                 <Tabs.Root
                     variant="enclosed"
@@ -157,27 +143,31 @@ const UserProfileEdit: React.FC = () => {
                     defaultValue={"account"}
                     fitted
                     background={themeColors.bgColorPrimary()}
+                    borderRadius={"lg"}
                 >
-                    <Tabs.List>
+                    <Tabs.List
+                    background={themeColors.bgColorPrimary()}
+                    gap={1}
+                    >
                         <Tabs.Trigger
                             value="account"
                             borderRadius={"md"}
                             color={themeColors.fontColor()}
+                            background={themeColors.bgColorSecondary()}
                             _hover={{
-                                border: '1px solid white',
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
                                 color: themeColors.fontColor()
                             }}
-                            background={themeColors.bgColorPrimary()}
+
                         >{t('updateProfile.accountInfo')}
                         </Tabs.Trigger>
                         <Tabs.Trigger
                             value="passwordReset"
                             color={themeColors.fontColor()}
+                            background={themeColors.bgColorSecondary()}
                             borderRadius={"md"}
                             _hover={{
-                                border: '1px solid white',
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
                                 color: themeColors.popoverBgColor()
@@ -198,7 +188,7 @@ const UserProfileEdit: React.FC = () => {
                                         value={accountForm.values.firstName}
                                         onChange={accountForm.handleChange}
                                         bgColor={themeColors.bgColorSecondary()}
-                                        color={themeColors.bgColorPrimary()}
+                                        color={themeColors.fontColor()}
                                     />
                                 </Field>
 
@@ -212,7 +202,7 @@ const UserProfileEdit: React.FC = () => {
                                         value={accountForm.values.lastName}
                                         onChange={accountForm.handleChange}
                                         bgColor={themeColors.bgColorSecondary()}
-                                        color={themeColors.bgColorPrimary()}
+                                        color={themeColors.fontColor()}
                                     />
                                 </Field>
 
@@ -225,11 +215,11 @@ const UserProfileEdit: React.FC = () => {
                                     value={accountForm.values.position}
                                     onChange={accountForm.handleChange}
                                     bgColor={themeColors.bgColorSecondary()}
-                                    color={themeColors.bgColorPrimary()}
+                                    color={themeColors.fontColor()}
                                 />
                                 </Field>
 
-                                <Button type="submit" colorScheme="blue">
+                                <Button type="submit" colorPalette="blue">
                                     {t('updateProfile.updateAccount')}
                                 </Button>
                             </VStack>
