@@ -19,7 +19,7 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
 
     const inputProps: InputProps = {
         size: "sm",
-        bg: themeColors.bgColorLight(),
+        bg: themeColors.bgColorSecondary(),
         borderRadius: "md"
     };
 

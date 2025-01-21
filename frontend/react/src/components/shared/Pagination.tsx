@@ -34,7 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({
               gap={4}
               mt={2}
               p={1}
-              bg={themeColors.bgColor()}
+              bg={themeColors.bgColorPrimary()}
               borderRadius={"md"}
               fontSize={"sm"}
         >
@@ -43,7 +43,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size="xs"
                 borderRadius={"md"}
-                bg={themeColors.bgColor()}
+                bg={themeColors.bgColorPrimary()}
                 color={themeColors.fontColor()}
                 disabled={currentPage + 1 === totalPages}
             >
@@ -85,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size={"2xs"}
                 borderRadius={"md"}
-                bg={themeColors.bgColor()}
+                bg={themeColors.bgColorPrimary()}
                 mr={2}
                 value={gotoPage}
                 disabled={currentPage + 1 === totalPages}

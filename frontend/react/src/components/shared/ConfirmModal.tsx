@@ -32,7 +32,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
     return (
         <DialogRoot open={isOpen} onOpenChange={(open) => !open && onClose()}>
             <DialogBackdrop />
-            <DialogContent backgroundColor={themeColors.bgColor()}>
+            <DialogContent backgroundColor={themeColors.bgColorPrimary()}>
                 <DialogHeader>{title}</DialogHeader>
                 <DialogBody>{message}</DialogBody>
                 <DialogFooter>

@@ -27,8 +27,9 @@ const Navbar: React.FC = () => {
     const {t} = useTranslation('navbar');
 
     return (
-        <Box bg={themeColors.bgColor()} h={"50px"}>
-            <Flex h={"50px"}
+        <Box bg={themeColors.bgColorPrimary()} h={"50px"}>
+            <Flex
+                h={"50px"}
                   alignItems={'center'}
                   justifyContent={'space-between'}
                   p={2}>
@@ -44,7 +45,7 @@ const Navbar: React.FC = () => {
 
                 {/* Logo and Desktop Navigation */}
                 <HStack gap={1}>
-                    <Box>
+                    <HStack>
                         <Link href="/dashboard">
                             <Image
                                 borderRadius="full"
@@ -54,7 +55,7 @@ const Navbar: React.FC = () => {
                                 cursor="pointer"
                             />
                         </Link>
-                    </Box>
+                    </HStack>
                     <HStack as={'nav'} display={{base: 'none', md: 'flex'}}>
                         <DesktopNav/>
                     </HStack>
@@ -65,16 +66,16 @@ const Navbar: React.FC = () => {
                     <MenuRoot>
                         <MenuTrigger asChild>
                             <Button
-                                bg={themeColors.bgColor()}
+                                bg={themeColors.buttonBgColor()}
                                 ml={4}
                                 color={themeColors.fontColor()}
                                 _hover={{
                                     textDecoration: 'none',
-                                    bg: themeColors.bgColorLight(),
+                                    bg: themeColors.highlightBgColor(),
                                     color: themeColors.fontColorChildMenu()
                                 }}
                                 transition="all 0.3s"
-                                variant="outline"
+                                variant="solid"
                                 size="sm"
                                 p={2}
                             >
@@ -100,40 +101,24 @@ const Navbar: React.FC = () => {
                             </Button>
                         </MenuTrigger>
                         <MenuContent
-                            bg={themeColors.bgColorLight()}
+                            bg={themeColors.bgColorSecondary()}
                             mt={2}
                             p={1}>
                             {userMenuItems.map((item) => (
                                 <MenuItem
                                     key={item.label}
                                     value={item.href}
-                                    bg={themeColors.bgColorLight()}
+                                    bg={themeColors.bgColorSecondary()}
+                                    color={themeColors.fontColor()}
                                     rounded="md"
                                     p={2}
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: themeColors.highlightBgColor(),
-                                        // color: themeColors.fontColorChildMenu(),
-                                        border: '1px solid white'
                                     }}
-                                    // onClick={item.onClick ? item.onClick : undefined}
+                                    onClick={item.onClick ? item.onClick : undefined}
                                 >
-                                    <a
-                                        href={item.href}
-                                        onClick={item.onClick}
-                                        color={themeColors.fontColor()}
-                                    >
-                                        {item.label}
-                                    </a>
-                                    {/*{item.href ? (*/}
-                                    {/*    <Link href={item.href}*/}
-                                    {/*          color={themeColors.fontColor()}*/}
-                                    {/*          onClick={item.onClick ? (e) => e.preventDefault() : undefined}>*/}
-                                    {/*        {item.label}*/}
-                                    {/*    </Link>*/}
-                                    {/*) : (*/}
-                                    {/*    <Text>{item.label}</Text>*/}
-                                    {/*)}*/}
+                                    {item.label}
                                 </MenuItem>
                             ))}
                         </MenuContent>
@@ -166,32 +151,32 @@ const DesktopNav: React.FC = () => {
             {navItems.map((navItem) => (
                 <PopoverRoot key={navItem.label}>
                     <PopoverTrigger asChild>
-                        <Box
+                        <Button
                             p={2}
                             fontSize={'sm'}
                             color={themeColors.fontColor()}
+                            bg={themeColors.buttonBgColor()}
                             fontWeight={500}
                             rounded={'lg'}
                             lineHeight="1.5"
                             _hover={{
-                                border: '1px solid white',
                                 textDecoration: 'none',
-                                bg: themeColors.bgColorLight(),
-                                color: themeColors.popoverBgColor()
+                                bg: themeColors.highlightBgColor(),
+                                color: themeColors.fontColor()
                             }}
                         >
                             <a
                                 color={themeColors.fontColorChildMenu()}
                                 href={navItem.href ?? '#'}>{navItem.label}
                             </a>
-                        </Box>
+                        </Button>
                     </PopoverTrigger>
 
                     {navItem.children && (
                         <PopoverContent
-                            border="1px solid white"
+                            border="1px solid green"
                             boxShadow={'xl'}
-                            bg={themeColors.bgColor()}
+                            bg={themeColors.bgColorPrimary()}
                             color={themeColors.popoverBgColor()}
                             p={2}
                             rounded={'xl'}
@@ -218,7 +203,8 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
             display={'block'}
             p={1}
             rounded={'md'}
-            bg={themeColors.bgColor()}
+            bg={themeColors.bgColorPrimary()}
+            color={themeColors.fontColor()}
             _hover={{
                 border: '1px solid white',
                 textDecoration: 'none',
@@ -229,8 +215,16 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
             <Link href={href}>
                 <Stack direction={'row'} align={'center'}>
                     <Box>
-                        <Text fontWeight={500} lineHeight="1.5">{label}</Text>
-                        {subLabel && <Text fontSize={'xs'}>{subLabel}</Text>}
+                        <Text
+                            fontWeight={500}
+                            lineHeight="1.5"
+                            color={themeColors.fontColor()}
+                        >{label}</Text>
+                        {subLabel &&
+                            <Text
+                                fontSize={'xs'}
+                                color={themeColors.fontColor()}
+                            >{subLabel}</Text>}
                     </Box>
                 </Stack>
             </Link>
@@ -241,7 +235,7 @@ const DesktopSubNav: React.FC<NavItem> = ({label, href, subLabel}) => {
 const MobileNav: React.FC = () => {
     const navItems = getNavItems();
     return (
-        <Stack bg={themeColors.bgColor()} p={4} display={{md: 'none'}}>
+        <Stack bg={themeColors.bgColorPrimary()} p={4} display={{md: 'none'}}>
             {navItems.map((navItem) => (
                 <MobileNavItem key={navItem.label} {...navItem} />
             ))}

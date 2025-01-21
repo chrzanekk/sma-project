@@ -39,7 +39,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                         {t('shared.roles')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColor()}>
+                <DrawerContent bg={themeColors.bgColorPrimary()}>
                     <DrawerContext>
                         {(store) => (
                             <>

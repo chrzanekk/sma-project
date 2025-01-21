@@ -37,7 +37,7 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                         {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColor()}>
+                <DrawerContent bg={themeColors.bgColorPrimary()}>
                     <DrawerContext>
                         {(store) => (
                             <>

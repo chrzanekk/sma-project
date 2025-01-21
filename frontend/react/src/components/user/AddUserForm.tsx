@@ -22,7 +22,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
 
     const inputProps: InputProps = {
         size: "sm",
-        bg: themeColors.bgColorLight(),
+        bg: themeColors.bgColorSecondary(),
         borderRadius: "md"
     };
 
@@ -225,7 +225,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                         styles={{
                                             control: (provided) => ({
                                                 ...provided,
-                                                backgroundColor: themeColors.bgColorLight(),
+                                                backgroundColor: themeColors.bgColorSecondary(),
                                                 borderColor: themeColors.borderColor(),
                                                 borderRadius: "md",
                                                 boxShadow: "none",
@@ -259,7 +259,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                         styles={{
                                             control: (provided) => ({
                                                 ...provided,
-                                                backgroundColor: themeColors.bgColorLight(),
+                                                backgroundColor: themeColors.bgColorSecondary(),
                                                 borderColor: themeColors.borderColor(),
                                                 borderRadius: "md",
                                                 boxShadow: "none",
@@ -293,7 +293,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                         styles={{
                                             control: (provided) => ({
                                                 ...provided,
-                                                backgroundColor: themeColors.bgColorLight(),
+                                                backgroundColor: themeColors.bgColorSecondary(),
                                                 borderColor: themeColors.borderColor(),
                                                 borderRadius: "md",
                                                 boxShadow: "none",

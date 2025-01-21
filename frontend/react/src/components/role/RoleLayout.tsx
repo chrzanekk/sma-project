@@ -16,13 +16,13 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                                                    addRoleButton,
                                                    table,
                                                    pagination,
-                                                   bgColor = themeColors.bgColor()
+                                                   bgColor = themeColors.bgColorPrimary()
                                                }) => {
     const {t} = useTranslation();
     return (
         <Grid
             templateRows="auto auto auto auto 1fr"
-            bgColor={themeColors.bgColorLight()}
+            bgColor={themeColors.bgColorSecondary()}
             height="100vh"
             gap={1}
         >

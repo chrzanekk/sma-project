@@ -10,7 +10,7 @@ const Layout = ({children}: { children: React.ReactNode }) => (
         display="flex"
         flexDirection="column"
         overflow={"hidden"}
-        bg={themeColors.bgColorLight()}
+        bg={themeColors.bgColorSecondary()}
     >
 
         <Box as="header" w="100%" position="sticky" top="0" zIndex="10">

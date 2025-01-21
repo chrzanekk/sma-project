@@ -3,7 +3,7 @@ import {Field, Form, Formik, FormikHelpers} from "formik";
 import {Button, Flex, Input} from "@chakra-ui/react";
 import React from "react";
 import * as Yup from 'yup';
-import {themeColors} from "@/theme/theme-colors.ts";
+import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     name?: string;
@@ -36,8 +36,9 @@ const RoleFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 name="name"
                                 as={Input}
                                 placeholder={t('shared.roleName')}
+                                _placeholder={{color: themeColorsHex.fontColor()}}
                                 size="sm"
-                                bg={themeColors.bgColorLight()}
+                                bg={themeColors.bgColorSecondary()}
                                 borderRadius={"md"}
                                 width="150px"
                             />

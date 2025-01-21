@@ -103,7 +103,7 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                                     styles={{
                                         control: (provided) => ({
                                             ...provided,
-                                            backgroundColor: themeColors.bgColorLight(),
+                                            backgroundColor: themeColors.bgColorSecondary(),
                                             borderColor: themeColors.borderColor(),
                                             borderRadius: "md",
                                             boxShadow: "none",

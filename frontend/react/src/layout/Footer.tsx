@@ -10,7 +10,7 @@ export default function SmallWithLogoLeft() {
     return (
         <Box
             as="footer"
-            bg={themeColors.bgColor()}
+            bg={themeColors.bgColorPrimary()}
             color={themeColors.fontColor()}
             width="100%"
             textAlign="center"

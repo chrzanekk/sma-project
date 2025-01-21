@@ -24,7 +24,7 @@ const UnderConstruction: React.FC<UnderConstructionProps> = ({
             align="center"
             justify="center"
             height="100vh"
-            bg={themeColors.bgColorLight()}
+            bg={themeColors.bgColorSecondary()}
             px={4}
             textAlign="center"
         >

@@ -16,13 +16,13 @@ const UserLayout: React.FC<UserLayoutProps> = ({
                                                          addUserButton,
                                                          table,
                                                          pagination,
-                                                         bgColor = themeColors.bgColor()
+                                                         bgColor = themeColors.bgColorPrimary()
                                                      }) => {
     const {t} = useTranslation();
     return (
         <Grid
             templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
-            bgColor={themeColors.bgColorLight()}
+            bgColor={themeColors.bgColorSecondary()}
             height="100vh" // Pełna wysokość ekranu
             gap={1}
         >

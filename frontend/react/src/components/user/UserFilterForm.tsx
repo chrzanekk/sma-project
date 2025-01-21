@@ -49,7 +49,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
     const selectStyles: StylesConfig<any, boolean> = {
         control: (provided) => ({
             ...provided,
-            backgroundColor: themeColorsHex.bgColorLight(),
+            backgroundColor: themeColorsHex.bgColorSecondary(),
             color: themeColorsHex.fontColor(),
             borderRadius: "5px",
             boxShadow: "none",
@@ -72,12 +72,12 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
         }),
         option: (provided, state) => ({
             ...provided,
-            backgroundColor: state.isSelected ? themeColorsHex.popoverBgColor() : themeColorsHex.bgColorLight(),
+            backgroundColor: state.isSelected ? themeColorsHex.bgColorSecondary() : themeColorsHex.bgColorPrimary(),
             color: state.isSelected ? themeColorsHex.fontColor() : themeColorsHex.fontColor(),
             cursor: "pointer",
             "&:hover": {
-                backgroundColor: themeColorsHex.popoverBgColor(),
-                color: themeColorsHex.popoverBgColor(),
+                backgroundColor: themeColorsHex.highlightBgColor(),
+                color: themeColorsHex.fontColorHover(),
             },
         }),
     };
@@ -114,28 +114,33 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             justifyContent={"center"}
                         >
                             <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
+                                   _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColor()}
+                                   bg={themeColors.bgColorPrimary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="loginStartsWith" as={Input} placeholder={t('shared.login')}
+                                   _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColor()}
+                                   bg={themeColors.bgColorPrimary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="firstNameStartsWith" as={Input} placeholder={t('shared.firstName')}
+                                   _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColor()}
+                                   bg={themeColors.bgColorPrimary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="lastNameStartsWith" as={Input} placeholder={t('shared.lastName')}
+                                   _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColor()}
+                                   bg={themeColors.bgColorPrimary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="positionStartsWith" as={Input} placeholder={t('shared.position')}
+                                   _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColor()}
+                                   bg={themeColors.bgColorPrimary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Select

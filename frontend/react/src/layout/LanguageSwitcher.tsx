@@ -19,7 +19,7 @@ const LanguageSwitcher: React.FC = () => {
         <MenuRoot>
             <MenuTrigger asChild>
                 <Button
-                    bg={themeColors.bgColor()}
+                    bg={themeColors.buttonBgColor()}
                     ml={4}
                     color={themeColors.fontColor()}
                     _hover={{
@@ -27,8 +27,6 @@ const LanguageSwitcher: React.FC = () => {
                         bg: themeColors.highlightBgColor(),
                         color: themeColors.popoverBgColor()
                     }}
-                    as={Button}
-                    variant="outline"
                     size="sm"
                     p={2}
                 >
@@ -36,17 +34,16 @@ const LanguageSwitcher: React.FC = () => {
                     {i18n.language === 'pl' ? 'Polski' : 'English'}
                 </Button>
             </MenuTrigger>
-            <MenuContent bg={themeColors.bgColorLight()} mt={2} p={1}>
+            <MenuContent bg={themeColors.bgColorSecondary()} mt={2} p={1}>
                 <MenuItem
-                    bg={themeColors.bgColorLight()}
+                    bg={themeColors.bgColorSecondary()}
                     p={2}
                     color={themeColors.fontColor()}
                     rounded={'md'}
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
-                        color: themeColors.fontColorChildMenu(),
-                        border: '1px solid white'
+                        color: themeColors.popoverBgColor(),
                     }}
                     value={'pl'}
                     valueText={'🇵🇱 Polski'}
@@ -54,14 +51,13 @@ const LanguageSwitcher: React.FC = () => {
                     🇵🇱 Polski
                 </MenuItem>
                 <MenuItem
-                    bg={themeColors.bgColor()}
+                    bg={themeColors.bgColorSecondary()}
                     rounded={'md'}
                     color={themeColors.fontColor()}
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
                         color: themeColors.popoverBgColor(),
-                        border: '1px solid white'
                     }}
                     value={'en'}
                     valueText={'🇬🇧 English'}

@@ -21,7 +21,7 @@ const Error404: React.FC<Error404Props> = ({
             align="center"
             justify="center"
             height="100vh"
-            bg={themeColors.bgColor()}
+            bg={themeColors.bgColorPrimary()}
             px={4}
             textAlign="center"
         >

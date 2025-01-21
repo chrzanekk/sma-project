@@ -20,7 +20,7 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
 
     const inputProps: InputProps = {
         size: "sm",
-        bg: themeColors.bgColorLight(),
+        bg: themeColors.bgColorSecondary(),
         borderRadius: "md"
     }
     return (

@@ -61,7 +61,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
 
     const inputProps: InputProps = {
         size: "sm",
-        bg: themeColors.bgColorLight(),
+        bg: themeColors.bgColorSecondary(),
         borderRadius: "md"
     }
 
@@ -202,7 +202,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                             styles={{
                                                 control: (provided) => ({
                                                     ...provided,
-                                                    backgroundColor: themeColors.bgColorLight(),
+                                                    backgroundColor: themeColors.bgColorSecondary(),
                                                     borderColor: themeColors.borderColor(),
                                                     borderRadius: "md",
                                                     boxShadow: "none",
@@ -234,7 +234,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                             styles={{
                                                 control: (provided) => ({
                                                     ...provided,
-                                                    backgroundColor: themeColors.bgColorLight(),
+                                                    backgroundColor: themeColors.bgColorSecondary(),
                                                     borderColor: themeColors.borderColor(),
                                                     borderRadius: "md",
                                                     boxShadow: "none",

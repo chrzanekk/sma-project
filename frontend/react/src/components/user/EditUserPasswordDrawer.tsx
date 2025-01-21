@@ -39,7 +39,7 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                         {t('shared.password')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColor()}>
+                <DrawerContent bg={themeColors.bgColorPrimary()}>
                     <DrawerContext>
                         {(store) => (
                             <>

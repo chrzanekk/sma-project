@@ -14,7 +14,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = themeColors.bgColor(),
+                                                         bgColor = themeColors.bgColorPrimary(),
                                                          fontColor = themeColors.fontColor()
                                                      }) => {
     return (

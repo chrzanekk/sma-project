@@ -30,7 +30,7 @@ const AdminPanel: React.FC = () => {
         <Grid
             templateRows="6% 94%"
             height={"90%"}
-            bgColor={themeColors.bgColorLight()}
+            bgColor={themeColors.bgColorSecondary()}
             gap={1}
             px={1}
             py={1}
@@ -39,7 +39,7 @@ const AdminPanel: React.FC = () => {
             <GridItem
                 w="100%"
                 p={1}
-                bg={themeColors.bgColor()}
+                bg={themeColors.bgColorPrimary()}
                 borderRadius={"lg"}
                 color={"white"}
             >
@@ -56,7 +56,7 @@ const AdminPanel: React.FC = () => {
                     <MenuRoot>
                         <MenuTrigger asChild>
                             <Button
-                                bg={themeColors.bgColor()}
+                                bg={themeColors.bgColorPrimary()}
                                 p={2}
                                 color={themeColors.fontColor()}
                                 _hover={{
@@ -75,11 +75,11 @@ const AdminPanel: React.FC = () => {
                                 {t("selectView")}
                             </Button>
                         </MenuTrigger>
-                        <MenuContent bgColor={themeColors.bgColor()}>
+                        <MenuContent bgColor={themeColors.bgColorPrimary()}>
                             {adminMenuItems.map((item, index) => (
                                 <MenuItem
                                     key={item.label || index}
-                                    bg={themeColors.bgColor()}
+                                    bg={themeColors.bgColorPrimary()}
                                     rounded={'md'}
                                     p={[2, 3]}
                                     _hover={{
@@ -103,7 +103,7 @@ const AdminPanel: React.FC = () => {
 
             <GridItem
                 w="100%"
-                bg={themeColors.bgColor()}
+                bg={themeColors.bgColorPrimary()}
                 borderRadius="lg"
                 overflowY={"auto"}
             >

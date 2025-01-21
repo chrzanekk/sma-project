@@ -156,7 +156,7 @@ const UserProfileEdit: React.FC = () => {
                     color={themeColors.fontColor()}
                     defaultValue={"account"}
                     fitted
-                    background={themeColors.bgColor()}
+                    background={themeColors.bgColorPrimary()}
                 >
                     <Tabs.List>
                         <Tabs.Trigger
@@ -169,7 +169,7 @@ const UserProfileEdit: React.FC = () => {
                                 bg: themeColors.highlightBgColor(),
                                 color: themeColors.fontColor()
                             }}
-                            background={themeColors.bgColor()}
+                            background={themeColors.bgColorPrimary()}
                         >{t('updateProfile.accountInfo')}
                         </Tabs.Trigger>
                         <Tabs.Trigger
@@ -197,8 +197,8 @@ const UserProfileEdit: React.FC = () => {
                                         name="firstName"
                                         value={accountForm.values.firstName}
                                         onChange={accountForm.handleChange}
-                                        bgColor={themeColors.bgColorLight()}
-                                        color={themeColors.bgColor()}
+                                        bgColor={themeColors.bgColorSecondary()}
+                                        color={themeColors.bgColorPrimary()}
                                     />
                                 </Field>
 
@@ -211,8 +211,8 @@ const UserProfileEdit: React.FC = () => {
                                         name="lastName"
                                         value={accountForm.values.lastName}
                                         onChange={accountForm.handleChange}
-                                        bgColor={themeColors.bgColorLight()}
-                                        color={themeColors.bgColor()}
+                                        bgColor={themeColors.bgColorSecondary()}
+                                        color={themeColors.bgColorPrimary()}
                                     />
                                 </Field>
 
@@ -224,8 +224,8 @@ const UserProfileEdit: React.FC = () => {
                                     name="position"
                                     value={accountForm.values.position}
                                     onChange={accountForm.handleChange}
-                                    bgColor={themeColors.bgColorLight()}
-                                    color={themeColors.bgColor()}
+                                    bgColor={themeColors.bgColorSecondary()}
+                                    color={themeColors.bgColorPrimary()}
                                 />
                                 </Field>
 
@@ -249,7 +249,7 @@ const UserProfileEdit: React.FC = () => {
                                     name="password"
                                     value={passwordForm.values.password}
                                     onChange={passwordForm.handleChange}
-                                    bgColor={themeColors.bgColorLight()}
+                                    bgColor={themeColors.bgColorSecondary()}
                                 />
                                 </Field>
 
@@ -263,7 +263,7 @@ const UserProfileEdit: React.FC = () => {
                                         name="newPassword"
                                         value={passwordForm.values.newPassword}
                                         onChange={passwordForm.handleChange}
-                                        bgColor={themeColors.bgColorLight()}
+                                        bgColor={themeColors.bgColorSecondary()}
                                     />
                                 </Field>
 
@@ -277,7 +277,7 @@ const UserProfileEdit: React.FC = () => {
                                         name="confirmPassword"
                                         value={passwordForm.values.confirmPassword}
                                         onChange={passwordForm.handleChange}
-                                        bgColor={themeColors.bgColorLight()}
+                                        bgColor={themeColors.bgColorSecondary()}
                                     />
                                 </Field>
 
