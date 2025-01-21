@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect, useState} from "react";
-import {Box, HStack} from "@chakra-ui/react";
+import {HStack, Icon} from "@chakra-ui/react";
 import {useTheme} from "next-themes";
 import {FaMoon, FaSun} from "react-icons/fa6";
 import {Switch} from "@/components/ui/switch.tsx";
@@ -18,14 +18,24 @@ export const ThemeToggle: React.FC = () => {
 
     return (
         <HStack>
-            <Box as={FaSun} color="green.500"/>
             <Switch
-                colorPalette="green"
+                colorPalette="teal"
                 checked={theme === "dark"}
                 onChange={() => setTheme(theme === "light" ? "dark" : "light")}
-                size="sm"
+                size="lg"
+                trackLabel={{
+                    on: (
+                        <Icon color={"yellow.400"}>
+                            <FaMoon/>
+                        </Icon>
+                    ),
+                    off: (
+                        <Icon color={"green.500"}>
+                            <FaSun/>
+                        </Icon>
+                    )
+                }}
             />
-            <Box as={FaMoon} color="green.500"/>
         </HStack>
     );
 };

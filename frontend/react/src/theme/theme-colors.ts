@@ -1,14 +1,14 @@
 import { useColorModeValue } from "@/components/ui/color-mode";
 
 export const themeColors = {
-    bgColorPrimary: () => useColorModeValue('gray.200', 'gray.700'),
+    bgColorPrimary: () => useColorModeValue('gray.300', 'gray.700'),
     bgColorSecondary: () => useColorModeValue('gray.50', 'gray.600'),
-    buttonBgColor: () => useColorModeValue('gray.200', 'gray.700'),
+    buttonBgColor: () => useColorModeValue('gray.300', 'gray.700'),
     popoverBgColor: () => useColorModeValue('white', 'gray.200'),
     highlightBgColor: () => useColorModeValue('green.300', 'green.700'),
     borderColor: () => useColorModeValue('gray.200', 'gray.600'),
     fontColor: () => useColorModeValue('gray.600', 'gray.300'),
-    fontColorHover: () => useColorModeValue('gray.50',"gray.400"),
+    fontColorHover: () => useColorModeValue('gray.100',"gray.400"),
     fontColorChildMenu: () => useColorModeValue('gray.500', 'gray.200')
 };
 

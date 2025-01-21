@@ -32,6 +32,7 @@
     "currentLanguage": "Język:",
     "polish": "Polski",
     "english": "Angielski",
+    "mode":"Tryb",
     "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",

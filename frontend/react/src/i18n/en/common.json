@@ -32,6 +32,7 @@
     "currentLanguage": "Language:",
     "polish": "Polish",
     "english": "English",
+    "mode":"Mode",
     "lastModifiedDate": "Data ost. modyf.",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
