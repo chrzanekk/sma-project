@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
                                 _hover={{
                                     textDecoration: 'none',
                                     bg: themeColors.highlightBgColor(),
-                                    color: themeColors.fontColorChildMenu()
+                                    color: themeColors.fontColorHover()
                                 }}
                                 transition="all 0.3s"
                                 variant="solid"
@@ -115,6 +115,7 @@ const Navbar: React.FC = () => {
                                     _hover={{
                                         textDecoration: 'none',
                                         bg: themeColors.highlightBgColor(),
+                                        color: themeColors.fontColorHover()
                                     }}
                                     onClick={item.onClick ? item.onClick : undefined}
                                 >
@@ -162,7 +163,7 @@ const DesktopNav: React.FC = () => {
                             _hover={{
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
-                                color: themeColors.fontColor()
+                                color: themeColors.fontColorHover()
                             }}
                         >
                             <a

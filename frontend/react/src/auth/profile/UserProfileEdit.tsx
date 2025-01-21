@@ -157,7 +157,7 @@ const UserProfileEdit: React.FC = () => {
                             _hover={{
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
-                                color: themeColors.fontColor()
+                                color: themeColors.fontColorHover()
                             }}
 
                         >{t('updateProfile.accountInfo')}
@@ -170,7 +170,7 @@ const UserProfileEdit: React.FC = () => {
                             _hover={{
                                 textDecoration: 'none',
                                 bg: themeColors.highlightBgColor(),
-                                color: themeColors.popoverBgColor()
+                                color: themeColors.fontColorHover()
                             }}
                         >{t('updateProfile.changePassword')}
                         </Tabs.Trigger>

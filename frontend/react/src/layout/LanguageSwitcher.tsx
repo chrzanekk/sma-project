@@ -19,13 +19,13 @@ const LanguageSwitcher: React.FC = () => {
         <MenuRoot>
             <MenuTrigger asChild>
                 <Button
-                    bg={themeColors.buttonBgColor()}
+                    bg={themeColors.bgColorPrimary()}
                     ml={4}
                     color={themeColors.fontColor()}
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
-                        color: themeColors.popoverBgColor()
+                        color: themeColors.fontColorHover()
                     }}
                     size="sm"
                     p={2}
@@ -43,7 +43,7 @@ const LanguageSwitcher: React.FC = () => {
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
-                        color: themeColors.popoverBgColor(),
+                        color: themeColors.fontColorHover(),
                     }}
                     value={'pl'}
                     valueText={'🇵🇱 Polski'}
@@ -57,7 +57,7 @@ const LanguageSwitcher: React.FC = () => {
                     _hover={{
                         textDecoration: 'none',
                         bg: themeColors.highlightBgColor(),
-                        color: themeColors.popoverBgColor(),
+                        color: themeColors.fontColorHover(),
                     }}
                     value={'en'}
                     valueText={'🇬🇧 English'}

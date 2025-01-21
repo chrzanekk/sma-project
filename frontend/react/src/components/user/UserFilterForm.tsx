@@ -49,7 +49,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
     const selectStyles: StylesConfig<any, boolean> = {
         control: (provided) => ({
             ...provided,
-            backgroundColor: themeColorsHex.bgColorSecondary(),
+            backgroundColor: themeColorsHex.bgColorPrimary(),
             color: themeColorsHex.fontColor(),
             borderRadius: "5px",
             boxShadow: "none",
@@ -116,31 +116,31 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <Field name="emailStartsWith" as={Input} placeholder={t('shared.email')}
                                    _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColorPrimary()}
+                                   bg={themeColors.bgColorSecondary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="loginStartsWith" as={Input} placeholder={t('shared.login')}
                                    _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColorPrimary()}
+                                   bg={themeColors.bgColorSecondary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="firstNameStartsWith" as={Input} placeholder={t('shared.firstName')}
                                    _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColorPrimary()}
+                                   bg={themeColors.bgColorSecondary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="lastNameStartsWith" as={Input} placeholder={t('shared.lastName')}
                                    _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColorPrimary()}
+                                   bg={themeColors.bgColorSecondary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Field name="positionStartsWith" as={Input} placeholder={t('shared.position')}
                                    _placeholder={{color: themeColorsHex.fontColor()}}
                                    size="sm"
-                                   bg={themeColors.bgColorPrimary()}
+                                   bg={themeColors.bgColorSecondary()}
                                    borderRadius={"md"}
                                    width="150px"/>
                             <Select
