@@ -25,12 +25,12 @@ export const ThemeToggle: React.FC = () => {
                 size="lg"
                 trackLabel={{
                     on: (
-                        <Icon color={"yellow.400"}>
+                        <Icon color={"green.500"}>
                             <FaMoon/>
                         </Icon>
                     ),
                     off: (
-                        <Icon color={"green.500"}>
+                        <Icon color={"yellow.500"}>
                             <FaSun/>
                         </Icon>
                     )
