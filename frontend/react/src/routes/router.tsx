@@ -88,6 +88,50 @@ const router = createBrowserRouter([
                     />
                 </Layout>
             </ProtectedRoute>
+        },
+        {
+            path: "diaryList",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={'diaryList'}
+                        nameSpace={'navbar'}
+                    />
+                </Layout>
+            </ProtectedRoute>
+        },
+        {
+            path: "diaryAddNew",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={'diaryAddNew'}
+                        nameSpace={'navbar'}
+                    />
+                </Layout>
+            </ProtectedRoute>
+        },
+        {
+            path: "mainWarehouse",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={'mainWarehouse'}
+                        nameSpace={'navbar'}
+                    />
+                </Layout>
+            </ProtectedRoute>
+        },
+        {
+            path: "constructionSites",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={'constructionSites'}
+                        nameSpace={'navbar'}
+                    />
+                </Layout>
+            </ProtectedRoute>
         }
     ],
 );

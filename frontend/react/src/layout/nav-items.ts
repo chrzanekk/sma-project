@@ -1,52 +1,58 @@
 import {useTranslation} from "react-i18next";
+import {useNavigate} from "react-router-dom";
+import {NavItem} from "@/types/nav-item-types.ts";
 
-export interface NavItem {
-    label: string;
-    subLabel?: string;
-    children?: Array<NavItem>;
-    href?: string;
-}
-
-export const getNavItems = (): Array<NavItem> => {
+export const getNavItems = (): NavItem[] => {
     const {t} = useTranslation('navbar');
+    const navigate = useNavigate();
     return [
         {
             label: t('dashboard'),
-            href: '/dashboard'
+            href: '#',
+            onClick: (() => navigate('/dashboard')),
+            value: "dashboard"
         },
         {
             label: t('diary'),
+            value: "diary",
             children: [
                 {
                     label: t('diaryList'),
-                    subLabel: t('diaryListSubLabel'),
                     href: '#',
+                    onClick: (() => navigate('/diaryList')),
+                    value: "diaryList"
                 },
                 {
                     label: t('diaryAddNew'),
-                    subLabel: t('diaryAddNewSubLabel'),
                     href: '#',
+                    onClick: (() => navigate('/diaryAddNew')),
+                    value: "diaryAddNew"
                 },
             ],
         },
         {
             label: t('warehouse'),
+            value: "warehouse",
             children: [
                 {
                     label: t('mainWarehouse'),
-                    subLabel: t('mainWarehouseSubLabel'),
                     href: '#',
+                    onClick: (() => navigate('/mainWarehouse')),
+                    value: "mainWarehouse"
                 },
                 {
                     label: t('constructionSites'),
-                    subLabel: t('constructionSitesSubLabel'),
                     href: '#',
+                    onClick: (() => navigate('/constructionSites')),
+                    value: "constructionSites"
                 },
-            ],
+            ]
         },
         {
             label: t('contractors'),
-            href: '/contractors',
+            href: '#',
+            onClick: (() => navigate('/contractors')),
+            value: "contractors"
         }
     ];
 }

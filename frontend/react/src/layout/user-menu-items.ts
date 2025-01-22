@@ -11,9 +11,24 @@ export const getUserMenuItems = (): MenuItem[] => {
     const hasRole = (role: string) => user?.roles?.includes(role);
 
     return [
-        {label: t('profile'), href: "#", onClick: (()=>navigate("/profile"))},
-        ...(hasRole('ROLE_ADMIN') ? [{label: t('adminPanel'), href:"#" , onClick: (()=> navigate('/adminPanel'))}] :[]),
-        {label: t('logout'), href: '#', onClick: logOut},
+        {
+            label: t('profile'),
+            href: "#",
+            onClick: (() => navigate("/profile")),
+            value: "profile"
+        },
+        ...(hasRole('ROLE_ADMIN') ? [{
+            label: t('adminPanel'),
+            href: "#",
+            value: " adminPanel",
+            onClick: (() => navigate('/adminPanel')),
+        }] : []),
+        {
+            label: t('logout'),
+            href: '#',
+            value: "logout",
+            onClick: logOut
+        },
     ];
 };
 
