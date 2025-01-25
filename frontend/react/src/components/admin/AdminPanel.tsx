@@ -28,7 +28,6 @@ const AdminPanel: React.FC = () => {
 
     return (
         <Grid
-            templateRows="6% 94%"
             height={"90%"}
             bgColor={themeColors.bgColorSecondary()}
             gap={1}
@@ -37,19 +36,18 @@ const AdminPanel: React.FC = () => {
         >
             {/* Wiersz 1: Tytuł i menu wyboru */}
             <GridItem
-                w="100%"
+                w={"100%"}
                 p={1}
                 bg={themeColors.bgColorPrimary()}
                 borderRadius={"lg"}
                 color={"white"}
             >
                 <Flex
-                    justifyContent="space-between"
-                    alignSelf="center"
+                    justifyContent={"space-between"}
                 >
-                    <Heading size="sm"
-                             fontSize="clamp(12px, 2vw, 14px)"
-                             alignSelf="center"
+                    <Heading size={"lg"}
+                             fontSize={"16px"}
+                             textAlign={"center"}
                              color={themeColors.fontColor()}>
                         {t('adminPanel')}
                     </Heading>
@@ -69,7 +67,7 @@ const AdminPanel: React.FC = () => {
                                 fontSize="clamp(10px, 1.5vw, 12px)"
                                 textAlign="center"
                                 w="auto" // Szerokość automatyczna
-                                h="100%" // Dostosowanie wysokości do rodzica
+                                h="auto" // Dostosowanie wysokości do rodzica
                                 maxH="40px"
                             >
                                 {t("selectView")}
