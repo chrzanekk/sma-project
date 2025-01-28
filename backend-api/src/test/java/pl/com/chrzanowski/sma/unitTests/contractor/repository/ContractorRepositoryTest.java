@@ -47,7 +47,13 @@ class ContractorRepositoryTest extends AbstractTestContainers {
     @Test
     void findByName_Positive() {
         // Given
-        Contractor contractor = Contractor.builder().name("Test Contractor").taxNumber("1234567890").build();
+        Contractor contractor = Contractor.builder()
+                .name("Test Contractor")
+                .customer(true)
+                .supplier(true)
+                .scaffoldingUser(true)
+                .taxNumber("1234567890")
+                .build();
         contractorRepository.save(contractor);
 
         // When
@@ -71,7 +77,13 @@ class ContractorRepositoryTest extends AbstractTestContainers {
     @Test
     void existsByName_Positive() {
         // Given
-        Contractor contractor = Contractor.builder().name("Test Contractor").taxNumber("1234567890").build();
+        Contractor contractor = Contractor.builder()
+                .name("Test Contractor")
+                .taxNumber("1234567890")
+                .customer(true)
+                .supplier(true)
+                .scaffoldingUser(true)
+                .build();
         contractorRepository.save(contractor);
 
         // When
