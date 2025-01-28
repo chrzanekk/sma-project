@@ -32,16 +32,12 @@ public enum Country {
             countriesWithCode.put(country.code, country);
         }
     }
-
-    public static Country getByType(String code) {
-        return countriesWithCode.get(code);
-    }
-
-    @JsonValue
-    public Map<String, String> toJson() {
-        Map<String, String> jsonRepresentation = new HashMap<>();
-        jsonRepresentation.put("code", code);
-        jsonRepresentation.put("name", name);
-        return jsonRepresentation;
+    public static Country fromCode(String code) {
+        for (Country country : values()) {
+            if (country.getCode().equalsIgnoreCase(code)) {
+                return country;
+            }
+        }
+        throw new IllegalArgumentException("Unknown country code: " + code);
     }
 }
