@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
+import jakarta.persistence.EntityManager;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,7 +15,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
-import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
@@ -23,13 +23,13 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
-import pl.com.chrzanowski.sma.role.model.Role;
-import pl.com.chrzanowski.sma.role.repository.RoleRepository;
+import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.model.User;
+import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,15 +51,24 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     private SendEmailService sendEmailService;
 
     @Autowired
-    private RoleRepository roleRepository;
-
-    @Autowired
     private ContractorRepository contractorRepository;
 
     private String jwtToken;
 
     @Autowired
     private UserHelper userHelper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private ContractorMapper contractorMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private EntityManager em;
 
     @BeforeEach
     void setUp() {
@@ -81,21 +90,23 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
         LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
-        userHelper.registerSecondUser(webTestClient);
+        LoginRequest secondUser = userHelper.registerSecondUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
 
-        createContractor(null, "First Contractor", "1234567890", "Main Street", "10", "1A",
-                "00-001", "Warsaw", Country.POLAND);
+        User firstRegisteredUser = userMapper.toEntity(userService.getUserByLogin(firstUser.getLogin()));
+        User secondRegisteredUser = userMapper.toEntity(userService.getUserByLogin(secondUser.getLogin()));
 
-        createContractor(null, "Second Contractor", "0987654321", "Second Street", "20", "2B",
-                "00-002", "Krakow", Country.POLAND);
+        createContractor("First Contractor", "1234567890", "Main Street", "10", "1A",
+                "00-001", "Warsaw", Country.POLAND, firstRegisteredUser);
+
+        createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
+                "00-002", "Krakow", Country.POLAND, secondRegisteredUser);
 
     }
 
-    private ContractorDTO createContractor(Long id, String name, String taxNumber, String street, String buildingNo,
-                                           String apartmentNo, String postalCode, String city, Country country) {
-        ContractorDTO contractor = ContractorDTO.builder()
-                .id(id)
+    private ContractorDTO createContractor(String name, String taxNumber, String street, String buildingNo,
+                                           String apartmentNo, String postalCode, String city, Country country, User user) {
+        Contractor contractor = Contractor.builder()
                 .name(name)
                 .taxNumber(taxNumber)
                 .street(street)
@@ -105,18 +116,11 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .city(city)
                 .country(country)
                 .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
+                .createdBy(user)
+                .lastModifiedDatetime(null)
                 .build();
-
-        return webTestClient.post()
-                .uri("/api/contractors/add")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(contractor)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBody(ContractorDTO.class)
-                .returnResult().getResponseBody();
+        Contractor savedContractor = contractorRepository.save(contractor);
+        return contractorMapper.toDto(savedContractor);
     }
 
     @Test

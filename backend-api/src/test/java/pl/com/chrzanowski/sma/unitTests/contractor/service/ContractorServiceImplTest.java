@@ -1,24 +1,21 @@
 package pl.com.chrzanowski.sma.unitTests.contractor.service;
 
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
+import pl.com.chrzanowski.sma.user.model.User;
+import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -38,7 +35,10 @@ class ContractorServiceImplTest {
     private ContractorMapper contractorMapper;
 
     @Mock
-    private ContractorQuerySpec contractorQuerySpec;
+    private UserService userService;
+
+    @Mock
+    private EntityManager entityManager;
 
     @InjectMocks
     private ContractorServiceImpl contractorService;
@@ -60,6 +60,14 @@ class ContractorServiceImplTest {
         contractor = new Contractor();
         contractor.setId(1L);
         contractor.setName("Workshop 1");
+
+        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null);
+        when(userService.getUserWithAuthorities()).thenReturn(mockUser);
+
+        User user = new User();
+        user.setId(mockUser.id());
+        user.setLogin(mockUser.login());
+        when(entityManager.getReference(User.class, mockUser.id())).thenReturn(user);
     }
 
 
@@ -86,6 +94,8 @@ class ContractorServiceImplTest {
 
     @Test
     void testUpdateContractorSuccess() {
+        when(contractorDao.findById(anyLong())).thenReturn(Optional.of(contractor));
+
         when(contractorMapper.toEntity(any(ContractorDTO.class))).thenReturn(contractor);
         when(contractorDao.save(any(Contractor.class))).thenReturn(contractor);
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);

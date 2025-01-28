@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.common.security;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -11,6 +13,8 @@ import java.util.stream.Stream;
 
 public class SecurityUtils {
 
+    private static final Logger log = LoggerFactory.getLogger(SecurityUtils.class);
+
     private SecurityUtils() {
     }
 
@@ -19,20 +23,40 @@ public class SecurityUtils {
      *
      * @return the login of the current user.
      */
+//    public static Optional<String> getCurrentUserLogin() {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//        return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
+//    }
+//
+//    private static String extractPrincipal(Authentication authentication) {
+//        if (authentication == null) {
+//            return null;
+//        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
+//            return springSecurityUser.getUsername();
+//        } else if (authentication.getPrincipal() instanceof String) {
+//            return (String) authentication.getPrincipal();
+//        }
+//        return null;
+//    }
     public static Optional<String> getCurrentUserLogin() {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        return Optional.ofNullable(extractPrincipal(securityContext.getAuthentication()));
-    }
-
-    private static String extractPrincipal(Authentication authentication) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            return null;
-        } else if (authentication.getPrincipal() instanceof UserDetails springSecurityUser) {
-            return springSecurityUser.getUsername();
-        } else if (authentication.getPrincipal() instanceof String) {
-            return (String) authentication.getPrincipal();
+            log.debug("SecurityContext is empty.");
+            return Optional.empty();
         }
-        return null;
+
+        log.debug("Authentication principal: {}", authentication.getPrincipal());
+        if (authentication.getPrincipal() instanceof UserDetails) {
+            String username = ((UserDetails) authentication.getPrincipal()).getUsername();
+            log.debug("Found username: {}", username);
+            return Optional.of(username);
+        } else if (authentication.getPrincipal() instanceof String) {
+            log.debug("Found username: {}", authentication.getPrincipal());
+            return Optional.of((String) authentication.getPrincipal());
+        }
+
+        log.debug("No username found.");
+        return Optional.empty();
     }
 
 
