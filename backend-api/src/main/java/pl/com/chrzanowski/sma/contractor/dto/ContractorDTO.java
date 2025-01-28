@@ -26,6 +26,9 @@ public class ContractorDTO {
     @JsonDeserialize(using = CountryDeserializer.class)
     @JsonSerialize(using = CountrySerializer.class)
     Country country;
+    Boolean customer;
+    Boolean supplier;
+    Boolean scaffoldingUser;
     Instant createdDatetime;
     Instant lastModifiedDatetime;
     Long createdById;

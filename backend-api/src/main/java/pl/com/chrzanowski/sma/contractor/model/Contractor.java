@@ -19,7 +19,6 @@ import pl.com.chrzanowski.sma.common.model.AuditableEntity;
 public class Contractor extends AuditableEntity {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contractor_seq")
     @SequenceGenerator(name = "contractor_seq", sequenceName = "contractor_sequence", allocationSize = 1)
     @Column(nullable = false)
@@ -51,4 +50,13 @@ public class Contractor extends AuditableEntity {
     @Column(name = "country")
     @Enumerated(EnumType.STRING)
     private Country country;
+
+    @Column(name = "customer", nullable = false)
+    private Boolean customer;
+
+    @Column(name = "supplier", nullable = false)
+    private Boolean supplier;
+
+    @Column(name = "scaffolding_user", nullable = false)
+    private Boolean scaffoldingUser;
 }
