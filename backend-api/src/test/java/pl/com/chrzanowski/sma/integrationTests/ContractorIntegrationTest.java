@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
-import jakarta.persistence.EntityManager;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,8 +66,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private EntityManager em;
+    private ContractorDTO firstContractor;
 
     @BeforeEach
     void setUp() {
@@ -96,7 +94,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         User firstRegisteredUser = userMapper.toEntity(userService.getUserByLogin(firstUser.getLogin()));
         User secondRegisteredUser = userMapper.toEntity(userService.getUserByLogin(secondUser.getLogin()));
 
-        createContractor("First Contractor", "1234567890", "Main Street", "10", "1A",
+        firstContractor = createContractor("First Contractor", "1234567890", "Main Street", "10", "1A",
                 "00-001", "Warsaw", Country.POLAND, firstRegisteredUser);
 
         createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
@@ -161,8 +159,9 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldGetContractorByIdSuccessfully() {
+        Long id = firstContractor.getId();
         ContractorDTO contractor = webTestClient.get()
-                .uri("/api/contractors/getById/1")
+                .uri("/api/contractors/getById/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -170,7 +169,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(contractor).isNotNull();
-        assertThat(contractor.getId()).isEqualTo(1L);
+        assertThat(contractor.getId()).isEqualTo(firstContractor.getId());
         assertThat(contractor.getName()).isEqualTo("First Contractor");
         assertThat(contractor.getCity()).isEqualTo("Warsaw");
     }
@@ -200,7 +199,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(1);
-        assertThat(contractors.get(0).getName()).isEqualTo("First Contractor");
+        assertThat(contractors.getFirst().getName()).isEqualTo("First Contractor");
     }
 
     @Test
@@ -233,7 +232,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldUpdateContractorSuccessfully() {
         ContractorDTO updateContractor = ContractorDTO.builder()
-                .id(1L)
+                .id(firstContractor.getId())
                 .name("Updated Contractor")
                 .taxNumber("1111111111")
                 .street("Updated Street")
@@ -278,8 +277,9 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldDeleteContractorSuccessfully() {
+        Long id = firstContractor.getId();
         webTestClient.delete()
-                .uri("/api/contractors/delete/1")
+                .uri("/api/contractors/delete/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk();
@@ -297,8 +297,9 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFailToDeleteContractorWithoutAuthorization() {
+
         webTestClient.delete()
-                .uri("/api/contractors/delete/1")
+                .uri("/api/contractors/delete/" + 66L)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }

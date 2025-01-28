@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,7 +29,6 @@ import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -96,6 +93,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
         userHelper.registerSecondUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUserLogin, webTestClient);
         firstUser = userDao.findByLogin(firstUserLogin.getLogin()).get();
+
     }
 
     @Test
@@ -114,8 +112,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldGetUserByIdSuccessfully() {
+        Long id = firstUser.getId();
         UserDTO userDTO = webTestClient.get()
-                .uri("/api/users/getById/1")
+                .uri("/api/users/getById/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -123,7 +122,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .returnResult().getResponseBody();
 
         assertThat(userDTO).isNotNull();
-        assertThat(userDTO.getId()).isEqualTo(1L);
+        assertThat(userDTO.getId()).isEqualTo(firstUser.getId());
     }
 
     @Test
@@ -153,8 +152,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldUpdateUserSuccessfully() {
+        Long id = firstUser.getId();
         UserDTO updateUser = UserDTO.builder()
-                .id(1L)
+                .id(id)
                 .login("updateduser")
                 .email("updated@test.com")
                 .firstName(firstUser.getFirstName())
@@ -177,8 +177,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldDeleteUserByIdSuccessfully() {
+        Long id = firstUser.getId();
         webTestClient.delete()
-                .uri("/api/users/delete/1")
+                .uri("/api/users/delete/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk();
@@ -467,9 +468,6 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldGetUsersByRolesSuccessfully() {
-        Role userRole = roleRepository.findByName("ROLE_USER").get();
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("roles", "ROLE_ADMIN");
 

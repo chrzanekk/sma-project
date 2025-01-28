@@ -77,8 +77,8 @@ public class ContractorServiceImpl implements ContractorService {
     @Override
     public ContractorDTO findById(Long id) {
         log.debug("Find contractor by id: {}", id);
-        Optional<Contractor> workshopOptional = contractorDao.findById(id);
-        return contractorMapper.toDto(workshopOptional.orElseThrow(() -> new ObjectNotFoundException("Workshop not " +
+        Optional<Contractor> optionalContractor = contractorDao.findById(id);
+        return contractorMapper.toDto(optionalContractor.orElseThrow(() -> new ObjectNotFoundException("Contractor not " +
                 "found")));
     }
 

@@ -19,7 +19,9 @@ import pl.com.chrzanowski.sma.common.model.AuditableEntity;
 public class Contractor extends AuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contractor_seq")
+    @SequenceGenerator(name = "contractor_seq", sequenceName = "contractor_sequence", allocationSize = 1)
     @Column(nullable = false)
     private Long id;
 

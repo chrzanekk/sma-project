@@ -2,10 +2,7 @@ package pl.com.chrzanowski.sma.email.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import pl.com.chrzanowski.sma.common.enumeration.Language;
 import pl.com.chrzanowski.sma.common.enumeration.MailEvent;
 import pl.com.chrzanowski.sma.user.model.User;
@@ -13,15 +10,17 @@ import pl.com.chrzanowski.sma.user.model.User;
 import java.time.Instant;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder(toBuilder = true)
 @Table(name = "send_emails")
 public class SendEmail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "send_emails_seq")
+    @SequenceGenerator(name = "send_emails_seq", sequenceName = "send_emails_sequence", allocationSize = 1)
     @Column(nullable = false)
     private Long id;
 
@@ -42,9 +41,34 @@ public class SendEmail {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     @JoinColumn(nullable = false, name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @Column(name = "create_date")
     private Instant createdDatetime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SendEmail sendEmail = (SendEmail) o;
+        return id != null && id.equals(sendEmail.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "SendEmail{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", mailEvent=" + mailEvent +
+                ", language=" + language +
+                ", createdDatetime=" + createdDatetime +
+                '}';
+    }
 }

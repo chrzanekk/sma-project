@@ -21,7 +21,8 @@ import java.util.Objects;
 public class UserToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_tokens_seq")
+    @SequenceGenerator(name = "user_tokens_seq", sequenceName = "user_tokens_sequence", allocationSize = 1)
     @Column(nullable = false)
     private Long id;
 
@@ -30,6 +31,7 @@ public class UserToken {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @Column(name = "creation_date")
