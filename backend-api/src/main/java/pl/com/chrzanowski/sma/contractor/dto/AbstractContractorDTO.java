@@ -3,6 +3,7 @@ package pl.com.chrzanowski.sma.contractor.dto;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.json.CountryDeserializer;
@@ -12,6 +13,7 @@ import java.time.Instant;
 
 @Getter
 @SuperBuilder
+@NoArgsConstructor(force = true)
 public abstract class AbstractContractorDTO {
     protected final Long id;
     protected final String name;
