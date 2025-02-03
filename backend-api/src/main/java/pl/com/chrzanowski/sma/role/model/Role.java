@@ -20,7 +20,6 @@ import java.util.Set;
 public class Role {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "roles_seq")
     @SequenceGenerator(name = "roles_seq", sequenceName = "roles_sequence", allocationSize = 1)
     @Column(nullable = false)

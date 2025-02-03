@@ -1,19 +1,19 @@
-package pl.com.chrzanowski.sma.contractor.mapper;
+package pl.com.chrzanowski.sma.contact.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.contact.mapper.ContactBaseDtoMapper;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorHasContactsDTO;
-import pl.com.chrzanowski.sma.contractor.model.Contractor;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactHasContractorsDTO;
+import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseDtoMapper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 
 @Mapper(componentModel = "spring",
-        uses = {UserMapper.class, ContactBaseDtoMapper.class},
+        uses = {UserMapper.class, ContractorBaseDtoMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ContractorMapper extends EntityMapper<ContractorDTO, Contractor> {
+public interface ContactMapper extends EntityMapper<ContactDTO, Contact> {
 
     @Override
     @Mapping(source = "createdBy.id", target = "createdById")
@@ -22,16 +22,16 @@ public interface ContractorMapper extends EntityMapper<ContractorDTO, Contractor
     @Mapping(source = "createdBy.lastName", target = "createdByLastName")
     @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
     @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
-    ContractorDTO toDto(Contractor contractor);
+    ContactDTO toDto(Contact contact);
 
     @Override
     @Mapping(source = "createdById", target = "createdBy.id")
     @Mapping(source = "modifiedById", target = "modifiedBy.id")
     @Mapping(source = "createdDatetime", target = "createdDatetime")
     @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
-    Contractor toEntity(ContractorDTO contractorDTO);
+    Contact toEntity(ContactDTO contactDTO);
 
-    @Mapping(source = "contacts", target = "contacts")
+    @Mapping(source = "contractors", target = "contractors")
     @Mapping(source = "createdBy.id", target = "createdById")
     @Mapping(source = "modifiedBy.id", target = "modifiedById")
     @Mapping(source = "createdBy.firstName", target = "createdByFirstName")
@@ -40,14 +40,14 @@ public interface ContractorMapper extends EntityMapper<ContractorDTO, Contractor
     @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
     @Mapping(source = "createdDatetime", target = "createdDatetime")
     @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
-    ContractorHasContactsDTO toContractorHasContactsDTO(Contractor contractor);
+    ContactHasContractorsDTO toContactHasContractorsDTO(Contact contact);
 
-    default Contractor fromId(Long id) {
+    default Contact fromId(Long id) {
         if (id == null) {
             return null;
         }
-        Contractor contractor = new Contractor();
-        contractor.setId(id);
-        return contractor;
+        Contact contact = new Contact();
+        contact.setId(id);
+        return contact;
     }
 }
