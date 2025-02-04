@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.sma.unitTests.contractor.dao;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPQLQuery;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorJPADaoImpl;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
+import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,10 @@ class ContractorJPADaoImplTest {
 
     @Mock
     private ContractorRepository contractorRepository;
+
+    @Mock
+    private ContractorQuerySpec querySpec;
+
 
     private AutoCloseable closeable;
 
@@ -209,12 +215,20 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecificationAndPageable_Positive() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
+        BooleanBuilder specification = new BooleanBuilder(); // używamy realnego obiektu
         PageRequest pageable = PageRequest.of(0, 10);
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
-        Page<Contractor> contractorPage = new PageImpl<>(List.of(contractor));
 
-        when(contractorRepository.findAll(specification, pageable)).thenReturn(contractorPage);
+        // Przygotowujemy mock JPQLQuery
+        @SuppressWarnings("unchecked")
+        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+
+        // Ustalamy zachowanie dla querySpec.buildQuery(...)
+        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(1L);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(List.of(contractor));
 
         // When
         Page<Contractor> result = contractorJPADaoImpl.findAll(specification, pageable);
@@ -222,30 +236,43 @@ class ContractorJPADaoImplTest {
         // Then
         assertEquals(1, result.getTotalElements());
         assertEquals(contractor, result.getContent().get(0));
-        verify(contractorRepository, times(1)).findAll(specification, pageable);
+        verify(querySpec, times(1)).buildQuery(specification);
     }
 
     @Test
     void findAllWithSpecificationAndPageable_Negative() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
+        BooleanBuilder specification = new BooleanBuilder();
         PageRequest pageable = PageRequest.of(0, 10);
-        when(contractorRepository.findAll(specification, pageable)).thenReturn(Page.empty());
+
+        @SuppressWarnings("unchecked")
+        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+
+        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(0L);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         // When
         Page<Contractor> result = contractorJPADaoImpl.findAll(specification, pageable);
 
         // Then
         assertTrue(result.isEmpty());
-        verify(contractorRepository, times(1)).findAll(specification, pageable);
+        verify(querySpec, times(1)).buildQuery(specification);
     }
 
     @Test
     void findAllWithSpecification_Positive() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
+        BooleanBuilder specification = new BooleanBuilder();
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
-        when(contractorRepository.findAll(specification)).thenReturn(List.of(contractor));
+
+        @SuppressWarnings("unchecked")
+        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+
+        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(List.of(contractor));
 
         // When
         List<Contractor> result = contractorJPADaoImpl.findAll(specification);
@@ -253,20 +280,25 @@ class ContractorJPADaoImplTest {
         // Then
         assertEquals(1, result.size());
         assertEquals(contractor, result.get(0));
-        verify(contractorRepository, times(1)).findAll(specification);
+        verify(querySpec, times(1)).buildQuery(specification);
     }
 
     @Test
     void findAllWithSpecification_Negative() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        when(contractorRepository.findAll(specification)).thenReturn(Collections.emptyList());
+        BooleanBuilder specification = new BooleanBuilder();
+
+        @SuppressWarnings("unchecked")
+        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+
+        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         // When
         List<Contractor> result = contractorJPADaoImpl.findAll(specification);
 
         // Then
         assertTrue(result.isEmpty());
-        verify(contractorRepository, times(1)).findAll(specification);
+        verify(querySpec, times(1)).buildQuery(specification);
     }
 }

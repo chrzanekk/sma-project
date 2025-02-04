@@ -1,11 +1,21 @@
 package pl.com.chrzanowski.sma.contractor.service.filter;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityManager;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.model.QContractor;
 
 @Component
 public class ContractorQuerySpec {
+
+    private final EntityManager em;
+
+    public ContractorQuerySpec(EntityManager em) {
+        this.em = em;
+    }
 
     public static BooleanBuilder buildPredicate(ContractorFilter filter) {
         QContractor contractor = QContractor.contractor;
@@ -50,7 +60,26 @@ public class ContractorQuerySpec {
         if (filter.getModifyDateEndWith() != null) {
             builder.and(contractor.lastModifiedDatetime.loe(filter.getModifyDateEndWith()));
         }
-
+        if (filter.getCustomer() != null) {
+            builder.and(contractor.customer.eq(filter.getCustomer()));
+        }
+        if (filter.getSupplier() != null) {
+            builder.and(contractor.supplier.eq(filter.getSupplier()));
+        }
+        if (filter.getScaffoldingUser() != null) {
+            builder.and(contractor.scaffoldingUser.eq(filter.getScaffoldingUser()));
+        }
         return builder;
+    }
+
+    public JPQLQuery<Contractor> buildQuery(BooleanBuilder builder) {
+        QContractor contractor = QContractor.contractor;
+
+        JPQLQuery<Contractor> query = new JPAQuery<>(em).select(contractor).from(contractor);
+        if (builder != null) {
+            query.where(builder);
+        }
+        query.leftJoin(contractor.contacts).fetchJoin();
+        return query;
     }
 }

@@ -32,6 +32,7 @@ public class UserJPADaoImpl implements UserDao {
 
     @Override
     public User save(User user) {
+        log.debug("DAO: Save user: {}", user.getLogin());
         return userRepository.save(user);
     }
 

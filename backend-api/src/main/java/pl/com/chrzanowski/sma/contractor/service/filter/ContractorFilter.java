@@ -22,6 +22,9 @@ public class ContractorFilter {
     private String postalCode;
     private String city;
     private Country country;
+    private Boolean customer;
+    private Boolean supplier;
+    private Boolean scaffoldingUser;
     private Instant createDateStartWith;
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;

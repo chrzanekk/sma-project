@@ -29,18 +29,17 @@ public class ContractorQueryServiceImpl implements ContractorQueryService {
         this.contractorMapper = contractorMapper;
     }
 
-
     @Override
     public List<ContractorDTO> findByFilter(ContractorFilter contractorFilter) {
         log.debug("Find all contractors by filter: {}", contractorFilter);
-        BooleanBuilder spec = ContractorQuerySpec.buildPredicate(contractorFilter);
-        return contractorMapper.toDtoList(contractorDao.findAll(spec));
+        BooleanBuilder specification = ContractorQuerySpec.buildPredicate(contractorFilter);
+        return contractorMapper.toDtoList(contractorDao.findAll(specification));
     }
 
     @Override
     public Page<ContractorDTO> findByFilter(ContractorFilter contractorFilter, Pageable pageable) {
         log.debug("Find all contractors by filter and page: {}", contractorFilter);
-        BooleanBuilder spec = ContractorQuerySpec.buildPredicate(contractorFilter);
-        return contractorDao.findAll(spec, pageable).map(contractorMapper::toDto);
+        BooleanBuilder specification = ContractorQuerySpec.buildPredicate(contractorFilter);
+        return contractorDao.findAll(specification, pageable).map(contractorMapper::toDto);
     }
 }

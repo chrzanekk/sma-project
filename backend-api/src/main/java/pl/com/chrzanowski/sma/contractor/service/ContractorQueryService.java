@@ -8,6 +8,7 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 import java.util.List;
 
 public interface ContractorQueryService {
+
     List<ContractorDTO> findByFilter(ContractorFilter contractorFilter);
 
     Page<ContractorDTO> findByFilter(ContractorFilter contractorFilter, Pageable pageable);
