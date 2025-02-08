@@ -24,5 +24,25 @@
   "userEditedError": "Błąd edycji użytkownika {{login}}.",
   "userNotFound": "Nie znaleziono użytkownika",
   "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją.",
-  "roleAddedError": "Błąd dodawania roli"
+  "roleAddedError": "Błąd dodawania roli",
+  "contractors": {
+    "contractorNotFound": "Kontrahent nieodnaleziony",
+    "nameMissing": "Nazwa kontrahenta jest wymagana",
+    "taxNumberMissing": "NIP jest wymagany",
+    "streetMissing": "Ulica jest wymagana",
+    "buildingNoMissing": "Numer budynku jest wymagany",
+    "cityMissing": "Miasto jest wymagane",
+    "postalCodeMissing": "Kod pocztowy jest wymagany",
+    "countryMissing": "Kraj jest wymagany",
+    "isCustomerMissing": "Określ czy to klient",
+    "isSupplierMissing": "Określ czy to dostawca",
+    "isScaffoldingUser": "Określ czy to użytkownik rusztowania"
+  },
+  "contacts": {
+    "contactNotFound": "Kontakt nieodnaleziony",
+    "firstNameMissing": "Imię wymagane",
+    "lastNameMissing": "Nazwisko wymagane",
+    "emailMissing": "Adres email wymagany",
+    "phoneNumberMissing": "Numer telefonu wymagany"
+  }
 }
