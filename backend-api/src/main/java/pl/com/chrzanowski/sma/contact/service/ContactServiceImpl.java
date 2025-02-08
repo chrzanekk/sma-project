@@ -1,12 +1,17 @@
 package pl.com.chrzanowski.sma.contact.service;
 
+
+import io.micrometer.common.util.StringUtils;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
+import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
@@ -16,6 +21,7 @@ import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -40,6 +46,7 @@ public class ContactServiceImpl implements ContactService {
     @Transactional
     public ContactDTO save(ContactDTO contactDTO) {
         log.debug("Request to save Contact : {}", contactDTO);
+        validateRequiredFields(contactDTO);
 
         UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
 
@@ -52,14 +59,15 @@ public class ContactServiceImpl implements ContactService {
         return contactMapper.toDto(savedContact);
     }
 
+
     @Override
     @Transactional
     public ContactDTO update(ContactDTO contactDTO) {
         log.debug("Update contact: {}", contactDTO);
-
+        validateRequiredFields(contactDTO);
         UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
 
-        Contact existingContact = contactDao.findById(contactDTO.getId()).orElseThrow(() -> new ObjectNotFoundException("Contact with id " + contactDTO.getId() + " not found"));
+        Contact existingContact = contactDao.findById(contactDTO.getId()).orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + contactDTO.getId() + " not found"));
 
         Contact contact = contactMapper.toEntity(contactDTO);
         contact.setId(existingContact.getId());
@@ -75,7 +83,7 @@ public class ContactServiceImpl implements ContactService {
     public ContactDTO findById(Long id) {
         log.debug("Find contact by id: {}", id);
         Optional<Contact> optionalContact = contactDao.findById(id);
-        return contactMapper.toDto(optionalContact.orElseThrow(() -> new ObjectNotFoundException("Contact with id " + id + " not found")));
+        return contactMapper.toDto(optionalContact.orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + id + " not found")));
     }
 
     @Override
@@ -89,5 +97,20 @@ public class ContactServiceImpl implements ContactService {
     public void delete(Long id) {
         log.debug("Delete contact: {}", id);
         contactDao.deleteById(id);
+    }
+
+    private static void validateRequiredFields(ContactDTO contactDTO) {
+        if (StringUtils.isBlank(contactDTO.getFirstName())) {
+            throw new PropertyMissingException(ContactErrorCode.FIRST_NAME_MISSING, "First name must not be empty", Map.of("firstName", contactDTO.getFirstName()));
+        }
+        if (StringUtils.isBlank(contactDTO.getLastName())) {
+            throw new PropertyMissingException(ContactErrorCode.LAST_NAME_MISSING, "Last name must not be empty", Map.of("lastName", contactDTO.getLastName()));
+        }
+        if (StringUtils.isBlank(contactDTO.getEmail())) {
+            throw new PropertyMissingException(ContactErrorCode.EMAIL_MISSING, "Email must not be empty", Map.of("email", contactDTO.getEmail()));
+        }
+        if (StringUtils.isBlank(contactDTO.getPhoneNumber())) {
+            throw new PropertyMissingException(ContactErrorCode.PHONE_NUMBER_MISSING, "PhoneNumber must not be empty", Map.of("phoneNumber", contactDTO.getPhoneNumber()));
+        }
     }
 }

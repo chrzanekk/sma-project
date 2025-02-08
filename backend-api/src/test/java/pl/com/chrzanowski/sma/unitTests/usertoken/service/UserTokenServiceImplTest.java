@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.TokenException;
+import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.usertoken.dao.UserTokenDao;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
@@ -16,6 +18,7 @@ import pl.com.chrzanowski.sma.usertoken.model.UserToken;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenServiceImpl;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -100,7 +103,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testSaveTokenUserNull() {
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userTokenService.saveToken(userTokenDTO.getToken(), null, TokenType.PASSWORD_RESET_TOKEN);
         });
 
@@ -111,7 +114,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testSaveTokenWithEmptyToken() {
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+        TokenException exception = assertThrows(TokenException.class, () -> {
             userTokenService.saveToken(null, userDTO, TokenType.PASSWORD_RESET_TOKEN);
         });
 
@@ -176,7 +179,7 @@ class UserTokenServiceImplTest {
     void testGetTokenDataNotFound() {
         when(userTokenDao.findUserTokenByToken(anyString())).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+        TokenException exception = assertThrows(TokenException.class, () -> {
             userTokenService.getTokenData("invalidToken");
         });
 
@@ -187,7 +190,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testGetTokenDataWithEmptyToken() {
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+        TokenException exception = assertThrows(TokenException.class, () -> {
             userTokenService.getTokenData(null);
         });
 
@@ -214,9 +217,9 @@ class UserTokenServiceImplTest {
 
     @Test
     void testDeleteTokenByNonExistingUserId() {
-        doThrow(new ObjectNotFoundException("User not found for id: 999")).when(userTokenDao).deleteTokensByUserId(999L);
+        doThrow(new UserNotFoundException("User not found for id: 999", Map.of("id", 999L))).when(userTokenDao).deleteTokensByUserId(999L);
 
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> {
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
             userTokenService.deleteTokenByUserId(999L);
         });
 

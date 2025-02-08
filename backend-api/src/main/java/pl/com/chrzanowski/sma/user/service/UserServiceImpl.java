@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO findById(Long id) {
         log.debug("Find user by id: {}", id);
         Optional<User> optionalUser = userDao.findById(id);
-        return userMapper.toDto(optionalUser.orElseThrow(() -> new ObjectNotFoundException(String.format(USER_WITH_ID_NOT_FOUND, id))));
+        return userMapper.toDto(optionalUser.orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_FOUND, id))));
     }
 
     @Override

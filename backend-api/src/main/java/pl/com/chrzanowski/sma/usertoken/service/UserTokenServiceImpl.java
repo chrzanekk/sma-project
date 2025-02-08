@@ -6,7 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.exception.TokenException;
+import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.usertoken.dao.UserTokenDao;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
@@ -42,12 +43,10 @@ public class UserTokenServiceImpl implements UserTokenService {
     public UserTokenDTO saveToken(String token, UserDTO userDTO, TokenType tokenType) {
         log.debug("Request to save token: {}, {}", tokenType.name(), token);
         if (userDTO == null) {
-            throw new ObjectNotFoundException("User must not be null");
+            throw new UserNotFoundException("User must not be null");
         } else if (token == null || token.isEmpty()) {
-            throw new ObjectNotFoundException("Token must not be null or empty");
-        }
-
-        else {
+            throw new TokenException("Token must not be null or empty");
+        } else {
             UserTokenDTO userTokenDTO = UserTokenDTO.builder()
                     .token(token)
                     .createDate(LocalDateTime.now())
@@ -73,7 +72,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     public UserTokenDTO getTokenData(String token) {
         log.debug("Request to get token data: {}", token);
         return userTokenDao.findUserTokenByToken(token).map(userTokenMapper::toDto)
-                .orElseThrow(() -> new ObjectNotFoundException("Token not found."));
+                .orElseThrow(() -> new TokenException("Token not found."));
     }
 
     @Override

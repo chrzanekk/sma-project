@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
@@ -53,13 +54,19 @@ class ContactServiceImplTest {
 
         contactDTO = ContactDTO.builder()
                 .id(1L)
-                .firstName("John Doe")
+                .firstName("John")
+                .lastName("Doe")
+                .phoneNumber("555-555-555")
+                .email("john@doe.com")
                 .createdDatetime(Instant.now())
                 .build();
 
         contact = new Contact();
         contact.setId(1L);
-        contact.setFirstName("John Doe");
+        contact.setFirstName("John");
+        contact.setLastName("Doe");
+        contact.setEmail("john@doe.com");
+        contact.setPhoneNumber("555-555-555");
 
         UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null);
         when(userService.getUserWithAuthorities()).thenReturn(mockUser);
@@ -83,7 +90,10 @@ class ContactServiceImplTest {
 
         ContactDTO result = contactService.save(contactDTO);
         assertNotNull(result);
-        assertEquals("John Doe", result.getFirstName());
+        assertEquals("John", result.getFirstName());
+        assertEquals("Doe", result.getLastName());
+        assertEquals("555-555-555", result.getPhoneNumber());
+        assertEquals("john@doe.com", result.getEmail());
 
         verify(contactDao, times(1)).save(any(Contact.class));
         verify(contactMapper, times(1)).toDto(any(Contact.class));
@@ -105,7 +115,7 @@ class ContactServiceImplTest {
 
         ContactDTO result = contactService.findById(1L);
         assertNotNull(result);
-        assertEquals("John Doe", result.getFirstName());
+        assertEquals("John", result.getFirstName());
 
         verify(contactDao, times(1)).findById(1L);
     }
@@ -114,7 +124,7 @@ class ContactServiceImplTest {
     void testFindByIdNotFound() {
         when(contactDao.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, () -> contactService.findById(1L));
+        assertThrows(ContactException.class, () -> contactService.findById(1L));
         verify(contactDao, times(1)).findById(1L);
     }
 
@@ -150,7 +160,7 @@ class ContactServiceImplTest {
 
         ContactDTO result = contactService.update(contactDTO);
         assertNotNull(result);
-        assertEquals("John Doe", result.getFirstName());
+        assertEquals("John", result.getFirstName());
 
         verify(contactDao, times(1)).findById(anyLong());
         verify(contactDao, times(1)).save(any(Contact.class));
@@ -160,7 +170,7 @@ class ContactServiceImplTest {
     void testUpdateContactNotFound() {
         when(contactDao.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, () -> contactService.update(contactDTO));
+        assertThrows(ContactException.class, () -> contactService.update(contactDTO));
         verify(contactDao, times(1)).findById(anyLong());
     }
 }

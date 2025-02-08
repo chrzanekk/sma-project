@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.RoleException;
-import pl.com.chrzanowski.sma.common.exception.error.ErrorCode;
+import pl.com.chrzanowski.sma.common.exception.error.RoleErrorCode;
 import pl.com.chrzanowski.sma.role.dao.RoleDao;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -74,7 +74,7 @@ public class RoleServiceImpl implements RoleService {
         if (existingRole.isPresent()) {
             Role role = existingRole.get();
             if (isRoleIsBase(role)) {
-                throw new RoleException(ErrorCode.ROLE_CANNOT_BE_DELETED, String.format("Cannot delete role %s", role.getName()), Map.of("roleName", role.getName()));
+                throw new RoleException(RoleErrorCode.ROLE_CANNOT_BE_DELETED, String.format("Cannot delete role %s", role.getName()), Map.of("roleName", role.getName()));
             } else {
                 roleDao.deleteById(id);
                 return true;

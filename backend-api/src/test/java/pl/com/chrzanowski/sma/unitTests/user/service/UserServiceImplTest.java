@@ -186,7 +186,7 @@ class UserServiceImplTest {
     void testFindById_UserNotFound() {
         when(userDao.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, () -> userService.findById(1L));
+        assertThrows(UserNotFoundException.class, () -> userService.findById(1L));
     }
 
     @Test
@@ -388,7 +388,7 @@ class UserServiceImplTest {
 
         when(userDao.findById(1L)).thenReturn(Optional.empty());
 
-        ObjectNotFoundException exception = assertThrows(ObjectNotFoundException.class, () -> userService.updateUserRoles(1L, newRoles));
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> userService.updateUserRoles(1L, newRoles));
         assertEquals(String.format("user with id %d not found", 1L), exception.getMessage());
 
         verify(userDao, times(0)).save(any(User.class));

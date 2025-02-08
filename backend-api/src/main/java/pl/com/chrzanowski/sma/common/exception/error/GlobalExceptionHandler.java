@@ -44,7 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException e, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(LocalDateTime.now())
-                .code(ErrorCode.INVALID_ARGUMENT.getCode())
+                .code(ExceptionHandlerErrorCode.INVALID_ARGUMENT.getCode())
                 .message(e.getMessage())
                 .details(Map.of("description", request.getDescription(false)))
                 .build();
@@ -58,7 +58,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatusCode status, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(LocalDateTime.now())
-                .code(ErrorCode.MALFORMED_JSON.getCode())
+                .code(ExceptionHandlerErrorCode.MALFORMED_JSON.getCode())
                 .message("Invalid JSON format")
                 .details(Map.of("description", request.getDescription(false)))
                 .build();
@@ -70,7 +70,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleGenericException(Exception e, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(LocalDateTime.now())
-                .code(ErrorCode.GENERIC_ERROR.getCode())
+                .code(ExceptionHandlerErrorCode.GENERIC_ERROR.getCode())
                 .message("An unexpected error occurred")
                 .details(Map.of("description", request.getDescription(false)))
                 .build();

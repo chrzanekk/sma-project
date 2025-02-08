@@ -8,7 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -53,13 +54,33 @@ class ContractorServiceImplTest {
 
         contractorDTO = ContractorDTO.builder()
                 .id(1L)
-                .name("Workshop 1")
+                .name("Contractor 1")
+                .taxNumber("2323526")
+                .street("Street 1")
+                .buildingNo("123")
+                .apartmentNo("12345")
+                .postalCode("2234")
+                .city("City 1")
+                .country(Country.POLAND)
+                .customer(true)
+                .supplier(false)
+                .scaffoldingUser(true)
                 .createdDatetime(Instant.now())
                 .build();
 
         contractor = new Contractor();
         contractor.setId(1L);
-        contractor.setName("Workshop 1");
+        contractor.setName("Contractor 1");
+        contractor.setTaxNumber("2323526");
+        contractor.setStreet("Street 1");
+        contractor.setBuildingNo("123");
+        contractor.setApartmentNo("12345");
+        contractor.setPostalCode("2234");
+        contractor.setCity("City 1");
+        contractor.setCountry(Country.POLAND);
+        contractor.setCustomer(true);
+        contractor.setSupplier(false);
+        contractor.setScaffoldingUser(true);
 
         UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null);
         when(userService.getUserWithAuthorities()).thenReturn(mockUser);
@@ -85,7 +106,7 @@ class ContractorServiceImplTest {
         ContractorDTO result = contractorService.save(contractorDTO);
 
         assertNotNull(result);
-        assertEquals("Workshop 1", result.getName());
+        assertEquals("Contractor 1", result.getName());
 
         verify(contractorMapper, times(1)).toEntity(any(ContractorDTO.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
@@ -103,7 +124,7 @@ class ContractorServiceImplTest {
         ContractorDTO result = contractorService.update(contractorDTO);
 
         assertNotNull(result);
-        assertEquals("Workshop 1", result.getName());
+        assertEquals("Contractor 1", result.getName());
 
         verify(contractorMapper, times(1)).toEntity(any(ContractorDTO.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
@@ -118,7 +139,7 @@ class ContractorServiceImplTest {
         ContractorDTO result = contractorService.findById(1L);
 
         assertNotNull(result);
-        assertEquals("Workshop 1", result.getName());
+        assertEquals("Contractor 1", result.getName());
 
         verify(contractorDao, times(1)).findById(1L);
         verify(contractorMapper, times(1)).toDto(any(Contractor.class));
@@ -128,7 +149,7 @@ class ContractorServiceImplTest {
     void testFindByIdNotFound() {
         when(contractorDao.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ObjectNotFoundException.class, () -> contractorService.findById(1L));
+        assertThrows(ContractorException.class, () -> contractorService.findById(1L));
 
         verify(contractorDao, times(1)).findById(1L);
     }
