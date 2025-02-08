@@ -301,7 +301,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .expectBodyList(ContractorDTO.class)
                 .returnResult().getResponseBody();
 
-        assertThat(contractors).hasSize(1); // Powinien zostać tylko drugi kontrahent
+        assertThat(contractors).hasSize(1);
     }
 
     @Test
@@ -357,6 +357,91 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .uri("/api/contractors/page?page=0&pageSize=10")
                 .exchange()
                 .expectStatus().isUnauthorized();
+    }
+
+
+    @Test
+    void shouldFailToAddContractorWithInvalidData() {
+        ContractorDTO invalidContractor = ContractorDTO.builder()
+                .name("") // brak nazwy - pole wymagane
+                .taxNumber("5555555555")
+                .street("Invalid Street")
+                .buildingNo("30")
+                .apartmentNo("3C")
+                .postalCode("00-003")
+                .city("Gdansk")
+                .country(Country.POLAND)
+                .customer(true)
+                .supplier(true)
+                .scaffoldingUser(true)
+                .createdDatetime(Instant.now())
+                .lastModifiedDatetime(Instant.now())
+                .build();
+
+        webTestClient.post()
+                .uri("/api/contractors/add")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(invalidContractor)
+                .exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    void shouldFailToUpdateNonExistentContractor() {
+        ContractorDTO nonExistentContractor = ContractorDTO.builder()
+                .id(9999L) // zakładamy, że taki ID nie istnieje
+                .name("Nonexistent Contractor")
+                .taxNumber("0000000000")
+                .street("Unknown Street")
+                .buildingNo("0")
+                .apartmentNo("0")
+                .postalCode("00-000")
+                .city("Nowhere")
+                .country(Country.POLAND)
+                .customer(true)
+                .supplier(true)
+                .scaffoldingUser(true)
+                .createdDatetime(Instant.now())
+                .lastModifiedDatetime(Instant.now())
+                .build();
+
+        webTestClient.put()
+                .uri("/api/contractors/update")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(nonExistentContractor)
+                .exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    void shouldFailToGetContractorByNonexistentId() {
+        webTestClient.get()
+                .uri("/api/contractors/getById/9999")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().is4xxClientError();
+    }
+
+    @Test
+    void shouldFailToGetContractorsWithInvalidPaginationParams() {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("page", "1");
+        queryParams.add("pageSize", "1");
+        queryParams.add("name", "Third");
+
+        List<ContractorDTO> contractors = webTestClient.get()
+                .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
+                        .queryParams(queryParams)
+                        .build())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(ContractorDTO.class)
+                .returnResult().getResponseBody();
+
+        assertThat(contractors).isEmpty();
     }
 
 }
