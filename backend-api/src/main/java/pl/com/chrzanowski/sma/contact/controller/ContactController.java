@@ -80,5 +80,4 @@ public class ContactController {
         contactService.delete(id);
         return ResponseEntity.ok().build();
     }
-
 }

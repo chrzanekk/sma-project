@@ -26,7 +26,7 @@ export const getContactsByFilter = async (filter: Record<string, any>) => {
 
 export const getContactById = async (id: number) => {
     try {
-        const response = await api.get(`${CONTACTS_API_BASE}/geteById/${id}`, getAuthConfig());
+        const response = await api.get(`${CONTACTS_API_BASE}/getById/${id}`, getAuthConfig());
         const contactDTO: ContactDTO = response.data;
         return contactDTO;
     } catch (err) {
@@ -34,3 +34,24 @@ export const getContactById = async (id: number) => {
     }
 }
 
+export const addContact = async (addContact: ContactDTO) => {
+    try {
+        const response = await api.post(`${CONTACTS_API_BASE}/add`, addContact, getAuthConfig());
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const updateContact = async (updateContact: ContactDTO) => {
+    try {
+        const response = await api.put(`${CONTACTS_API_BASE}/update`, updateContact, getAuthConfig());
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const deleteContactById = async (id: number) => {
+    await api.delete(`${CONTACTS_API_BASE}/delete/${id}`, getAuthConfig());
+}

@@ -1,6 +1,6 @@
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO} from "@/types/contractor-types.ts";
 
-export interface ContactDTO {
+export interface ContactBaseDTO {
     id?: number;
     firstName: string;
     lastName: string;
@@ -17,14 +17,14 @@ export interface ContactDTO {
     modifiedByLastName: string;
 }
 
-export interface ContactHasContractorsDTO {
+export interface ContactDTO {
     id?: number;
     firstName: string;
     lastName: string;
     phoneNumber: string;
     email: string;
     additionalInfo: string;
-    contractors?: Array<ContractorDTO>
+    contractors?: Array<ContractorBaseDTO>
     createdDatetime: string;
     lastModifiedDatetime: string;
     createdById: number;

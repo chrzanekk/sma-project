@@ -6,7 +6,6 @@ import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.model.AuditableEntity;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
