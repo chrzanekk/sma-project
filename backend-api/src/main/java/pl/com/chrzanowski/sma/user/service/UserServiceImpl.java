@@ -11,7 +11,6 @@ import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
@@ -39,7 +38,6 @@ public class UserServiceImpl implements UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final static String USER_WITH_EMAIL_NOT_FOUND = "user with email %s not found";
     private final static String USER_WITH_ID_NOT_FOUND = "user with id %d not found";
 
     private final UserDao userDao;
