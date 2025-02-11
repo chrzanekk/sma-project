@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ContactException;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;

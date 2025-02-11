@@ -47,7 +47,7 @@ public class ContractorController {
 
     @GetMapping("/page")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
-                                                                                Pageable pageable) {
+                                                                                    Pageable pageable) {
         log.debug("REST request to get all contractors by filter with page: {}", contractorFilter);
         Page<ContractorDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
         HttpHeaders headers =
@@ -59,15 +59,15 @@ public class ContractorController {
     @GetMapping("/getById/{id}")
     public ResponseEntity<ContractorDTO> getContractorById(@Valid @PathVariable Long id) {
         log.debug("REST request to get contractor by id: {}", id);
-        ContractorDTO contractorDTO = contractorService.findById(id);
-        return ResponseEntity.ok().body(contractorDTO);
+        ContractorDTO contractorBaseDTO = contractorService.findById(id);
+        return ResponseEntity.ok().body(contractorBaseDTO);
     }
 
     @PostMapping("/add")
     public ResponseEntity<ContractorDTO> addContractor(@RequestBody ContractorDTO contractorDTO) {
         log.debug("REST request to add new contractor: {}", contractorDTO);
-        ContractorDTO newContractorDTO = contractorService.save(contractorDTO);
-        return ResponseEntity.ok().body(newContractorDTO);
+        ContractorDTO newContractorBaseDTO = contractorService.save(contractorDTO);
+        return ResponseEntity.ok().body(newContractorBaseDTO);
     }
 
     @PutMapping("/update")

@@ -3,10 +3,13 @@ package pl.com.chrzanowski.sma.integrationTests;
 import org.flywaydb.core.Flyway;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -16,6 +19,7 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
@@ -38,6 +42,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
+@Import(ContractorIntegrationTest.TestConfig.class)
 public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Autowired
@@ -46,7 +51,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Autowired
     private Flyway flyway;
 
-    @MockBean
+    @Autowired
     private SendEmailService sendEmailService;
 
     @Autowired
@@ -67,6 +72,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     private UserService userService;
 
     private ContractorDTO firstContractor;
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public SendEmailService sendEmailService() {
+            return Mockito.mock(SendEmailService.class);
+        }
+    }
 
     @BeforeEach
     void setUp() {
@@ -126,7 +139,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldAddContractorSuccessfully() {
-        ContractorDTO newContractor = ContractorDTO.builder()
+        ContractorBaseDTO newContractor = ContractorBaseDTO.builder()
                 .name("New Contractor")
                 .taxNumber("5555555555")
                 .street("New Street")
@@ -144,14 +157,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
         List<Contractor> contractorListBefore = contractorRepository.findAll();
 
-        ContractorDTO savedContractor = webTestClient.post()
+        ContractorBaseDTO savedContractor = webTestClient.post()
                 .uri("/api/contractors/add")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(newContractor)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ContractorDTO.class)
+                .expectBody(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         List<Contractor> contractorListAfter = contractorRepository.findAll();
@@ -166,12 +179,12 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldGetContractorByIdSuccessfully() {
         Long id = firstContractor.getId();
-        ContractorDTO contractor = webTestClient.get()
+        ContractorBaseDTO contractor = webTestClient.get()
                 .uri("/api/contractors/getById/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ContractorDTO.class)
+                .expectBody(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractor).isNotNull();
@@ -194,14 +207,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(1);
@@ -222,14 +235,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(0);
@@ -237,7 +250,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldUpdateContractorSuccessfully() {
-        ContractorDTO updateContractor = ContractorDTO.builder()
+        ContractorBaseDTO updateContractor = ContractorBaseDTO.builder()
                 .id(firstContractor.getId())
                 .name("Updated Contractor")
                 .taxNumber("1111111111")
@@ -254,14 +267,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .lastModifiedDatetime(Instant.now())
                 .build();
 
-        ContractorDTO updatedContractor = webTestClient.put()
+        ContractorBaseDTO updatedContractor = webTestClient.put()
                 .uri("/api/contractors/update")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateContractor)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ContractorDTO.class)
+                .expectBody(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(updatedContractor).isNotNull();
@@ -271,7 +284,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFailToUpdateContractorWithoutAuthorization() {
-        ContractorDTO updateContractor = ContractorDTO.builder()
+        ContractorBaseDTO updateContractor = ContractorBaseDTO.builder()
                 .id(1L)
                 .name("Unauthorized Update")
                 .build();
@@ -293,12 +306,12 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isOk();
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri("/api/contractors/all")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(1);
@@ -319,14 +332,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "0");
         queryParams.add("pageSize", "1");
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(2);
@@ -338,14 +351,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("page", "10");
         queryParams.add("pageSize", "10");
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).isEmpty();
@@ -362,7 +375,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFailToAddContractorWithInvalidData() {
-        ContractorDTO invalidContractor = ContractorDTO.builder()
+        ContractorBaseDTO invalidContractor = ContractorBaseDTO.builder()
                 .name("") // brak nazwy - pole wymagane
                 .taxNumber("5555555555")
                 .street("Invalid Street")
@@ -389,7 +402,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldFailToUpdateNonExistentContractor() {
-        ContractorDTO nonExistentContractor = ContractorDTO.builder()
+        ContractorBaseDTO nonExistentContractor = ContractorBaseDTO.builder()
                 .id(9999L) // zakładamy, że taki ID nie istnieje
                 .name("Nonexistent Contractor")
                 .taxNumber("0000000000")
@@ -431,14 +444,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("pageSize", "1");
         queryParams.add("name", "Third");
 
-        List<ContractorDTO> contractors = webTestClient.get()
+        List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorDTO.class)
+                .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).isEmpty();

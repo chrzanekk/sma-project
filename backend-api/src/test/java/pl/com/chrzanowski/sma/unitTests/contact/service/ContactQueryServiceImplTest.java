@@ -36,7 +36,7 @@ class ContactQueryServiceImplTest {
     @InjectMocks
     private ContactQueryServiceImpl contactQueryService;
 
-    private ContactDTO contactDTO;
+    private ContactDTO contactBaseDTO;
     private Contact contact;
     private AutoCloseable autoCloseable;
 
@@ -44,7 +44,7 @@ class ContactQueryServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        contactDTO = ContactDTO.builder()
+        contactBaseDTO = ContactDTO.builder()
                 .id(1L)
                 .firstName("John Doe")
                 .build();
@@ -64,7 +64,7 @@ class ContactQueryServiceImplTest {
         ContactFilter filter = new ContactFilter();
 
         when(contactDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.singletonList(contact));
-        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactDTO));
+        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactBaseDTO));
 
         List<ContactDTO> result = contactQueryService.findByFilter(filter);
 
@@ -97,7 +97,7 @@ class ContactQueryServiceImplTest {
 
         Page<Contact> contactPage = new PageImpl<>(Collections.singletonList(contact));
         when(contactDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(contactPage);
-        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
+        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactBaseDTO);
 
         Page<ContactDTO> result = contactQueryService.findByFilter(filter, pageable);
 

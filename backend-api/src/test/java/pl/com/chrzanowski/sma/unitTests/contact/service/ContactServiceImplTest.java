@@ -9,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ContactException;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;

@@ -3,17 +3,21 @@ package pl.com.chrzanowski.sma.contractor.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
+import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.contact.mapper.ContactBaseDtoMapper;
+import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorHasContactsDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 
 @Mapper(componentModel = "spring",
-        uses = {UserMapper.class, ContactBaseDtoMapper.class},
+        uses = {UserMapper.class, ContactBaseMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface ContractorMapper extends EntityMapper<ContractorDTO, Contractor> {
+public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Contractor> {
+
+    @Autowired
+    protected ContactBaseMapper contactBaseMapper;
 
     @Override
     @Mapping(source = "createdBy.id", target = "createdById")
@@ -22,32 +26,18 @@ public interface ContractorMapper extends EntityMapper<ContractorDTO, Contractor
     @Mapping(source = "createdBy.lastName", target = "createdByLastName")
     @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
     @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
-    ContractorDTO toDto(Contractor contractor);
+    @Mapping(target = "contacts", expression = "java(contactBaseMapper.toDtoSet(contractor.getContacts()))")
+    public abstract ContractorDTO toDto(Contractor contractor);
 
     @Override
     @Mapping(source = "createdById", target = "createdBy.id")
     @Mapping(source = "modifiedById", target = "modifiedBy.id")
     @Mapping(source = "createdDatetime", target = "createdDatetime")
     @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
-    Contractor toEntity(ContractorDTO contractorDTO);
+    @Mapping(target = "contacts", expression = "java(contactBaseMapper.toEntitySet(contractorDTO.getContacts()))")
+    public abstract Contractor toEntity(ContractorDTO contractorDTO);
 
-    @Mapping(source = "contacts", target = "contacts")
-    @Mapping(source = "createdBy.id", target = "createdById")
-    @Mapping(source = "modifiedBy.id", target = "modifiedById")
-    @Mapping(source = "createdBy.firstName", target = "createdByFirstName")
-    @Mapping(source = "createdBy.lastName", target = "createdByLastName")
-    @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
-    @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
-    @Mapping(source = "createdDatetime", target = "createdDatetime")
-    @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
-    ContractorHasContactsDTO toContractorHasContactsDTO(Contractor contractor);
+    // Mapowanie do wersji bazowej
+    public abstract ContractorBaseDTO toBaseDto(Contractor contractor);
 
-    default Contractor fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Contractor contractor = new Contractor();
-        contractor.setId(id);
-        return contractor;
-    }
 }

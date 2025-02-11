@@ -65,6 +65,7 @@ public class Contractor extends AuditableEntity {
     private Boolean scaffoldingUser;
 
     @ManyToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
     @JoinTable(name = "contractor_contacts",
             joinColumns = @JoinColumn(name = "contractor_id"),
             inverseJoinColumns = @JoinColumn(name="contact_id"))

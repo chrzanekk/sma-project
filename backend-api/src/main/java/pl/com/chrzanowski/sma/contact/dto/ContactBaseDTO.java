@@ -3,13 +3,11 @@ package pl.com.chrzanowski.sma.contact.dto;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import lombok.extern.jackson.Jacksonized;
 
-import java.util.Set;
-
+@Jacksonized
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ContactHasContractorsDTO extends AbstractContactDTO {
-    private final Set<ContractorDTO> contractors;
+public class ContactBaseDTO extends AbstractContactDTO {
 }

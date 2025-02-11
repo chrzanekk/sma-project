@@ -11,20 +11,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryServiceImpl;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
-import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
 import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 

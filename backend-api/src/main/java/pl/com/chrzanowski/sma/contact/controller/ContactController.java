@@ -41,8 +41,8 @@ public class ContactController {
     @GetMapping("/find")
     public ResponseEntity<List<ContactDTO>> getAllContactsByFilter(ContactFilter filter) {
         log.debug("REST request to get all contacts by filter: {}", filter);
-        List<ContactDTO> contactDTOS = contactQueryService.findByFilter(filter);
-        return ResponseEntity.ok().body(contactDTOS);
+        List<ContactDTO> contactBaseDTOS = contactQueryService.findByFilter(filter);
+        return ResponseEntity.ok().body(contactBaseDTOS);
     }
 
     @GetMapping("/page")
@@ -63,8 +63,8 @@ public class ContactController {
     @PostMapping("/add")
     public ResponseEntity<ContactDTO> addContact(@RequestBody ContactDTO contactDTO) {
         log.debug("REST request to add Contact : {}", contactDTO);
-        ContactDTO savedContactDTO = contactService.save(contactDTO);
-        return ResponseEntity.ok().body(savedContactDTO);
+        ContactDTO savedContactBaseDTO = contactService.save(contactDTO);
+        return ResponseEntity.ok().body(savedContactBaseDTO);
     }
 
     @PutMapping("/update")

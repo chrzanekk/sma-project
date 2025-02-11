@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface ContactService {
 
-    ContactDTO save(ContactDTO contactDTO);
+    ContactDTO save(ContactDTO contactBaseDTO);
 
-    ContactDTO update(ContactDTO contactDTO);
+    ContactDTO update(ContactDTO contactBaseDTO);
 
     ContactDTO findById(Long id);
 
