@@ -12,6 +12,7 @@ import Layout from "@/layout/Layout.tsx";
 import RoleManagement from "@/components/role/RoleManagement.tsx";
 import AdminPanel from "@/components/admin/AdminPanel.tsx";
 import UnderConstructionRoute from "@/routes/UnderConstructionRoute.tsx";
+import ContractorManagement from "@/components/contractor/ContractorManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -82,13 +83,21 @@ const router = createBrowserRouter([
             path: "contractors",
             element: <ProtectedRoute>
                 <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'contractors'}
-                        nameSpace={'navbar'}
-                    />
+                    <ContractorManagement/>
                 </Layout>
             </ProtectedRoute>
         },
+        // {
+        //     path: "contractors",
+        //     element: <ProtectedRoute>
+        //         <Layout>
+        //             <UnderConstructionRoute
+        //                 nameKey={'contractors'}
+        //                 nameSpace={'navbar'}
+        //             />
+        //         </Layout>
+        //     </ProtectedRoute>
+        // },
         {
             path: "diaryList",
             element: <ProtectedRoute>

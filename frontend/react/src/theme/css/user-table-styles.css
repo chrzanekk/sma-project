@@ -1,5 +1,3 @@
-
-/* Dodaj proporcjonalne szerokości */
 .user-table th:nth-child(1){
     width: 2%; /* ID */
     text-align: center;

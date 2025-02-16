@@ -1,13 +1,13 @@
-import {themeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
-import {Field, Form, Formik} from "formik";
+import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import React from "react";
 import {addNewRole} from "@/services/role-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {Button, Input, InputProps, Stack} from "@chakra-ui/react";
+import {Button, Stack} from "@chakra-ui/react";
 import {RoleDTO} from "@/types/role-types.ts";
+import CustomInputField from "@/components/shared/FormConfig.tsx";
 
 interface AddRoleFormProps {
     onSuccess: () => void;
@@ -16,13 +16,6 @@ interface AddRoleFormProps {
 const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
 
     const {t} = useTranslation('auth');
-
-    const inputProps: InputProps = {
-        size: "sm",
-        bg: themeColors.bgColorSecondary(),
-        borderRadius: "md"
-    };
-
     return (
         <Formik initialValues={{name: ''}}
                 validationSchema={Yup.object({
@@ -51,28 +44,12 @@ const AddRoleForm: React.FC<AddRoleFormProps> = ({onSuccess}) => {
                     }
                 }}
         >
-            {({errors, touched, values, handleChange, isValid, isSubmitting, dirty}) => (
+            {({isValid, isSubmitting, dirty}) => (
                 <Form>
                     <Stack gap="8px">
-                        <Field
-                            label={t('shared.roleName')}
-                            invalid={!!errors.name && touched.name}
-                            errorText={errors.name}
-                            name={"name"}
-                        >
-                            {({field}: any) => (
-                                <Input
-                                    {...field}
-                                    type="text"
-                                    name="name"
-                                    value={values.name}
-                                    onChange={handleChange}
-                                    placeholder={t('shared.roleName')}
-                                    {...inputProps}
-                                />
-                            )}
-                        </Field>
-                        <Button disabled={!isValid || isSubmitting ||!dirty} type="submit" colorPalette="green">
+                        <CustomInputField name={"name"} label={t('shared.roleName')}
+                                          placeholder={t('shared.roleName')}/>
+                        <Button disabled={!isValid || isSubmitting || !dirty} type="submit" colorPalette="green" width={"400px"}>
                             {t('shared.addRole')}
                         </Button>
                     </Stack>

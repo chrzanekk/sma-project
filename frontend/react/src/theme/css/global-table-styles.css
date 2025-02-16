@@ -1,17 +1,13 @@
 :root {
-    --table-border-color: #a1a1aa; /* domyślnie szary */
-    --table-bg-color: #f4f4f5; /* jasny */
+    --table-border-color: #a1a1aa;
+    --table-bg-color: #f4f4f5;
     --table-header-bg-color: #d4d4d8;
     --table-text-color: black;
 }
 
 .dark-theme {
-    /*--table-border-color: #3f3f46; !* ciemny szary *!*/
-    /*--table-bg-color: #27272a; !* ciemny *!*/
-    /*--table-header-bg-color: #404040; !* jeszcze ciemniejszy *!*/
-    /*--table-text-color: white;*/
-    --table-border-color: #a1a1aa; /* domyślnie szary */
-    --table-bg-color: #f4f4f5; /* jasny */
+    --table-border-color: #a1a1aa;
+    --table-bg-color: #f4f4f5;
     --table-header-bg-color: #d4d4d8;
     --table-text-color: black;
 }

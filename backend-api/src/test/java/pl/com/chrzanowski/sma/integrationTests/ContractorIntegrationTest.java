@@ -196,13 +196,13 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFilterContractorsByAllFieldsSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("name", "First");
-        queryParams.add("taxNumber", "1234567890");
-        queryParams.add("street", "Main Street");
-        queryParams.add("city", "Warsaw");
-        queryParams.add("buildingNo", "10");
-        queryParams.add("apartmentNo", "1A");
-        queryParams.add("postalCode", "00-001");
+        queryParams.add("nameStartsWith", "First");
+        queryParams.add("taxNumberStartsWith", "1234567890");
+        queryParams.add("streetStartsWith", "Main Street");
+        queryParams.add("cityStartsWith", "Warsaw");
+        queryParams.add("buildingNoStartsWith", "10");
+        queryParams.add("apartmentNoStartsWith", "1A");
+        queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
@@ -224,13 +224,13 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFilterContractorsByAllFieldsSuccessfullyReturnZeroElements() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("name", "Second");
-        queryParams.add("taxNumber", "1234567890");
-        queryParams.add("street", "Second Street");
-        queryParams.add("city", "Warsaw");
-        queryParams.add("buildingNo", "10");
-        queryParams.add("apartmentNo", "1A");
-        queryParams.add("postalCode", "00-001");
+        queryParams.add("nameStartsWith", "Second");
+        queryParams.add("taxNumberStartsWith", "1234567890");
+        queryParams.add("streetStartsWith", "Second Street");
+        queryParams.add("cityStartsWith", "Warsaw");
+        queryParams.add("buildingNoStartsWith", "10");
+        queryParams.add("apartmentNoStartsWith", "1A");
+        queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
         queryParams.add("pageSize", "10");
@@ -442,7 +442,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "1");
         queryParams.add("pageSize", "1");
-        queryParams.add("name", "Third");
+        queryParams.add("nameStartsWith", "Third");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")

@@ -3,7 +3,7 @@ import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {themeColors} from "@/theme/theme-colors.ts";
-import {getAdminPanelMenuItems} from "@/layout/admin-panel-menu-items.ts";
+import {getAdminPanelMenuItems} from "@/components/admin/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
 

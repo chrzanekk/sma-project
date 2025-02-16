@@ -1,0 +1,23 @@
+{
+  "add": "Dodaj kontrahenta",
+  "details": "Dane kontrahenta",
+  "name": "Nazwa firmy",
+  "taxNumber": "NIP",
+  "address": "Adres",
+  "street": "Ulica",
+  "buildingNo": "Numer budynku",
+  "apartmentNo": "Numer lokalu",
+  "postalCode": "Kod pocztowy",
+  "city": "Miasto",
+  "country": "Kraj",
+  "customer": "Czy klient",
+  "supplier": "Czy dostawca",
+  "scaffoldingUser":"Czy użytkownik ruszt.",
+  "contractorList": "Lista kontrahentów",
+  "notifications" : {
+    "addContractorSuccess" : "Kontrahenta {{name}} dodany pomyślnie",
+    "addContractorError": "Błąd dodawania kontrahenta",
+    "editContractorSuccess" : "Dane kontrahenta {{name}} zmieniono pomyślnie",
+    "editContractorError": "Błąd edycji kontrahenta {{name}}"
+  }
+}

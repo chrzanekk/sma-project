@@ -1,9 +1,4 @@
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
-import AddRoleForm from "@/components/role/AddRoleForm.tsx";
-import React from "react";
 import {
     DrawerActionTrigger,
     DrawerBackdrop,
@@ -13,23 +8,32 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerRoot,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
+    DrawerTrigger
+} from "@/components/ui/drawer.tsx";
+import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+import {FaPlus} from "react-icons/fa";
+import {themeColors} from "@/theme/theme-colors.ts";
+import React from "react";
+import AddContractorForm from "@/components/contractor/AddContractorForm.tsx";
 
-interface AddRoleDrawerProps {
-    fetchRoles: () => void;
+
+interface AddContractorDrawerProps {
+    fetchContractors: () => void;
 }
 
-const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
-    const {t} = useTranslation('auth');
+const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContractors}) => {
+    const {t} = useTranslation('contractors');
     return (
         <>
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
-                    <Button colorPalette="green" size={"2xs"} p={1}>
-                        <FaPlus/>
-                        {t('shared.addRole')}
+                    <Button
+                        colorPalette="green"
+                        size={"2xs"}
+                        p={1}
+                    ><FaPlus/>
+                        {t('add')}
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColorPrimary()}>
@@ -39,23 +43,22 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("shared.roleDetails")}
+                                    {t("contractors:details")}
                                     </Heading>
-                                    </DrawerHeader>
+                                </DrawerHeader>
                                 <DrawerBody>
-                                    <AddRoleForm
+                                    <AddContractorForm
                                         onSuccess={() => {
-                                            fetchRoles();
-                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                            fetchContractors();
+                                            store.setOpen(false);
                                         }}
                                     />
                                 </DrawerBody>
                                 <DrawerFooter>
                                     <DrawerActionTrigger asChild>
                                         <Button
-                                            colorPalette="green"
-                                            onClick={() => store.setOpen(false)}
-                                            width={"300px"}
+                                            colorPalette="red"
+                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
                                         >
                                             {t("close", {ns: "common"})}
                                         </Button>
@@ -69,5 +72,4 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
         </>
     )
 }
-
-export default AddRoleDrawer;
+export default AddContractorDrawer;

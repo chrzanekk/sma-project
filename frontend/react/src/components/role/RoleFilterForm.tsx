@@ -1,9 +1,9 @@
 import {useTranslation} from "react-i18next";
-import {Field, Form, Formik, FormikHelpers} from "formik";
-import {Button, Flex, Input} from "@chakra-ui/react";
+import {Form, Formik, FormikHelpers} from "formik";
+import {Button, Flex} from "@chakra-ui/react";
 import React from "react";
 import * as Yup from 'yup';
-import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
+import {CustomInputFilterField} from "@/components/shared/FormConfig.tsx";
 
 interface FilterValues {
     name?: string;
@@ -32,16 +32,7 @@ const RoleFilterForm: React.FC<Props> = ({onSubmit}) => {
                 return (
                     <Form onSubmit={handleSubmit}>
                         <Flex gap={2} mb={1} justifyContent={"center"}>
-                            <Field
-                                name="name"
-                                as={Input}
-                                placeholder={t('shared.roleName')}
-                                _placeholder={{color: themeColorsHex.fontColor()}}
-                                size="sm"
-                                bg={themeColors.bgColorSecondary()}
-                                borderRadius={"md"}
-                                width="150px"
-                            />
+                            <CustomInputFilterField name="name" placeholder={t('shared.roleName')}/>
                         </Flex>
                         <Flex gap={2} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"

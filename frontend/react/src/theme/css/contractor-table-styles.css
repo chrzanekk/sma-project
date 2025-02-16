@@ -1,0 +1,130 @@
+.contractor-table th:nth-child(1) {
+    width: 2%; /* ID */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table td:nth-child(1) {
+    width: 2%; /* ID */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(2) {
+    width: 30%; /* Name */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(2) {
+    width: 20%; /* Name */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(3) {
+    width: 8%; /* tax number */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(3) {
+    width: 8%; /* tax number */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(4) {
+    width: 20%; /* Address */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(4) {
+    width: 20%; /* Address */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table th:nth-child(5) {
+    width: 7%; /* Customer */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table td:nth-child(5) {
+    width: 7%; /* Customer */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(6) {
+    width: 7%; /* Supplier */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(6) {
+    width: 7%; /* Supplier */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(7){
+    width: 7%; /* Scaffolding User */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(7) {
+    width: 7%; /* Scaffolding User */
+    text-align: center;
+}
+
+.contractor-table th:nth-child(8){
+    width: 7%; /* Create date */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table td:nth-child(8) {
+    width: 7%; /* Create date */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table th:nth-child(9){
+    width: 7%; /* Created by */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table td:nth-child(9) {
+    width: 7%; /* Created by */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table th:nth-child(10){
+    width: 7%; /* Modify date */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(10) {
+    width: 7%; /* Modify date */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table th:nth-child(11){
+    width: 7%; /* Modified by */
+    text-align: center;
+    font-size: x-small;
+}
+.contractor-table td:nth-child(11) {
+    width: 7%; /* Modified by */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contractor-table th:nth-child(12){
+    width: 8%; /* Actions */
+    text-align: center;
+    align-content: center;
+    font-size: x-small;
+}
+
+.contractor-table td:nth-child(12) {
+    width: 8%; /* Actions */
+    text-align: center;
+    align-content: center;
+}

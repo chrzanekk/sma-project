@@ -14,13 +14,13 @@ import java.time.Instant;
 @Data
 public class ContractorFilter {
     private Long id;
-    private String name;
-    private String taxNumber;
-    private String street;
-    private String buildingNo;
-    private String apartmentNo;
-    private String postalCode;
-    private String city;
+    private String nameStartsWith;
+    private String taxNumberStartsWith;
+    private String streetStartsWith;
+    private String buildingNoStartsWith;
+    private String apartmentNoStartsWith;
+    private String postalCodeStartsWith;
+    private String cityStartsWith;
     private Country country;
     private Boolean customer;
     private Boolean supplier;

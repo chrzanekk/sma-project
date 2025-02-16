@@ -1,16 +1,15 @@
 import {useTranslation} from "react-i18next";
-import {themeColors} from "@/theme/theme-colors.ts";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {AdminEditRoleUpdateRequest, UserDTO} from "@/types/user-types.ts";
 import {getUserById} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Stack, Text} from "@chakra-ui/react";
-import Select from "react-select";
+import {Button, Stack} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
+import {CustomSelectField} from "@/components/shared/FormConfig.tsx";
 
 interface EditUserRolesFormProps {
     onSuccess: () => void;
@@ -78,45 +77,14 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                 }
             }}
         >
-            {({errors, touched, isValid, isSubmitting, setFieldValue, values}) => {
-                const selectedRoles = values.roles || [];
-                const remainingRoles = roleOptions.filter(option => !selectedRoles.includes(option.value));
-                const rolesAreUnchanged =
-                    JSON.stringify(selectedRoles.sort()) === JSON.stringify(initialValues.roles.sort());
+            {({isValid, isSubmitting}) => {
+
                 return (
                     <Form>
                         <Stack gap="8px">
-                            <div>
-                                <Text fontSize="sm" fontWeight="bold" mb="1">
-                                    {t('shared.chooseRoles')}
-                                </Text>
-                                <Select
-                                    isMulti
-                                    options={roleOptions}
-                                    value={roleOptions.filter(option => selectedRoles.includes(option.value))}
-                                    placeholder={t("shared.chooseRoles")}
-                                    closeMenuOnSelect={remainingRoles.length === 1}
-                                    onChange={(selectedOptions) => {
-                                        const roles = selectedOptions.map(option => option.value);
-                                        setFieldValue("roles", roles).catch();
-                                    }}
-                                    styles={{
-                                        control: (provided) => ({
-                                            ...provided,
-                                            backgroundColor: themeColors.bgColorSecondary(),
-                                            borderColor: themeColors.borderColor(),
-                                            borderRadius: "md",
-                                            boxShadow: "none",
-                                        })
-                                    }}
-                                />
-                                {touched.roles && errors.roles && (
-                                    <Text color="red.500" fontSize="xs" mt="1">
-                                        {errors.roles}
-                                    </Text>
-                                )}
-                            </div>
-                            <Button disabled={!isValid || isSubmitting || rolesAreUnchanged} type="submit"
+                            <CustomSelectField name={"roles"} options={roleOptions} label={t('shared.chooseRoles')}
+                                               placeholder={t('shared.chooseRoles')} isMulti={true}/>
+                            <Button disabled={!isValid || isSubmitting} type="submit"
                                     colorPalette="green">
                                 {t('shared.changerRoles')}
                             </Button>

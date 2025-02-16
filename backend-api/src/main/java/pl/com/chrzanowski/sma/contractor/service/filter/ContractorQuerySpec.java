@@ -24,26 +24,26 @@ public class ContractorQuerySpec {
         if (filter.getId() != null) {
             builder.and(contractor.id.eq(filter.getId()));
         }
-        if (filter.getName() != null && !filter.getName().isEmpty()) {
-            builder.and(contractor.name.containsIgnoreCase(filter.getName()));
+        if (filter.getNameStartsWith() != null && !filter.getNameStartsWith().isEmpty()) {
+            builder.and(contractor.name.containsIgnoreCase(filter.getNameStartsWith()));
         }
-        if (filter.getTaxNumber() != null && !filter.getTaxNumber().isEmpty()) {
-            builder.and(contractor.taxNumber.containsIgnoreCase(filter.getTaxNumber()));
+        if (filter.getTaxNumberStartsWith() != null && !filter.getTaxNumberStartsWith().isEmpty()) {
+            builder.and(contractor.taxNumber.containsIgnoreCase(filter.getTaxNumberStartsWith()));
         }
-        if (filter.getStreet() != null && !filter.getStreet().isEmpty()) {
-            builder.and(contractor.street.containsIgnoreCase(filter.getStreet()));
+        if (filter.getStreetStartsWith() != null && !filter.getStreetStartsWith().isEmpty()) {
+            builder.and(contractor.street.containsIgnoreCase(filter.getStreetStartsWith()));
         }
-        if (filter.getBuildingNo() != null && !filter.getBuildingNo().isEmpty()) {
-            builder.and(contractor.buildingNo.containsIgnoreCase(filter.getBuildingNo()));
+        if (filter.getBuildingNoStartsWith() != null && !filter.getBuildingNoStartsWith().isEmpty()) {
+            builder.and(contractor.buildingNo.containsIgnoreCase(filter.getBuildingNoStartsWith()));
         }
-        if (filter.getApartmentNo() != null && !filter.getApartmentNo().isEmpty()) {
-            builder.and(contractor.apartmentNo.containsIgnoreCase(filter.getApartmentNo()));
+        if (filter.getApartmentNoStartsWith() != null && !filter.getApartmentNoStartsWith().isEmpty()) {
+            builder.and(contractor.apartmentNo.containsIgnoreCase(filter.getApartmentNoStartsWith()));
         }
-        if (filter.getPostalCode() != null && !filter.getPostalCode().isEmpty()) {
-            builder.and(contractor.postalCode.containsIgnoreCase(filter.getPostalCode()));
+        if (filter.getPostalCodeStartsWith() != null && !filter.getPostalCodeStartsWith().isEmpty()) {
+            builder.and(contractor.postalCode.containsIgnoreCase(filter.getPostalCodeStartsWith()));
         }
-        if (filter.getCity() != null && !filter.getCity().isEmpty()) {
-            builder.and(contractor.city.containsIgnoreCase(filter.getCity()));
+        if (filter.getCityStartsWith() != null && !filter.getCityStartsWith().isEmpty()) {
+            builder.and(contractor.city.containsIgnoreCase(filter.getCityStartsWith()));
         }
         if (filter.getCountry() != null) {
             builder.and(contractor.country.eq(filter.getCountry()));

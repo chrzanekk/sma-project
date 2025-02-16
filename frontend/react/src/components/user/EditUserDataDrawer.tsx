@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, DrawerContext} from "@chakra-ui/react";
+import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import {themeColors} from "@/theme/theme-colors.ts";
@@ -42,7 +42,11 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
-                                <DrawerHeader>{t("shared.editUserDetails")}</DrawerHeader>
+                                <DrawerHeader>
+                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                    {t("shared.editUserDetails")}
+                                    </Heading>
+                                    </DrawerHeader>
                                 <DrawerBody>
                                     <EditUserDataForm
                                         onSuccess={() => {

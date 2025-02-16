@@ -1,7 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorDTO, AddContractorDTO, EditContractorDTO} from "@/types/contractor-types.ts";
 
 
 const CONTRACTOR_API_BASE = "/api/contractors";
@@ -14,11 +14,14 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
             page: filter.page || 0
         });
         const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
+        console.log(response)
         const {items, totalPages} = parsePaginationResponse(response);
-        return {
+        const result = {
             contractors: items as ContractorDTO[],
             totalPages
         };
+        console.log(result)
+        return result;
     } catch (err) {
         return {contractors: [], totalPages: 1};
     }
@@ -34,7 +37,7 @@ export const getContractorById = async (id: number) => {
     }
 }
 
-export const addContractor = async (addContractor: ContractorDTO) => {
+export const addContractor = async (addContractor: AddContractorDTO) => {
     try {
         const response = await api.post(`${CONTRACTOR_API_BASE}/add`, addContractor, getAuthConfig());
         return response.data;
@@ -43,7 +46,7 @@ export const addContractor = async (addContractor: ContractorDTO) => {
     }
 }
 
-export const updateContractor = async (updateContractor: ContractorDTO) => {
+export const updateContractor = async (updateContractor: EditContractorDTO) => {
     try {
         const response = await api.put(`${CONTRACTOR_API_BASE}/update`, updateContractor, getAuthConfig());
         return response.data;

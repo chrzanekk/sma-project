@@ -1,13 +1,13 @@
 import {useTranslation} from "react-i18next";
-import {themeColors} from "@/theme/theme-colors.ts";
-import {Field, Form, Formik} from "formik";
+import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {AdminEditPasswordChangeRequest} from "@/types/user-types.ts";
 import {setNewUserPassword} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Input, InputProps, Stack, Text} from "@chakra-ui/react";
+import {Button, Stack} from "@chakra-ui/react";
 import React from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
+import CustomInputField from "@/components/shared/FormConfig.tsx";
 
 interface EditUserPasswordFormProps {
     onSuccess: () => void;
@@ -18,11 +18,6 @@ interface EditUserPasswordFormProps {
 const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, userId, login}) => {
     const {t} = useTranslation(['auth', 'common'])
 
-    const inputProps: InputProps = {
-        size: "sm",
-        bg: themeColors.bgColorSecondary(),
-        borderRadius: "md"
-    }
     return (
         <Formik
             initialValues={{
@@ -68,53 +63,13 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
                 }
             }}
         >
-            {({errors, touched, handleChange, isValid, isSubmitting, dirty}) => (
+            {({isValid, isSubmitting, dirty}) => (
                 <Form>
                     <Stack gap="8px">
-                        <Field name="newPassword">
-                            {({field}: any) => (
-                                <div>
-                                    <Text fontSize="sm" fontWeight="bold" mb="1">
-                                        {t('updateProfile.newPassword')}
-                                    </Text>
-                                    <Input
-                                        {...field}
-                                        type="password"
-                                        placeholder="********"
-                                        onChange={handleChange}
-                                        {...inputProps}
-                                    />
-                                    {touched.newPassword && errors.newPassword && (
-                                        <Text color="red.500" fontSize="xs" mt="1">
-                                            {errors.newPassword}
-                                        </Text>
-                                    )}
-                                </div>
-                            )}
-                        </Field>
-
-                        {/* Confirm Password Field */}
-                        <Field name="confirmPassword">
-                            {({field}: any) => (
-                                <div>
-                                    <Text fontSize="sm" fontWeight="bold" mb="1">
-                                        {t('updateProfile.confirmPassword')}
-                                    </Text>
-                                    <Input
-                                        {...field}
-                                        type="password"
-                                        placeholder="********"
-                                        onChange={handleChange}
-                                        {...inputProps}
-                                    />
-                                    {touched.confirmPassword && errors.confirmPassword && (
-                                        <Text color="red.500" fontSize="xs" mt="1">
-                                            {errors.confirmPassword}
-                                        </Text>
-                                    )}
-                                </div>
-                            )}
-                        </Field>
+                        <CustomInputField name={"newPassword"} label={t('updateProfile.newPassword')}
+                                          placeholder={t('updateProfile.newPassword')} type={"password"}/>
+                        <CustomInputField name={"confirmPassword"} label={t('updateProfile.confirmPassword')}
+                                          placeholder={t('updateProfile.confirmPassword')} type={"password"}/>
                         <Button disabled={!isValid || isSubmitting || !dirty} type="submit" colorScheme="green">
                             {t('newPassword.submit')}
                         </Button>

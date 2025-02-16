@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {Button, DrawerContext} from "@chakra-ui/react";
+import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
@@ -44,7 +44,11 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
-                                <DrawerHeader>{t("newPassword.header")}</DrawerHeader>
+                                <DrawerHeader>
+                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                        {t("newPassword.header")}
+                                    </Heading>
+                                </DrawerHeader>
                                 <DrawerBody>
                                     <EditUserPasswordForm
                                         onSuccess={() => {

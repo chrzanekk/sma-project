@@ -1,14 +1,14 @@
 import {useTranslation} from "react-i18next";
-import {themeColors} from "@/theme/theme-colors.ts";
-import {Field, Form, Formik} from "formik";
+import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Input, InputProps, Stack, Text} from "@chakra-ui/react";
-import Select from "react-select";
+import {Button, Stack} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
+import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+
 
 interface EditUserDataFormProps {
     onSuccess: () => void;
@@ -59,17 +59,6 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
     }, [userId]);
 
 
-    const inputProps: InputProps = {
-        size: "sm",
-        bg: themeColors.bgColorSecondary(),
-        borderRadius: "md"
-    }
-
-    const booleanOptions = [
-        {value: true, label: t("yes", {ns: "common"})},
-        {value: false, label: t("no", {ns: "common"})}
-    ];
-
     return (
         <Formik
             initialValues={initialValues}
@@ -112,145 +101,25 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                 }
             }}
         >
-            {({errors, touched, isValid, isSubmitting, setFieldValue, setFieldTouched, values, dirty}) => {
-                const handleSelectChange = React.useCallback((fieldName: string, value: boolean) => {
-                    setFieldValue(fieldName, value).catch();
-                    setFieldTouched(fieldName, true).catch();
-                }, [setFieldValue, setFieldTouched]);
-
+            {({isValid, isSubmitting, dirty}) => {
+                const booleanOptions = getBooleanOptions(t);
                 return (
                     <Form>
-                        <Stack gap="12px">
-                            <Field name="firstName">
-                                {({field}: any) => (
-                                    <div>
-                                        <Text fontSize="sm" fontWeight="bold" mb="1">
-                                            {t('shared.firstName')}
-                                        </Text>
-                                        <Input
-                                            {...field}
-                                            placeholder={t('shared.firstName')}
-                                            {...inputProps}
-                                            isreadonly={isLoading}
-                                        />
-                                        {touched.firstName && errors.firstName && (
-                                            <Text color="red.500" fontSize="xs" mt="1">
-                                                {errors.firstName}
-                                            </Text>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                            {/* Last Name Field */}
-                            <Field name="lastName">
-                                {({field}: any) => (
-                                    <div>
-                                        <Text fontSize="sm" fontWeight="bold" mb="1">
-                                            {t('shared.lastName')}
-                                        </Text>
-                                        <Input
-                                            {...field}
-                                            placeholder={t('shared.lastName')}
-                                            {...inputProps}
-                                            isreadonly={isLoading}
-                                        />
-                                        {touched.lastName && errors.lastName && (
-                                            <Text color="red.500" fontSize="xs" mt="1">
-                                                {errors.lastName}
-                                            </Text>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                            {/* Position Field */}
-                            <Field name="position">
-                                {({field}: any) => (
-                                    <div>
-                                        <Text fontSize="sm" fontWeight="bold" mb="1">
-                                            {t('shared.position')}
-                                        </Text>
-                                        <Input
-                                            {...field}
-                                            placeholder={t('shared.position')}
-                                            {...inputProps}
-                                            isreadonly={isLoading}
-                                        />
-                                        {touched.position && errors.position && (
-                                            <Text color="red.500" fontSize="xs" mt="1">
-                                                {errors.position}
-                                            </Text>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                            {/* Locked Field */}
-                            <Field name="locked">
-                                {() => (
-                                    <div>
-                                        <Text fontSize="sm" fontWeight="bold" mb="1">
-                                            {t('shared.locked')}
-                                        </Text>
-                                        <Select
-                                            options={booleanOptions}
-                                            placeholder={t("shared.locked")}
-                                            value={booleanOptions.find((option) => option.value === values.locked)}
-                                            onChange={(selectedOption) => handleSelectChange("locked", selectedOption?.value ?? false)}
-                                            isDisabled={isLoading}
-                                            styles={{
-                                                control: (provided) => ({
-                                                    ...provided,
-                                                    backgroundColor: themeColors.bgColorSecondary(),
-                                                    borderColor: themeColors.borderColor(),
-                                                    borderRadius: "md",
-                                                    boxShadow: "none",
-                                                })
-                                            }}
-                                        />
-                                        {touched.locked && errors.locked && (
-                                            <Text color="red.500" fontSize="xs" mt="1">
-                                                {errors.locked}
-                                            </Text>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                            {/* Enabled Field */}
-                            <Field name="enabled">
-                                {() => (
-                                    <div>
-                                        <Text fontSize="sm" fontWeight="bold" mb="1">
-                                            {t('shared.enabled')}
-                                        </Text>
-                                        <Select
-                                            options={booleanOptions}
-                                            placeholder={t("shared.enabled")}
-                                            value={booleanOptions.find((option) => option.value === values.enabled)}
-                                            onChange={(selectedOption) => handleSelectChange("enabled", selectedOption?.value ?? false)}
-                                            isDisabled={isLoading}
-                                            styles={{
-                                                control: (provided) => ({
-                                                    ...provided,
-                                                    backgroundColor: themeColors.bgColorSecondary(),
-                                                    borderColor: themeColors.borderColor(),
-                                                    borderRadius: "md",
-                                                    boxShadow: "none",
-                                                })
-                                            }}
-                                        />
-                                        {touched.enabled && errors.enabled && (
-                                            <Text color="red.500" fontSize="xs" mt="1">
-                                                {errors.enabled}
-                                            </Text>
-                                        )}
-                                    </div>
-                                )}
-                            </Field>
-
-                            <Button disabled={!isValid || isSubmitting || !dirty || isLoading} type="submit" colorPalette="green">
+                        <Stack gap="8px">
+                            <CustomInputField name={"firstName"} label={t('shared.firstName')}
+                                              placeholder={t('shared.firstName')}/>
+                            <CustomInputField name={"lastName"} label={t('shared.lastName')}
+                                              placeholder={t('shared.lastName')}/>
+                            <CustomInputField name={"position"} label={t('shared.position')}
+                                              placeholder={t('shared.position')}/>
+                            <CustomSelectField name={"locked"} label={t('shared.locked')}
+                                               placeholder={t('shared.locked')} options={booleanOptions}
+                                               width={"400px"}/>
+                            <CustomSelectField name={"enabled"} label={t('shared.enabled')}
+                                               placeholder={t('shared.enabled')} options={booleanOptions}
+                                               width={"400px"}/>
+                            <Button disabled={!isValid || isSubmitting || !dirty || isLoading} type="submit"
+                                    colorPalette="green" width={"400px"}>
                                 {t('save', {ns: "common"})}
                             </Button>
                         </Stack>

@@ -1,4 +1,4 @@
-import {Button, DrawerContext} from "@chakra-ui/react";
+import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import AddUserForm from "@/components/user/AddUserForm.tsx";
@@ -24,7 +24,6 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
     const {t} = useTranslation('auth');
     return (
         <>
-
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
@@ -41,7 +40,11 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
-                                <DrawerHeader>{t("shared.userDetails")}</DrawerHeader>
+                                <DrawerHeader>
+                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                        {t("shared.userDetails")}
+                                    </Heading>
+                                </DrawerHeader>
                                 <DrawerBody>
                                     <AddUserForm
                                         onSuccess={() => {

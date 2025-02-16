@@ -1,9 +1,4 @@
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
-import AddRoleForm from "@/components/role/AddRoleForm.tsx";
-import React from "react";
 import {
     DrawerActionTrigger,
     DrawerBackdrop,
@@ -13,23 +8,33 @@ import {
     DrawerFooter,
     DrawerHeader,
     DrawerRoot,
-    DrawerTrigger,
-} from "@/components/ui/drawer"
+    DrawerTrigger
+} from "@/components/ui/drawer.tsx";
+import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+import {themeColors} from "@/theme/theme-colors.ts";
+import {FaTimes} from "react-icons/fa";
+import React from "react";
 
-interface AddRoleDrawerProps {
-    fetchRoles: () => void;
+
+interface EditContractorDrawerProps {
+    fetchContractors: () => void;
+    contractorId: number;
 }
 
-const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
-    const {t} = useTranslation('auth');
+const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContractors, contractorId}) => {
+    const {t} = useTranslation(['common', 'contractors']);
+
     return (
         <>
             <DrawerRoot size={"md"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
-                    <Button colorPalette="green" size={"2xs"} p={1}>
-                        <FaPlus/>
-                        {t('shared.addRole')}
+                    <Button
+                        colorPalette="green"
+                        size={"2xs"}
+                        p={1}
+                    >
+                        {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent bg={themeColors.bgColorPrimary()}>
@@ -39,29 +44,31 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("shared.roleDetails")}
+                                        {t("contractors:edit")}
                                     </Heading>
-                                    </DrawerHeader>
+                                </DrawerHeader>
                                 <DrawerBody>
-                                    <AddRoleForm
+                                    <EditContractorForm
                                         onSuccess={() => {
-                                            fetchRoles();
-                                            store.setOpen(false); // Zamknięcie drawera po sukcesie
+                                            fetchContractors();
+                                            store.setOpen(false);
                                         }}
+                                        contractorId={contractorId}
                                     />
                                 </DrawerBody>
                                 <DrawerFooter>
                                     <DrawerActionTrigger asChild>
                                         <Button
-                                            colorPalette="green"
+                                            colorPalette="red"
                                             onClick={() => store.setOpen(false)}
-                                            width={"300px"}
                                         >
+                                            <FaTimes/>
                                             {t("close", {ns: "common"})}
                                         </Button>
                                     </DrawerActionTrigger>
                                 </DrawerFooter>
                             </>
+
                         )}
                     </DrawerContext>
                 </DrawerContent>
@@ -70,4 +77,4 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
     )
 }
 
-export default AddRoleDrawer;
+export default EditContractorDrawer;

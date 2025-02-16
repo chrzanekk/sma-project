@@ -7,7 +7,8 @@ export class Country {
         Country.ENGLAND,
     ];
 
-    private constructor(public readonly code: string, public readonly name: string) {}
+    private constructor(public readonly code: string, public readonly name: string) {
+    }
 
     public static fromCode(code: string): Country {
         const country = Country.countries.find(
@@ -19,3 +20,9 @@ export class Country {
         return country;
     }
 }
+
+
+export const getCountryOptions = (t: (key: string, options?: any) => string) => [
+    {value: Country.POLAND.code, label: t("poland", {ns: "countries", defaultValue: Country.POLAND.name})},
+    {value: Country.ENGLAND.code, label: t("england", {ns: "countries", defaultValue: Country.ENGLAND.name})},
+]

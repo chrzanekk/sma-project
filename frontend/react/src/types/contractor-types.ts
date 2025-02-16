@@ -1,4 +1,5 @@
 import {ContactBaseDTO} from "@/types/contact-types.ts";
+import {Country} from "@/types/country-type.ts";
 
 export interface ContractorBaseDTO {
     id?: number;
@@ -9,7 +10,7 @@ export interface ContractorBaseDTO {
     apartmentNo: string;
     postalCode: string;
     city: string;
-    country: string;
+    country: Country;
     customer: boolean;
     supplier: boolean;
     scaffoldingUser: boolean;
@@ -33,7 +34,7 @@ export interface ContractorDTO {
     apartmentNo: string;
     postalCode: string;
     city: string;
-    country: string;
+    country: Country;
     customer: boolean;
     supplier: boolean;
     scaffoldingUser: boolean;
@@ -46,4 +47,62 @@ export interface ContractorDTO {
     modifiedById: number;
     modifiedByFirstName: string;
     modifiedByLastName: string;
+}
+
+export interface AddContractorDTO {
+    name: string;
+    taxNumber: string;
+    street: string;
+    buildingNo: string;
+    apartmentNo: string;
+    postalCode: string;
+    city: string;
+    country: Country;
+    customer: boolean;
+    supplier: boolean;
+    scaffoldingUser: boolean;
+}
+
+export interface AddContractorFormValues {
+    name: string;
+    taxNumber: string;
+    street: string;
+    buildingNo: string;
+    apartmentNo: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    customer: boolean;
+    supplier: boolean;
+    scaffoldingUser: boolean;
+}
+
+export interface EditContractorDTO {
+    id?: number;
+    name: string;
+    taxNumber: string;
+    street: string;
+    buildingNo: string;
+    apartmentNo: string;
+    postalCode: string;
+    city: string;
+    country: Country;
+    customer: boolean;
+    supplier: boolean;
+    scaffoldingUser: boolean;
+}
+
+export interface EditContractorFormValues {
+    id?: number;
+    name: string;
+    taxNumber: string;
+    street: string;
+    buildingNo: string;
+    apartmentNo: string;
+    postalCode: string;
+    city: string;
+    country: string;
+    customer: boolean;
+    supplier: boolean;
+    scaffoldingUser: boolean;
 }

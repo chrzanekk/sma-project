@@ -1,6 +1,6 @@
 import {AdminEditPasswordChangeRequest, UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {RoleDTO} from "@/types/role-types.ts";
-import {api, getAuthConfig, toBoolean} from "@/services/axios-config.ts";
+import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 
@@ -42,8 +42,8 @@ export const addUser = async (addUser: UserFormDTO) => {
         );
         const payload: UserDTO = {
             ...addUser,
-            locked: toBoolean(addUser.locked),
-            enabled: toBoolean(addUser.enabled),
+            // locked: toBoolean(addUser.locked),
+            // enabled: toBoolean(addUser.enabled),
             roles
         }
         const response = await api.post(`${USERS_API_BASE}/add`, payload, getAuthConfig());
@@ -60,8 +60,8 @@ export const updateUser = async (user: UserFormDTO) => {
         );
         const userDTO: UserDTO = {
             ...user,
-            locked: toBoolean(user.locked),
-            enabled: toBoolean(user.enabled),
+            // locked: toBoolean(user.locked),
+            // enabled: toBoolean(user.enabled),
             roles
         }
         const response = await api.put(`${USERS_API_BASE}/update`, userDTO, getAuthConfig());

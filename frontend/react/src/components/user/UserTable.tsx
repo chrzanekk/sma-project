@@ -22,7 +22,7 @@ interface Props {
 }
 
 const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
-    const {t} = useTranslation('auth')
+    const {t} = useTranslation('auth');
     const {user: currentUser} = useAuth();
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedUserId, setSelectedUserId] = useState<number | null>(null);

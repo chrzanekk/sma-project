@@ -14,6 +14,10 @@ import errorsEn from './en/errors.json'
 import errorsPl from './pl/errors.json'
 import adminPanelMenuPl from './pl/adminPanelMenu.json'
 import adminPanelMenuEn from './en/adminPanelMenu.json'
+import contractorsPl from './pl/contractors.json'
+import contractorsEn from './en/contractors.json'
+import countriesPl from './pl/countries.json'
+import countriesEn from './en/countries.json'
 
 i18n.use(initReactI18next).init({
     resources: {
@@ -24,7 +28,9 @@ i18n.use(initReactI18next).init({
             auth: authEn,
             footer: footerEn,
             errors: errorsEn,
-            adminPanelMenu: adminPanelMenuEn
+            adminPanelMenu: adminPanelMenuEn,
+            contractors: contractorsEn,
+            countries: countriesEn
         },
         pl: {
             common: commonPl,
@@ -33,12 +39,15 @@ i18n.use(initReactI18next).init({
             auth: authPl,
             footer: footerPl,
             errors: errorsPl,
-            adminPanelMenu: adminPanelMenuPl
+            adminPanelMenu: adminPanelMenuPl,
+            contractors: contractorsPl,
+            countries: countriesPl
         },
     },
     lng: 'pl',
     fallbackLng: 'en',
-    ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu'],
+    ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
+        'contractors', 'countries'],
     defaultNS: 'common',
     interpolation: {
         escapeValue: false,
