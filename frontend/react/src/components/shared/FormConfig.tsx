@@ -87,13 +87,15 @@ interface CustomInputFieldProps {
     label?: string;
     placeholder?: string;
     type?: string;
+    width?: string;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                name,
                                                                label,
                                                                placeholder,
-                                                               type = "text"
+                                                               type = "text",
+                                                               width
                                                            }) => {
     return (
         <Field name={name}>
@@ -111,7 +113,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         size="sm"
                         bg={themeColors.bgColorSecondary()}
                         borderRadius="md"
-                        width="400px"
+                        width={width || "100%"}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -141,7 +143,7 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                         placeholder,
                                                                         options,
                                                                         isMulti = false,
-    width
+                                                                        width
                                                                     }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const [field, meta] = useField(name);
@@ -160,7 +162,7 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 : provided;
             return {
                 ...baseControl,
-                width: width
+                width: width ? width : "auto",
             };
         },
     };

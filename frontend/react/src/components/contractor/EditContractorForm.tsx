@@ -1,12 +1,14 @@
 import {useTranslation} from "react-i18next";
 import {ContractorDTO, EditContractorDTO, EditContractorFormValues} from "@/types/contractor-types.ts";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
-import {Formik} from "formik";
+import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
+import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
+import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
 
 
 interface EditContractorFormProps {
@@ -50,7 +52,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
                     apartmentNo: contractor.apartmentNo,
                     postalCode: contractor.postalCode,
                     city: contractor.city,
-                    country: contractor.country.name,
+                    country: contractor.country.code,
                     customer: contractor.customer,
                     supplier: contractor.supplier,
                     scaffoldingUser: contractor.scaffoldingUser
@@ -133,8 +135,132 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
                     setSubmitting(false);
                 }
             }}
-            >
+        >
+            {({isValid, isSubmitting, dirty}) => {
+                const booleanOptions = getBooleanOptions(t);
+                return (
+                    <Form>
+                        <Stack gap={4}>
+                            {/* Wiersz 1: Name (4/6) i Tax Number (2/6) */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                <GridItem colSpan={4}>
+                                    <CustomInputField
+                                        name="name"
+                                        label={t('contractors:name')}
+                                        placeholder={t('contractors:name')}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                    <CustomInputField
+                                        name="taxNumber"
+                                        label={t('contractors:taxNumber')}
+                                        placeholder={t('contractors:taxNumber')}
+                                    />
+                                </GridItem>
+                            </Grid>
 
+                            {/* Wiersz 2: Street (6/12), BuildingNo (3/12), ApartmentNo (3/12) */}
+                            <Grid templateColumns="repeat(12, 0.5fr)" gap={4}>
+                                <GridItem colSpan={6}>
+                                    <CustomInputField
+                                        name="street"
+                                        label={t('contractors:street')}
+                                        placeholder={t('contractors:street')}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={3}>
+                                    <CustomInputField
+                                        name="buildingNo"
+                                        label={t('contractors:buildingNo')}
+                                        placeholder={t('contractors:buildingNo')}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={3}>
+                                    <CustomInputField
+                                        name="apartmentNo"
+                                        label={t('contractors:apartmentNo')}
+                                        placeholder={t('contractors:apartmentNo')}
+                                    />
+                                </GridItem>
+                            </Grid>
+
+                            {/* Wiersz 3: PostalCode (1/6), City (3/6), Country (2/6) */}
+                            <Grid templateColumns="repeat(12, 0.5fr)" gap={4}>
+                                <GridItem colSpan={3}>
+                                    <CustomInputField
+                                        name="postalCode"
+                                        label={t('contractors:postalCode')}
+                                        placeholder={t('contractors:postalCode')}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={6}>
+                                    <CustomInputField
+                                        name="city"
+                                        label={t('contractors:city')}
+                                        placeholder={t('contractors:city')}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={3}>
+                                    <CustomSelectField
+                                        name="country"
+                                        label={t("contractors:country")}
+                                        placeholder={t("contractors:country")}
+                                        width="100%"
+                                        options={countryOptions}
+                                    />
+                                </GridItem>
+                            </Grid>
+
+                            {/* Wiersz 4: Customer (2/6), Supplier (2/6), ScaffoldingUser (2/6) */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                <GridItem colSpan={2}>
+                                    <CustomSelectField
+                                        name="customer"
+                                        label={t("contractors:customer")}
+                                        placeholder={t("contractors:customer")}
+                                        width="100%"
+                                        options={booleanOptions}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                    <CustomSelectField
+                                        name="supplier"
+                                        label={t("contractors:supplier")}
+                                        placeholder={t("contractors:supplier")}
+                                        width="100%"
+                                        options={booleanOptions}
+                                    />
+                                </GridItem>
+                                <GridItem colSpan={2}>
+                                    <CustomSelectField
+                                        name="scaffoldingUser"
+                                        label={t("contractors:scaffoldingUser")}
+                                        placeholder={t("contractors:scaffoldingUser")}
+                                        width="100%"
+                                        options={booleanOptions}
+                                    />
+                                </GridItem>
+                            </Grid>
+
+                            {/* Wiersz 5: Button wyśrodkowany */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                <GridItem colSpan={6} textAlign="center">
+                                    <Button
+                                        disabled={!isValid || isSubmitting || !dirty || isLoading}
+                                        type="submit"
+                                        colorScheme="green"
+                                        width="400px"
+                                    >
+                                        {t('save', {ns: "common"})}
+                                    </Button>
+                                </GridItem>
+                            </Grid>
+                        </Stack>
+                    </Form>
+                )
+            }}
         </Formik>
     )
 }
+
+export default EditContractorForm;

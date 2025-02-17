@@ -1,75 +1,75 @@
 import {useTranslation} from "react-i18next";
 import {
-    DrawerActionTrigger,
-    DrawerBackdrop,
-    DrawerBody,
-    DrawerCloseTrigger,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerRoot,
-    DrawerTrigger
-} from "@/components/ui/drawer.tsx";
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+    DialogActionTrigger,
+    DialogBackdrop,
+    DialogBody,
+    DialogCloseTrigger,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogRoot,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
+import {Button, DialogContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContractorForm from "@/components/contractor/AddContractorForm.tsx";
 
 
-interface AddContractorDrawerProps {
+interface AddContractorDialogProps {
     fetchContractors: () => void;
 }
 
-const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContractors}) => {
+const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContractors}) => {
     const {t} = useTranslation('contractors');
     return (
         <>
-            <DrawerRoot size={"lg"}>
-                <DrawerBackdrop/>
-                <DrawerTrigger asChild>
+            <DialogRoot size={"lg"} placement={"top"}>
+                <DialogBackdrop/>
+                <DialogTrigger asChild>
                     <Button
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
                     ><FaPlus/>
-                        {t('add')}
+                        {t('add') + "(DIALOG)"}
                     </Button>
-                </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
-                    <DrawerContext>
+                </DialogTrigger>
+                <DialogContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
+                    <DialogContext>
                         {(store) => (
                             <>
-                                <DrawerCloseTrigger/>
-                                <DrawerHeader>
+                                <DialogCloseTrigger/>
+                                <DialogHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
                                     {t("contractors:details")}
                                     </Heading>
-                                </DrawerHeader>
-                                <DrawerBody>
+                                </DialogHeader>
+                                <DialogBody>
                                     <AddContractorForm
                                         onSuccess={() => {
                                             fetchContractors();
                                             store.setOpen(false);
                                         }}
                                     />
-                                </DrawerBody>
-                                <DrawerFooter>
-                                    <DrawerActionTrigger asChild>
+                                </DialogBody>
+                                <DialogFooter>
+                                    <DialogActionTrigger asChild>
                                         <Button
                                             colorPalette="red"
                                             onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
                                         >
                                             {t("close", {ns: "common"})}
                                         </Button>
-                                    </DrawerActionTrigger>
-                                </DrawerFooter>
+                                    </DialogActionTrigger>
+                                </DialogFooter>
                             </>
                         )}
-                    </DrawerContext>
-                </DrawerContent>
-            </DrawerRoot>
+                    </DialogContext>
+                </DialogContent>
+            </DialogRoot>
         </>
     )
 }
-export default AddContractorDrawer;
+export default AddContractorDialog;

@@ -14,13 +14,11 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
             page: filter.page || 0
         });
         const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
-        console.log(response)
         const {items, totalPages} = parsePaginationResponse(response);
         const result = {
             contractors: items as ContractorDTO[],
             totalPages
         };
-        console.log(result)
         return result;
     } catch (err) {
         return {contractors: [], totalPages: 1};
@@ -31,6 +29,7 @@ export const getContractorById = async (id: number) => {
     try {
         const response = await api.get(`${CONTRACTOR_API_BASE}/getById/${id}`, getAuthConfig());
         const contractorDTO: ContractorDTO = response.data;
+        console.log(contractorDTO)
         return contractorDTO;
     } catch (err) {
         throw err;

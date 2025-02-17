@@ -1,15 +1,16 @@
 import React from "react";
 import {
     Button,
-    DialogRoot,
     DialogBackdrop,
-    DialogContent,
-    DialogHeader,
     DialogBody,
+    DialogContent,
     DialogFooter,
-    DialogCloseTrigger,
+    DialogHeader,
+    DialogRoot,
+    Heading,
 } from "@chakra-ui/react";
-import { themeColors } from "@/theme/theme-colors.ts";
+import {themeColors} from "@/theme/theme-colors.ts";
+import {DialogActionTrigger} from "@/components/ui/dialog.tsx";
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -28,24 +29,31 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                        title,
                                                        message,
                                                        confirmText = "Confirm",
-                                                       cancelText = "Cancel"}) => {
+                                                       cancelText = "Cancel"
+                                                   }) => {
     return (
         <DialogRoot open={isOpen} onOpenChange={(open) => !open && onClose()}>
-            <DialogBackdrop />
-            <DialogContent backgroundColor={themeColors.bgColorPrimary()}>
-                <DialogHeader>{title}</DialogHeader>
+            <DialogBackdrop/>
+            <DialogContent backgroundColor={themeColors.bgColorSecondary()}>
+                <DialogHeader>
+                    <Heading size={"xl"}>
+                        {title}
+                    </Heading>
+                </DialogHeader>
                 <DialogBody>{message}</DialogBody>
                 <DialogFooter>
                     <Button
-                        colorScheme="red"
+                        colorPalette="red"
                         onClick={onConfirm}
                         mr={3}
                     >
                         {confirmText}
                     </Button>
-                    <DialogCloseTrigger>
-                        <Button colorScheme="green">{cancelText}</Button>
-                    </DialogCloseTrigger>
+                    <DialogActionTrigger asChild>
+                        <Button colorPalette="green"
+                                onClick={onClose}
+                        >{cancelText}</Button>
+                    </DialogActionTrigger>
                 </DialogFooter>
             </DialogContent>
         </DialogRoot>

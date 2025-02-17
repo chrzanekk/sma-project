@@ -1,56 +1,56 @@
 import {useTranslation} from "react-i18next";
 import {
-    DrawerActionTrigger,
-    DrawerBackdrop,
-    DrawerBody,
-    DrawerCloseTrigger,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerRoot,
-    DrawerTrigger
-} from "@/components/ui/drawer.tsx";
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+    DialogActionTrigger,
+    DialogBackdrop,
+    DialogBody,
+    DialogCloseTrigger,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogRoot,
+    DialogTrigger
+} from "@/components/ui/dialog.tsx";
+import {Button, DialogContext, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditContractorForm from "@/components/contractor/EditContractorForm.tsx";
 
 
-interface EditContractorDrawerProps {
+interface EditContractorDialogProps {
     fetchContractors: () => void;
     contractorId: number;
 }
 
-const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContractors, contractorId}) => {
+const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContractors, contractorId}) => {
     const {t} = useTranslation(['common', 'contractors']);
 
     return (
         <>
-            <DrawerRoot size={"lg"} placement={"end"}>
-                <DrawerBackdrop/>
-                <DrawerTrigger asChild>
+            <DialogRoot size={"lg"} placement={"top"}>
+                <DialogBackdrop/>
+                <DialogTrigger asChild>
                     <Button
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
                     >
-                        {t('data', {ns: "common"})}
+                        {t('data', {ns: "common"}) + "(D)"}
                     </Button>
-                </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}
+                </DialogTrigger>
+                <DialogContent bg={themeColors.bgColorSecondary()}
                                offset={"2"}
                                borderRadius={"md"}>
-                    <DrawerContext>
+                    <DialogContext>
                         {(store) => (
                             <>
-                                <DrawerCloseTrigger/>
-                                <DrawerHeader>
+                                <DialogCloseTrigger/>
+                                <DialogHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
                                         {t("contractors:edit")}
                                     </Heading>
-                                </DrawerHeader>
-                                <DrawerBody>
+                                </DialogHeader>
+                                <DialogBody>
                                     <EditContractorForm
                                         onSuccess={() => {
                                             fetchContractors();
@@ -58,9 +58,9 @@ const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContrac
                                         }}
                                         contractorId={contractorId}
                                     />
-                                </DrawerBody>
-                                <DrawerFooter>
-                                    <DrawerActionTrigger asChild>
+                                </DialogBody>
+                                <DialogFooter>
+                                    <DialogActionTrigger asChild>
                                         <Button
                                             colorPalette="red"
                                             onClick={() => store.setOpen(false)}
@@ -68,16 +68,16 @@ const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContrac
                                             <FaTimes/>
                                             {t("close", {ns: "common"})}
                                         </Button>
-                                    </DrawerActionTrigger>
-                                </DrawerFooter>
+                                    </DialogActionTrigger>
+                                </DialogFooter>
                             </>
 
                         )}
-                    </DrawerContext>
-                </DrawerContent>
-            </DrawerRoot>
+                    </DialogContext>
+                </DialogContent>
+            </DialogRoot>
         </>
     )
 }
 
-export default EditContractorDrawer;
+export default EditContractorDialog;

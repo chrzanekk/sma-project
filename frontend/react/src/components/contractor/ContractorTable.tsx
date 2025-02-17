@@ -1,7 +1,6 @@
 import {ContractorDTO} from "@/types/contractor-types.ts";
-import {useAuth} from "@/context/AuthContext.tsx";
 import {useTranslation} from "react-i18next";
-import {Button, Table, Text, useDisclosure} from "@chakra-ui/react";
+import {Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useTheme} from "next-themes";
 import {Field} from "@/components/ui/field.tsx";
@@ -10,6 +9,8 @@ import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import classNames from "classnames";
 import '@/theme/css/global-table-styles.css';
 import '@/theme/css/contractor-table-styles.css';
+import EditContractorDrawer from "@/components/contractor/EditContractorDrawer.tsx";
+import EditContractorDialog from "@/components/contractor/EditContractorDialog.tsx";
 
 
 interface Props {
@@ -20,7 +21,6 @@ interface Props {
 
 const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContractors}) => {
     const {t} = useTranslation(['common', 'contractors']);
-    const {user: currentUser} = useAuth();
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedContractorId, setSelectedContractorId] = useState<number | null>(null);
     const {theme} = useTheme();
@@ -72,16 +72,16 @@ const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContracto
                             <Table.Cell>{contractor.name}</Table.Cell>
                             <Table.Cell>{contractor.taxNumber}</Table.Cell>
                             <Table.Cell>
-                                    <div>
-                                        {contractor.street} {contractor.buildingNo}
-                                        {contractor.apartmentNo && contractor.apartmentNo.trim() !== ""
-                                            ? "/" + contractor.apartmentNo
-                                            : ""},{" "}
-                                        {contractor.postalCode} {contractor.city},{" "}
-                                        {contractor.country && typeof contractor.country === "object"
-                                            ? contractor.country.name
-                                            : contractor.country || ""}
-                                    </div>
+                                <div>
+                                    {contractor.street} {contractor.buildingNo}
+                                    {contractor.apartmentNo && contractor.apartmentNo.trim() !== ""
+                                        ? "/" + contractor.apartmentNo
+                                        : ""},{" "}
+                                    {contractor.postalCode} {contractor.city},{" "}
+                                    {contractor.country && typeof contractor.country === "object"
+                                        ? contractor.country.name
+                                        : contractor.country || ""}
+                                </div>
                             </Table.Cell>
                             <Table.Cell>{contractor.customer ? t("common:yes") : t("common:no")}</Table.Cell>
                             <Table.Cell>{contractor.supplier ? t("common:yes") : t("common:no")}</Table.Cell>
@@ -91,18 +91,18 @@ const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContracto
                             <Table.Cell>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
                             <Table.Cell>{`${contractor.modifiedByFirstName} ${contractor.modifiedByLastName}`}</Table.Cell>
                             <Table.Cell>
-                                {/*<HStack gap={1} alignContent={"center"}>*/}
-                                {/*    <EditContractorDrawer*/}
-                                {/*        fetchUsers={fetchContractors}*/}
-                                {/*        contractorId={contractor.id!}/>*/}
-                                {/*</HStack>*/}
-                                <Button
-                                    colorPalette="red"
-                                    size={"2xs"}
-                                    onClick={() => handleDeleteClick(contractor.id!)}
-                                    disabled={currentUser?.id === contractor.id}>
-                                    {t('delete', {ns: "common"})}
-                                </Button>
+                                <HStack gap={1} alignContent={"center"}>
+                                    <EditContractorDrawer
+                                        fetchContractors={fetchContractors}
+                                        contractorId={contractor.id!}/>
+                                    <EditContractorDialog fetchContractors={fetchContractors} contractorId={contractor.id!}/>
+                                    <Button
+                                        colorPalette="red"
+                                        size={"2xs"}
+                                        onClick={() => handleDeleteClick(contractor.id!)}>
+                                        {t('delete', {ns: "common"})}
+                                    </Button>
+                                </HStack>
                             </Table.Cell>
                         </Table.Row>
                     ))}
