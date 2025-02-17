@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+import CustomInputField, {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {AddContractorDTO, AddContractorFormValues} from "@/types/contractor-types.ts";
@@ -9,6 +9,7 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
 import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 
 
 interface AddContractorFormProps {

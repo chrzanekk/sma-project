@@ -7,7 +7,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {Button, Stack} from "@chakra-ui/react";
 import {RoleDTO} from "@/types/role-types.ts";
-import CustomInputField from "@/components/shared/FormConfig.tsx";
+import CustomInputField from "@/components/shared/CustomFormFields.tsx";
 
 interface AddRoleFormProps {
     onSuccess: () => void;

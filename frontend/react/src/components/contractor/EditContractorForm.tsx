@@ -8,7 +8,8 @@ import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
-import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+import CustomInputField, {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 
 
 interface EditContractorFormProps {

@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Form, Formik, FormikHelpers} from "formik";
 import {Button, Flex} from "@chakra-ui/react";
 import React from "react";
-import {CustomInputFilterField, CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+import {CustomInputFilterField, CustomSelectField, getBooleanOptions} from "@/components/shared/CustomFormFields.tsx";
 
 
 interface FilterValues {

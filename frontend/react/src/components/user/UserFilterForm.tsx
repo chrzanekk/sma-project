@@ -4,7 +4,8 @@ import * as Yup from 'yup';
 import {Button, Flex} from '@chakra-ui/react';
 import {useTranslation} from "react-i18next";
 import useRoles from "@/hooks/UseRoles.tsx";
-import {CustomInputFilterField, CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 
 interface FilterValues {
     emailStartsWith?: string;

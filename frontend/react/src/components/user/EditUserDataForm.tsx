@@ -7,7 +7,8 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {Button, Stack} from "@chakra-ui/react";
 import React, {useEffect, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/FormConfig.tsx";
+import CustomInputField, {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 
 
 interface EditUserDataFormProps {

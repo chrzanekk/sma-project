@@ -9,7 +9,7 @@ import React, {useEffect, useState} from "react";
 import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {CustomSelectField} from "@/components/shared/FormConfig.tsx";
+import {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 
 interface EditUserRolesFormProps {
     onSuccess: () => void;
