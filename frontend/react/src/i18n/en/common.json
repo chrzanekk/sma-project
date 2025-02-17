@@ -34,8 +34,8 @@
     "mode":"Tryb",
     "createDate": "Data utworzenia",
     "createdBy": "Utworzony przez",
-    "lastModifiedDate": "Data ost. modyf.",
-    "lastModifiedBy":"Ost. zmodyfikowany przez",
+    "lastModifiedDate": "Data ost. mod.",
+    "lastModifiedBy":"Ost. zmod. przez",
     "notifications": {
         "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
         "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",

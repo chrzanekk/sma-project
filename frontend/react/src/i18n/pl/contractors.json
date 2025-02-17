@@ -11,9 +11,9 @@
   "postalCode": "Kod pocztowy",
   "city": "Miasto",
   "country": "Kraj",
-  "customer": "Czy klient",
-  "supplier": "Czy dostawca",
-  "scaffoldingUser":"Czy użytkownik ruszt.",
+  "customer": "Klient",
+  "supplier": "Dostawca",
+  "scaffoldingUser":"Użyt. ruszt.",
   "contractorList": "Lista kontrahentów",
   "notifications" : {
     "addContractorSuccess" : "Kontrahenta {{name}} dodany pomyślnie",

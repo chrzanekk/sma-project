@@ -10,64 +10,64 @@
 }
 
 .contractor-table th:nth-child(2) {
-    width: 30%; /* Name */
+    width: 15%; /* Name */
     text-align: center;
     font-size: x-small;
 }
 .contractor-table td:nth-child(2) {
-    width: 20%; /* Name */
+    width: 15%; /* Name */
     text-align: center;
 }
 
 .contractor-table th:nth-child(3) {
-    width: 8%; /* tax number */
+    width: 7%; /* tax number */
     text-align: center;
     font-size: x-small;
 }
 .contractor-table td:nth-child(3) {
-    width: 8%; /* tax number */
+    width: 7%; /* tax number */
     text-align: center;
 }
 
 .contractor-table th:nth-child(4) {
-    width: 20%; /* Address */
+    width: 15%; /* Address */
     text-align: center;
     font-size: x-small;
 }
 .contractor-table td:nth-child(4) {
-    width: 20%; /* Address */
+    width: 15%; /* Address */
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table th:nth-child(5) {
-    width: 7%; /* Customer */
+    width: 3%; /* Customer */
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(5) {
-    width: 7%; /* Customer */
+    width: 3%; /* Customer */
     text-align: center;
 }
 
 .contractor-table th:nth-child(6) {
-    width: 7%; /* Supplier */
+    width: 3%; /* Supplier */
     text-align: center;
     font-size: x-small;
 }
 .contractor-table td:nth-child(6) {
-    width: 7%; /* Supplier */
+    width: 3%; /* Supplier */
     text-align: center;
 }
 
 .contractor-table th:nth-child(7){
-    width: 7%; /* Scaffolding User */
+    width: 4%; /* Scaffolding User */
     text-align: center;
     font-size: x-small;
 }
 .contractor-table td:nth-child(7) {
-    width: 7%; /* Scaffolding User */
+    width: 4%; /* Scaffolding User */
     text-align: center;
 }
 

@@ -1,5 +1,6 @@
 {
   "add": "Dodaj kontrahenta",
+  "edit": "Edytuj dane kontrahenta",
   "details": "Dane kontrahenta",
   "name": "Nazwa firmy",
   "taxNumber": "NIP",
@@ -10,9 +11,9 @@
   "postalCode": "Kod pocztowy",
   "city": "Miasto",
   "country": "Kraj",
-  "customer": "Czy klient",
-  "supplier": "Czy dostawca",
-  "scaffoldingUser":"Czy użytkownik ruszt.",
+  "customer": "Klient",
+  "supplier": "Dostawca",
+  "scaffoldingUser":"Użyt. ruszt.",
   "contractorList": "Lista kontrahentów",
   "notifications" : {
     "addContractorSuccess" : "Kontrahenta {{name}} dodany pomyślnie",
