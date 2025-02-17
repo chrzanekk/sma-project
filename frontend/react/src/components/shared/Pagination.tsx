@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Flex, Input, NativeSelectField, NativeSelectRoot, Text} from '@chakra-ui/react';
-import {themeColors} from "@/theme/theme-colors.ts";
+import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 
 interface PaginationProps {
@@ -68,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({
             >
                 {t('previous', {ns: 'common'})}
             </Button>
-            <Text>
+            <Text color={themeColors.fontColor()}>
                 {t('page', {ns: 'common'})} {currentPage + 1} {t('of', {ns: 'common'})} {totalPages}
             </Text>
             <Button
@@ -86,11 +86,13 @@ const Pagination: React.FC<PaginationProps> = ({
                 size={"2xs"}
                 borderRadius={"md"}
                 bg={themeColors.bgColorPrimary()}
+                color={themeColors.fontColor()}
                 mr={2}
                 value={gotoPage}
                 disabled={currentPage + 1 === totalPages}
                 onChange={(e) => setGotoPage(e.target.value)}
                 placeholder={t('goToPage', {ns: 'common'})}
+                _placeholder={{color: themeColorsHex.fontColor()}}
             />
             <Button size={"2xs"}
                     onClick={handleGotoPage}

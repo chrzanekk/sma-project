@@ -8,7 +8,7 @@ interface MyTextInputProps {
     type?: string;
     placeholder?: string;
     id?: string;
-    styleProps?: { [key: string]: any }; // Obiekt z dowolnymi stylami
+    styleProps?: { [key: string]: any };
 }
 
 export const MyTextInput = ({label, styleProps = {}, ...props}: MyTextInputProps) => {

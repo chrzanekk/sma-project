@@ -248,7 +248,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
                                     <Button
                                         disabled={!isValid || isSubmitting || !dirty || isLoading}
                                         type="submit"
-                                        colorScheme="green"
+                                        colorPalette="green"
                                         width="400px"
                                     >
                                         {t('save', {ns: "common"})}

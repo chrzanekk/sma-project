@@ -24,7 +24,7 @@ export const getBooleanOptions = (
 export const selectStyles: StylesConfig<any, boolean> = {
     control: (provided) => ({
         ...provided,
-        backgroundColor: themeColorsHex.bgColorPrimary(),
+        backgroundColor: themeColorsHex.bgColorSecondary(),
         color: themeColorsHex.fontColor(),
         borderRadius: "5px",
         boxShadow: "none",
@@ -72,6 +72,7 @@ export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({n
     <Field
         name={name}
         as={Input}
+        color={themeColors.fontColor()}
         placeholder={placeholder}
         _placeholder={{color: themeColorsHex.fontColor()}}
         size="sm"
@@ -111,6 +112,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         placeholder={placeholder}
                         type={type}
                         size="sm"
+                        color={themeColors.fontColor()}
                         bg={themeColors.bgColorSecondary()}
                         borderRadius="md"
                         width={width || "100%"}
@@ -182,7 +184,6 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 isMulti={isMulti}
                 onChange={(selectedOption: any) => {
                     if (isMulti) {
-                        // selectedOption będzie tablicą lub null
                         const values = selectedOption ? selectedOption.map((opt: any) => opt.value) : [];
                         setFieldValue(name, values).catch();
                     } else {
