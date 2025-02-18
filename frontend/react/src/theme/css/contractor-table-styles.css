@@ -1,132 +1,125 @@
-.contractor-table th:nth-child(1) {
-    width: 2%; /* ID */
+.contractor-table th:nth-child(1) { /* ID */
+    width: 2%;
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(1) {
-    width: 2%; /* ID */
     text-align: center;
 }
 
-.contractor-table th:nth-child(2) {
-    width: 15%; /* Name */
+.contractor-table th:nth-child(2) { /* Name */
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(2) {
-    width: 15%; /* Name */
+    width: 15%;
     text-align: center;
 }
 
-.contractor-table th:nth-child(3) {
-    width: 7%; /* tax number */
+.contractor-table th:nth-child(3) { /*NIP*/
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(3) {
-    width: 7%; /* tax number */
+    width: 15%;
     text-align: center;
 }
 
-.contractor-table th:nth-child(4) {
-    width: 15%; /* Address */
+.contractor-table th:nth-child(4) { /*adres*/
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(4) {
-    width: 15%; /* Address */
+    width: 25%;
     text-align: center;
-    font-size: x-small;
 }
 
-.contractor-table th:nth-child(5) {
-    width: 3%; /* Customer */
+.contractor-table th:nth-child(5) { /* customer */
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(5) {
-    width: 3%; /* Customer */
+    width: 4%;
     text-align: center;
 }
 
-.contractor-table th:nth-child(6) {
-    width: 3%; /* Supplier */
+.contractor-table th:nth-child(6) { /* supplier */
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(6) {
-    width: 3%; /* Supplier */
+    width: 4%;
     text-align: center;
 }
 
-.contractor-table th:nth-child(7){
-    width: 4%; /* Scaffolding User */
+.contractor-table th:nth-child(7) { /* Scaffolding user */
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(7) {
-    width: 4%; /* Scaffolding User */
+    width: 4%;
     text-align: center;
 }
 
-.contractor-table th:nth-child(8){
-    width: 7%; /* Create date */
+.contractor-table th:nth-child(8) { /* Created datetime */
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(8) {
-    width: 7%; /* Create date */
+    width: 5%;
     text-align: center;
     font-size: x-small;
 }
-.contractor-table th:nth-child(9){
-    width: 7%; /* Created by */
+
+.contractor-table th:nth-child(9) { /* Created by */
     text-align: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(9) {
-    width: 7%; /* Created by */
+    width: 5%;
     text-align: center;
     font-size: x-small;
 }
 
-.contractor-table th:nth-child(10){
-    width: 7%; /* Modify date */
+.contractor-table th:nth-child(10) { /* Modified datetime */
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(10) {
-    width: 7%; /* Modify date */
+    width: 5%;
     text-align: center;
     font-size: x-small;
 }
 
-.contractor-table th:nth-child(11){
-    /*width: 7%; !* Modified by *!*/
+.contractor-table th:nth-child(11) { /* Modified by */
     text-align: center;
     font-size: x-small;
 }
+
 .contractor-table td:nth-child(11) {
-    /*width: 7%; !* Modified by *!*/
+    width: 5%;
     text-align: center;
     font-size: x-small;
 }
 
-.contractor-table th:nth-child(12){
-    /*width: 100%;*/
-    /*min-width: 8%; !* Actions *!*/
+.contractor-table th:nth-child(12) { /* Actions */
     text-align: center;
     align-content: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(12) {
-    /*width: auto;*/
-    /*min-width: 8%;!* Actions *!*/
+    width: 10%;
     text-align: center;
     align-content: center;
 }
