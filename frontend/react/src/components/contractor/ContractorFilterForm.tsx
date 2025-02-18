@@ -69,6 +69,7 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             px={1}
                             py={1}
                             justifyContent={"center"}
+                            flexWrap={"wrap"}
                         >
                             <CustomInputFilterField name="nameStartsWith" placeholder={t('contractors:name')}/>
                             <CustomInputFilterField name="taxNumberStartsWith"

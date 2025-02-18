@@ -73,12 +73,15 @@ const AdminPanel: React.FC = () => {
                                 {t("selectView")}
                             </Button>
                         </MenuTrigger>
-                        <MenuContent bgColor={themeColors.bgColorPrimary()}>
+                        <MenuContent
+                            bgColor={themeColors.bgColorSecondary()}
+                        >
                             {adminMenuItems.map((item, index) => (
                                 <MenuItem
                                     key={item.label || index}
-                                    bg={themeColors.bgColorPrimary()}
+                                    bg={themeColors.bgColorSecondary()}
                                     rounded={'md'}
+                                    color={themeColors.fontColor()}
                                     p={[2, 3]}
                                     _hover={{
                                         textDecoration: 'none',

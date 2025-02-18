@@ -67,6 +67,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             px={1}
                             py={1}
                             justifyContent={"center"}
+                            flexWrap={"wrap"}
                         >
                             <CustomInputFilterField name="emailStartsWith" placeholder={t('shared.email')}/>
                             <CustomInputFilterField name="loginStartsWith" placeholder={t('shared.login')}/>

@@ -21,7 +21,7 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
     const {t} = useTranslation(['common','contractors']);
     return (
         <Grid
-            templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
+            templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorSecondary()}
             height="100vh" // Pełna wysokość ekranu
             gap={1}

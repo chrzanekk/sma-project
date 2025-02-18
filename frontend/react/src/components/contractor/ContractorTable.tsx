@@ -25,7 +25,7 @@ const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContracto
     const [selectedContractorId, setSelectedContractorId] = useState<number | null>(null);
     const {theme} = useTheme();
 
-    const tableClass = classNames('custom-table', 'contractor-table', {'dark-theme': theme === 'dark'});
+    const tableClass = classNames('custom-table', {'dark-theme': theme === 'dark'});
 
     const handleDeleteClick = (id: number) => {
         setSelectedContractorId(id);

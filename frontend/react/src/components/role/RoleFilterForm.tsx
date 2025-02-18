@@ -31,7 +31,7 @@ const RoleFilterForm: React.FC<Props> = ({onSubmit}) => {
             {({handleSubmit, resetForm}) => {
                 return (
                     <Form onSubmit={handleSubmit}>
-                        <Flex gap={2} mb={1} justifyContent={"center"}>
+                        <Flex gap={2} mb={1} justifyContent={"center"} flexWrap={"wrap"}>
                             <CustomInputFilterField name="name" placeholder={t('shared.roleName')}/>
                         </Flex>
                         <Flex gap={2} justifyContent={"center"}>

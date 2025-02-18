@@ -6,8 +6,9 @@ import {themeColors} from "@/theme/theme-colors.ts";
 
 const Layout = ({children}: { children: React.ReactNode }) => (
     <Box
-        h={"100vh"}
+        minH="100vh"
         display="flex"
+        w={"auto"}
         flexDirection="column"
         overflow={"hidden"}
         bg={themeColors.bgColorSecondary()}
