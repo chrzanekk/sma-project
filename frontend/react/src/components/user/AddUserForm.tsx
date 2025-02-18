@@ -10,7 +10,8 @@ import {themeColors} from "@/theme/theme-colors.ts";
 import Select from 'react-select';
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
-import CustomInputField, {CustomSelectField, getBooleanOptions} from "@/components/shared/CustomFormFields.tsx";
+import CustomInputField, {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 
 interface AddUserFormProps {
     onSuccess: () => void;

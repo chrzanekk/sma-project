@@ -117,14 +117,16 @@
 }
 
 .contractor-table th:nth-child(12){
-    width: 8%; /* Actions */
+    width: auto;
+    min-width: 8%; /* Actions */
     text-align: center;
     align-content: center;
     font-size: x-small;
 }
 
 .contractor-table td:nth-child(12) {
-    width: 8%; /* Actions */
+    width: auto;
+    min-width: 8%;/* Actions */
     text-align: center;
     align-content: center;
 }
