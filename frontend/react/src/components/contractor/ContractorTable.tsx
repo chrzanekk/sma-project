@@ -17,9 +17,19 @@ interface Props {
     contractors: ContractorDTO[];
     onDelete: (id: number) => void;
     fetchContractors: () => void;
+    onSortChange: (field: string) => void;
+    sortField: string | null;
+    sortDirection: "asc" | "desc"
 }
 
-const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContractors}) => {
+const ContractorTable: React.FC<Props> = ({
+                                              contractors,
+                                              onDelete,
+                                              fetchContractors,
+                                              onSortChange,
+                                              sortField,
+                                              sortDirection
+                                          }) => {
     const {t} = useTranslation(['common', 'contractors']);
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedContractorId, setSelectedContractorId] = useState<number | null>(null);
@@ -46,22 +56,51 @@ const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContracto
             </Field>)
     }
 
+    const renderSortIndicator = (field: string) => {
+        if (sortField === field) {
+            return sortDirection === "asc" ? "↑" : "↓";
+        }
+        return null;
+    };
+
     return (
         <>
             <Table.Root className={tableClass}>
                 <Table.Header>
                     <Table.Row>
-                        <Table.ColumnHeader>ID</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:name')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:taxNumber')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:address')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:customer')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:supplier')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('contractors:scaffoldingUser')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('createDate')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('createdBy')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('lastModifiedDate')}</Table.ColumnHeader>
-                        <Table.ColumnHeader>{t('lastModifiedBy')}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("id")}>
+                            ID {renderSortIndicator("id")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("name")}>
+                            {t('contractors:name')} {renderSortIndicator("name")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("taxNumber")}>
+                            {t('contractors:taxNumber')}{renderSortIndicator("taxNumber")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("street")}>
+                            {t('contractors:address')}{renderSortIndicator("street")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("customer")}>
+                            {t('contractors:customer')}{renderSortIndicator("customer")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("supplier")}>
+                            {t('contractors:supplier')}{renderSortIndicator("supplier")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("scaffoldingUser")}>
+                            {t('contractors:scaffoldingUser')}{renderSortIndicator("scaffoldingUser")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("createdDatetime")}>
+                            {t('createDate')}{renderSortIndicator("createdDatetime")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("createdBy")}>
+                            {t('createdBy')}{renderSortIndicator("createdBy")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                            onClick={() => onSortChange("lastModifiedDatetime")}>
+                            {t('lastModifiedDate')}{renderSortIndicator("lastModifiedDatetime")}</Table.ColumnHeader>
+                        <Table.ColumnHeader cursor={"pointer"}
+                                                  onClick={() => onSortChange("modifiedBy")}>
+                            {t('lastModifiedBy')}{renderSortIndicator("modifiedBy")}</Table.ColumnHeader>
                         <Table.ColumnHeader>{t('edit')}</Table.ColumnHeader>
                     </Table.Row>
                 </Table.Header>
@@ -95,7 +134,8 @@ const ContractorTable: React.FC<Props> = ({contractors, onDelete, fetchContracto
                                     <EditContractorDrawer
                                         fetchContractors={fetchContractors}
                                         contractorId={contractor.id!}/>
-                                    <EditContractorDialog fetchContractors={fetchContractors} contractorId={contractor.id!}/>
+                                    <EditContractorDialog fetchContractors={fetchContractors}
+                                                          contractorId={contractor.id!}/>
                                     <Button
                                         colorPalette="red"
                                         size={"2xs"}

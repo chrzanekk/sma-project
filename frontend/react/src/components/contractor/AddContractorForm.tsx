@@ -50,13 +50,12 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
                         .max(20, t('verification.maxLength', {field: t('contractors:street'), count: 20}))
                         .required(t('verification.required', {field: t('contractors:street')})),
                     buildingNo: Yup.string()
-                        .min(2, t('verification.minLength', {field: t('contractors:buildingNo'), count: 2}))
+                        .min(1, t('verification.minLength', {field: t('contractors:buildingNo'), count: 1}))
                         .max(15, t('verification.maxLength', {field: t('contractors:buildingNo'), count: 15}))
                         .required(t('verification.required', {field: t('contractors:buildingNo')})),
                     apartmentNo: Yup.string()
-                        .min(2, t('verification.minLength', {field: t('contractors:apartmentNo'), count: 2}))
-                        .max(15, t('verification.maxLength', {field: t('contractors:apartmentNo'), count: 15}))
-                        .required(t('verification.required', {field: t('contractors:apartmentNo')})),
+                        .min(1, t('verification.minLength', {field: t('contractors:apartmentNo'), count: 1}))
+                        .max(15, t('verification.maxLength', {field: t('contractors:apartmentNo'), count: 15})),
                     postalCode: Yup.string()
                         .min(2, t('verification.minLength', {field: t('contractors:postalCode'), count: 2}))
                         .max(50, t('verification.maxLength', {field: t('contractors:postalCode'), count: 50}))
