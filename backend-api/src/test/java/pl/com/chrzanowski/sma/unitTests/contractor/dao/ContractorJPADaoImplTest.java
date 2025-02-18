@@ -9,9 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorJPADaoImpl;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
@@ -224,7 +222,7 @@ class ContractorJPADaoImplTest {
         JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
 
         // Ustalamy zachowanie dla querySpec.buildQuery(...)
-        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
@@ -236,7 +234,7 @@ class ContractorJPADaoImplTest {
         // Then
         assertEquals(1, result.getTotalElements());
         assertEquals(contractor, result.getContent().get(0));
-        verify(querySpec, times(1)).buildQuery(specification);
+        verify(querySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test
@@ -248,7 +246,7 @@ class ContractorJPADaoImplTest {
         @SuppressWarnings("unchecked")
         JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
 
-        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(0L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
@@ -259,7 +257,7 @@ class ContractorJPADaoImplTest {
 
         // Then
         assertTrue(result.isEmpty());
-        verify(querySpec, times(1)).buildQuery(specification);
+        verify(querySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test
@@ -271,7 +269,7 @@ class ContractorJPADaoImplTest {
         @SuppressWarnings("unchecked")
         JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
 
-        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(querySpec.buildQuery(specification, null)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(List.of(contractor));
 
         // When
@@ -280,7 +278,7 @@ class ContractorJPADaoImplTest {
         // Then
         assertEquals(1, result.size());
         assertEquals(contractor, result.get(0));
-        verify(querySpec, times(1)).buildQuery(specification);
+        verify(querySpec, times(1)).buildQuery(specification, null);
     }
 
     @Test
@@ -291,7 +289,7 @@ class ContractorJPADaoImplTest {
         @SuppressWarnings("unchecked")
         JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
 
-        when(querySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(querySpec.buildQuery(specification, null)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         // When
@@ -299,6 +297,6 @@ class ContractorJPADaoImplTest {
 
         // Then
         assertTrue(result.isEmpty());
-        verify(querySpec, times(1)).buildQuery(specification);
+        verify(querySpec, times(1)).buildQuery(specification, null);
     }
 }

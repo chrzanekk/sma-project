@@ -61,7 +61,7 @@ public class ContractorJPADaoImpl implements ContractorDao {
     @Override
     public Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contractors with specification for page {}, {}", specification, pageable);
-        JPQLQuery<Contractor> query = querySpec.buildQuery(specification);
+        JPQLQuery<Contractor> query = querySpec.buildQuery(specification, pageable);
         long count = query.fetchCount();
         List<Contractor> contractors = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(contractors, pageable, count);
@@ -70,7 +70,7 @@ public class ContractorJPADaoImpl implements ContractorDao {
     @Override
     public List<Contractor> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all contractors with specification {}", specification);
-        JPQLQuery<Contractor> query = querySpec.buildQuery(specification);
+        JPQLQuery<Contractor> query = querySpec.buildQuery(specification, null);
         return query.fetch();
     }
 
