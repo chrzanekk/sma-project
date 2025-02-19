@@ -34,3 +34,36 @@ export interface ContactDTO {
     modifiedByFirstName: string;
     modifiedByLastName: string;
 }
+
+export interface AddContactFormValues {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    additionalInfo: string;
+}
+
+export interface AddContactDTO {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    additionalInfo: string;
+}
+export interface EditContactFormValues {
+    id?: number;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    additionalInfo: string;
+}
+
+export interface EditContactDTO {
+    id?: number;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    email: string;
+    additionalInfo: string;
+}

@@ -7,7 +7,8 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {Button, Stack} from "@chakra-ui/react";
 import React from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import CustomInputField from "@/components/shared/CustomFormFields.tsx";
+import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
+
 
 interface EditUserPasswordFormProps {
     onSuccess: () => void;

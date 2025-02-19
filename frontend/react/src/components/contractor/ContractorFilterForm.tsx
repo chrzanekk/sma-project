@@ -93,7 +93,6 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <Button type="submit" colorPalette="blue"
                                     size={"2xs"}>
                                 {t('search')}
-                                {/*{t('search', {ns: "common"})}*/}
                             </Button>
                             <Button
                                 type="button"
@@ -105,7 +104,6 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 }}
                             >
                                 {t('clearFilters')}
-                                {/*{t('clearFilters', {ns: "common"})}*/}
                             </Button>
                         </Flex>
 

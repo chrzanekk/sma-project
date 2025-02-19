@@ -1,0 +1,115 @@
+.contact-table th:nth-child(1) { /* ID */
+    width: 3%;
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(1) {
+    text-align: center;
+}
+
+.contact-table th:nth-child(2) { /* FirstName */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(2) {
+    width: 10%;
+    text-align: center;
+}
+
+.contact-table th:nth-child(3) { /* LastName */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(3) {
+    width: 10%;
+    text-align: center;
+}
+
+.contact-table th:nth-child(4) { /*PhoneNumber*/
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(4) {
+    width: 10%;
+    text-align: center;
+}
+
+.contact-table th:nth-child(5) { /* Email */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(5) {
+    width: 10%;
+    text-align: center;
+}
+
+.contact-table th:nth-child(6) { /* AdditionalInfo */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(6) {
+    width: 30%;
+    text-align: center;
+}
+
+.contact-table th:nth-child(7) { /* Created datetime */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(7) {
+    width: 5%;
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table th:nth-child(8) { /* Created by */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(8) {
+    width: 5%;
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table th:nth-child(9) { /* Modified datetime */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(9) {
+    width: 5%;
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table th:nth-child(10) { /* Modified by */
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(10) {
+    width: 5%;
+    text-align: center;
+    font-size: x-small;
+}
+
+.contact-table th:nth-child(11) { /* Actions */
+    text-align: center;
+    align-content: center;
+    font-size: x-small;
+}
+
+.contact-table td:nth-child(11) {
+    width: 10%;
+    text-align: center;
+    align-content: center;
+}

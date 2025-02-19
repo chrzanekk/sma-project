@@ -1,7 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {ContactDTO} from "@/types/contact-types.ts";
+import {AddContactDTO, ContactDTO, EditContactDTO} from "@/types/contact-types.ts";
 
 
 const CONTACTS_API_BASE = "/api/contacts";
@@ -34,7 +34,7 @@ export const getContactById = async (id: number) => {
     }
 }
 
-export const addContact = async (addContact: ContactDTO) => {
+export const addContact = async (addContact: AddContactDTO) => {
     try {
         const response = await api.post(`${CONTACTS_API_BASE}/add`, addContact, getAuthConfig());
         return response.data;
@@ -43,7 +43,7 @@ export const addContact = async (addContact: ContactDTO) => {
     }
 }
 
-export const updateContact = async (updateContact: ContactDTO) => {
+export const updateContact = async (updateContact: EditContactDTO) => {
     try {
         const response = await api.put(`${CONTACTS_API_BASE}/update`, updateContact, getAuthConfig());
         return response.data;

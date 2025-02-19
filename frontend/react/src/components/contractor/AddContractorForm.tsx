@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import CustomInputField, {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {AddContractorDTO, AddContractorFormValues} from "@/types/contractor-types.ts";

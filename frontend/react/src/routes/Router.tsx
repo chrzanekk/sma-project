@@ -13,6 +13,7 @@ import RoleManagement from "@/components/role/RoleManagement.tsx";
 import AdminPanel from "@/components/admin/AdminPanel.tsx";
 import UnderConstructionRoute from "@/routes/UnderConstructionRoute.tsx";
 import ContractorManagement from "@/components/contractor/ContractorManagement.tsx";
+import ContactManagement from "@/components/contact/ContactManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -91,10 +92,7 @@ const router = createBrowserRouter([
             path: "contacts",
             element: <ProtectedRoute>
                 <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'contacts'}
-                        nameSpace={'navbar'}
-                    />
+                   <ContactManagement/>
                 </Layout>
             </ProtectedRoute>
         },

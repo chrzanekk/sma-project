@@ -1,6 +1,6 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
-import {Box, Input, Text} from "@chakra-ui/react";
+import {Box, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
 import {themeColors, themeColorsHex} from "@/theme/theme-colors";
 import {selectStyles} from "@/components/shared/formOptions.ts";
@@ -73,7 +73,6 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
     );
 };
 
-export default CustomInputField;
 
 export interface CustomSelectFieldProps {
     name: string;
@@ -146,3 +145,50 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
         </Box>
     );
 };
+
+interface CustomTextAreaFieldProps {
+    name: string;
+    label?: string;
+    placeholder?: string;
+    width?: string;
+    rows?: number;
+}
+
+const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
+                                                                     name,
+                                                                     label,
+                                                                     placeholder,
+                                                                     width,
+                                                                     rows = 3,
+                                                                 }) => {
+    return (
+        <Field name={name}>
+            {({field, meta}: FieldProps) => (
+                <Box mb={2}>
+                    {label && (
+                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                            {label}
+                        </Text>
+                    )}
+                    <Textarea
+                        {...field}
+                        placeholder={placeholder}
+                        size="sm"
+                        color={themeColors.fontColor()}
+                        bg={themeColors.bgColorSecondary()}
+                        borderRadius="md"
+                        width={width || "100%"}
+                        rows={rows}
+                    />
+                    {meta.touched && meta.error && (
+                        <Text color="red.500" fontSize="xs" mt="1">
+                            {meta.error}
+                        </Text>
+                    )}
+                </Box>
+            )}
+        </Field>
+    );
+};
+
+export {CustomTextAreaField, CustomInputField};
