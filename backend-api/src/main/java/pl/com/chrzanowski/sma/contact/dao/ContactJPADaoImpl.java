@@ -49,7 +49,7 @@ public class ContactJPADaoImpl implements ContactDao {
     @Override
     public Page<Contact> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contacts by specificaiton with page: {}", specification);
-        JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification);
+        JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification, pageable);
         long totalElements = query.fetchCount();
         List<Contact> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, totalElements);
@@ -58,7 +58,7 @@ public class ContactJPADaoImpl implements ContactDao {
     @Override
     public List<Contact> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all contacts by specificaiton: {}", specification);
-        JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification);
+        JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
 

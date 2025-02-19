@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.contact.dao.ContactJPADaoImpl;
@@ -122,7 +121,7 @@ class ContactJPADaoImplTest {
         @SuppressWarnings("unchecked")
         JPQLQuery<Contact> mockQuery = mock(JPQLQuery.class);
 
-        when(contactQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
@@ -132,7 +131,7 @@ class ContactJPADaoImplTest {
 
         assertEquals(1, result.getTotalElements());
         assertEquals(contact, result.getContent().get(0));
-        verify(contactQuerySpec, times(1)).buildQuery(specification);
+        verify(contactQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test
@@ -143,7 +142,7 @@ class ContactJPADaoImplTest {
         @SuppressWarnings("unchecked")
         JPQLQuery<Contact> mockQuery = mock(JPQLQuery.class);
 
-        when(contactQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(0L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
@@ -152,7 +151,7 @@ class ContactJPADaoImplTest {
         Page<Contact> result = contactJPADaoImpl.findAll(specification, pageable);
 
         assertTrue(result.isEmpty());
-        verify(contactQuerySpec, times(1)).buildQuery(specification);
+        verify(contactQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test
