@@ -87,17 +87,17 @@ const router = createBrowserRouter([
                 </Layout>
             </ProtectedRoute>
         },
-        // {
-        //     path: "contractors",
-        //     element: <ProtectedRoute>
-        //         <Layout>
-        //             <UnderConstructionRoute
-        //                 nameKey={'contractors'}
-        //                 nameSpace={'navbar'}
-        //             />
-        //         </Layout>
-        //     </ProtectedRoute>
-        // },
+        {
+            path: "contacts",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={'contacts'}
+                        nameSpace={'navbar'}
+                    />
+                </Layout>
+            </ProtectedRoute>
+        },
         {
             path: "diaryList",
             element: <ProtectedRoute>
