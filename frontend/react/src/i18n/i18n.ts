@@ -19,6 +19,8 @@ import contractorsPl from './pl/contractors.json'
 import contractorsEn from './en/contractors.json'
 import countriesPl from './pl/countries.json'
 import countriesEn from './en/countries.json'
+import contactsPl from './pl/contacts.json'
+import contactsEn from './en/contacts.json'
 
 i18n
     .use(initReactI18next)
@@ -34,7 +36,8 @@ i18n
             errors: errorsEn,
             adminPanelMenu: adminPanelMenuEn,
             contractors: contractorsEn,
-            countries: countriesEn
+            countries: countriesEn,
+            contacts: contactsEn
         },
         pl: {
             common: commonPl,
@@ -45,13 +48,14 @@ i18n
             errors: errorsPl,
             adminPanelMenu: adminPanelMenuPl,
             contractors: contractorsPl,
-            countries: countriesPl
+            countries: countriesPl,
+            contacts: contactsPl
         },
     },
     lng: 'pl',
     fallbackLng: 'en',
     ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
-        'contractors', 'countries'],
+        'contractors', 'countries','contacts'],
     defaultNS: 'common',
     interpolation: {
         escapeValue: false,

@@ -1,0 +1,17 @@
+{
+  "add": "Dodaj kontakt",
+  "edit": "Edytuj dane kontaktu",
+  "details": "Dane kontaktu",
+  "firstName": "Imię",
+  "lastName": "Nazwisko",
+  "phoneNumber": "Numer telefonu",
+  "email": "E-mail",
+  "additionalInfo": "Informacje dodatkowe",
+  "contactList": "Lista kontaktów",
+  "notifications" : {
+    "addContactSuccess" : "Kontrahent {firstName} {lastName} dodany pomyślnie",
+    "addContactError": "Błąd dodawania kontrahenta",
+    "editContactSuccess" : "Dane kontrahenta {firstName} {lastName} zmieniono pomyślnie",
+    "editContactError": "Błąd edycji kontaktu {firstName} {lastName}"
+  }
+}
