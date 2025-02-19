@@ -37,17 +37,17 @@
     "lastModifiedDate": "Data ost. mod.",
     "lastModifiedBy":"Ost. zmod. przez",
     "notifications": {
-        "emailAlreadyExists": "Email {{email}} już istnieje w bazie",
-        "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
-        "userAddedSuccess": "Użytkownik {{login}} dodany pomyślnie.",
+        "emailAlreadyExists": "Email {email} już istnieje w bazie",
+        "loginAlreadyExists": "Login {login} istnieje już  w bazie",
+        "userAddedSuccess": "Użytkownik {login} dodany pomyślnie.",
         "userAddedError": "Błąd dodawania użytkownika",
-        "userPasswordSetSuccess": "Pomyślnie zmieniono hasło użytkownika {{login}}",
-        "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
-        "userEditedSuccess": "Dane użytkownika {{login}} zmieniono pomyślnie",
-        "userEditedError": "Błąd edycji użytkownika {{login}}",
-        "userRolesEditedSuccess": "Role użytkownika {{login}} zmieniono pomyślnie",
-        "userRolesEditedError": "Błąd edycji ról użytkownika {{login}}",
-        "addRoleSuccess": "Rola {{role}} dodana pomyślnie"
+        "userPasswordSetSuccess": "Pomyślnie zmieniono hasło użytkownika {login}",
+        "userPasswordSetError": "Błąd zmieniony hasła użytkownika {login}",
+        "userEditedSuccess": "Dane użytkownika {login} zmieniono pomyślnie",
+        "userEditedError": "Błąd edycji użytkownika {login}",
+        "userRolesEditedSuccess": "Role użytkownika {login} zmieniono pomyślnie",
+        "userRolesEditedError": "Błąd edycji ról użytkownika {login}",
+        "addRoleSuccess": "Rola {role} dodana pomyślnie"
     },
     "deleteConfirmation": {
         "title": "Potwierdź usunięcie",
@@ -55,6 +55,6 @@
     },
     "underConstruction": {
         "title": "Strona w budowie",
-        "message": "Przepraszamy, strona {{name}} jest w trakcie budowy."
+        "message": "Przepraszamy, strona {name} jest w trakcie budowy."
     }
 }

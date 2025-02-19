@@ -8,20 +8,20 @@
   "malformedJson": "Nieprawidłowy format JSON",
   "jwtTokenNotAvailable": "Brak autoryzacji",
   "emailNotFound": "Nie znaleziono użytkownika o podanym adresie e-mail",
-  "emailAlreadyExists": "Adres e-mail {{email}} już istnieje w bazie",
-  "loginAlreadyExists": "Login {{login}} istnieje już  w bazie",
+  "emailAlreadyExists": "Adres e-mail {email} już istnieje w bazie",
+  "loginAlreadyExists": "Login {login} istnieje już  w bazie",
   "emailSendFail" :  "Wysyłanie e-maila nie powiodło się",
   "expiredToken": "Token wygasł",
   "objectNotFound": "Nie znaleziono obiektu",
   "passwordNotMatch": "Hasła nie pasują do siebie",
-  "usernameExists": "Login {{login}} istnieje już w bazie",
+  "usernameExists": "Login {login} istnieje już w bazie",
   "invalidArgument": "Nieprawidłowy argument",
   "roleNotFound": "Nie znaleziono roli",
-  "roleCannotBeDeleted": "Rola {{role}} nie może zostać usunięta",
+  "roleCannotBeDeleted": "Rola {role} nie może zostać usunięta",
   "invalidPassword": "Nieprawidłowe hasło",
   "userAddedError": "Błąd dodawania użytkownika",
-  "userPasswordSetError": "Błąd zmieniony hasła użytkownika {{login}}",
-  "userEditedError": "Błąd edycji użytkownika {{login}}.",
+  "userPasswordSetError": "Błąd zmieniony hasła użytkownika {login}",
+  "userEditedError": "Błąd edycji użytkownika {login}.",
   "userNotFound": "Nie znaleziono użytkownika",
   "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją.",
   "roleAddedError": "Błąd dodawania roli",
@@ -44,5 +44,10 @@
     "lastNameMissing": "Nazwisko wymagane",
     "emailMissing": "Adres email wymagany",
     "phoneNumberMissing": "Numer telefonu wymagany"
+  },
+  "verification": {
+    "required": "Pole {field} jest wymagane",
+    "minLength": "{field} musi mieć co najmniej {count, plural, one {# znak} few {# znaki} other {# znaków}}.",
+    "maxLength": "{field} nie może mieć więcej niż {count, plural, one {# znak} few {# znaki} other {# znaków}}."
   }
 }

@@ -87,7 +87,7 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
                         await addContractor(mappedContractor);
                         successNotification(
                             t('success', {ns: "common"}),
-                            formatMessage('contractors:notifications.addContractorSuccess', {name: formValues.name})
+                            formatMessage('notifications.addContractorSuccess', {name: formValues.name},'contractors')
                         );
                         onSuccess();
                     } catch (err: any) {

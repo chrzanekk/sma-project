@@ -16,9 +16,9 @@
   "scaffoldingUser":"Użyt. ruszt.",
   "contractorList": "Lista kontrahentów",
   "notifications" : {
-    "addContractorSuccess" : "Kontrahenta {{name}} dodany pomyślnie",
+    "addContractorSuccess" : "Kontrahent {name} dodany pomyślnie",
     "addContractorError": "Błąd dodawania kontrahenta",
-    "editContractorSuccess" : "Dane kontrahenta {{name}} zmieniono pomyślnie",
-    "editContractorError": "Błąd edycji kontrahenta {{name}}"
+    "editContractorSuccess" : "Dane kontrahenta {name} zmieniono pomyślnie",
+    "editContractorError": "Błąd edycji kontrahenta {name}"
   }
 }

@@ -1,4 +1,5 @@
 import i18n from 'i18next';
+import ICU from 'i18next-icu';
 import {initReactI18next} from 'react-i18next';
 import commonEn from './en/common.json';
 import commonPl from './pl/common.json';
@@ -19,7 +20,10 @@ import contractorsEn from './en/contractors.json'
 import countriesPl from './pl/countries.json'
 import countriesEn from './en/countries.json'
 
-i18n.use(initReactI18next).init({
+i18n
+    .use(initReactI18next)
+    .use(ICU)
+    .init({
     resources: {
         en: {
             common: commonEn,
