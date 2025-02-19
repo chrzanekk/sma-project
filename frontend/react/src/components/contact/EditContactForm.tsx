@@ -63,15 +63,15 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
                     .required(t('errors:verification.required', {field: t('contacts:firstName')})),
                 lastName: Yup.string()
                     .min(2, t('errors:verification.minLength', {field: t('contacts:lastName'), count: 2}))
-                    .max(20, t('errors:verification.maxLength', {field: t('contacts:lastName'), count: 20}))
+                    .max(30, t('errors:verification.maxLength', {field: t('contacts:lastName'), count: 30}))
                     .required(t('errors:verification.required', {field: t('contacts:lastName')})),
                 phoneNumber: Yup.string()
                     .min(5, t('errors:verification.minLength', {field: t('contacts:phoneNumber'), count: 5}))
-                    .max(20, t('errors:verification.maxLength', {field: t('contacts:phoneNumber'), count: 20}))
+                    .max(25, t('errors:verification.maxLength', {field: t('contacts:phoneNumber'), count: 25}))
                     .required(t('errors:verification.required', {field: t('contacts:phoneNumber')})),
                 email: Yup.string()
                     .min(5, t('errors:verification.minLength', {field: t('contacts:email'), count: 5}))
-                    .max(20, t('errors:verification.maxLength', {field: t('contacts:email'), count: 20}))
+                    .max(75, t('errors:verification.maxLength', {field: t('contacts:email'), count: 75}))
                     .required(t('errors:verification.required', {field: t('contacts:email')})),
                 additionalInfo: Yup.string()
                     .min(5, t('errors:verification.minLength', {field: t('contacts:additionalInfo'), count: 5}))
@@ -87,10 +87,10 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
                     await updateContact(mappedContact);
                     successNotification(
                         t('success', {ns: "common"}),
-                        formatMessage('notifications.editContractorSuccess', {
+                        formatMessage('notifications.editContactSuccess', {
                             firstName: mappedContact.firstName,
                             lastName: mappedContact.lastName
-                        }, 'contractors')
+                        }, 'contacts')
                     );
                     onSuccess();
                 } catch (err: any) {
@@ -108,8 +108,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
                 (
                     <Form>
                         <Stack gap={4}>
-                            {/* Wiersz 1: Name (4/6) i Tax Number (2/6) */}
-                            <Grid templateColumns="repeat(2, 3fr)" gap={4}>
+                            {/* Wiersz 1: FirstName 3/6 + LastName 3/6*/}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
                                 <GridItem colSpan={3}>
                                     <CustomInputField
                                         name="firstName"
@@ -126,8 +126,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
                                 </GridItem>
                             </Grid>
 
-                            {/* Wiersz 2: Emial + Phone number */}
-                            <Grid templateColumns="repeat(2, 3fr)" gap={4}>
+                            {/* Wiersz 2: Emial 3/6 + Phone number 3/6 */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
                                 <GridItem colSpan={3}>
                                     <CustomInputField
                                         name="phoneNumber"
@@ -144,8 +144,8 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
                                 </GridItem>
                             </Grid>
 
-                            {/* Wiersz 3: Additional Info */}
-                            <Grid templateColumns="repeat(1, 6fr)" gap={4}>
+                            {/* Wiersz 3: Additional Info 6/6 */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
                                 <GridItem colSpan={6}>
                                     <CustomTextAreaField
                                         name="additionalInfo"
