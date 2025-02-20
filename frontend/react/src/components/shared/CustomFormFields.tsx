@@ -55,10 +55,11 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                     <Input
                         {...field}
                         placeholder={placeholder}
+                        _placeholder={{color: themeColorsHex.fontColor()}}
                         type={type}
                         size="sm"
                         color={themeColors.fontColor()}
-                        bg={themeColors.bgColorSecondary()}
+                        bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
                     />
@@ -81,6 +82,7 @@ export interface CustomSelectFieldProps {
     options: any[];
     isMulti?: boolean;
     width?: string;
+    bgColor?: string;
 }
 
 export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
@@ -89,7 +91,8 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                         placeholder,
                                                                         options,
                                                                         isMulti = false,
-                                                                        width
+                                                                        width,
+                                                                        bgColor
                                                                     }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const [field, meta] = useField(name);
@@ -108,6 +111,7 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 : provided;
             return {
                 ...baseControl,
+                backgroundColor: bgColor ?? baseControl.backgroundColor,
                 width: width ? width : "auto",
             };
         },
@@ -175,7 +179,7 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                         placeholder={placeholder}
                         size="sm"
                         color={themeColors.fontColor()}
-                        bg={themeColors.bgColorSecondary()}
+                        bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}

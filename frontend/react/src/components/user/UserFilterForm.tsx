@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
+import {themeColorsHex} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     emailStartsWith?: string;
@@ -76,15 +77,17 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomInputFilterField name="positionStartsWith" placeholder={t('shared.position')}/>
                             <CustomSelectField name={"locked"}
                                                placeholder={t("shared.locked")}
-                                               options={booleanOptions}/>
+                                               options={booleanOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>
                             <CustomSelectField name={"enabled"}
                                                placeholder={t("shared.enabled")}
-                                               options={booleanOptions}/>
+                                               options={booleanOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>
                             <CustomSelectField name={"roles"}
                                                isMulti={true}
                                                placeholder={t("shared.chooseRoles")}
-                                               options={roleOptions}/>
-                        </Flex>
+                                               options={roleOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>                        </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
                                     size={"2xs"}>

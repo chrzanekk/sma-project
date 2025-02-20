@@ -9,9 +9,9 @@
   "additionalInfo": "Informacje dodatkowe",
   "contactList": "Lista kontaktów",
   "notifications" : {
-    "addContactSuccess" : "Kontrahent {firstName} {lastName} dodany pomyślnie",
+    "addContactSuccess" : "Kontakt {firstName} {lastName} dodany pomyślnie",
     "addContactError": "Błąd dodawania kontrahenta",
-    "editContactSuccess" : "Dane kontrahenta {firstName} {lastName} zmieniono pomyślnie",
+    "editContactSuccess" : "Dane kontaktu {firstName} {lastName} zmieniono pomyślnie",
     "editContactError": "Błąd edycji kontaktu {firstName} {lastName}"
   }
 }

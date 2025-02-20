@@ -21,7 +21,7 @@ export const getBooleanOptions = (
 export const selectStyles: StylesConfig<any, boolean> = {
     control: (provided) => ({
         ...provided,
-        backgroundColor: themeColorsHex.bgColorSecondary(),
+        backgroundColor: themeColorsHex.bgColorPrimary(),
         color: themeColorsHex.fontColor(),
         borderRadius: "5px",
         boxShadow: "none",
@@ -45,8 +45,8 @@ export const selectStyles: StylesConfig<any, boolean> = {
     option: (provided, state) => ({
         ...provided,
         backgroundColor: state.isSelected
-            ? themeColorsHex.bgColorSecondary()
-            : themeColorsHex.bgColorPrimary(),
+            ? themeColorsHex.bgColorPrimary()
+            : themeColorsHex.bgColorSecondary(),
         color: state.isSelected
             ? themeColorsHex.fontColor()
             : themeColorsHex.fontColor(),

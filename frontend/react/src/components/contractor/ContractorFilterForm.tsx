@@ -5,6 +5,7 @@ import {Button, Flex} from "@chakra-ui/react";
 import React from "react";
 import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
+import {themeColorsHex} from "@/theme/theme-colors.ts";
 
 
 interface FilterValues {
@@ -82,12 +83,18 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomInputFilterField name="postalCodeStartsWith"
                                                     placeholder={t('contractors:postalCode')}/>
                             <CustomInputFilterField name="cityStartsWith" placeholder={t('contractors:city')}/>
-                            <CustomSelectField name={"customer"} placeholder={t("contractors:customer")}
-                                               options={booleanOptions}/>
-                            <CustomSelectField name={"supplier"} placeholder={t("contractors:supplier")}
-                                               options={booleanOptions}/>
-                            <CustomSelectField name={"scaffoldingUser"} placeholder={t("contractors:scaffoldingUser")}
-                                               options={booleanOptions}/>
+                            <CustomSelectField name={"customer"}
+                                               placeholder={t("contractors:customer")}
+                                               options={booleanOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>
+                            <CustomSelectField name={"supplier"}
+                                               placeholder={t("contractors:supplier")}
+                                               options={booleanOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>
+                            <CustomSelectField name={"scaffoldingUser"}
+                                               placeholder={t("contractors:scaffoldingUser")}
+                                               options={booleanOptions}
+                                               bgColor={themeColorsHex.bgColorSecondary()}/>
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"

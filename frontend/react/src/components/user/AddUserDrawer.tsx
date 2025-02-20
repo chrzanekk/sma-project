@@ -35,7 +35,7 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                         {t('shared.addUser')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorPrimary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary()}>
                     <DrawerContext>
                         {(store) => (
                             <>

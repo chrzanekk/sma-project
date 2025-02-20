@@ -32,7 +32,7 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                         {t('shared.addRole')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorPrimary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary()}>
                     <DrawerContext>
                         {(store) => (
                             <>
