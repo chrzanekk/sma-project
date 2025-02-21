@@ -5,6 +5,8 @@ import {confirmAccount} from "@/services/auth-service";
 import {successNotification} from "@/notifications/notifications.ts";
 import AppBanner from "@/auth/common/AppBanner.tsx";
 import {useTranslation} from "react-i18next";
+import {ThemeToggle} from "@/layout/ThemeToggle.tsx";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 const ConfirmAccount = () => {
     const navigate = useNavigate();
@@ -27,11 +29,12 @@ const ConfirmAccount = () => {
                 .catch(() => {
                 });
         }
-    }, [token]);
+    }, [t, token]);
 
     return (
-        <Box>
-            <Stack minH={'100vh'} direction={{base: 'column', md: 'row'}}>
+        <Box backgroundColor={themeColors.bgColorSecondary()} p={3} minH={'100vh'}>
+            <ThemeToggle/>
+            <Stack direction={{base: 'column', md: 'row'}}>
                 <Flex p={8} flex={1} align={'center'} justify={'center'}>
                     <Stack gap={4} w={'full'} maxW={'md'}>
                         {confirmationStatus === "loading" && (

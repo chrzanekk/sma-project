@@ -2,12 +2,13 @@
 
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
+import {Box, Button, Heading, Stack} from "@chakra-ui/react";
 import {successNotification} from "@/notifications/notifications.ts";
-import {MyTextInput} from "@/components/shared/CustomFields.tsx";
 import {registerUser} from "@/services/auth-service.ts";
 import {RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
+import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 const RegisterForm = () => {
     const {t} = useTranslation(['auth', 'common']);
@@ -59,49 +60,40 @@ const RegisterForm = () => {
             {({isValid, isSubmitting}) => (
                 <Form>
                     <Box display="flex" justifyContent="center">
-                        <Image
-                            alt="ResetPassword Image"
-                            objectFit="scale-down"
-                            src="/img/sma-logo.png"
-                            width="200px"
-                            height="auto"
-                        />
+                        <Heading fontSize="2xl" mb={15} color={themeColors.fontColor()}>{t('register.header')}</Heading>
                     </Box>
-                    <Box display="flex" justifyContent="center">
-                        <Heading fontSize="2xl" mb={15}>{t('register.header')}</Heading>
-                    </Box>
-                    <Stack gap="24px">
-                        <MyTextInput
+                    <Stack gap={2}>
+                        <CustomInputField
                             label={t('shared.login')}
                             name="login"
                             type="text"
                             placeholder={t('shared.login')}
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.email')}
                             name="email"
                             type="email"
                             placeholder="example@example.com"
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.password')}
                             name="password"
                             type="password"
                             placeholder={t('shared.password')}
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.firstName')}
                             name="firstName"
                             type="text"
                             placeholder={t('shared.firstName')}
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.lastName')}
                             name="lastName"
                             type="text"
                             placeholder={t('shared.lastName')}
                         />
-                        <Button disabled={!isValid || isSubmitting} type="submit">
+                        <Button disabled={!isValid || isSubmitting} type="submit" colorPalette={"green"}>
                             {t('register.submit')}
                         </Button>
                     </Stack>

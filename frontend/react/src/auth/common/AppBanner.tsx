@@ -9,21 +9,19 @@ const AppBanner = () => {
     return (
         <Flex
             flex={1}
-            p={10}
+            p={3}
             flexDirection="column"
             alignItems="center"
             justifyContent="center"
-            // bgGradient={{ sm: "linear(to-r,white,green.500)" }}
-            backgroundImage="linear-gradient(to right, white, #38a169)"
         >
-            <Text fontSize="6xl" color={themeColors.fontColor()} fontWeight="bold" mb={5}>
+            <Text fontSize="5xl" color={themeColors.fontColor()} fontWeight="bold" mb={1}>
                 {t('welcome')}
             </Text>
             <Image
                 alt="SMA LOGO"
                 objectFit="scale-down"
                 src="/img/sma-logo-2.png"
-                width="600px"
+                width="500px"
                 height="auto"
             />
         </Flex>

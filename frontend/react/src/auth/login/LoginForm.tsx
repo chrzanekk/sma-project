@@ -3,9 +3,10 @@ import {useNavigate} from "react-router-dom";
 import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {successNotification} from "@/notifications/notifications.ts";
-import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
-import {MyTextInput} from "@/components/shared/CustomFields.tsx";
+import {Box, Button, Heading, Stack} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
+import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 
 const LoginForm = () => {
@@ -39,28 +40,17 @@ const LoginForm = () => {
 
             {({isValid, isSubmitting}) => (
                 <Form>
-                    <Stack gap={15}>
+                    <Stack gap={4}>
                         <Box display="flex" justifyContent="center">
-                            <Image
-                                alt={'ResetPassword Image'}
-                                objectFit={"scale-down"}
-                                src={
-                                    '/img/sma-logo.png'
-                                }
-                                width={'200px'}
-                                height={'auto'}
-                            />
+                            <Heading fontSize={'2xl'} mb={15} color={themeColors.fontColor()}>{t('login.header')}</Heading>
                         </Box>
-                        <Box display="flex" justifyContent="center">
-                            <Heading fontSize={'2xl'} mb={15}>{t('login.header')}</Heading>
-                        </Box>
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.login')}
                             name={"login"}
                             type={"text"}
                             placeholder={t('shared.login')}
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t('shared.password')}
                             name={"password"}
                             type={"password"}
