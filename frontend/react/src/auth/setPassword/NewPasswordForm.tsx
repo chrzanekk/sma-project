@@ -28,7 +28,7 @@ const NewPasswordForm = () => {
             validationSchema={Yup.object({
                 password: Yup.string()
                     .min(6, t('verification.minLength', {field: t('shared.password'), count: 6}))
-                    .max(20, t('verification.maxLength', {field: t('shared.password'), count: 20}))
+                    .max(50, t('verification.maxLength', {field: t('shared.password'), count: 50}))
                     .required(t('verification.required', {field: t('shared.password')})),
                 confirmPassword: Yup.string()
                     .oneOf([Yup.ref("password")], t('verification.passwordNotMatch'))

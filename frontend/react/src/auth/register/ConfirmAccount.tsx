@@ -42,10 +42,11 @@ const ConfirmAccount = () => {
                         )}
                         {confirmationStatus === "success" && (
                             <>
-                                <Heading textAlign="center" size="lg">{t('confirm.header')}</Heading>
-                                <Text textAlign="center">{t('confirm.info')}</Text>
+                                <Heading textAlign="center" size="lg"
+                                         color={themeColors.fontColor()}>{t('confirm.header')}</Heading>
+                                <Text textAlign="center" color={themeColors.fontColor()}>{t('confirm.info')}</Text>
                                 <Button
-                                    colorScheme="teal"
+                                    colorPalette="green"
                                     onClick={() => navigate("/")}
                                     alignSelf="center"
                                 >

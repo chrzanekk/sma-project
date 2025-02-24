@@ -5,4 +5,6 @@ import pl.com.chrzanowski.sma.email.model.SendEmail;
 
 
 public interface SendEmailRepository extends JpaRepository<SendEmail, Long> {
+
+    void deleteByUserId(Long userId);
 }

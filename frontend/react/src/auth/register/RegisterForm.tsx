@@ -9,9 +9,12 @@ import {RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
 import {themeColors} from "@/theme/theme-colors.ts";
+import {useNavigate} from "react-router-dom";
 
 const RegisterForm = () => {
     const {t} = useTranslation(['auth', 'common']);
+    const navigate = useNavigate();
+
     return (
         <Formik
             initialValues={{
@@ -32,7 +35,7 @@ const RegisterForm = () => {
                     .required(t('verification.required', {field: t('shared.email')})),
                 password: Yup.string()
                     .min(4, t('verification.minLength', {field: t('shared.password'), count: 4}))
-                    .max(10, t('verification.maxLength', {field: t('shared.password'), count: 10}))
+                    .max(50, t('verification.maxLength', {field: t('shared.password'), count: 50}))
                     .required(t('verification.required', {field: t('shared.password')})),
                 firstName: Yup.string()
                     .min(2, t('verification.minLength', {field: t('shared.firstName'), count: 2}))
@@ -51,6 +54,7 @@ const RegisterForm = () => {
                         t('success', {ns: "common"}),
                         t('notifications.registerSuccessDetails', {login: register.login})
                     )
+                    navigate("/")
                 }).catch(() => {
                 }).finally(() => {
                     setSubmitting(false);

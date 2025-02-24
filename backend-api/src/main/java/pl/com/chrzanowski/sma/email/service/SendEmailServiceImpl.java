@@ -55,8 +55,6 @@ public class SendEmailServiceImpl implements SendEmailService {
         this.sendEmailDao = sendEmailDao;
     }
 
-    //todo implement confirmation information in frontend
-    //todo find way to pass frontend domain name here when application will be deployed to production
     @Override
     public MessageResponse sendAfterRegistration(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user registration: {}", userTokenDTO.getEmail());
@@ -160,5 +158,11 @@ public class SendEmailServiceImpl implements SendEmailService {
             }
         }
         throw new IllegalArgumentException("No email title!");
+    }
+
+    @Override
+    public void deleteEmailByUserId(Long userId) {
+        log.debug("Request to delete emails by userId {}", userId);
+        sendEmailDao.deleteByUserId(userId);
     }
 }

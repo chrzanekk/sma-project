@@ -17,7 +17,6 @@ export const ThemeToggle: React.FC = () => {
     if (!mounted) return null;
 
     return (
-
         <Switch
             colorPalette="teal"
             checked={theme === "dark"}
