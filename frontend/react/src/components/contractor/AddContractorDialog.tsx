@@ -10,7 +10,7 @@ import {
     DialogRoot,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import {Button, DialogContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
@@ -24,7 +24,7 @@ interface AddContractorDialogProps {
 const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContractors}) => {
     const {t} = useTranslation('contractors');
     return (
-        <>
+        <Box>
             <DialogRoot size={"lg"} placement={"top"}>
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
@@ -39,7 +39,7 @@ const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContracto
                 <DialogContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
                     <DialogContext>
                         {(store) => (
-                            <>
+                            <Box>
                                 <DialogCloseTrigger/>
                                 <DialogHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
@@ -64,12 +64,12 @@ const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContracto
                                         </Button>
                                     </DialogActionTrigger>
                                 </DialogFooter>
-                            </>
+                            </Box>
                         )}
                     </DialogContext>
                 </DialogContent>
             </DialogRoot>
-        </>
+        </Box>
     )
 }
 export default AddContractorDialog;

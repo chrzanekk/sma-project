@@ -10,7 +10,7 @@ import {
     DialogRoot,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import {Button, DialogContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
@@ -24,7 +24,7 @@ interface AddContractorDialogProps {
 const AddContactDialog: React.FC<AddContractorDialogProps> = ({fetchContacts}) => {
     const {t} = useTranslation('contacts');
     return (
-        <>
+        <Box>
             <DialogRoot size={"lg"} placement={"top"}>
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
@@ -69,7 +69,7 @@ const AddContactDialog: React.FC<AddContractorDialogProps> = ({fetchContacts}) =
                     </DialogContext>
                 </DialogContent>
             </DialogRoot>
-        </>
+        </Box>
     )
 }
 export default AddContactDialog;

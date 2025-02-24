@@ -10,7 +10,7 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
@@ -24,7 +24,7 @@ interface AddContractorDrawerProps {
 const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContractors}) => {
     const {t} = useTranslation('contractors');
     return (
-        <>
+        <Box>
             <DrawerRoot size={"lg"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
@@ -39,7 +39,7 @@ const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContracto
                 <DrawerContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
                     <DrawerContext>
                         {(store) => (
-                            <>
+                            <Box>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
@@ -64,12 +64,12 @@ const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContracto
                                         </Button>
                                     </DrawerActionTrigger>
                                 </DrawerFooter>
-                            </>
+                            </Box>
                         )}
                     </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
-        </>
+        </Box>
     )
 }
 export default AddContractorDrawer;

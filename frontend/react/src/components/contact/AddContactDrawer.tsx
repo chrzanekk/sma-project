@@ -10,7 +10,7 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
@@ -24,7 +24,7 @@ interface AddContractorDrawerProps {
 const AddContactDrawer: React.FC<AddContractorDrawerProps> = ({fetchContacts}) => {
     const {t} = useTranslation('contacts');
     return (
-        <>
+        <Box>
             <DrawerRoot size={"lg"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
@@ -69,7 +69,7 @@ const AddContactDrawer: React.FC<AddContractorDrawerProps> = ({fetchContacts}) =
                     </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
-        </>
+        </Box>
     )
 }
 export default AddContactDrawer;

@@ -30,7 +30,6 @@ export const getContractorById = async (id: number) => {
     try {
         const response = await api.get(`${CONTRACTOR_API_BASE}/getById/${id}`, getAuthConfig());
         const contractorDTO: ContractorDTO = response.data;
-        console.log(contractorDTO)
         return contractorDTO;
     } catch (err) {
         throw err;

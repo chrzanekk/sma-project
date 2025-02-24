@@ -1,6 +1,6 @@
 import {ContractorDTO} from "@/types/contractor-types.ts";
 import {useTranslation} from "react-i18next";
-import {Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
+import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useTheme} from "next-themes";
 import {Field} from "@/components/ui/field.tsx";
@@ -64,7 +64,7 @@ const ContractorTable: React.FC<Props> = ({
     };
 
     return (
-        <>
+        <Box>
             <Table.Root className={tableClass}>
                 <Table.Header>
                     <Table.Row>
@@ -160,7 +160,7 @@ const ContractorTable: React.FC<Props> = ({
                 confirmText={t("delete", {ns: "common"})}
                 cancelText={t("cancel", {ns: "common"})}
             />
-        </>
+        </Box>
     )
 
 }
