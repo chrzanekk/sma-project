@@ -14,6 +14,7 @@ import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
+import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -55,6 +56,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserTokenService userTokenService;
+
+    @Mock
+    private SendEmailService sendEmailService;
 
     @InjectMocks
     private UserServiceImpl userService;
