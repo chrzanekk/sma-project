@@ -5,6 +5,8 @@ import {confirmAccount} from "@/services/auth-service";
 import {successNotification} from "@/notifications/notifications.ts";
 import AppBanner from "@/auth/common/AppBanner.tsx";
 import {useTranslation} from "react-i18next";
+import {ThemeToggle} from "@/layout/ThemeToggle.tsx";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 const ConfirmAccount = () => {
     const navigate = useNavigate();
@@ -27,11 +29,12 @@ const ConfirmAccount = () => {
                 .catch(() => {
                 });
         }
-    }, [token]);
+    }, [t, token]);
 
     return (
-        <Box>
-            <Stack minH={'100vh'} direction={{base: 'column', md: 'row'}}>
+        <Box backgroundColor={themeColors.bgColorSecondary()} p={3} minH={'100vh'}>
+            <ThemeToggle/>
+            <Stack direction={{base: 'column', md: 'row'}}>
                 <Flex p={8} flex={1} align={'center'} justify={'center'}>
                     <Stack gap={4} w={'full'} maxW={'md'}>
                         {confirmationStatus === "loading" && (
@@ -39,10 +42,11 @@ const ConfirmAccount = () => {
                         )}
                         {confirmationStatus === "success" && (
                             <>
-                                <Heading textAlign="center" size="lg">{t('confirm.header')}</Heading>
-                                <Text textAlign="center">{t('confirm.info')}</Text>
+                                <Heading textAlign="center" size="lg"
+                                         color={themeColors.fontColor()}>{t('confirm.header')}</Heading>
+                                <Text textAlign="center" color={themeColors.fontColor()}>{t('confirm.info')}</Text>
                                 <Button
-                                    colorScheme="teal"
+                                    colorPalette="green"
                                     onClick={() => navigate("/")}
                                     alignSelf="center"
                                 >

@@ -14,6 +14,7 @@ import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
+import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
@@ -46,17 +47,19 @@ public class UserServiceImpl implements UserService {
     private final RoleMapper roleMapper;
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
+    private final SendEmailService sentEmailService;
 
     public UserServiceImpl(UserDao userDao,
                            UserMapper userMapper,
                            RoleService roleService, RoleMapper roleMapper,
-                           PasswordEncoder encoder, UserTokenService userTokenService) {
+                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.roleService = roleService;
         this.roleMapper = roleMapper;
         this.userTokenService = userTokenService;
         this.encoder = encoder;
+        this.sentEmailService = sentEmailService;
     }
 
     @Override
@@ -222,6 +225,7 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         log.debug("Delete user by id: {}", id);
         userTokenService.deleteTokenByUserId(id);
+        sentEmailService.deleteEmailByUserId(id);
         userDao.deleteById(id);
     }
 

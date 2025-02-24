@@ -5,4 +5,6 @@ import pl.com.chrzanowski.sma.email.model.SendEmail;
 public interface SendEmailDao {
 
     void save(SendEmail sendEmail);
+
+    void deleteByUserId(Long userId);
 }

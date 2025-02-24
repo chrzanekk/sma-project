@@ -22,4 +22,10 @@ public class SendEmailJPADaoImpl implements SendEmailDao {
         log.debug("JPA DAO: save sent email.");
         sendEmailRepository.save(sendEmail);
     }
+
+    @Override
+    public void deleteByUserId(Long userId) {
+        log.debug("JPA DAO: delete sent emails by userId.");
+        sendEmailRepository.deleteByUserId(userId);
+    }
 }

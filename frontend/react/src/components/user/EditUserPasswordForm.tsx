@@ -28,7 +28,7 @@ const EditUserPasswordForm: React.FC<EditUserPasswordFormProps> = ({onSuccess, u
             validationSchema={Yup.object({
                 newPassword: Yup.string()
                     .min(6, t('verification.minLength', {field: t('updateProfile.newPassword'), count: 6}))
-                    .max(20, t('verification.maxLength', {field: t('updateProfile.newPassword'), count: 20}))
+                    .max(50, t('verification.maxLength', {field: t('updateProfile.newPassword'), count: 50}))
                     .required(t('verification.required', {field: t('updateProfile.newPassword')})),
                 confirmPassword: Yup.string()
                     .oneOf([Yup.ref("newPassword")], t('verification.passwordNotMatch'))

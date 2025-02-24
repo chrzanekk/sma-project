@@ -13,4 +13,6 @@ public interface SendEmailService {
     MessageResponse sendPasswordResetMail(UserTokenDTO userTokenDTO, Locale locale);
 
     MessageResponse sendAfterPasswordChange(UserTokenDTO userTokenDTO, Locale locale);
+
+    void deleteEmailByUserId(Long userId);
 }

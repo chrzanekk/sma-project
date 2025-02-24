@@ -3,9 +3,9 @@ import {Form, Formik} from "formik";
 import * as Yup from "yup";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Image, Stack} from "@chakra-ui/react";
-import {MyTextInput} from "@/components/shared/CustomFields.tsx";
 import {resetPassword} from "@/services/auth-service.ts";
 import {useTranslation} from "react-i18next";
+import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
 
 
 const NewPasswordForm = () => {
@@ -28,7 +28,7 @@ const NewPasswordForm = () => {
             validationSchema={Yup.object({
                 password: Yup.string()
                     .min(6, t('verification.minLength', {field: t('shared.password'), count: 6}))
-                    .max(20, t('verification.maxLength', {field: t('shared.password'), count: 20}))
+                    .max(50, t('verification.maxLength', {field: t('shared.password'), count: 50}))
                     .required(t('verification.required', {field: t('shared.password')})),
                 confirmPassword: Yup.string()
                     .oneOf([Yup.ref("password")], t('verification.passwordNotMatch'))
@@ -75,13 +75,13 @@ const NewPasswordForm = () => {
                                 {t("newPassword.header")}
                             </Heading>
                         </Box>
-                        <MyTextInput
+                        <CustomInputField
                             label={t("newPassword.newPassword")}
                             name="password"
                             type="password"
                             placeholder={t("newPassword.newPassword")}
                         />
-                        <MyTextInput
+                        <CustomInputField
                             label={t("newPassword.confirmPassword")}
                             name="confirmPassword"
                             type="password"
@@ -89,6 +89,7 @@ const NewPasswordForm = () => {
                         />
                         <Button
                             type="submit"
+                            colorPalette={"green"}
                             disabled={!isValid || isSubmitting}
                         >
                             {t("newPassword.submit")}

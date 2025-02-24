@@ -42,11 +42,11 @@ const UserProfileEdit: React.FC = () => {
     const passwordSchema = Yup.object({
         password: Yup.string()
             .min(6, t("verification.minLength", {field: t("shared.password"), count: 6}))
-            .max(20, t("verification.maxLength", {field: t("shared.password"), count: 20}))
+            .max(50, t("verification.maxLength", {field: t("shared.password"), count: 50}))
             .required(t("verification.required", {field: t("shared.password")})),
         newPassword: Yup.string()
             .min(6, t("verification.minLength", {field: t("updateProfile.newPassword"), count: 6}))
-            .max(20, t("verification.maxLength", {field: t("updateProfile.newPassword"), count: 20}))
+            .max(50, t("verification.maxLength", {field: t("updateProfile.newPassword"), count: 50}))
             .required(t("verification.required", {field: t("updateProfile.newPassword")})),
         confirmPassword: Yup.string()
             .oneOf([Yup.ref("newPassword")], t("verification.passwordNotMatch"))
@@ -66,7 +66,7 @@ const UserProfileEdit: React.FC = () => {
                 return;
             }
             const userUpdateRequest = {
-                id: currentUser?.id!,
+                id: currentUser?.id,
                 email: currentUser?.email,
                 login: currentUser?.login,
                 firstName: values.firstName,

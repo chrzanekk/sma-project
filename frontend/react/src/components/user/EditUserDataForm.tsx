@@ -75,8 +75,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     .required(t('verification.required', {field: t('shared.lastName')})),
                 position: Yup.string()
                     .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))
-                    .max(50, t('verification.maxLength', {field: t('shared.position'), count: 50}))
-                    .required(t('verification.required', {field: t('shared.position')})),
+                    .max(50, t('verification.maxLength', {field: t('shared.position'), count: 50})),
                 locked: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.locked")})),
                 enabled: Yup.boolean()
@@ -104,23 +103,27 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
         >
             {({isValid, isSubmitting, dirty}) => {
                 const booleanOptions = getBooleanOptions(t);
+                const width = "450px";
                 return (
                     <Form>
                         <Stack gap="8px">
                             <CustomInputField name={"firstName"} label={t('shared.firstName')}
-                                              placeholder={t('shared.firstName')}/>
+                                              placeholder={t('shared.firstName')}
+                                              width={width}/>
                             <CustomInputField name={"lastName"} label={t('shared.lastName')}
-                                              placeholder={t('shared.lastName')}/>
+                                              placeholder={t('shared.lastName')}
+                                              width={width}/>
                             <CustomInputField name={"position"} label={t('shared.position')}
-                                              placeholder={t('shared.position')}/>
+                                              placeholder={t('shared.position')}
+                                              width={width}/>
                             <CustomSelectField name={"locked"} label={t('shared.locked')}
                                                placeholder={t('shared.locked')} options={booleanOptions}
-                                               width={"400px"}/>
+                                               width={width}/>
                             <CustomSelectField name={"enabled"} label={t('shared.enabled')}
                                                placeholder={t('shared.enabled')} options={booleanOptions}
-                                               width={"400px"}/>
+                                               width={width}/>
                             <Button disabled={!isValid || isSubmitting || !dirty || isLoading} type="submit"
-                                    colorPalette="green" width={"400px"}>
+                                    colorPalette="green" width={width}>
                                 {t('save', {ns: "common"})}
                             </Button>
                         </Stack>
