@@ -1,16 +1,16 @@
 import React from "react";
+import {Button, DialogBackdrop, Text} from "@chakra-ui/react";
 import {
-    Button,
-    DialogBackdrop,
+    DialogActionTrigger,
     DialogBody,
+    DialogCloseTrigger,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogRoot,
-    Heading,
-} from "@chakra-ui/react";
+    DialogTitle,
+} from "@/components/ui/dialog";
 import {themeColors} from "@/theme/theme-colors.ts";
-import {DialogActionTrigger} from "@/components/ui/dialog.tsx";
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -29,31 +29,32 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                        title,
                                                        message,
                                                        confirmText = "Confirm",
-                                                       cancelText = "Cancel"
+                                                       cancelText = "Cancel",
                                                    }) => {
     return (
-        <DialogRoot open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <DialogRoot
+            open={isOpen}
+            onOpenChange={(open) => !open && onClose()}
+            role="alertdialog"
+        >
             <DialogBackdrop/>
             <DialogContent backgroundColor={themeColors.bgColorSecondary()}>
-                <DialogHeader>
-                    <Heading size={"xl"}>
-                        {title}
-                    </Heading>
+                <DialogCloseTrigger/>
+                <DialogHeader color={themeColors.fontColor()}>
+                    <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
-                <DialogBody>{message}</DialogBody>
+                <DialogBody asChild>
+                    <Text color={themeColors.fontColor()}>{message}</Text>
+                </DialogBody>
                 <DialogFooter>
-                    <Button
-                        colorPalette="red"
-                        onClick={onConfirm}
-                        mr={3}
-                    >
+                    <DialogActionTrigger asChild>
+                        <Button variant="outline" onClick={onClose}>
+                            {cancelText}
+                        </Button>
+                    </DialogActionTrigger>
+                    <Button colorPalette="red" onClick={onConfirm}>
                         {confirmText}
                     </Button>
-                    <DialogActionTrigger asChild>
-                        <Button colorPalette="green"
-                                onClick={onClose}
-                        >{cancelText}</Button>
-                    </DialogActionTrigger>
                 </DialogFooter>
             </DialogContent>
         </DialogRoot>

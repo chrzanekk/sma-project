@@ -10,7 +10,7 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {Button, DrawerContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
@@ -26,7 +26,7 @@ const EditContactDrawer: React.FC<EditContractorDrawerProps> = ({fetchContacts, 
     const {t} = useTranslation(['common', 'contacts']);
 
     return (
-        <>
+        <Box>
             <DrawerRoot size={"lg"} placement={"end"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
@@ -43,7 +43,7 @@ const EditContactDrawer: React.FC<EditContractorDrawerProps> = ({fetchContacts, 
                                borderRadius={"md"}>
                     <DrawerContext>
                         {(store) => (
-                            <>
+                            <Box>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
@@ -70,13 +70,13 @@ const EditContactDrawer: React.FC<EditContractorDrawerProps> = ({fetchContacts, 
                                         </Button>
                                     </DrawerActionTrigger>
                                 </DrawerFooter>
-                            </>
+                            </Box>
 
                         )}
                     </DrawerContext>
                 </DrawerContent>
             </DrawerRoot>
-        </>
+        </Box>
     )
 }
 

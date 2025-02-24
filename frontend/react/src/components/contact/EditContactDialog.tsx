@@ -10,7 +10,7 @@ import {
     DialogRoot,
     DialogTrigger
 } from "@/components/ui/dialog.tsx";
-import {Button, DialogContext, Heading} from "@chakra-ui/react";
+import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
@@ -26,7 +26,7 @@ const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, 
     const {t} = useTranslation(['common', 'contacts']);
 
     return (
-        <>
+        <Box>
             <DialogRoot size={"lg"} placement={"top"}>
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
@@ -43,7 +43,7 @@ const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, 
                                borderRadius={"md"}>
                     <DialogContext>
                         {(store) => (
-                            <>
+                            <Box>
                                 <DialogCloseTrigger/>
                                 <DialogHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor()}>
@@ -70,13 +70,13 @@ const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, 
                                         </Button>
                                     </DialogActionTrigger>
                                 </DialogFooter>
-                            </>
+                            </Box>
 
                         )}
                     </DialogContext>
                 </DialogContent>
             </DialogRoot>
-        </>
+        </Box>
     )
 }
 

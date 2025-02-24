@@ -20,7 +20,7 @@ export const getUserMenuItems = (): MenuItem[] => {
         ...(hasRole('ROLE_ADMIN') ? [{
             label: t('adminPanel'),
             href: "#",
-            value: " adminPanel",
+            value: "adminPanel",
             onClick: (() => navigate('/adminPanel')),
         }] : []),
         {
