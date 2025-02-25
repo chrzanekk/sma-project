@@ -34,6 +34,7 @@ interface CustomInputFieldProps {
     placeholder?: string;
     type?: string;
     width?: string;
+    readOnly?: boolean;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -41,7 +42,8 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                label,
                                                                placeholder,
                                                                type = "text",
-                                                               width
+                                                               width,
+                                                               readOnly
                                                            }) => {
     return (
         <Field name={name}>
@@ -62,6 +64,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
+                        readOnly={readOnly}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -83,6 +86,7 @@ export interface CustomSelectFieldProps {
     isMulti?: boolean;
     width?: string;
     bgColor?: string;
+    disabled?: boolean
 }
 
 export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
@@ -92,7 +96,8 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                         options,
                                                                         isMulti = false,
                                                                         width,
-                                                                        bgColor
+                                                                        bgColor,
+                                                                        disabled = false,
                                                                     }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const [field, meta] = useField(name);
@@ -126,6 +131,7 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
             )}
             <Select
                 options={options}
+                isDisabled={disabled}
                 placeholder={placeholder}
                 aria-label={placeholder}
                 value={selectedValue}
@@ -156,6 +162,7 @@ interface CustomTextAreaFieldProps {
     placeholder?: string;
     width?: string;
     rows?: number;
+    readOnly?: boolean
 }
 
 const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
@@ -164,6 +171,7 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                                                                      placeholder,
                                                                      width,
                                                                      rows = 3,
+                                                                     readOnly = false
                                                                  }) => {
     return (
         <Field name={name}>
@@ -177,12 +185,14 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                     <Textarea
                         {...field}
                         placeholder={placeholder}
+                        _placeholder={{color: themeColorsHex.fontColor()}}
                         size="sm"
                         color={themeColors.fontColor()}
                         bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}
+                        disabled={readOnly}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
