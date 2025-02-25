@@ -2,18 +2,18 @@ import React from "react";
 import {Form, Formik, FormikHelpers} from "formik";
 import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields";
-import {EditContractorFormValues} from "@/types/contractor-types.ts";
+import {ContractorFormValues} from "@/types/contractor-types.ts";
 import * as Yup from 'yup';
 import {useTranslation} from "react-i18next";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 import {getCountryOptions} from "@/types/country-type.ts";
 
 interface CommonContractorFormProps {
-    initialValues: EditContractorFormValues;
-    validationSchema: Yup.Schema<EditContractorFormValues>
+    initialValues: ContractorFormValues;
+    validationSchema: Yup.Schema<ContractorFormValues>
     onSubmit: (
-        values: EditContractorFormValues,
-        formikHelpers: FormikHelpers<EditContractorFormValues>
+        values: ContractorFormValues,
+        formikHelpers: FormikHelpers<ContractorFormValues>
     ) => Promise<void>;
     disabled?: boolean;
 }
@@ -28,7 +28,7 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> = ({
     const booleanOptions = getBooleanOptions(t);
     const countryOptions = getCountryOptions(t);
     return (
-        <Formik<EditContractorFormValues>
+        <Formik<ContractorFormValues>
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={onSubmit}

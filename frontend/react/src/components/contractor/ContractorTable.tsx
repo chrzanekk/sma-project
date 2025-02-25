@@ -1,4 +1,4 @@
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {useTranslation} from "react-i18next";
 import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import React, {useState} from "react";
@@ -14,7 +14,7 @@ import EditContractorDialog from "@/components/contractor/EditContractorDialog.t
 
 
 interface Props {
-    contractors: ContractorDTO[];
+    contractors: FetchableContractorDTO[];
     onDelete: (id: number) => void;
     fetchContractors: () => void;
     onSortChange: (field: string) => void;

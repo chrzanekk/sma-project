@@ -3,13 +3,13 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
 import {addContact} from "@/services/contact-service.ts";
-import {AddContactDTO} from "@/types/contact-types.ts";
+import {BaseContactFormValues, ContactDTO} from "@/types/contact-types.ts";
 import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
 
 
 interface AddContactFormProps {
-    onSuccess: (data: AddContactDTO) => void;
+    onSuccess: (data: BaseContactFormValues) => void;
 }
 
 const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
@@ -27,10 +27,10 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
 
     const handleSubmit = async (values: ContactFormValues) => {
         try {
-            const mappedContact: AddContactDTO = {
+            const mappedContact: ContactDTO = {
                 ...values
             }
-            await addContact(mappedContact);
+            const response = await addContact(mappedContact);
             successNotification(
                 t('success', {ns: "common"}),
                 formatMessage('notifications.addContactSuccess', {
@@ -38,7 +38,10 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
                     lastName: values.lastName
                 }, 'contacts')
             );
-            onSuccess(mappedContact);
+            const mappedResponse: BaseContactFormValues = {
+                ...response
+            }
+            onSuccess(mappedResponse);
         } catch (err: any) {
             console.error(err);
             errorNotification(

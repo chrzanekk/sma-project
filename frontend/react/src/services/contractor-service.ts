@@ -1,7 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {ContractorDTO, AddContractorDTO, EditContractorDTO} from "@/types/contractor-types.ts";
+import {FetchableContractorDTO, ContractorDTO} from "@/types/contractor-types.ts";
 
 
 const CONTRACTOR_API_BASE = "/api/contractors";
@@ -17,7 +17,7 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
         const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         const result = {
-            contractors: items as ContractorDTO[],
+            contractors: items as FetchableContractorDTO[],
             totalPages
         };
         return result;
@@ -29,14 +29,14 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
 export const getContractorById = async (id: number) => {
     try {
         const response = await api.get(`${CONTRACTOR_API_BASE}/getById/${id}`, getAuthConfig());
-        const contractorDTO: ContractorDTO = response.data;
+        const contractorDTO: FetchableContractorDTO = response.data;
         return contractorDTO;
     } catch (err) {
         throw err;
     }
 }
 
-export const addContractor = async (addContractor: AddContractorDTO) => {
+export const addContractor = async (addContractor: ContractorDTO) => {
     try {
         const response = await api.post(`${CONTRACTOR_API_BASE}/add`, addContractor, getAuthConfig());
         return response.data;
@@ -45,7 +45,7 @@ export const addContractor = async (addContractor: AddContractorDTO) => {
     }
 }
 
-export const updateContractor = async (updateContractor: EditContractorDTO) => {
+export const updateContractor = async (updateContractor: ContractorDTO) => {
     try {
         const response = await api.put(`${CONTRACTOR_API_BASE}/update`, updateContractor, getAuthConfig());
         return response.data;

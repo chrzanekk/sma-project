@@ -1,4 +1,4 @@
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {FetchableContractorDTO} from "@/types/contractor-types.ts";
 import React, {useCallback, useEffect, useState} from "react";
 import {deleteContractorById, getContractorsByFilter} from "@/services/contractor-service.ts";
 import ContractorLayout from "@/components/contractor/ContractorLayout.tsx";
@@ -8,10 +8,11 @@ import ContractorFilterForm from "@/components/contractor/ContractorFilterForm.t
 import {Flex} from "@chakra-ui/react";
 import AddContractorDrawer from "@/components/contractor/AddContractorDrawer.tsx";
 import AddContractorDialog from "@/components/contractor/AddContractorDialog.tsx";
+import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
 
 
 const ContractorManagement: React.FC = () => {
-    const [contractors, setContractors] = useState<ContractorDTO[]>([]);
+    const [contractors, setContractors] = useState<FetchableContractorDTO[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -99,6 +100,7 @@ const ContractorManagement: React.FC = () => {
                 <Flex justifyContent={"center"} gap={2}>
                     <AddContractorDrawer fetchContractors={fetchContractors}/>
                     <AddContractorDialog fetchContractors={fetchContractors}/>
+                    <AddContractorWithContactDialog fetchContractors={fetchContractors}/>
                 </Flex>
             }
             table={

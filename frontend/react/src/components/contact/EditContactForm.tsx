@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {ContactDTO, EditContactDTO, EditContactFormValues} from "@/types/contact-types.ts";
+import {BaseContactFormValues, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getContactById, updateContact} from "@/services/contact-service.ts";
 import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
@@ -15,7 +15,7 @@ interface EditContactFormProps {
 
 const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId}) => {
     const {t} = useTranslation(['common', 'contractors', 'errors'])
-    const defaultValues: EditContactFormValues = {
+    const defaultValues: BaseContactFormValues = {
         id: 0,
         firstName: '',
         lastName: '',
@@ -24,7 +24,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         additionalInfo: ''
     }
 
-    const [initialValues, setInitialValues] = useState<EditContactFormValues>(defaultValues);
+    const [initialValues, setInitialValues] = useState<BaseContactFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
 
@@ -32,7 +32,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         const fetchContact = async () => {
             setIsLoading(true);
             try {
-                const contact: ContactDTO = await getContactById(contactId);
+                const contact: FetchableContactDTO = await getContactById(contactId);
                 setInitialValues({
                     id: contact.id,
                     firstName: contact.firstName,
@@ -54,7 +54,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
 
     const handleSubmit = async (values: ContactFormValues) => {
         try {
-            const mappedContact: EditContactDTO = {
+            const mappedContact: ContactDTO = {
                 ...values
             }
             await updateContact(mappedContact);

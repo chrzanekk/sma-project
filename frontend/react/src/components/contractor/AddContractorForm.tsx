@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {AddContractorDTO, EditContractorFormValues} from "@/types/contractor-types.ts";
+import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
@@ -10,14 +10,14 @@ import CommonContractorForm from "@/components/contractor/CommonContractorForm.t
 
 
 interface AddContractorFormProps {
-    onSuccess: (data: AddContractorDTO) => void;
+    onSuccess: (data: ContractorDTO) => void;
 }
 
 const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'contractors']);
     const countryOptions = getCountryOptions(t);
 
-    const initialValues: EditContractorFormValues = {
+    const initialValues: ContractorFormValues = {
         name: "",
         taxNumber: "",
         street: "",
@@ -34,12 +34,12 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
     const validationSchema = getContractorValidationSchema(t, countryOptions);
 
     const handleSubmit = async (
-        values: EditContractorFormValues,
+        values: ContractorFormValues,
         {setSubmitting}: { setSubmitting: (isSubmitting: boolean) => void }
     ) => {
         setSubmitting(true);
         try {
-            const mappedContractor: AddContractorDTO = {
+            const mappedContractor: ContractorDTO = {
                 ...values,
                 country: Country.fromCode(values.country),
             };

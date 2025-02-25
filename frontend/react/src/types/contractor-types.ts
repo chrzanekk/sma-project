@@ -1,7 +1,9 @@
-import {ContactBaseDTO} from "@/types/contact-types.ts";
+import {BaseContactDTOForContractor} from "@/types/contact-types.ts";
 import {Country} from "@/types/country-type.ts";
 
-export interface ContractorBaseDTO {
+
+//interfejs do wyswietlania kontrahentów wraz z kontaktami
+export interface FetchableContractorDTO {
     id?: number;
     name: string;
     taxNumber: string;
@@ -14,6 +16,7 @@ export interface ContractorBaseDTO {
     customer: boolean;
     supplier: boolean;
     scaffoldingUser: boolean;
+    contacts: Array<BaseContactDTOForContractor>
     createdDatetime: string;
     lastModifiedDatetime: string;
     createdById: number;
@@ -24,7 +27,23 @@ export interface ContractorBaseDTO {
     modifiedByLastName: string;
 }
 
+//podstawowy interfejs użyty jako typ do wyświetlania kontaktó z kontrahentami (by uniknąć odwołania cyklicznego)
+export interface BaseContractorDTOForContact {
+id?: number;
+name: string;
+taxNumber: string;
+street: string;
+buildingNo: string;
+apartmentNo: string;
+postalCode: string;
+city: string;
+country: Country;
+customer: boolean;
+supplier: boolean;
+scaffoldingUser: boolean;
+}
 
+//interfejs do dodania kontrahenta wraz z kontaktami (lub pusta lista jeśli user nie dodał nic)
 export interface ContractorDTO {
     id?: number;
     name: string;
@@ -38,61 +57,11 @@ export interface ContractorDTO {
     customer: boolean;
     supplier: boolean;
     scaffoldingUser: boolean;
-    contacts: Array<ContactBaseDTO>
-    createdDatetime: string;
-    lastModifiedDatetime: string;
-    createdById: number;
-    createdByFirstName: string;
-    createdByLastName: string;
-    modifiedById: number;
-    modifiedByFirstName: string;
-    modifiedByLastName: string;
+    contacts?: Array<BaseContactDTOForContractor>;
 }
 
-export interface AddContractorDTO {
-    name: string;
-    taxNumber: string;
-    street: string;
-    buildingNo: string;
-    apartmentNo: string;
-    postalCode: string;
-    city: string;
-    country: Country;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
-}
-
-export interface AddContractorFormValues {
-    name: string;
-    taxNumber: string;
-    street: string;
-    buildingNo: string;
-    apartmentNo: string;
-    postalCode: string;
-    city: string;
-    country: string;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
-}
-
-export interface EditContractorDTO {
-    id?: number;
-    name: string;
-    taxNumber: string;
-    street: string;
-    buildingNo: string;
-    apartmentNo: string;
-    postalCode: string;
-    city: string;
-    country: Country;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
-}
-
-export interface EditContractorFormValues {
+//interfejs używany w formularzach - country jako string - mapowany na enum
+export interface ContractorFormValues {
     id?: number;
     name: string;
     taxNumber: string;
@@ -105,4 +74,5 @@ export interface EditContractorFormValues {
     customer: boolean;
     supplier: boolean;
     scaffoldingUser: boolean;
+    contacts?: Array<BaseContactDTOForContractor>;
 }

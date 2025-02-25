@@ -8,13 +8,13 @@ import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import classNames from "classnames";
 import '@/theme/css/global-table-styles.css';
 import '@/theme/css/contact-table-styles.css';
-import {ContactDTO} from "@/types/contact-types.ts";
+import {FetchableContactDTO} from "@/types/contact-types.ts";
 import EditContactDrawer from "@/components/contact/EditContactDrawer.tsx";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
 
 
 interface Props {
-    contacts: ContactDTO[];
+    contacts: FetchableContactDTO[];
     onDelete: (id: number) => void;
     fetchContacts: () => void;
     onSortChange: (field: string) => void;

@@ -1,10 +1,10 @@
 import * as Yup from "yup";
-import {EditContractorFormValues} from "@/types/contractor-types.ts";
+import {ContractorFormValues} from "@/types/contractor-types.ts";
 
 export const getContractorValidationSchema = (
     t: (key: string, options?: any) => string,
     countryOptions: { value: string; label: string }[]
-): Yup.Schema<EditContractorFormValues> => {
+): Yup.Schema<ContractorFormValues> => {
     return Yup.object({
         name: Yup.string()
             .min(5, t("verification.minLength", {field: t("contractors:name"), count: 5}))
@@ -42,5 +42,5 @@ export const getContractorValidationSchema = (
         customer: Yup.boolean().required(t("verification.required", {field: t("contractors:customer")})),
         supplier: Yup.boolean().required(t("verification.required", {field: t("contractors:supplier")})),
         scaffoldingUser: Yup.boolean().required(t("verification.required", {field: t("contractors:scaffoldingUser")})),
-    }) as Yup.Schema<EditContractorFormValues>;
+    }) as Yup.Schema<ContractorFormValues>;
 };

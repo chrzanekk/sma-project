@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {ContractorDTO, EditContractorDTO, EditContractorFormValues} from "@/types/contractor-types.ts";
+import {FetchableContractorDTO, EditContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
 import React, {useEffect, useState} from "react";
 import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
@@ -16,7 +16,7 @@ interface EditContractorFormProps {
 
 const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId}) => {
     const {t} = useTranslation(['common', 'contractors', 'errors'])
-    const defaultValues: EditContractorFormValues = {
+    const defaultValues: ContractorFormValues = {
         id: 0,
         name: '',
         taxNumber: '',
@@ -31,7 +31,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
         scaffoldingUser: false
     }
 
-    const [initialValues, setInitialValues] = useState<EditContractorFormValues>(defaultValues);
+    const [initialValues, setInitialValues] = useState<ContractorFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const countryOptions = getCountryOptions(t);
 
@@ -40,7 +40,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
         const fetchContractor = async () => {
             setIsLoading(true);
             try {
-                const contractor: ContractorDTO = await getContractorById(contractorId);
+                const contractor: FetchableContractorDTO = await getContractorById(contractorId);
                 setInitialValues({
                     id: contractor.id,
                     name: contractor.name,
@@ -67,7 +67,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
     const validationSchema = getContractorValidationSchema(t, countryOptions);
 
     const handleSubmit = async (
-        values: EditContractorFormValues,
+        values: ContractorFormValues,
         {setSubmitting}: { setSubmitting: (isSubmitting: boolean) => void }
     ) => {
         setSubmitting(true);
