@@ -1,17 +1,9 @@
 import {useTranslation} from "react-i18next";
-import React, {useState} from "react";
+import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
 import {BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
-import {
-    StepsCompletedContent,
-    StepsContent,
-    StepsItem,
-    StepsList,
-    StepsNextTrigger,
-    StepsPrevTrigger,
-    StepsRoot,
-} from "@/components/ui/steps"
+import {StepsContent, StepsItem, StepsList, StepsNextTrigger, StepsPrevTrigger, StepsRoot,} from "@/components/ui/steps"
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
@@ -20,6 +12,7 @@ import CommonContractorForm from "@/components/contractor/CommonContractorForm.t
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
 import {Box, Group, Heading} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
+import {FormikProps} from "formik";
 
 
 interface AddContractorWithContactFormProps {
@@ -51,6 +44,27 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
     const contractorValidationSchema = getContractorValidationSchema(t, countryOptions);
 
+    const contractorFormRef = useRef<FormikProps<ContractorFormValues>>(null);
+    const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
+
+    const handleNext = async () => {
+        if (currentStep === 0) {
+            if (contractorFormRef.current) {
+                await contractorFormRef.current.submitForm();
+                // Callback onSubmit w CommonContractorForm (handleContractorSubmit) ustawi dane i przejdzie do kroku 1
+            }
+        } else if (currentStep === 1) {
+            if (contactFormRef.current) {
+                await contactFormRef.current.submitForm();
+                // Callback onSubmit w ContactFormWithSearch (handleContactSubmit) ustawi dane i przejdzie do kroku 2
+            }
+        }
+    };
+
+    const handlePrev = () => {
+        setCurrentStep((prev) => prev - 1);
+    };
+
     const handleContractorSubmit = async (values: ContractorFormValues) => {
         setContractorData(values);
         setCurrentStep(1);
@@ -69,6 +83,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
             contacts: contactData ? [contactData] : [],
         };
         try {
+            console.log(payload);
             await addContractor(payload);
             successNotification(
                 t("success", {ns: "common"}),
@@ -96,11 +111,15 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                     initialValues={contractorInitialValues}
                     validationSchema={contractorValidationSchema}
                     onSubmit={handleContractorSubmit}
+                    hideSubmit={true}
+                    innerRef={contractorFormRef}
                 />
             </StepsContent>
 
             <StepsContent index={1}>
-                <ContactFormWithSearch onSuccess={handleContactSubmit}/>
+                <ContactFormWithSearch onSuccess={handleContactSubmit}
+                                       hideSubmit={true}
+                                       innerRef={contactFormRef}/>
             </StepsContent>
 
             <StepsContent index={2}>
@@ -121,24 +140,30 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                         </p>
                     </Box>
                 </Box>
-                <Button onClick={handleFinalSubmit} colorScheme="green">
+                <Button onClick={handleFinalSubmit} colorPalette="green">
                     {t("common:save", "Zapisz")}
+                </Button>
+                <Button variant="outline" ml={2} onClick={onSuccess} colorPalette={"red"}>
+                    {t("common:cancel", "Anuluj")}
                 </Button>
             </StepsContent>
 
-            <StepsCompletedContent>{t("common:allStepsCompleted", "Wszystkie kroki zakończone!")}</StepsCompletedContent>
 
             <Group mt={4}>
-                <StepsPrevTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentStep(currentStep - 1)}>
-                        {t("common:previous", "Poprzedni")}
-                    </Button>
-                </StepsPrevTrigger>
-                <StepsNextTrigger asChild>
-                    <Button variant="outline" size="sm" onClick={() => setCurrentStep(currentStep + 1)}>
-                        {t("common:next", "Następny")}
-                    </Button>
-                </StepsNextTrigger>
+                {currentStep > 0 && (
+                    <StepsPrevTrigger asChild>
+                        <Button variant="outline" size="sm" onClick={handlePrev}>
+                            {t("common:previous", "Poprzedni")}
+                        </Button>
+                    </StepsPrevTrigger>
+                )}
+                {currentStep < 2 && (
+                    <StepsNextTrigger asChild>
+                        <Button variant="outline" size="sm" onClick={handleNext}>
+                            {t("common:next", "Następny")}
+                        </Button>
+                    </StepsNextTrigger>
+                )}
             </Group>
         </StepsRoot>
     )

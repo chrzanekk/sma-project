@@ -8,9 +8,11 @@ import {getContactValidationSchema} from "@/validation/contactValidationSchema.t
 
 interface ContactFormWithSearchProps {
     onSuccess: (values: BaseContactFormValues) => void;
+    hideSubmit?: boolean;
+    innerRef?: React.Ref<any>;
 }
 
-const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess}) => {
+const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess, hideSubmit, innerRef}) => {
     const {t} = useTranslation(["common", "contacts", "errors"]);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<BaseContactFormValues[]>([]);
@@ -85,6 +87,8 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess}
                     onSuccess(values);
                 }}
                 readOnly={selectedContact !== null}
+                hideSubmit={hideSubmit}
+                innerRef={innerRef}
             />
         </Box>
 
