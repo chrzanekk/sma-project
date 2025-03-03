@@ -34,7 +34,7 @@ interface CustomInputFieldProps {
     placeholder?: string;
     type?: string;
     width?: string;
-    readOnly?: boolean;
+    disabled?: boolean;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -43,7 +43,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                placeholder,
                                                                type = "text",
                                                                width,
-                                                               readOnly
+                                                               disabled
                                                            }) => {
     return (
         <Field name={name}>
@@ -64,7 +64,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
-                        readOnly={readOnly}
+                        disabled={disabled}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -162,7 +162,7 @@ interface CustomTextAreaFieldProps {
     placeholder?: string;
     width?: string;
     rows?: number;
-    readOnly?: boolean
+    disabled?: boolean
 }
 
 const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
@@ -171,7 +171,7 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                                                                      placeholder,
                                                                      width,
                                                                      rows = 3,
-                                                                     readOnly = false
+                                                                     disabled = false
                                                                  }) => {
     return (
         <Field name={name}>
@@ -192,7 +192,7 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}
-                        disabled={readOnly}
+                        disabled={disabled}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">

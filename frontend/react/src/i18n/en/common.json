@@ -36,6 +36,7 @@
     "createdBy": "Utworzony przez",
     "lastModifiedDate": "Data ost. mod.",
     "lastModifiedBy":"Ost. zmod. przez",
+    "summary": "Podsumowanie",
     "notifications": {
         "emailAlreadyExists": "Email {email} już istnieje w bazie",
         "loginAlreadyExists": "Login {login} istnieje już  w bazie",

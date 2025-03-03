@@ -5,6 +5,7 @@ import {useTranslation} from "react-i18next";
 import {Box, Button, Input, List} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {themeColorsHex} from "@/theme/theme-colors.ts";
 
 interface ContactFormWithSearchProps {
     onSuccess: (values: BaseContactFormValues) => void;
@@ -29,7 +30,8 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
 
     const handleSearch = async () => {
         try {
-            const result = await getContactsByFilter({lastName: searchTerm});
+            console.log(searchTerm)
+            const result = await getContactsByFilter({lastNameStartsWith: searchTerm});
             setSearchResults(result.contacts)
         } catch (err) {
             console.error('Bład wyszukiwania kontaktu', err);
@@ -49,10 +51,11 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
             <Box mb={4}>
                 <Input
                     placeholder={"Wyszukaj kontakt (nazwisko)"}
+                    _placeholder={{color: themeColorsHex.fontColor()}}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <Button mt={2} onClick={handleSearch}>
+                <Button mt={2} onClick={handleSearch} colorPalette={"orange"}>
                     {t('common:search')}
                 </Button>
                 {searchResults.length > 0 && (
@@ -74,7 +77,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
 
             {selectedContact && (
                 <Box mb={4}>
-                    <Button onClick={handleResetContact} colorScheme="red">
+                    <Button onClick={handleResetContact} colorPalette="red">
                         {t("contacts:resetSelected", "Resetuj wybrany kontakt")}
                     </Button>
                 </Box>
@@ -86,7 +89,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
                 onSubmit={async (values) => {
                     onSuccess(values);
                 }}
-                readOnly={selectedContact !== null}
+                disabled={selectedContact !== null}
                 hideSubmit={hideSubmit}
                 innerRef={innerRef}
             />
