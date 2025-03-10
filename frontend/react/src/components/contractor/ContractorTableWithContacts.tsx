@@ -1,6 +1,6 @@
 // ContractorTableWithContacts.tsx
 import React, {useState} from "react";
-import {Box, Button, Collapsible, HStack, IconButton, Table, Text,} from "@chakra-ui/react";
+import {Box, Button, Collapsible, HStack, Table, Text,} from "@chakra-ui/react";
 import {useTheme} from "next-themes";
 import {useTranslation} from "react-i18next";
 import classNames from "classnames";
@@ -8,7 +8,6 @@ import DateFormatter from "@/utils/date-formatter";
 import EditContractorDrawer from "@/components/contractor/EditContractorDrawer";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
 import {FetchableContractorDTO} from "@/types/contractor-types";
-import {FaArrowDown, FaArrowUp} from "react-icons/fa";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
 
 
@@ -73,8 +72,6 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
             <Table.Root className={tableClass}>
                 <Table.Header>
                     <Table.Row>
-                        {/* Pusta kolumna dla przycisku rozwijania */}
-                        <Table.ColumnHeader/>
                         <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("id")}>
                             ID {renderSortIndicator("id")}
                         </Table.ColumnHeader>
@@ -118,18 +115,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                         const contractorId = contractor.id!;
                         return (
                             <React.Fragment key={contractorId}>
-                                <Table.Row>
-                                    {/* Kolumna z przyciskiem rozwijania */}
-                                    <Table.Cell>
-                                        <IconButton
-                                            aria-label="Rozwiń wiersz"
-                                            onClick={() => toggleExpand(contractorId)}
-                                            size={"2xs"}
-                                            colorPalette={"blue"}
-                                        >
-                                            {expandedRows[contractorId] ? <FaArrowUp/> : <FaArrowDown/>}
-                                        </IconButton>
-                                    </Table.Cell>
+                                <Table.Row onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}>
                                     <Table.Cell>{contractorId}</Table.Cell>
                                     <Table.Cell>{contractor.name}</Table.Cell>
                                     <Table.Cell>{contractor.taxNumber}</Table.Cell>
@@ -163,7 +149,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         <Box>{contractor.modifiedByFirstName}</Box>
                                         <Box>{contractor.modifiedByLastName}</Box>
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={(e) => e.stopPropagation()}>
                                         <HStack gap={1}>
                                             <EditContractorDrawer
                                                 fetchContractors={fetchContractors}
