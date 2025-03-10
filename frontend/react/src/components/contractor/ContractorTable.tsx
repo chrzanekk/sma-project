@@ -12,6 +12,7 @@ import '@/theme/css/contractor-table-styles.css';
 import EditContractorDrawer from "@/components/contractor/EditContractorDrawer.tsx";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog.tsx";
 
+//left this component...will be changed to genericContractorTable and used in ContactTableWithContractors in future.
 
 interface Props {
     contractors: FetchableContractorDTO[];
