@@ -2,13 +2,14 @@ import {FetchableContractorDTO} from "@/types/contractor-types.ts";
 import React, {useCallback, useEffect, useState} from "react";
 import {deleteContractorById, getContractorsByFilter} from "@/services/contractor-service.ts";
 import ContractorLayout from "@/components/contractor/ContractorLayout.tsx";
-import ContractorTable from "@/components/contractor/ContractorTable.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import ContractorFilterForm from "@/components/contractor/ContractorFilterForm.tsx";
 import {Flex} from "@chakra-ui/react";
 import AddContractorDrawer from "@/components/contractor/AddContractorDrawer.tsx";
 import AddContractorDialog from "@/components/contractor/AddContractorDialog.tsx";
 import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
+import ContractorTableWithContacts from "@/components/contractor/ContractorTableWithContacts.tsx";
+import useContactManagement from "@/hooks/UseContactManagement.tsx";
 
 
 const ContractorManagement: React.FC = () => {
@@ -19,6 +20,12 @@ const ContractorManagement: React.FC = () => {
     const [sortField, setSortField] = useState<string | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [filter, setFilter] = useState<Record<string, any>>({});
+
+    const {
+        fetchContacts,
+        handleContactDelete,
+        handleContactSortChange,
+    } = useContactManagement();
 
     const fetchContractors = useCallback(async (customFilter = {}, page = 0, size = rowsPerPage) => {
         try {
@@ -104,14 +111,20 @@ const ContractorManagement: React.FC = () => {
                 </Flex>
             }
             table={
-                <ContractorTable
+                <ContractorTableWithContacts
                     contractors={contractors}
                     onDelete={handleDelete}
                     fetchContractors={fetchContractors}
                     onSortChange={handleSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}
-                />}
+                    contactFetchContacts={fetchContacts}
+                    contactOnDelete={handleContactDelete}
+                    contactOnSortChange={handleContactSortChange}
+                    contactSortField={sortField}
+                    contactSortDirection={sortDirection}
+                />
+            }
             pagination={
                 <Pagination
                     currentPage={currentPage}
