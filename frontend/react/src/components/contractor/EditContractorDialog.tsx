@@ -14,7 +14,7 @@ import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
-import EditContractorForm from "@/components/contractor/EditContractorForm.tsx";
+import EditContractorWithContactForm from "@/components/contractor/EditContractorWithContactForm.tsx";
 
 
 interface EditContractorDialogProps {
@@ -51,7 +51,7 @@ const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContrac
                                     </Heading>
                                 </DialogHeader>
                                 <DialogBody>
-                                    <EditContractorForm
+                                    <EditContractorWithContactForm
                                         onSuccess={() => {
                                             fetchContractors();
                                             store.setOpen(false);

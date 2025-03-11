@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {FetchableContractorDTO, EditContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
+import {ContractorDTO, ContractorFormValues, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import React, {useEffect, useState} from "react";
 import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
@@ -72,7 +72,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
     ) => {
         setSubmitting(true);
         try {
-            const mappedContractor: EditContractorDTO = {
+            const mappedContractor: ContractorDTO = {
                 ...values,
                 id: contractorId,
                 country: Country.fromCode(values.country),
