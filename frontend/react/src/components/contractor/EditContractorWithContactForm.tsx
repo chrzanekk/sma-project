@@ -156,11 +156,9 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     key={1}
                     index={1}
                     color={themeColors.fontColor()}>
-                    <Steps.Trigger>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text
                         color={themeColors.fontColor()}>{t("contacts:manage", "Edycja kontaktów")}</Text>}</Steps.Title>
-                    </Steps.Trigger>
                     <Steps.Separator/>
                 </Steps.Item>
                 <Steps.Item
@@ -188,8 +186,9 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
 
             {/* Krok 1 – edycja kontaktów */}
             <Steps.Content key={1} index={1}>
-                <Box mb={4}>
-                    <Heading size="md">{t("contacts:manage", "Edycja kontaktów")}</Heading>
+                <Box mb={2}>
+                    <Heading size="md"
+                             color={themeColors.fontColor()}>{t("contacts:manage", "Edycja kontaktów")}</Heading>
                 </Box>
                 {/* Formularz wyszukiwania/dodawania kontaktu – przekazujemy innerRef */}
                 <ContactFormWithSearch
@@ -199,7 +198,8 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                 />
                 {/* Przycisk do zatwierdzenia formularza kontaktu */}
                 <Button
-                    mt={2}
+                    mt={1}
+                    size={"2xs"}
                     colorPalette="blue"
                     onClick={async () => {
                         if (contactFormRef.current) {
@@ -210,7 +210,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     {t("contacts:add", "Dodaj kontakt")}
                 </Button>
                 {/* Lista kontaktów z możliwością usunięcia */}
-                <Box mt={4}>
+                <Box mt={2}>
                     <Heading size="sm" mb={2}>
                         {t("contacts:list", "Lista kontaktów")}
                     </Heading>

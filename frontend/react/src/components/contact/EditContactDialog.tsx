@@ -31,7 +31,7 @@ const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, 
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
                     <Button
-                        colorPalette="green"
+                        colorPalette="blue"
                         size={"2xs"}
                         p={1}
                     >

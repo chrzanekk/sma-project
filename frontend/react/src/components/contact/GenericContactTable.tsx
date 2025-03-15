@@ -163,37 +163,37 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                            color: themeColors.fontColorHover()
                                        }}
                             >
-                                <Table.Cell {...commonCellProps}>{contact.id}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{contact.firstName}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{contact.lastName}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{contact.phoneNumber}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{contact.email}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{contact.additionalInfo}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"2%"}>{contact.id}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contact.firstName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contact.lastName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contact.phoneNumber}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contact.email}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"30%"}>{contact.additionalInfo}</Table.Cell>
                                 {extended && isFetchableContact(contact) && (
                                     <>
                                         {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
                                         {"createdDatetime" in contact && (
-                                            <Table.Cell {...commonCellProps}>
+                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 {DateFormatter.formatDateTime(
                                                     (contact as FetchableContactDTO).createdDatetime
                                                 )}
                                             </Table.Cell>
                                         )}
                                         {"createdByFirstName" in contact && (
-                                            <Table.Cell {...commonCellProps}>
+                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <div>{(contact as FetchableContactDTO).createdByFirstName}</div>
                                                 <div>{(contact as FetchableContactDTO).createdByLastName}</div>
                                             </Table.Cell>
                                         )}
                                         {"lastModifiedDatetime" in contact && (
-                                            <Table.Cell {...commonCellProps}>
+                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 {DateFormatter.formatDateTime(
                                                     (contact as FetchableContactDTO).lastModifiedDatetime
                                                 )}
                                             </Table.Cell>
                                         )}
                                         {"modifiedByFirstName" in contact && (
-                                            <Table.Cell {...commonCellProps}>
+                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <div>{(contact as FetchableContactDTO).modifiedByFirstName}</div>
                                                 <div>{(contact as FetchableContactDTO).modifiedByLastName}</div>
                                             </Table.Cell>
@@ -208,7 +208,7 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                                 contactId={contact.id!}
                                             />
                                             <Button
-                                                colorPalette="red"
+                                                colorPalette="orange"
                                                 size="2xs"
                                                 onClick={() => handleDeleteClick(contact.id!)}
                                             >

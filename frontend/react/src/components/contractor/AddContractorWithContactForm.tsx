@@ -103,19 +103,22 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
             <Steps.List>
                 <Steps.Item key={0} index={0} color={themeColors.fontColor()}>
                     <Steps.Indicator/>
-                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("contractors:add")}</Text>}</Steps.Title>
+                    <Steps.Title>{<Text ml={2}
+                                        color={themeColors.fontColor()}>{t("contractors:add")}</Text>}
+                    </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
                 <Steps.Item key={1} index={1} color={themeColors.fontColor()}>
-                    <Steps.Trigger>
                     <Steps.Indicator/>
-                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>} </Steps.Title>
-                    </Steps.Trigger>
+                    <Steps.Title>{<Text ml={2}
+                                        color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>}
+                    </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
                 <Steps.Item key={2} index={2} color={themeColors.fontColor()}>
                     <Steps.Indicator/>
-                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("common:summary")}</Text>} </Steps.Title>
+                    <Steps.Title>{<Text ml={2}
+                                        color={themeColors.fontColor()}>{t("common:summary")}</Text>} </Steps.Title>
                 </Steps.Item>
             </Steps.List>
 

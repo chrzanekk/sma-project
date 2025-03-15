@@ -8,6 +8,8 @@ import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
 import {themeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
+import {useTheme} from "next-themes";
+import classNames from "classnames";
 
 
 interface ContractorTableWithContactsProps {
@@ -41,7 +43,10 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
     const {t} = useTranslation(["common", "contractors"]);
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
-    // Stan rozwinięcia wierszy, przyjmujemy, że contractor.id jest zawsze zdefiniowane
+    const {theme} = useTheme();
+
+    const tableClass = classNames('contractor-table', {'dark-theme': theme === 'dark'});
+
     const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
 
     const toggleExpand = (id: number) => {
@@ -67,6 +72,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
         <Box>
             <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
                 <Table.Root size={"sm"}
+                            className={tableClass}
                             stickyHeader
                             showColumnBorder
                             interactive
@@ -127,10 +133,10 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                             color: themeColors.fontColorHover()
                                         }}
                                         onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}>
-                                        <Table.Cell {...commonCellProps}>{contractorId}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{contractor.name}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{contractor.taxNumber}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"2%"}>{contractorId}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"15%"}>{contractor.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"15%"}>{contractor.taxNumber}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"25%"}>
                                             {contractor.street} {contractor.buildingNo}
                                             {contractor.apartmentNo && contractor.apartmentNo.trim() !== ""
                                                 ? "/" + contractor.apartmentNo
@@ -141,33 +147,33 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                 ? contractor.country.name
                                                 : contractor.country || ""}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"4%"}>
                                             {contractor.customer ? t("common:yes") : t("common:no")}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"4%"}>
                                             {contractor.supplier ? t("common:yes") : t("common:no")}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"4%"}>
                                             {contractor.scaffoldingUser ? t("common:yes") : t("common:no")}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>{contractor.createdByFirstName}</Box>
                                             <Box>{contractor.createdByLastName}</Box>
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>{contractor.modifiedByFirstName}</Box>
                                             <Box>{contractor.modifiedByLastName}</Box>
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>
+                                        <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()} alignContent={"center"}>
                                             <HStack gap={1}>
                                                 <EditContractorDialog
                                                     fetchContractors={fetchContractors}
                                                     contractorId={contractorId}
                                                 />
                                                 <Button
-                                                    colorPalette="red"
+                                                    colorPalette="orange"
                                                     size="2xs"
                                                     onClick={() => onDelete(contractorId)}
                                                 >

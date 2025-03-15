@@ -54,14 +54,14 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
 
     return (
         <Box>
-            <Box mb={4}>
+            <Box mb={2}>
                 <Input
                     placeholder={t("contacts:searchPlaceholder", "Wyszukaj kontakt (nazwisko)")}
                     _placeholder={{color: themeColorsHex.fontColor()}}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <Button mt={2} mb={2} onClick={handleSearch} colorPalette="orange">
+                <Button mt={2} mb={2} onClick={handleSearch} colorPalette="orange" size={"xs"}>
                     {t("common:search")}
                 </Button>
                 {searchResults.length > 0 && (
@@ -108,7 +108,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
 
             {selectedContact && (
                 <Box mb={4}>
-                    <Button onClick={handleResetContact} colorPalette="red">
+                    <Button onClick={handleResetContact} colorPalette="red" size={"2xs"}>
                         {t("common:resetSelected")}
                     </Button>
                 </Box>
@@ -130,8 +130,9 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
             {/* Przycisk do ręcznego zatwierdzenia formularza kontaktu */}
             {!hideSubmit && (
                 <Button
-                    mt={2}
+                    mt={1}
                     colorScheme="blue"
+                    size={"2xs"}
                     onClick={async () => {
                         if (innerRef && typeof innerRef !== "function" && innerRef.current) {
                             await innerRef.current.submitForm();
