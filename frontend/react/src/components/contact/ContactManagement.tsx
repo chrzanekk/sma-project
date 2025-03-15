@@ -4,7 +4,6 @@ import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
 import {FetchableContactDTO} from "@/types/contact-types.ts";
 import {getContactsByFilter} from "@/services/contact-service.ts";
-import AddContactDrawer from "@/components/contact/AddContactDrawer.tsx";
 import AddContactDialog from "@/components/contact/AddContactDialog.tsx";
 import ContactFilterForm from "@/components/contact/ContactFilterForm.tsx";
 import ContactLayout from "@/components/contact/ContactLayout.tsx";
@@ -98,7 +97,6 @@ const ContactManagement: React.FC = () => {
             filters={<ContactFilterForm onSubmit={handleFilterSubmit}/>}
             addContactButton={
                 <Flex justifyContent={"center"} gap={2}>
-                    <AddContactDrawer fetchContacts={fetchContacts}/>
                     <AddContactDialog fetchContacts={fetchContacts}/>
                 </Flex>
             }

@@ -33,7 +33,7 @@ const AddContactDialog: React.FC<AddContractorDialogProps> = ({fetchContacts}) =
                         size={"2xs"}
                         p={1}
                     ><FaPlus/>
-                        {t('add') + "(DIALOG)"}
+                        {t('add')}
                     </Button>
                 </DialogTrigger>
                 <DialogContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>

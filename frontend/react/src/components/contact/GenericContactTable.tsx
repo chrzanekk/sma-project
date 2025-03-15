@@ -8,7 +8,6 @@ import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import classNames from "classnames";
 import "@/theme/css/global-table-styles.css";
 import "@/theme/css/contact-table-styles.css";
-import EditContactDrawer from "@/components/contact/EditContactDrawer.tsx";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
 import {BaseContactDTOForContractor, FetchableContactDTO} from "@/types/contact-types.ts";
 
@@ -188,25 +187,21 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                 </>
                             )}
                             {extended && (
-                            <Table.Cell>
-                                <HStack gap={1} alignContent="center">
-                                    <EditContactDrawer
-                                        fetchContacts={fetchContacts}
-                                        contactId={contact.id!}
-                                    />
-                                    <EditContactDialog
-                                        fetchContacts={fetchContacts}
-                                        contactId={contact.id!}
-                                    />
-                                    <Button
-                                        colorPalette="red"
-                                        size="2xs"
-                                        onClick={() => handleDeleteClick(contact.id!)}
-                                    >
-                                        {t("delete", {ns: "common"})}
-                                    </Button>
-                                </HStack>
-                            </Table.Cell>
+                                <Table.Cell>
+                                    <HStack gap={1} alignContent="center">
+                                        <EditContactDialog
+                                            fetchContacts={fetchContacts}
+                                            contactId={contact.id!}
+                                        />
+                                        <Button
+                                            colorPalette="red"
+                                            size="2xs"
+                                            onClick={() => handleDeleteClick(contact.id!)}
+                                        >
+                                            {t("delete", {ns: "common"})}
+                                        </Button>
+                                    </HStack>
+                                </Table.Cell>
                             )}
                         </Table.Row>
                     ))}
