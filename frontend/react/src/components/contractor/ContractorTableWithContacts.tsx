@@ -184,7 +184,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                             onSortChange={contactOnSortChange}
                                                             sortField={contactSortField}
                                                             sortDirection={contactSortDirection}
-                                                            extended={true}
+                                                            extended={false}
                                                         />
                                                     </Box>
                                                 </Collapsible.Content>

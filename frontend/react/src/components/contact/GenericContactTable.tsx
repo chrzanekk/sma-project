@@ -1,15 +1,8 @@
-import { useTranslation } from "react-i18next";
-import {
-    Box,
-    Button,
-    HStack,
-    Table,
-    Text,
-    useDisclosure,
-} from "@chakra-ui/react";
-import { useState } from "react";
-import { useTheme } from "next-themes";
-import { Field } from "@/components/ui/field.tsx";
+import {useTranslation} from "react-i18next";
+import {Box, Button, HStack, Table, Text, useDisclosure,} from "@chakra-ui/react";
+import {useState} from "react";
+import {useTheme} from "next-themes";
+import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import classNames from "classnames";
@@ -45,10 +38,10 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                                                  sortDirection,
                                                                  extended = false,
                                                              }: Props<T>) => {
-    const { t } = useTranslation(["common", "contacts"]);
-    const { open, onOpen, onClose } = useDisclosure();
+    const {t} = useTranslation(["common", "contacts"]);
+    const {open, onOpen, onClose} = useDisclosure();
     const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
-    const { theme } = useTheme();
+    const {theme} = useTheme();
 
     const tableClass = classNames("custom-table", "contact-table", {
         "dark-theme": theme === "dark",
@@ -148,9 +141,10 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                 >
                                     {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
                                 </Table.ColumnHeader>
+                                <Table.ColumnHeader>{t("edit")}</Table.ColumnHeader>
                             </>
                         )}
-                        <Table.ColumnHeader>{t("edit")}</Table.ColumnHeader>
+
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -193,6 +187,7 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                     )}
                                 </>
                             )}
+                            {extended && (
                             <Table.Cell>
                                 <HStack gap={1} alignContent="center">
                                     <EditContactDrawer
@@ -208,10 +203,11 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                         size="2xs"
                                         onClick={() => handleDeleteClick(contact.id!)}
                                     >
-                                        {t("delete", { ns: "common" })}
+                                        {t("delete", {ns: "common"})}
                                     </Button>
                                 </HStack>
                             </Table.Cell>
+                            )}
                         </Table.Row>
                     ))}
                 </Table.Body>
@@ -221,10 +217,10 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                 isOpen={open}
                 onClose={onClose}
                 onConfirm={confirmDelete}
-                title={t("deleteConfirmation.title", { ns: "common" })}
-                message={t("deleteConfirmation.message", { ns: "common" })}
-                confirmText={t("delete", { ns: "common" })}
-                cancelText={t("cancel", { ns: "common" })}
+                title={t("deleteConfirmation.title", {ns: "common"})}
+                message={t("deleteConfirmation.message", {ns: "common"})}
+                confirmText={t("delete", {ns: "common"})}
+                cancelText={t("cancel", {ns: "common"})}
             />
         </Box>
     );
