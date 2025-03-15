@@ -1,4 +1,4 @@
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import {
     DialogActionTrigger,
     DialogBackdrop,
@@ -10,9 +10,9 @@ import {
     DialogRoot,
     DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Box, Button, DialogContext, Heading } from "@chakra-ui/react";
-import { FaPlus } from "react-icons/fa";
-import { themeColors } from "@/theme/theme-colors.ts";
+import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
+import {FaPlus} from "react-icons/fa";
+import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContractorWithContactForm from "@/components/contractor/AddContractorWithContactForm";
 
@@ -20,23 +20,23 @@ interface AddContractorWithContactDialogProps {
     fetchContractors: () => void;
 }
 
-const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogProps> = ({ fetchContractors }) => {
-    const { t } = useTranslation("contractors");
+const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogProps> = ({fetchContractors}) => {
+    const {t} = useTranslation("contractors");
 
     return (
         <Box>
-            <DialogRoot size="lg" placement="top">
-                <DialogBackdrop />
+            <DialogRoot size="xl" placement="top">
+                <DialogBackdrop/>
                 <DialogTrigger asChild>
                     <Button colorPalette="green" size="2xs" p={1}>
-                        <FaPlus /> {t("add") + " (DIALOG)"}
+                        <FaPlus/> {t("add")}
                     </Button>
                 </DialogTrigger>
                 <DialogContent bg={themeColors.bgColorSecondary()} offset="4" borderRadius="md">
                     <DialogContext>
                         {(store) => (
                             <Box>
-                                <DialogCloseTrigger />
+                                <DialogCloseTrigger/>
                                 <DialogHeader>
                                     <Heading size="xl" color={themeColors.fontColor()}>
                                         {t("contractors:details")}
@@ -53,7 +53,7 @@ const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogPro
                                 <DialogFooter>
                                     <DialogActionTrigger asChild>
                                         <Button colorPalette="red" onClick={() => store.setOpen(false)}>
-                                            {t("close", { ns: "common" })}
+                                            {t("close", {ns: "common"})}
                                         </Button>
                                     </DialogActionTrigger>
                                 </DialogFooter>

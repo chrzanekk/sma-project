@@ -5,8 +5,6 @@ import ContractorLayout from "@/components/contractor/ContractorLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import ContractorFilterForm from "@/components/contractor/ContractorFilterForm.tsx";
 import {Flex} from "@chakra-ui/react";
-import AddContractorDrawer from "@/components/contractor/AddContractorDrawer.tsx";
-import AddContractorDialog from "@/components/contractor/AddContractorDialog.tsx";
 import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
 import ContractorTableWithContacts from "@/components/contractor/ContractorTableWithContacts.tsx";
 import useContactManagement from "@/hooks/UseContactManagement.tsx";
@@ -105,8 +103,6 @@ const ContractorManagement: React.FC = () => {
             filters={<ContractorFilterForm onSubmit={handleFilterSubmit}/>}
             addContractorButton={
                 <Flex justifyContent={"center"} gap={2}>
-                    <AddContractorDrawer fetchContractors={fetchContractors}/>
-                    <AddContractorDialog fetchContractors={fetchContractors}/>
                     <AddContractorWithContactDialog fetchContractors={fetchContractors}/>
                 </Flex>
             }

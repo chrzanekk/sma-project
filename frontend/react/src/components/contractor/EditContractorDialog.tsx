@@ -27,15 +27,14 @@ const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContrac
 
     return (
         <Box>
-            <DialogRoot size={"lg"} placement={"top"}>
+            <DialogRoot size={"xl"} placement={"top"}>
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
                     <Button
-                        colorPalette="green"
+                        colorPalette="blue"
                         size={"2xs"}
-                        p={1}
-                    >
-                        {t('data', {ns: "common"}) + "(D)"}
+                        p={1}>
+                        {t('data', {ns: "common"})}
                     </Button>
                 </DialogTrigger>
                 <DialogContent bg={themeColors.bgColorSecondary()}

@@ -1,11 +1,11 @@
-import { BaseContactFormValues } from "@/types/contact-types.ts";
-import React, { useState } from "react";
-import { getContactsByFilter } from "@/services/contact-service.ts";
-import { useTranslation } from "react-i18next";
-import { Box, Button, Input, List } from "@chakra-ui/react";
+import {BaseContactFormValues} from "@/types/contact-types.ts";
+import React, {useState} from "react";
+import {getContactsByFilter} from "@/services/contact-service.ts";
+import {useTranslation} from "react-i18next";
+import {Box, Button, Input, Table} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
-import { getContactValidationSchema } from "@/validation/contactValidationSchema.ts";
-import { themeColorsHex } from "@/theme/theme-colors.ts";
+import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
 
 interface ContactFormWithSearchProps {
     onSuccess: (values: BaseContactFormValues) => void;
@@ -13,8 +13,8 @@ interface ContactFormWithSearchProps {
     innerRef?: React.Ref<any>;
 }
 
-const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({ onSuccess, hideSubmit, innerRef }) => {
-    const { t } = useTranslation(["common", "contacts", "errors"]);
+const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess, hideSubmit, innerRef}) => {
+    const {t} = useTranslation(["common", "contacts", "errors"]);
     const [searchTerm, setSearchTerm] = useState("");
     const [searchResults, setSearchResults] = useState<BaseContactFormValues[]>([]);
     const [selectedContact, setSelectedContact] = useState<BaseContactFormValues | null>(null);
@@ -30,7 +30,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({ onSuccess
 
     const handleSearch = async () => {
         try {
-            const result = await getContactsByFilter({ lastNameStartsWith: searchTerm });
+            const result = await getContactsByFilter({lastNameStartsWith: searchTerm});
             setSearchResults(result.contacts);
         } catch (err) {
             console.error("Błąd wyszukiwania kontaktu", err);
@@ -57,34 +57,59 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({ onSuccess
             <Box mb={4}>
                 <Input
                     placeholder={t("contacts:searchPlaceholder", "Wyszukaj kontakt (nazwisko)")}
-                    _placeholder={{ color: themeColorsHex.fontColor() }}
+                    _placeholder={{color: themeColorsHex.fontColor()}}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <Button mt={2} onClick={handleSearch} colorPalette="orange">
-                    {t("common:search", "Szukaj")}
+                <Button mt={2} mb={2} onClick={handleSearch} colorPalette="orange">
+                    {t("common:search")}
                 </Button>
                 {searchResults.length > 0 && (
-                    <List.Root mt={2} border="1px solid gray" borderRadius="md" p={2}>
-                        {searchResults.map((contact, idx) => (
-                            <List.Item
-                                key={idx}
-                                p={2}
-                                cursor="pointer"
-                                onClick={() => handleSelectContact(contact)}
-                                _hover={{ bg: "gray.100" }}
-                            >
-                                {contact.firstName} {contact.lastName}
-                            </List.Item>
-                        ))}
-                    </List.Root>
+                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
+                        <Table.Root size={"sm"}
+                                    stickyHeader
+                                    showColumnBorder
+                                    interactive
+                                    color={themeColors.fontColor()}
+                        >
+                            <Table.Header>
+                                <Table.Row bg={themeColors.bgColorPrimary()}>
+                                    <Table.ColumnHeader
+                                        color={themeColors.fontColor()}>{t("contacts:firstName")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"end"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                {searchResults.map((contact, idx) => (
+                                    <Table.Row key={idx}
+                                               onClick={() => handleSelectContact(contact)}
+                                               style={{cursor: "pointer"}}
+                                               bg={themeColors.bgColorSecondary()}
+                                               _hover={{
+                                                   textDecoration: 'none',
+                                                   bg: themeColors.highlightBgColor(),
+                                                   color: themeColors.fontColorHover()
+                                               }}
+                                    >
+                                        <Table.Cell>{contact.firstName}</Table.Cell>
+                                        <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
+                                        <Table.Cell textAlign={"end"}>{contact.phoneNumber}</Table.Cell>
+                                    </Table.Row>
+                                ))}
+                            </Table.Body>
+                        </Table.Root>
+                    </Table.ScrollArea>
                 )}
             </Box>
 
             {selectedContact && (
                 <Box mb={4}>
                     <Button onClick={handleResetContact} colorPalette="red">
-                        {t("contacts:resetSelected", "Resetuj wybrany kontakt")}
+                        {t("common:resetSelected")}
                     </Button>
                 </Box>
             )}
@@ -95,7 +120,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({ onSuccess
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
                     // Wywołanie callbacka po walidacji i zatwierdzeniu formularza
-                    handleAddContact(values);
+                    await handleAddContact(values);
                 }}
                 disabled={selectedContact !== null} // Jeżeli kontakt został wybrany, można uniemożliwić edycję
                 hideSubmit={true}

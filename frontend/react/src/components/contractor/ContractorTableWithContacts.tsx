@@ -5,7 +5,6 @@ import {useTheme} from "next-themes";
 import {useTranslation} from "react-i18next";
 import classNames from "classnames";
 import DateFormatter from "@/utils/date-formatter";
-import EditContractorDrawer from "@/components/contractor/EditContractorDrawer";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
 import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
@@ -151,10 +150,6 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                     </Table.Cell>
                                     <Table.Cell onClick={(e) => e.stopPropagation()}>
                                         <HStack gap={1}>
-                                            <EditContractorDrawer
-                                                fetchContractors={fetchContractors}
-                                                contractorId={contractorId}
-                                            />
                                             <EditContractorDialog
                                                 fetchContractors={fetchContractors}
                                                 contractorId={contractorId}

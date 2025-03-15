@@ -3,18 +3,16 @@ import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
 import {BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
-import {StepsContent, StepsItem, StepsList, StepsNextTrigger, StepsPrevTrigger, StepsRoot,} from "@/components/ui/steps"
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
-import {Box, Flex, Heading, Text} from "@chakra-ui/react";
+import {Box, Flex, Heading, Steps, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
 import {themeColors} from "@/theme/theme-colors.ts";
-
 
 interface AddContractorWithContactFormProps {
     onSuccess: () => void;
@@ -101,14 +99,27 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     };
 
     return (
-        <StepsRoot defaultStep={0} count={3}>
-            <StepsList>
-                <StepsItem index={0} title={<Text color={themeColors.fontColor()}>{t("contractors:add")}</Text>} color={themeColors.fontColor()}/>
-                <StepsItem index={1} title={<Text color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>} color={themeColors.fontColor()}/>
-                <StepsItem index={2} title={<Text color={themeColors.fontColor()}>{t("common:summary")}</Text>} color={themeColors.fontColor()}/>
-            </StepsList>
+        <Steps.Root defaultStep={0} count={3} variant={"solid"} colorPalette={'green'} size={"sm"}>
+            <Steps.List>
+                <Steps.Item key={0} index={0} color={themeColors.fontColor()}>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("contractors:add")}</Text>}</Steps.Title>
+                    <Steps.Separator/>
+                </Steps.Item>
+                <Steps.Item key={1} index={1} color={themeColors.fontColor()}>
+                    <Steps.Trigger>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>} </Steps.Title>
+                    </Steps.Trigger>
+                    <Steps.Separator/>
+                </Steps.Item>
+                <Steps.Item key={2} index={2} color={themeColors.fontColor()}>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text ml={2} color={themeColors.fontColor()}>{t("common:summary")}</Text>} </Steps.Title>
+                </Steps.Item>
+            </Steps.List>
 
-            <StepsContent index={0}>
+            <Steps.Content key={0} index={0}>
                 <CommonContractorForm
                     initialValues={contractorInitialValues}
                     validationSchema={contractorValidationSchema}
@@ -117,15 +128,15 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                     innerRef={contractorFormRef}
                     onValidityChange={(isValid) => setIsContractorValid(isValid)}
                 />
-            </StepsContent>
+            </Steps.Content>
 
-            <StepsContent index={1}>
+            <Steps.Content key={1} index={1}>
                 <ContactFormWithSearch onSuccess={handleContactSubmit}
                                        hideSubmit={true}
                                        innerRef={contactFormRef}/>
-            </StepsContent>
+            </Steps.Content>
 
-            <StepsContent index={2}>
+            <Steps.Content key={2} index={2}>
                 <Flex direction="column" align="center" justify="center" textAlign="center" mb={4}>
                     <Heading size="md" color={themeColors.fontColor()}>{t("common:summary")}</Heading>
                     <Box mt={2}>
@@ -150,18 +161,18 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                         {t("common:save")}
                     </Button>
                 </Flex>
-            </StepsContent>
+            </Steps.Content>
 
             <Flex direction="row" align="center" justify="center" textAlign="center" mb={4} gap={6}>
                 {currentStep > 0 && (
-                    <StepsPrevTrigger asChild>
+                    <Steps.PrevTrigger asChild>
                         <Button variant="solid" colorPalette={"green"} size="sm" onClick={handlePrev}>
                             {t("common:previous")}
                         </Button>
-                    </StepsPrevTrigger>
+                    </Steps.PrevTrigger>
                 )}
                 {currentStep < 2 && (
-                    <StepsNextTrigger asChild>
+                    <Steps.NextTrigger asChild>
                         <Button
                             variant="solid"
                             colorPalette={"green"}
@@ -170,10 +181,10 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                             disabled={currentStep === 0 && !isContractorValid}>
                             {t("common:next")}
                         </Button>
-                    </StepsNextTrigger>
+                    </Steps.NextTrigger>
                 )}
             </Flex>
-        </StepsRoot>
+        </Steps.Root>
     )
 };
 

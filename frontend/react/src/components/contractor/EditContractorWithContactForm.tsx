@@ -1,34 +1,30 @@
-import { useTranslation } from "react-i18next";
-import React, { useEffect, useRef, useState } from "react";
-import { ContractorDTO, ContractorFormValues, FetchableContractorDTO } from "@/types/contractor-types.ts";
-import { BaseContactFormValues } from "@/types/contact-types.ts";
-import { getContractorById, updateContractor } from "@/services/contractor-service.ts";
-import { Country, getCountryOptions } from "@/types/country-type.ts";
-import { errorNotification, successNotification } from "@/notifications/notifications.ts";
-import { formatMessage } from "@/notifications/FormatMessage.tsx";
-import { getContractorValidationSchema } from "@/validation/contractorValidationSchema.ts";
+import {useTranslation} from "react-i18next";
+import React, {useEffect, useRef, useState} from "react";
+import {ContractorDTO, ContractorFormValues, FetchableContractorDTO} from "@/types/contractor-types.ts";
+import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
+import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {errorNotification, successNotification} from "@/notifications/notifications.ts";
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
+import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
-import { Box, Flex, Heading, Text } from "@chakra-ui/react";
-import { Button } from "@/components/ui/button.tsx";
-import { FormikProps } from "formik";
-import {
-    StepsRoot,
-    StepsList,
-    StepsItem,
-    StepsContent,
-    StepsNextTrigger,
-    StepsPrevTrigger,
-} from "@/components/ui/steps";
-import { themeColors } from "@/theme/theme-colors.ts";
+import {Box, Flex, Heading, Steps, Table, Text} from "@chakra-ui/react";
+import {Button} from "@/components/ui/button.tsx";
+import {FormikProps} from "formik";
+import {StepsNextTrigger, StepsPrevTrigger,} from "@/components/ui/steps";
+import {themeColors} from "@/theme/theme-colors.ts";
 
 interface EditContractorWithContactFormStepsProps {
     onSuccess: () => void;
     contractorId: number;
 }
 
-const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactFormStepsProps> = ({ onSuccess, contractorId }) => {
-    const { t } = useTranslation(["common", "contractors", "errors", "contacts"]);
+const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactFormStepsProps> = ({
+                                                                                                   onSuccess,
+                                                                                                   contractorId
+                                                                                               }) => {
+    const {t} = useTranslation(["common", "contractors", "errors", "contacts"]);
     const countryOptions = getCountryOptions(t);
 
     // Stany dla danych kontrahenta i listy kontaktów
@@ -129,8 +125,8 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         try {
             await updateContractor(payload);
             successNotification(
-                t("success", { ns: "common" }),
-                formatMessage("notifications.editContractorSuccess", { name: contractorData.name }, "contractors")
+                t("success", {ns: "common"}),
+                formatMessage("notifications.editContractorSuccess", {name: contractorData.name}, "contractors")
             );
             onSuccess();
         } catch (err: any) {
@@ -145,27 +141,41 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     if (isLoading || !contractorData) return <div>Loading...</div>;
 
     return (
-        <StepsRoot defaultStep={0} count={3}>
-            <StepsList>
-                <StepsItem
+        <Steps.Root defaultStep={0} count={3} variant={"solid"} colorPalette={'green'} size={"sm"}>
+            <Steps.List>
+                <Steps.Item
+                    key={0}
                     index={0}
-                    title={<Text color={themeColors.fontColor()}>{t("contractors:edit", "Edycja kontrahenta")}</Text>}
-                    color={themeColors.fontColor()}
-                />
-                <StepsItem
+                    color={themeColors.fontColor()}>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text
+                        color={themeColors.fontColor()}>{t("contractors:edit", "Edycja kontrahenta")}</Text>}</Steps.Title>
+                    <Steps.Separator/>
+                </Steps.Item>
+                <Steps.Item
+                    key={1}
                     index={1}
-                    title={<Text color={themeColors.fontColor()}>{t("contacts:manage", "Edycja kontaktów")}</Text>}
-                    color={themeColors.fontColor()}
-                />
-                <StepsItem
+                    color={themeColors.fontColor()}>
+                    <Steps.Trigger>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text
+                        color={themeColors.fontColor()}>{t("contacts:manage", "Edycja kontaktów")}</Text>}</Steps.Title>
+                    </Steps.Trigger>
+                    <Steps.Separator/>
+                </Steps.Item>
+                <Steps.Item
+                    key={2}
                     index={2}
-                    title={<Text color={themeColors.fontColor()}>{t("common:summary", "Podsumowanie")}</Text>}
-                    color={themeColors.fontColor()}
-                />
-            </StepsList>
+                    color={themeColors.fontColor()}>
+                    <Steps.Indicator/>
+                    <Steps.Title>{<Text
+                        color={themeColors.fontColor()}>{t("common:summary", "Podsumowanie")}</Text>}</Steps.Title>
+                    <Steps.Separator/>
+                </Steps.Item>
+            </Steps.List>
 
             {/* Krok 0 – formularz kontrahenta */}
-            <StepsContent index={0}>
+            <Steps.Content key={0} index={0}>
                 <CommonContractorForm
                     initialValues={contractorData}
                     validationSchema={validationSchema}
@@ -174,10 +184,10 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     innerRef={contractorFormRef}
                     onValidityChange={(isValid) => setIsContractorValid(isValid)}
                 />
-            </StepsContent>
+            </Steps.Content>
 
             {/* Krok 1 – edycja kontaktów */}
-            <StepsContent index={1}>
+            <Steps.Content key={1} index={1}>
                 <Box mb={4}>
                     <Heading size="md">{t("contacts:manage", "Edycja kontaktów")}</Heading>
                 </Box>
@@ -190,7 +200,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                 {/* Przycisk do zatwierdzenia formularza kontaktu */}
                 <Button
                     mt={2}
-                    colorScheme="blue"
+                    colorPalette="blue"
                     onClick={async () => {
                         if (contactFormRef.current) {
                             await contactFormRef.current.submitForm();
@@ -204,58 +214,66 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     <Heading size="sm" mb={2}>
                         {t("contacts:list", "Lista kontaktów")}
                     </Heading>
-                    <Box
-                        maxH="200px"
-                        overflowY="auto"
-                        border="1px solid #ccc"
-                        borderRadius="md"
-                        p={2}
-                    >
-                        {/* Nagłówek listy */}
-                        <Box display="grid" gridTemplateColumns="repeat(4, 1fr)" fontWeight="bold" mb={2}>
-                            <Box>{t("contacts:firstName", "Imię")}</Box>
-                            <Box>{t("contacts:lastName", "Nazwisko")}</Box>
-                            <Box>{t("contacts:phoneNumber", "Telefon")}</Box>
-                            <Box>{t("common:actions", "Akcje")}</Box>
-                        </Box>
-                        {/* Wiersze */}
-                        {contacts.length > 0 ? (
-                            contacts.map((contact, index) => (
-                                <Box
-                                    key={index}
-                                    display="grid"
-                                    gridTemplateColumns="repeat(4, 1fr)"
-                                    alignItems="center"
-                                    py={1}
-                                    borderBottom="1px solid #e2e8f0"
-                                >
-                                    <Box>{contact.firstName}</Box>
-                                    <Box>{contact.lastName}</Box>
-                                    <Box>{contact.phoneNumber}</Box>
-                                    <Box>
-                                        <Button
-                                            variant="ghost"
-                                            colorScheme="red"
-                                            size="xs"
-                                            onClick={() => handleRemoveContact(index)}
-                                        >
-                                            {t("common:delete", "Usuń")}
-                                        </Button>
-                                    </Box>
-                                </Box>
-                            ))
-                        ) : (
-                            <Box textAlign="center" py={2}>
-                                {t("contacts:noContacts", "Brak kontaktów")}
-                            </Box>
-                        )}
-                    </Box>
-                </Box>
-            </StepsContent>
 
+                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
+                        <Table.Root size={"sm"}
+                                    stickyHeader
+                                    showColumnBorder
+                                    interactive
+                                    color={themeColors.fontColor()}
+                        >
+                            <Table.Header>
+                                <Table.Row bg={themeColors.bgColorPrimary()}>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}>{t("contacts:firstName")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}>{t("common:actions", "Akcje")}</Table.ColumnHeader>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                {contacts.length > 0 ? (contacts.map((contact, idx) => (
+                                    <Table.Row key={idx}
+                                               style={{cursor: "pointer"}}
+                                               bg={themeColors.bgColorSecondary()}
+                                               _hover={{
+                                                   textDecoration: 'none',
+                                                   bg: themeColors.highlightBgColor(),
+                                                   color: themeColors.fontColorHover()
+                                               }}
+                                    >
+                                        <Table.Cell textAlign={"center"}>{contact.firstName}</Table.Cell>
+                                        <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
+                                        <Table.Cell textAlign={"center"}>{contact.phoneNumber}</Table.Cell>
+                                        <Table.Cell textAlign={"center"}>
+                                            <Box>
+                                                <Button
+                                                    variant="ghost"
+                                                    colorScheme="red"
+                                                    size="2xs"
+                                                    onClick={() => handleRemoveContact(idx)}
+                                                >
+                                                    {t("common:delete", "Usuń")}
+                                                </Button>
+                                            </Box></Table.Cell>
+                                    </Table.Row>
+                                ))) : (
+                                    <Box textAlign="center" py={2}>
+                                        {t("contacts:noContacts", "Brak kontaktów")}
+                                    </Box>
+                                )}
+                            </Table.Body>
+                        </Table.Root>
+                    </Table.ScrollArea>
+                </Box>
+            </Steps.Content>
 
             {/* Krok 2 – podsumowanie */}
-            <StepsContent index={2}>
+            <Steps.Content key={2} index={2}>
                 <Flex direction="column" align="center" justify="center" textAlign="center" mb={4}>
                     <Heading size="md" color={themeColors.fontColor()}>
                         {t("common:summary", "Podsumowanie")}
@@ -325,7 +343,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                         {t("common:save", "Zapisz")}
                     </Button>
                 </Flex>
-            </StepsContent>
+            </Steps.Content>
 
             <Flex direction="row" align="center" justify="center" textAlign="center" mb={4} gap={6}>
                 {currentStep > 0 && (
@@ -349,7 +367,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     </StepsNextTrigger>
                 )}
             </Flex>
-        </StepsRoot>
+        </Steps.Root>
     );
 };
 

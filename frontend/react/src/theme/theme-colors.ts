@@ -20,4 +20,5 @@ export const themeColorsHex = {
     fontColor: () => useColorModeValue('#52525b', '#d4d4d8'), // gray.600 | gray.200
     fontColorHover: () => useColorModeValue('#3f3f46', '#e4e4e7'),// gray.500 | gray.200
     highlightBgColor: () => useColorModeValue('#86efac', '#116932'),
+    borderColor: () => useColorModeValue('#e4e4e7', '#52525b'), // gray.200 | gray.600
 };
