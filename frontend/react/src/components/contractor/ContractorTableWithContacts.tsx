@@ -1,13 +1,13 @@
 // ContractorTableWithContacts.tsx
 import React, {useState} from "react";
 import {Box, Button, Collapsible, HStack, Table, Text,} from "@chakra-ui/react";
-import {useTheme} from "next-themes";
 import {useTranslation} from "react-i18next";
-import classNames from "classnames";
 import DateFormatter from "@/utils/date-formatter";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
 import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
+import {themeColors} from "@/theme/theme-colors.ts";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 
 interface ContractorTableWithContactsProps {
@@ -39,10 +39,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                                      contactSortDirection,
                                                                                  }) => {
     const {t} = useTranslation(["common", "contractors"]);
-    const {theme} = useTheme();
-    const tableClass = classNames("custom-table", "contractor-table", {
-        "dark-theme": theme === "dark",
-    });
+    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     // Stan rozwinięcia wierszy, przyjmujemy, że contractor.id jest zawsze zdefiniowane
     const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
@@ -68,130 +65,153 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
 
     return (
         <Box>
-            <Table.Root className={tableClass}>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("id")}>
-                            ID {renderSortIndicator("id")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("name")}>
-                            {t("contractors:name")} {renderSortIndicator("name")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("taxNumber")}>
-                            {t("contractors:taxNumber")} {renderSortIndicator("taxNumber")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("street")}>
-                            {t("contractors:address")} {renderSortIndicator("street")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("customer")}>
-                            {t("contractors:customer")} {renderSortIndicator("customer")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("supplier")}>
-                            {t("contractors:supplier")} {renderSortIndicator("supplier")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("scaffoldingUser")}>
-                            {t("contractors:scaffoldingUser")} {renderSortIndicator("scaffoldingUser")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("createdDatetime")}>
-                            {t("createDate")} {renderSortIndicator("createdDatetime")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("createdBy")}>
-                            {t("createdBy")} {renderSortIndicator("createdBy")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("lastModifiedDatetime")}>
-                            {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader cursor="pointer" onClick={() => onSortChange("modifiedBy")}>
-                            {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader>{t("edit")}</Table.ColumnHeader>
-                    </Table.Row>
-                </Table.Header>
+            <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
+                <Table.Root size={"sm"}
+                            stickyHeader
+                            showColumnBorder
+                            interactive
+                            color={themeColors.fontColor()}>
+                    <Table.Header>
+                        <Table.Row bg={themeColors.bgColorPrimary()}>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("id")}>
+                                ID {renderSortIndicator("id")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("name")}>
+                                {t("contractors:name")} {renderSortIndicator("name")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("taxNumber")}>
+                                {t("contractors:taxNumber")} {renderSortIndicator("taxNumber")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("street")}>
+                                {t("contractors:address")} {renderSortIndicator("street")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("customer")}>
+                                {t("contractors:customer")} {renderSortIndicator("customer")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("supplier")}>
+                                {t("contractors:supplier")} {renderSortIndicator("supplier")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}
+                                                onClick={() => onSortChange("scaffoldingUser")}>
+                                {t("contractors:scaffoldingUser")} {renderSortIndicator("scaffoldingUser")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}
+                                                onClick={() => onSortChange("createdDatetime")}>
+                                {t("createDate")} {renderSortIndicator("createdDatetime")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("createdBy")}>
+                                {t("createdBy")} {renderSortIndicator("createdBy")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}
+                                                onClick={() => onSortChange("lastModifiedDatetime")}>
+                                {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("modifiedBy")}>
+                                {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("edit")}</Table.ColumnHeader>
+                        </Table.Row>
+                    </Table.Header>
 
-                <Table.Body>
-                    {contractors.map((contractor) => {
-                        // Używamy asercji, że id jest zdefiniowane
-                        const contractorId = contractor.id!;
-                        return (
-                            <React.Fragment key={contractorId}>
-                                <Table.Row onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}>
-                                    <Table.Cell>{contractorId}</Table.Cell>
-                                    <Table.Cell>{contractor.name}</Table.Cell>
-                                    <Table.Cell>{contractor.taxNumber}</Table.Cell>
-                                    <Table.Cell>
-                                        {contractor.street} {contractor.buildingNo}
-                                        {contractor.apartmentNo && contractor.apartmentNo.trim() !== ""
-                                            ? "/" + contractor.apartmentNo
-                                            : ""}
-                                        , {contractor.postalCode} {contractor.city},{" "}
-                                        {contractor.country &&
-                                        typeof contractor.country === "object"
-                                            ? contractor.country.name
-                                            : contractor.country || ""}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {contractor.customer ? t("common:yes") : t("common:no")}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {contractor.supplier ? t("common:yes") : t("common:no")}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {contractor.scaffoldingUser ? t("common:yes") : t("common:no")}
-                                    </Table.Cell>
-                                    <Table.Cell>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
-                                    <Table.Cell>
-                                        <Box>{contractor.createdByFirstName}</Box>
-                                        <Box>{contractor.createdByLastName}</Box>
-                                    </Table.Cell>
-                                    <Table.Cell>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
-                                    <Table.Cell>
-                                        <Box>{contractor.modifiedByFirstName}</Box>
-                                        <Box>{contractor.modifiedByLastName}</Box>
-                                    </Table.Cell>
-                                    <Table.Cell onClick={(e) => e.stopPropagation()}>
-                                        <HStack gap={1}>
-                                            <EditContractorDialog
-                                                fetchContractors={fetchContractors}
-                                                contractorId={contractorId}
-                                            />
-                                            <Button
-                                                colorPalette="red"
-                                                size="2xs"
-                                                onClick={() => onDelete(contractorId)}
-                                            >
-                                                {t("delete", {ns: "common"})}
-                                            </Button>
-                                        </HStack>
-                                    </Table.Cell>
-                                </Table.Row>
-
-                                {/* Wiersz rozwijany z tabelą kontaktów */}
-                                {expandedRows[contractorId] && (
-                                    <Table.Row>
-                                        <Table.Cell colSpan={13}>
-                                            <Collapsible.Root open={expandedRows[contractorId]}>
-                                                <Collapsible.Content>
-                                                    <Box>
-                                                        <GenericContactTable
-                                                            contacts={contractor.contacts}
-                                                            onDelete={contactOnDelete}
-                                                            fetchContacts={contactFetchContacts}
-                                                            onSortChange={contactOnSortChange}
-                                                            sortField={contactSortField}
-                                                            sortDirection={contactSortDirection}
-                                                            extended={false}
-                                                        />
-                                                    </Box>
-                                                </Collapsible.Content>
-                                            </Collapsible.Root>
+                    <Table.Body>
+                        {contractors.map((contractor) => {
+                            // Używamy asercji, że id jest zdefiniowane
+                            const contractorId = contractor.id!;
+                            return (
+                                <React.Fragment key={contractorId}>
+                                    <Table.Row
+                                        bg={themeColors.bgColorSecondary()}
+                                        _hover={{
+                                            textDecoration: 'none',
+                                            bg: themeColors.highlightBgColor(),
+                                            color: themeColors.fontColorHover()
+                                        }}
+                                        onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}>
+                                        <Table.Cell {...commonCellProps}>{contractorId}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>{contractor.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>{contractor.taxNumber}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            {contractor.street} {contractor.buildingNo}
+                                            {contractor.apartmentNo && contractor.apartmentNo.trim() !== ""
+                                                ? "/" + contractor.apartmentNo
+                                                : ""}
+                                            , {contractor.postalCode} {contractor.city},{" "}
+                                            {contractor.country &&
+                                            typeof contractor.country === "object"
+                                                ? contractor.country.name
+                                                : contractor.country || ""}
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            {contractor.customer ? t("common:yes") : t("common:no")}
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            {contractor.supplier ? t("common:yes") : t("common:no")}
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            {contractor.scaffoldingUser ? t("common:yes") : t("common:no")}
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            <Box>{contractor.createdByFirstName}</Box>
+                                            <Box>{contractor.createdByLastName}</Box>
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            <Box>{contractor.modifiedByFirstName}</Box>
+                                            <Box>{contractor.modifiedByLastName}</Box>
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>
+                                            <HStack gap={1}>
+                                                <EditContractorDialog
+                                                    fetchContractors={fetchContractors}
+                                                    contractorId={contractorId}
+                                                />
+                                                <Button
+                                                    colorPalette="red"
+                                                    size="2xs"
+                                                    onClick={() => onDelete(contractorId)}
+                                                >
+                                                    {t("delete", {ns: "common"})}
+                                                </Button>
+                                            </HStack>
                                         </Table.Cell>
                                     </Table.Row>
-                                )}
-                            </React.Fragment>
-                        );
-                    })}
-                </Table.Body>
-            </Table.Root>
+
+                                    {/* Wiersz rozwijany z tabelą kontaktów */}
+                                    {expandedRows[contractorId] && (
+                                        <Table.Row
+                                            bg={themeColors.bgColorSecondary()}
+                                            _hover={{
+                                                textDecoration: 'none',
+                                                bg: themeColors.highlightBgColor(),
+                                                color: themeColors.fontColorHover()
+                                            }}
+                                        >
+                                            <Table.Cell colSpan={13} {...commonCellProps}>
+                                                <Collapsible.Root open={expandedRows[contractorId]}>
+                                                    <Collapsible.Content>
+                                                        <Box>
+                                                            <GenericContactTable
+                                                                contacts={contractor.contacts}
+                                                                onDelete={contactOnDelete}
+                                                                fetchContacts={contactFetchContacts}
+                                                                onSortChange={contactOnSortChange}
+                                                                sortField={contactSortField}
+                                                                sortDirection={contactSortDirection}
+                                                                extended={false}
+                                                            />
+                                                        </Box>
+                                                    </Collapsible.Content>
+                                                </Collapsible.Root>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    )}
+                                </React.Fragment>
+                            );
+                        })}
+                    </Table.Body>
+                </Table.Root>
+            </Table.ScrollArea>
         </Box>
     );
 };

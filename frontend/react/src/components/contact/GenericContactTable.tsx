@@ -1,15 +1,15 @@
 import {useTranslation} from "react-i18next";
-import {Box, Button, HStack, Table, Text, useDisclosure,} from "@chakra-ui/react";
+import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import {useState} from "react";
-import {useTheme} from "next-themes";
 import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import classNames from "classnames";
 import "@/theme/css/global-table-styles.css";
 import "@/theme/css/contact-table-styles.css";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
 import {BaseContactDTOForContractor, FetchableContactDTO} from "@/types/contact-types.ts";
+import {themeColors} from "@/theme/theme-colors.ts";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 function isFetchableContact(
     contact: BaseContactDTOForContractor
@@ -40,11 +40,7 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
     const {t} = useTranslation(["common", "contacts"]);
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
-    const {theme} = useTheme();
-
-    const tableClass = classNames("custom-table", "contact-table", {
-        "dark-theme": theme === "dark",
-    });
+    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     const handleDeleteClick = (id: number) => {
         setSelectedContactId(id);
@@ -73,140 +69,159 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
         return null;
     };
 
+
     return (
         <Box>
-            <Table.Root className={tableClass}>
-                <Table.Header>
-                    <Table.Row>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("id")}
-                        >
-                            ID {renderSortIndicator("id")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("firstName")}
-                        >
-                            {t("contacts:firstName")} {renderSortIndicator("firstName")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("lastName")}
-                        >
-                            {t("contacts:lastName")} {renderSortIndicator("lastName")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("phoneNumber")}
-                        >
-                            {t("contacts:phoneNumber")} {renderSortIndicator("phoneNumber")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("email")}
-                        >
-                            {t("contacts:email")} {renderSortIndicator("email")}
-                        </Table.ColumnHeader>
-                        <Table.ColumnHeader
-                            cursor="pointer"
-                            onClick={() => onSortChange("additionalInfo")}
-                        >
-                            {t("contacts:additionalInfo")} {renderSortIndicator("additionalInfo")}
-                        </Table.ColumnHeader>
-                        {extended && (
-                            <>
-                                <Table.ColumnHeader
-                                    cursor="pointer"
-                                    onClick={() => onSortChange("createdDatetime")}
-                                >
-                                    {t("createDate")} {renderSortIndicator("createdDatetime")}
-                                </Table.ColumnHeader>
-                                <Table.ColumnHeader
-                                    cursor="pointer"
-                                    onClick={() => onSortChange("createdBy")}
-                                >
-                                    {t("createdBy")} {renderSortIndicator("createdBy")}
-                                </Table.ColumnHeader>
-                                <Table.ColumnHeader
-                                    cursor="pointer"
-                                    onClick={() => onSortChange("lastModifiedDatetime")}
-                                >
-                                    {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
-                                </Table.ColumnHeader>
-                                <Table.ColumnHeader
-                                    cursor="pointer"
-                                    onClick={() => onSortChange("modifiedBy")}
-                                >
-                                    {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
-                                </Table.ColumnHeader>
-                                <Table.ColumnHeader>{t("edit")}</Table.ColumnHeader>
-                            </>
-                        )}
-
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                    {contacts.map((contact) => (
-                        <Table.Row key={contact.id}>
-                            <Table.Cell>{contact.id}</Table.Cell>
-                            <Table.Cell>{contact.firstName}</Table.Cell>
-                            <Table.Cell>{contact.lastName}</Table.Cell>
-                            <Table.Cell>{contact.phoneNumber}</Table.Cell>
-                            <Table.Cell>{contact.email}</Table.Cell>
-                            <Table.Cell>{contact.additionalInfo}</Table.Cell>
-                            {extended && isFetchableContact(contact) && (
+            <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
+                <Table.Root size={"sm"}
+                            stickyHeader
+                            showColumnBorder
+                            interactive
+                            color={themeColors.fontColor()}
+                >
+                    <Table.Header>
+                        <Table.Row bg={themeColors.bgColorPrimary()}>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("id")}
+                            >
+                                ID {renderSortIndicator("id")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("firstName")}
+                            >
+                                {t("contacts:firstName")} {renderSortIndicator("firstName")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("lastName")}
+                            >
+                                {t("contacts:lastName")} {renderSortIndicator("lastName")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("phoneNumber")}
+                            >
+                                {t("contacts:phoneNumber")} {renderSortIndicator("phoneNumber")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("email")}
+                            >
+                                {t("contacts:email")} {renderSortIndicator("email")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("additionalInfo")}
+                            >
+                                {t("contacts:additionalInfo")} {renderSortIndicator("additionalInfo")}
+                            </Table.ColumnHeader>
+                            {extended && (
                                 <>
-                                    {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
-                                    {"createdDatetime" in contact && (
-                                        <Table.Cell>
-                                            {DateFormatter.formatDateTime(
-                                                (contact as FetchableContactDTO).createdDatetime
-                                            )}
-                                        </Table.Cell>
-                                    )}
-                                    {"createdByFirstName" in contact && (
-                                        <Table.Cell>
-                                            <div>{(contact as FetchableContactDTO).createdByFirstName}</div>
-                                            <div>{(contact as FetchableContactDTO).createdByLastName}</div>
-                                        </Table.Cell>
-                                    )}
-                                    {"lastModifiedDatetime" in contact && (
-                                        <Table.Cell>
-                                            {DateFormatter.formatDateTime(
-                                                (contact as FetchableContactDTO).lastModifiedDatetime
-                                            )}
-                                        </Table.Cell>
-                                    )}
-                                    {"modifiedByFirstName" in contact && (
-                                        <Table.Cell>
-                                            <div>{(contact as FetchableContactDTO).modifiedByFirstName}</div>
-                                            <div>{(contact as FetchableContactDTO).modifiedByLastName}</div>
-                                        </Table.Cell>
-                                    )}
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("createdDatetime")}
+                                    >
+                                        {t("createDate")} {renderSortIndicator("createdDatetime")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("createdBy")}
+                                    >
+                                        {t("createdBy")} {renderSortIndicator("createdBy")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("lastModifiedDatetime")}
+                                    >
+                                        {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("modifiedBy")}
+                                    >
+                                        {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                                        textAlign={"center"}
+                                                        borderColor={"gray"}
+                                    >{t("edit")}
+                                    </Table.ColumnHeader>
                                 </>
                             )}
-                            {extended && (
-                                <Table.Cell>
-                                    <HStack gap={1} alignContent="center">
-                                        <EditContactDialog
-                                            fetchContacts={fetchContacts}
-                                            contactId={contact.id!}
-                                        />
-                                        <Button
-                                            colorPalette="red"
-                                            size="2xs"
-                                            onClick={() => handleDeleteClick(contact.id!)}
-                                        >
-                                            {t("delete", {ns: "common"})}
-                                        </Button>
-                                    </HStack>
-                                </Table.Cell>
-                            )}
+
                         </Table.Row>
-                    ))}
-                </Table.Body>
-            </Table.Root>
+                    </Table.Header>
+                    <Table.Body>
+                        {contacts.map((contact) => (
+                            <Table.Row key={contact.id}
+                                       bg={themeColors.bgColorSecondary()}
+                                       _hover={{
+                                           textDecoration: 'none',
+                                           bg: themeColors.highlightBgColor(),
+                                           color: themeColors.fontColorHover()
+                                       }}
+                            >
+                                <Table.Cell {...commonCellProps}>{contact.id}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contact.firstName}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contact.lastName}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contact.phoneNumber}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contact.email}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contact.additionalInfo}</Table.Cell>
+                                {extended && isFetchableContact(contact) && (
+                                    <>
+                                        {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
+                                        {"createdDatetime" in contact && (
+                                            <Table.Cell {...commonCellProps}>
+                                                {DateFormatter.formatDateTime(
+                                                    (contact as FetchableContactDTO).createdDatetime
+                                                )}
+                                            </Table.Cell>
+                                        )}
+                                        {"createdByFirstName" in contact && (
+                                            <Table.Cell {...commonCellProps}>
+                                                <div>{(contact as FetchableContactDTO).createdByFirstName}</div>
+                                                <div>{(contact as FetchableContactDTO).createdByLastName}</div>
+                                            </Table.Cell>
+                                        )}
+                                        {"lastModifiedDatetime" in contact && (
+                                            <Table.Cell {...commonCellProps}>
+                                                {DateFormatter.formatDateTime(
+                                                    (contact as FetchableContactDTO).lastModifiedDatetime
+                                                )}
+                                            </Table.Cell>
+                                        )}
+                                        {"modifiedByFirstName" in contact && (
+                                            <Table.Cell {...commonCellProps}>
+                                                <div>{(contact as FetchableContactDTO).modifiedByFirstName}</div>
+                                                <div>{(contact as FetchableContactDTO).modifiedByLastName}</div>
+                                            </Table.Cell>
+                                        )}
+                                    </>
+                                )}
+                                {extended && (
+                                    <Table.Cell {...commonCellProps}>
+                                        <HStack gap={1} alignContent="center">
+                                            <EditContactDialog
+                                                fetchContacts={fetchContacts}
+                                                contactId={contact.id!}
+                                            />
+                                            <Button
+                                                colorPalette="red"
+                                                size="2xs"
+                                                onClick={() => handleDeleteClick(contact.id!)}
+                                            >
+                                                {t("delete", {ns: "common"})}
+                                            </Button>
+                                        </HStack>
+                                    </Table.Cell>
+                                )}
+                            </Table.Row>
+                        ))}
+                    </Table.Body>
+                </Table.Root>
+            </Table.ScrollArea>
 
             <ConfirmModal
                 isOpen={open}
