@@ -157,6 +157,131 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
     );
 };
 
+
+interface CustomSimpleSelectProps {
+    label?: string;
+    value: number;
+    onChange: (value: number) => void;
+    options: { value: number; label: string }[];
+    width?: string;
+    bgColor?: string;
+    disabled?: boolean;
+    size?: "xs" | "sm" | "md" | "lg";
+    hideArrow?: boolean;
+}
+
+const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
+                                                                   label,
+                                                                   value,
+                                                                   onChange,
+                                                                   options,
+                                                                   width,
+                                                                   bgColor,
+                                                                   disabled = false,
+                                                                   size = "sm",
+                                                                   hideArrow = false,
+                                                               }) => {
+
+    const selectedValue = options.find((option) => option.value === value) || null;
+
+    const getSizeStyles = (size: string) => {
+        switch (size) {
+            case "xs":
+                return {
+                    controlHeight: "24px",
+                    fontSize: "12px",
+                    padding: "0 6px",
+                };
+            case "sm":
+                return {
+                    controlHeight: "30px",
+                    fontSize: "14px",
+                    padding: "0 8px",
+                };
+            case "md":
+                return {
+                    controlHeight: "36px",
+                    fontSize: "16px",
+                    padding: "0 10px",
+                };
+            case "lg":
+                return {
+                    controlHeight: "42px",
+                    fontSize: "18px",
+                    padding: "0 12px",
+                };
+            default:
+                return {
+                    controlHeight: "30px",
+                    fontSize: "20px",
+                    padding: "0 8px",
+                };
+        }
+    };
+
+    const sizeStyles = getSizeStyles(size);
+
+    const customSelectStyles: StylesConfig<any, false> = {
+        ...selectStyles,
+        control: (provided, state) => {
+            const baseControl = selectStyles.control
+                ? selectStyles.control(provided, state)
+                : provided;
+            return {
+                ...baseControl,
+                backgroundColor: bgColor ?? baseControl.backgroundColor,
+                width: width || "auto", // <- wymusza szerokość całego kontenera
+                minWidth: "unset",      // usuwa ewentualne minimalne szerokości
+                maxWidth: width,
+                minHeight: sizeStyles.controlHeight,
+                height: sizeStyles.controlHeight,
+                fontSize: sizeStyles.fontSize,
+            };
+        },
+        valueContainer: (provided) => ({
+            ...provided,
+            height: sizeStyles.controlHeight,
+            padding: sizeStyles.padding,
+        }),
+        indicatorsContainer: (provided) => ({
+            ...provided,
+            height: sizeStyles.controlHeight,
+        }),
+        // Możesz dodatkowo zmniejszyć odstępy w menu:
+        menu: (provided) => ({
+            ...provided,
+            fontSize: sizeStyles.fontSize,
+            width: "100%",
+        }),
+    };
+
+    const noArrowComponents = {
+        IndicatorSeparator: () => null,
+        DropdownIndicator: () => null,
+    };
+
+    return (
+        <Box>
+            {label && (
+                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                    {label}
+                </Text>
+            )}
+            <Select
+                options={options}
+                isDisabled={disabled}
+                value={selectedValue}
+                onChange={(selectedOption: any) => {
+                    onChange(selectedOption.value);
+                }}
+                styles={customSelectStyles}
+                isSearchable={false}  // jeśli nie chcesz pola wyszukiwania
+                components={hideArrow ? noArrowComponents : undefined} // usuwamy strzałkę i separator
+            />
+        </Box>
+    );
+};
+
 interface CustomTextAreaFieldProps {
     name: string;
     label?: string;
@@ -257,4 +382,4 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
 };
 
 
-export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField};
+export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect};
