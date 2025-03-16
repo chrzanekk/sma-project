@@ -41,22 +41,22 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
             validationSchema={Yup.object({
                 login: Yup.string()
                     .min(5, t('verification.minLength', {field: t('shared.login'), count: 5}))
-                    .max(15, t('verification.maxLength', {field: t('shared.login'), count: 15}))
+                    .max(20, t('verification.maxLength', {field: t('shared.login'), count: 20}))
                     .required(t('verification.required', {field: t('shared.login')})),
                 email: Yup.string()
                     .email(t('verification.invalidEmail'))
                     .required(t('verification.required', {field: t('shared.email')})),
                 password: Yup.string()
                     .min(4, t('verification.minLength', {field: t('shared.password'), count: 4}))
-                    .max(10, t('verification.maxLength', {field: t('shared.password'), count: 10}))
+                    .max(50, t('verification.maxLength', {field: t('shared.password'), count: 50}))
                     .required(t('verification.required', {field: t('shared.password')})),
                 firstName: Yup.string()
                     .min(2, t('verification.minLength', {field: t('shared.firstName'), count: 2}))
-                    .max(10, t('verification.maxLength', {field: t('shared.firstName'), count: 10}))
+                    .max(30, t('verification.maxLength', {field: t('shared.firstName'), count: 30}))
                     .required(t('verification.required', {field: t('shared.firstName')})),
                 lastName: Yup.string()
                     .min(2, t('verification.minLength', {field: t('shared.lastName'), count: 2}))
-                    .max(10, t('verification.maxLength', {field: t('shared.lastName'), count: 10}))
+                    .max(30, t('verification.maxLength', {field: t('shared.lastName'), count: 30}))
                     .required(t('verification.required', {field: t('shared.lastName')})),
                 position: Yup.string()
                     .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))

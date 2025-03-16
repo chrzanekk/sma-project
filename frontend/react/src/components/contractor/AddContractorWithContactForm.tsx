@@ -9,7 +9,7 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
-import {Box, Flex, Heading, Steps, Text} from "@chakra-ui/react";
+import {Box, Flex, Grid, GridItem, Heading, Separator, Steps, Table, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
 import {themeColors} from "@/theme/theme-colors.ts";
@@ -23,10 +23,10 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     const countryOptions = getCountryOptions(t);
 
     const [contractorData, setContractorData] = useState<ContractorFormValues | null>(null);
-    const [contactData, setContactData] = useState<BaseContactFormValues | null>(null);
 
     const [currentStep, setCurrentStep] = useState(0);
     const [isContractorValid, setIsContractorValid] = useState(false);
+    const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
 
 
     const contractorInitialValues: ContractorFormValues = {
@@ -69,9 +69,20 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
         setCurrentStep(1);
     };
 
-    const handleContactSubmit = (values: BaseContactFormValues) => {
-        setContactData(values);
-        setCurrentStep(2);
+    const handleAddContact = (contact: BaseContactFormValues) => {
+        const alreadyExists = contacts.some(
+            (c) =>
+                c.firstName === contact.firstName &&
+                c.lastName === contact.lastName &&
+                c.phoneNumber === contact.phoneNumber
+        );
+        if (!alreadyExists) {
+            setContacts((prev) => [...prev, contact]);
+        }
+    };
+
+    const handleRemoveContact = (index: number) => {
+        setContacts((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleFinalSubmit = async () => {
@@ -79,10 +90,9 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
-            contacts: contactData ? [contactData] : [],
+            contacts: contacts
         };
         try {
-            console.log(payload);
             await addContractor(payload);
             successNotification(
                 t("success", {ns: "common"}),
@@ -133,32 +143,232 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                 />
             </Steps.Content>
 
+
             <Steps.Content key={1} index={1}>
-                <ContactFormWithSearch onSuccess={handleContactSubmit}
+                <Heading size="md" mb={2} color={themeColors.fontColor()}>
+                    {t("contacts:addOptional")}
+                </Heading>
+                <ContactFormWithSearch onSuccess={handleAddContact}
                                        hideSubmit={true}
                                        innerRef={contactFormRef}/>
+                {/* Przycisk "Dodaj kontakt" */}
+                <Button
+                    mt={2}
+                    size="xs"
+                    colorPalette="blue"
+                    onClick={async () => {
+                        if (contactFormRef.current) {
+                            await contactFormRef.current.submitForm(); // wywołuje handleContactSubmit
+                        }
+                    }}
+                >
+                    {t("contacts:add", "Dodaj kontakt")}
+                </Button>
+
+                {/* Lista kontaktów (opcjonalnie z przyciskiem usuń) */}
+                <Box mt={4}>
+                    <Heading size="sm" mb={2} color={themeColors.fontColor()}>
+                        {t("contacts:list", "Lista kontaktów")}
+                    </Heading>
+
+                    <Table.ScrollArea borderWidth="1px" rounded="sm" height="200px">
+                        <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor()}>
+                            <Table.Header>
+                                <Table.Row bg={themeColors.bgColorPrimary()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                        {t("contacts:firstName")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                        {t("contacts:lastName")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                        {t("contacts:phoneNumber")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                        {t("common:actions", "Akcje")}
+                                    </Table.ColumnHeader>
+                                </Table.Row>
+                            </Table.Header>
+
+                            <Table.Body>
+                                {contacts.length > 0 ? (
+                                    contacts.map((contact, idx) => (
+                                        <Table.Row
+                                            key={idx}
+                                            bg={themeColors.bgColorSecondary()}
+                                            _hover={{
+                                                textDecoration: "none",
+                                                bg: themeColors.highlightBgColor(),
+                                                color: themeColors.fontColorHover(),
+                                            }}
+                                        >
+                                            <Table.Cell textAlign="center">{contact.firstName}</Table.Cell>
+                                            <Table.Cell textAlign="center">{contact.lastName}</Table.Cell>
+                                            <Table.Cell textAlign="center">{contact.phoneNumber}</Table.Cell>
+                                            <Table.Cell textAlign="center">
+                                                <Button
+                                                    variant="ghost"
+                                                    colorScheme="red"
+                                                    size="2xs"
+                                                    onClick={() => handleRemoveContact(idx)}
+                                                >
+                                                    {t("common:delete", "Usuń")}
+                                                </Button>
+                                            </Table.Cell>
+                                        </Table.Row>
+                                    ))
+                                ) : (
+                                    <Box textAlign="center" py={2}>
+                                        {t("contacts:noContacts", "Brak kontaktów")}
+                                    </Box>
+                                )}
+                            </Table.Body>
+                        </Table.Root>
+                    </Table.ScrollArea>
+                </Box>
             </Steps.Content>
 
+
             <Steps.Content key={2} index={2}>
-                <Flex direction="column" align="center" justify="center" textAlign="center" mb={4}>
+                <Box direction="column" textAlign="center" mb={2}>
                     <Heading size="md" color={themeColors.fontColor()}>{t("common:summary")}</Heading>
                     <Box mt={2}>
-                        {/*//todo add header for Contractor*/}
-                        <p>
-                            <strong>{t("contractors:name")}: </strong>
-                            {contractorData ? contractorData.name : t("common:empty")}
-                        </p>
-                        {/*//todo add header for Contact*/}
-                        <p>
-                            <strong>{t("contacts:firstName")}: </strong>
-                            {contactData ? contactData.firstName : t("common:empty")}
-                        </p>
-                        <p>
-                            <strong>{t("contacts:lastName")}: </strong>
-                            {contactData ? contactData.lastName : t("common:empty")}
-                        </p>
+                        <Text textStyle={"lg"} fontWeight={"bold"}
+                              color={themeColors.fontColor()}>{t("contractors:details")}</Text>
+                        {contractorData && (<Box borderWidth="1px" borderRadius="md" overflow="hidden">
+                            <Grid templateColumns="repeat(6, 1fr)" gap={0}>
+                                {/* Wiersz 1: NAME i TAX NUMBER */}
+                                <GridItem
+                                    colSpan={3}
+                                    borderRightWidth="1px"
+                                    borderBottomWidth="1px"
+                                    borderColor="gray.400"
+                                    p={2}
+                                >
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:name", "NAME")}
+                                    </Text>
+                                    <Text color={themeColors.fontColor()}>{contractorData!.name}</Text>
+                                </GridItem>
+                                <GridItem
+                                    colSpan={3}
+                                    borderBottomWidth="1px"
+                                    borderColor="gray.400"
+                                    p={2}
+                                >
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:taxNumber", "Tax Number")}
+                                    </Text>
+                                    <Text color={themeColors.fontColor()}>{contractorData!.taxNumber}</Text>
+                                </GridItem>
+
+                                {/* Wiersz 2: Address – łączony w jeden wiersz */}
+                                <GridItem
+                                    colSpan={6}
+                                    borderBottomWidth="1px"
+                                    borderColor="gray.400"
+                                    p={2}
+                                >
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:address", "Address")}
+                                    </Text>
+                                    <Text color={themeColors.fontColor()}>
+                                        {contractorData!.street} {contractorData!.buildingNo}
+                                        {contractorData!.apartmentNo && contractorData!.apartmentNo.trim() !== ""
+                                            ? "/" + contractorData!.apartmentNo
+                                            : ""}
+                                        , {contractorData!.postalCode} {contractorData!.city},{" "}
+                                        {typeof contractorData!.country === "object"
+                                            ? (contractorData!.country as { name: string }).name
+                                            : contractorData!.country}
+                                    </Text>
+                                </GridItem>
+
+                                {/* Wiersz 3: Boolean values – Customer, Supplier, ScaffoldingUser */}
+                                <GridItem
+                                    colSpan={2}
+                                    borderRightWidth="1px"
+                                    borderColor="gray.400"
+                                    p={2}
+                                >
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:customer", "Customer")}
+                                    </Text>
+                                    <Text
+                                        color={themeColors.fontColor()}>{contractorData!.customer ? t("common:yes", "Yes") : t("common:no", "No")}</Text>
+                                </GridItem>
+                                <GridItem
+                                    colSpan={2}
+                                    borderRightWidth="1px"
+                                    borderColor={"gray.400"}
+                                    p={2}
+                                >
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:supplier", "Supplier")}
+                                    </Text>
+                                    <Text
+                                        color={themeColors.fontColor()}>{contractorData!.supplier ? t("common:yes", "Yes") : t("common:no", "No")}</Text>
+                                </GridItem>
+                                <GridItem colSpan={2} p={2}>
+                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
+                                        {t("contractors:scaffoldingUser", "Scaffolding User")}
+                                    </Text>
+                                    <Text color={themeColors.fontColor()}>
+                                        {contractorData!.scaffoldingUser ? t("common:yes", "Yes") : t("common:no", "No")}
+                                    </Text>
+                                </GridItem>
+                            </Grid>
+                        </Box>)}
+
+                        <Separator/>
+                        <Box mt={2}>
+                            <Text textStyle={"lg"} fontWeight={"bold"} color={themeColors.fontColor()}>
+                                {t("contacts:list", "Lista kontaktów")}
+                            </Text>
+
+                            <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
+                                <Table.Root size={"sm"}
+                                            stickyHeader
+                                            showColumnBorder
+                                            interactive
+                                            color={themeColors.fontColor()}
+                                >
+                                    <Table.Header>
+                                        <Table.Row bg={themeColors.bgColorPrimary()}>
+                                            <Table.ColumnHeader color={themeColors.fontColor()}
+                                                                textAlign={"center"}>{t("contacts:firstName")}</Table.ColumnHeader>
+                                            <Table.ColumnHeader color={themeColors.fontColor()}
+                                                                textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
+                                            <Table.ColumnHeader color={themeColors.fontColor()}
+                                                                textAlign={"center"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
+                                        </Table.Row>
+                                    </Table.Header>
+
+                                    <Table.Body>
+                                        {contacts.length > 0 ? (contacts.map((contact, idx) => (
+                                            <Table.Row key={idx}
+                                                       bg={themeColors.bgColorSecondary()}
+                                                       _hover={{
+                                                           textDecoration: 'none',
+                                                           bg: themeColors.highlightBgColor(),
+                                                           color: themeColors.fontColorHover()
+                                                       }}
+                                            >
+                                                <Table.Cell textAlign={"center"}>{contact.firstName}</Table.Cell>
+                                                <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
+                                                <Table.Cell textAlign={"center"}>{contact.phoneNumber}</Table.Cell>
+                                            </Table.Row>
+                                        ))) : (
+                                            <Box textAlign="center" py={2}>
+                                                {t("contacts:noContacts", "Brak kontaktów")}
+                                            </Box>
+                                        )}
+                                    </Table.Body>
+                                </Table.Root>
+                            </Table.ScrollArea>
+                        </Box>
                     </Box>
-                </Flex>
+                </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>
                         {t("common:save")}
