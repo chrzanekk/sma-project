@@ -2,10 +2,11 @@ import {BaseContactFormValues} from "@/types/contact-types.ts";
 import React, {useState} from "react";
 import {getContactsByFilter} from "@/services/contact-service.ts";
 import {useTranslation} from "react-i18next";
-import {Box, Button, Input, Table} from "@chakra-ui/react";
+import {Box, Button, Table} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
-import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
+import {themeColors} from "@/theme/theme-colors.ts";
+import {CustomInputSearchField} from "@/components/shared/CustomFormFields.tsx";
 
 interface ContactFormWithSearchProps {
     onSuccess: (values: BaseContactFormValues) => void;
@@ -55,15 +56,12 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
     return (
         <Box>
             <Box mb={2}>
-                <Input
+                <CustomInputSearchField
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    handleSearch={handleSearch}
                     placeholder={t("contacts:searchPlaceholder", "Wyszukaj kontakt (nazwisko)")}
-                    _placeholder={{color: themeColorsHex.fontColor()}}
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <Button mt={2} mb={2} onClick={handleSearch} colorPalette="orange" size={"xs"}>
-                    {t("common:search")}
-                </Button>
                 {searchResults.length > 0 && (
                     <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
                         <Table.Root size={"sm"}
@@ -73,7 +71,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
                                     color={themeColors.fontColor()}
                         >
                             <Table.Header>
-                                <Table.Row bg={themeColors.bgColorPrimary()}>
+                                <Table.Row bg={themeColors.bgColorPrimary()} >
                                     <Table.ColumnHeader
                                         color={themeColors.fontColor()}>{t("contacts:firstName")}</Table.ColumnHeader>
                                     <Table.ColumnHeader color={themeColors.fontColor()}

@@ -74,9 +74,8 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
         <Box>
             <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
                 <Table.Root size={"sm"}
-                            stickyHeader
-                            showColumnBorder
                             interactive
+                            showColumnBorder
                             color={themeColors.fontColor()}
                 >
                     <Table.Header>
@@ -145,7 +144,6 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                     </Table.ColumnHeader>
                                     <Table.ColumnHeader color={themeColors.fontColor()}
                                                         textAlign={"center"}
-                                                        borderColor={"gray"}
                                     >{t("edit")}
                                     </Table.ColumnHeader>
                                 </>
@@ -181,8 +179,9 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                         )}
                                         {"createdByFirstName" in contact && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <div>{(contact as FetchableContactDTO).createdByFirstName}</div>
-                                                <div>{(contact as FetchableContactDTO).createdByLastName}</div>
+                                                <Box>
+                                                    {(contact as FetchableContactDTO).createdByFirstName.charAt(0)}. {(contact as FetchableContactDTO).createdByLastName}
+                                                </Box>
                                             </Table.Cell>
                                         )}
                                         {"lastModifiedDatetime" in contact && (
@@ -194,15 +193,16 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                         )}
                                         {"modifiedByFirstName" in contact && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <div>{(contact as FetchableContactDTO).modifiedByFirstName}</div>
-                                                <div>{(contact as FetchableContactDTO).modifiedByLastName}</div>
+                                                <Box>
+                                                    {(contact as FetchableContactDTO).modifiedByFirstName.charAt(0)}. {(contact as FetchableContactDTO).modifiedByLastName}
+                                                </Box>
                                             </Table.Cell>
                                         )}
                                     </>
                                 )}
                                 {extended && (
                                     <Table.Cell {...commonCellProps}>
-                                        <HStack gap={1} alignContent="center">
+                                        <HStack gap={1} justifyContent="center">
                                             <EditContactDialog
                                                 fetchContacts={fetchContacts}
                                                 contactId={contact.id!}

@@ -32,7 +32,8 @@ const Pagination: React.FC<PaginationProps> = ({
         <Flex justify="center"
               align="center"
               gap={4}
-              mt={2}
+              mt={1}
+              mb={1}
               p={1}
               bg={themeColors.bgColorPrimary()}
               borderRadius={"md"}
@@ -43,7 +44,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size="xs"
                 borderRadius={"md"}
-                bg={themeColors.bgColorPrimary()}
+                bg={themeColors.bgColorSecondary()}
                 color={themeColors.fontColor()}
                 disabled={currentPage + 1 === totalPages}
             >
@@ -62,6 +63,7 @@ const Pagination: React.FC<PaginationProps> = ({
             {/* Nawigacja między stronami */}
             <Button
                 size={"2xs"}
+                colorPalette={"blue"}
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 0}
                 mr={2}
@@ -73,6 +75,7 @@ const Pagination: React.FC<PaginationProps> = ({
             </Text>
             <Button
                 size={"2xs"}
+                colorPalette={"blue"}
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage + 1 === totalPages}
                 ml={2}
@@ -85,7 +88,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size={"2xs"}
                 borderRadius={"md"}
-                bg={themeColors.bgColorPrimary()}
+                bg={themeColors.bgColorSecondary()}
                 color={themeColors.fontColor()}
                 mr={2}
                 value={gotoPage}
@@ -96,6 +99,7 @@ const Pagination: React.FC<PaginationProps> = ({
             />
             <Button size={"2xs"}
                     onClick={handleGotoPage}
+                    colorPalette={"blue"}
                     disabled={currentPage + 1 === totalPages}
             >
                 {t('go', {ns: 'common'})}

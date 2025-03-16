@@ -102,7 +102,7 @@ const ContractorManagement: React.FC = () => {
         <ContractorLayout
             filters={<ContractorFilterForm onSubmit={handleFilterSubmit}/>}
             addContractorButton={
-                <Flex justifyContent={"center"} gap={2}>
+                <Flex justifyContent={"center"}>
                     <AddContractorWithContactDialog fetchContractors={fetchContractors}/>
                 </Flex>
             }

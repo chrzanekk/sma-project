@@ -31,7 +31,7 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
                 p={1}
                 mt={1}
                 bg={bgColor}
-                borderRadius="lg"
+                borderRadius={"lg"}
             ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
                 {t('contractors:contractorList')}
             </Heading>
@@ -49,12 +49,12 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
                 {filters}
             </GridItem>
 
-            {/* Wiersz 2: Przycisk Add User */}
+            {/* Wiersz 2: Przycisk Add Contractor */}
             <GridItem
                 w="100%"
                 bg={bgColor}
                 p={1}
-                borderRadius="lg"
+                borderRadius={"lg"}
             >
                 {addContractorButton}
             </GridItem>

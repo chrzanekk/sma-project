@@ -28,7 +28,7 @@ const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogPro
             <DialogRoot size="xl" placement="top">
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
-                    <Button colorPalette="green" size="2xs" p={1}>
+                    <Button colorPalette="green" size="2xs">
                         <FaPlus/> {t("add")}
                     </Button>
                 </DialogTrigger>

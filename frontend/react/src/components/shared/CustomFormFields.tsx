@@ -1,9 +1,10 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
-import {Box, Input, Text, Textarea} from "@chakra-ui/react";
+import {Box, Button, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
 import {themeColors, themeColorsHex} from "@/theme/theme-colors";
 import {selectStyles} from "@/components/shared/formOptions.ts";
+import {useTranslation} from "react-i18next";
 // -----------------------------
 // Komponenty formularzowe
 // -----------------------------
@@ -89,16 +90,16 @@ export interface CustomSelectFieldProps {
     disabled?: boolean
 }
 
-export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
-                                                                        name,
-                                                                        label,
-                                                                        placeholder,
-                                                                        options,
-                                                                        isMulti = false,
-                                                                        width,
-                                                                        bgColor,
-                                                                        disabled = false,
-                                                                    }) => {
+const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
+                                                                 name,
+                                                                 label,
+                                                                 placeholder,
+                                                                 options,
+                                                                 isMulti = false,
+                                                                 width,
+                                                                 bgColor,
+                                                                 disabled = false,
+                                                             }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const [field, meta] = useField(name);
 
@@ -205,4 +206,55 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
     );
 };
 
-export {CustomTextAreaField, CustomInputField};
+export interface CustomInputSearchFieldProps {
+    name?: string;
+    label?: string;
+    placeholder: string;
+    searchTerm: string;
+    setSearchTerm: (value: string) => void;
+    handleSearch: () => void;
+}
+
+const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
+                                                                           name,
+                                                                           label,
+                                                                           placeholder,
+                                                                           searchTerm,
+                                                                           setSearchTerm,
+                                                                           handleSearch,
+                                                                       }) => {
+    const {t} = useTranslation();
+
+    return (
+        <Box mb={1}>
+            {label && (
+                <Text fontSize={"sm"} fontWeight={"bold"} mb={"1"} color={themeColors.fontColor()}>
+                    {label}
+                </Text>
+            )}
+            <Input
+                name={name}
+                placeholder={placeholder}
+                _placeholder={{color: themeColorsHex.fontColor()}}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                size={"sm"}
+                color={themeColors.fontColor()}
+                bg={themeColors.bgColorPrimary()}
+                borderRadius={"md"}
+            />
+            <Button
+                mt={1}
+                mb={1}
+                onClick={handleSearch}
+                colorScheme={"orange"}
+                size={"xs"}
+            >
+                {t("common:search")}
+            </Button>
+        </Box>
+    );
+};
+
+
+export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField};

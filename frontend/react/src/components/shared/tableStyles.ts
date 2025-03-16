@@ -6,14 +6,15 @@ export const useTableStyles = () => {
 
     const commonCellProps = {
         textAlign: "center",
-        borderColor: "gray",
+        borderColor: "gray.400"
     };
 
     const commonColumnHeaderProps = {
         cursor: "pointer",
         color: fontColor,
         textAlign: "center",
-        borderColor: "gray",
+        borderColor: "gray.400",
+        fontSize: "x-small"
     };
 
     return {commonCellProps, commonColumnHeaderProps};

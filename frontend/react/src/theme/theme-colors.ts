@@ -8,7 +8,7 @@ export const themeColors = {
     highlightBgColor: () => useColorModeValue('green.300', 'green.700'),
     borderColor: () => useColorModeValue('gray.200', 'gray.600'),
     fontColor: () => useColorModeValue('gray.600', 'gray.300'),
-    fontColorHover: () => useColorModeValue('gray.100',"gray.400"),
+    fontColorHover: () => useColorModeValue('gray.500',"gray.400"),
     fontColorChildMenu: () => useColorModeValue('gray.500', 'gray.200')
 };
 
@@ -18,7 +18,7 @@ export const themeColorsHex = {
     bgColorSecondary: () => useColorModeValue('#f4f4f5', '#52525b'), // 'gray.100', 'gray.600'
     popoverBgColor: () => useColorModeValue('#FFFFFF', '#e4e4e7'), // white | gray.200
     fontColor: () => useColorModeValue('#52525b', '#d4d4d8'), // gray.600 | gray.200
-    fontColorHover: () => useColorModeValue('#3f3f46', '#e4e4e7'),// gray.500 | gray.200
-    highlightBgColor: () => useColorModeValue('#86efac', '#116932'),
+    fontColorHover: () => useColorModeValue('#a1a1aa', '#a1a1aa'),// gray.400 | gray.400
+    highlightBgColor: () => useColorModeValue('#86efac', '#116932'), //green.300 | green.700
     borderColor: () => useColorModeValue('#e4e4e7', '#52525b'), // gray.200 | gray.600
 };
