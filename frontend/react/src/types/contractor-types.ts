@@ -71,8 +71,8 @@ export interface ContractorFormValues {
     postalCode: string;
     city: string;
     country: string;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
+    customer: boolean | undefined;
+    supplier: boolean | undefined;
+    scaffoldingUser: boolean | undefined;
     contacts?: Array<BaseContactDTOForContractor>;
 }

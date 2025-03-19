@@ -38,9 +38,9 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
         postalCode: "",
         city: "",
         country: countryOptions[0].value,
-        customer: false,
-        supplier: false,
-        scaffoldingUser: false,
+        customer: undefined,
+        supplier: undefined,
+        scaffoldingUser: undefined,
     };
 
     const contractorValidationSchema = getContractorValidationSchema(t, countryOptions);
@@ -90,6 +90,9 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
+            customer: contractorData.customer ?? false,
+            supplier: contractorData.supplier ?? false,
+            scaffoldingUser: contractorData.scaffoldingUser ?? false,
             contacts: contacts
         };
         try {
