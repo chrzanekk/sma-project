@@ -28,15 +28,15 @@ const UserProfileEdit: React.FC = () => {
     const accountSchema = Yup.object({
         firstName: Yup.string()
             .min(2, t("verification.minLength", {field: t("shared.firstName"), count: 2}))
-            .max(10, t("verification.maxLength", {field: t("shared.firstName"), count: 10}))
+            .max(30, t("verification.maxLength", {field: t("shared.firstName"), count: 30}))
             .required(t("verification.required", {field: t("shared.firstName")})),
         lastName: Yup.string()
             .min(2, t("verification.minLength", {field: t("shared.lastName"), count: 2}))
-            .max(25, t("verification.maxLength", {field: t("shared.lastName"), count: 25}))
+            .max(30, t("verification.maxLength", {field: t("shared.lastName"), count: 30}))
             .required(t("verification.required", {field: t("shared.lastName")})),
         position: Yup.string()
             .min(2, t("verification.minLength", {field: t("shared.position"), count: 2}))
-            .max(25, t("verification.maxLength", {field: t("shared.position"), count: 25})),
+            .max(30, t("verification.maxLength", {field: t("shared.position"), count: 30})),
     });
 
     const passwordSchema = Yup.object({

@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {Button, Flex, Input, NativeSelectField, NativeSelectRoot, Text} from '@chakra-ui/react';
+import {Button, Flex, Input, Text} from '@chakra-ui/react';
 import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
+import {CustomSimpleSelect} from "@/components/shared/CustomFormFields.tsx";
 
 interface PaginationProps {
     currentPage: number;
@@ -32,36 +33,34 @@ const Pagination: React.FC<PaginationProps> = ({
         <Flex justify="center"
               align="center"
               gap={4}
-              mt={2}
+              mt={1}
+              mb={1}
               p={1}
               bg={themeColors.bgColorPrimary()}
               borderRadius={"md"}
               fontSize={"sm"}
         >
             {/* Wybór liczby wierszy */}
-            <NativeSelectRoot
-                width="110px"
-                size="xs"
-                borderRadius={"md"}
-                bg={themeColors.bgColorPrimary()}
-                color={themeColors.fontColor()}
+            <CustomSimpleSelect
+                value={rowsPerPage}
+                onChange={onRowsPerPageChange}
+                options={[
+                    {value: 5, label: "5"},
+                    {value: 10, label: "10"},
+                    {value: 20, label: "20"},
+                    {value: 50, label: "50"},
+                    {value: 100, label: "100"},
+                ]}
+                bgColor={themeColorsHex.bgColorSecondary()}
                 disabled={currentPage + 1 === totalPages}
-            >
-                <NativeSelectField
-                    value={rowsPerPage}
-                    onChange={(e) => onRowsPerPageChange(Number(e.target.value))}
-                >
-                    <option value={5}>5</option>
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                    <option value={50}>50</option>
-                    <option value={100}>100</option>
-                </NativeSelectField>
-            </NativeSelectRoot>
-
+                width="100px"
+                size="xs"
+                hideArrow={true}
+            />
             {/* Nawigacja między stronami */}
             <Button
                 size={"2xs"}
+                colorPalette={"blue"}
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 0}
                 mr={2}
@@ -73,6 +72,7 @@ const Pagination: React.FC<PaginationProps> = ({
             </Text>
             <Button
                 size={"2xs"}
+                colorPalette={"blue"}
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage + 1 === totalPages}
                 ml={2}
@@ -85,7 +85,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size={"2xs"}
                 borderRadius={"md"}
-                bg={themeColors.bgColorPrimary()}
+                bg={themeColors.bgColorSecondary()}
                 color={themeColors.fontColor()}
                 mr={2}
                 value={gotoPage}
@@ -96,6 +96,7 @@ const Pagination: React.FC<PaginationProps> = ({
             />
             <Button size={"2xs"}
                     onClick={handleGotoPage}
+                    colorPalette={"blue"}
                     disabled={currentPage + 1 === totalPages}
             >
                 {t('go', {ns: 'common'})}

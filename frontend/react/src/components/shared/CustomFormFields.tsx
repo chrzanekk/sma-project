@@ -1,9 +1,10 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
-import {Box, Input, Text, Textarea} from "@chakra-ui/react";
+import {Box, Button, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
 import {themeColors, themeColorsHex} from "@/theme/theme-colors";
 import {selectStyles} from "@/components/shared/formOptions.ts";
+import {useTranslation} from "react-i18next";
 // -----------------------------
 // Komponenty formularzowe
 // -----------------------------
@@ -34,6 +35,7 @@ interface CustomInputFieldProps {
     placeholder?: string;
     type?: string;
     width?: string;
+    disabled?: boolean;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -41,7 +43,8 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                label,
                                                                placeholder,
                                                                type = "text",
-                                                               width
+                                                               width,
+                                                               disabled
                                                            }) => {
     return (
         <Field name={name}>
@@ -62,6 +65,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
+                        disabled={disabled}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -83,17 +87,19 @@ export interface CustomSelectFieldProps {
     isMulti?: boolean;
     width?: string;
     bgColor?: string;
+    disabled?: boolean
 }
 
-export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
-                                                                        name,
-                                                                        label,
-                                                                        placeholder,
-                                                                        options,
-                                                                        isMulti = false,
-                                                                        width,
-                                                                        bgColor
-                                                                    }) => {
+const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
+                                                                 name,
+                                                                 label,
+                                                                 placeholder,
+                                                                 options,
+                                                                 isMulti = false,
+                                                                 width,
+                                                                 bgColor,
+                                                                 disabled = false,
+                                                             }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const [field, meta] = useField(name);
 
@@ -126,6 +132,7 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
             )}
             <Select
                 options={options}
+                isDisabled={disabled}
                 placeholder={placeholder}
                 aria-label={placeholder}
                 value={selectedValue}
@@ -150,12 +157,138 @@ export const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
     );
 };
 
+
+interface CustomSimpleSelectProps {
+    label?: string;
+    value: number;
+    onChange: (value: number) => void;
+    options: { value: number; label: string }[];
+    width?: string;
+    bgColor?: string;
+    disabled?: boolean;
+    size?: "xs" | "sm" | "md" | "lg";
+    hideArrow?: boolean;
+}
+
+const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
+                                                                   label,
+                                                                   value,
+                                                                   onChange,
+                                                                   options,
+                                                                   width,
+                                                                   bgColor,
+                                                                   disabled = false,
+                                                                   size = "sm",
+                                                                   hideArrow = false,
+                                                               }) => {
+
+    const selectedValue = options.find((option) => option.value === value) || null;
+
+    const getSizeStyles = (size: string) => {
+        switch (size) {
+            case "xs":
+                return {
+                    controlHeight: "24px",
+                    fontSize: "12px",
+                    padding: "0 6px",
+                };
+            case "sm":
+                return {
+                    controlHeight: "30px",
+                    fontSize: "14px",
+                    padding: "0 8px",
+                };
+            case "md":
+                return {
+                    controlHeight: "36px",
+                    fontSize: "16px",
+                    padding: "0 10px",
+                };
+            case "lg":
+                return {
+                    controlHeight: "42px",
+                    fontSize: "18px",
+                    padding: "0 12px",
+                };
+            default:
+                return {
+                    controlHeight: "30px",
+                    fontSize: "20px",
+                    padding: "0 8px",
+                };
+        }
+    };
+
+    const sizeStyles = getSizeStyles(size);
+
+    const customSelectStyles: StylesConfig<any, false> = {
+        ...selectStyles,
+        control: (provided, state) => {
+            const baseControl = selectStyles.control
+                ? selectStyles.control(provided, state)
+                : provided;
+            return {
+                ...baseControl,
+                backgroundColor: bgColor ?? baseControl.backgroundColor,
+                width: width || "auto", // <- wymusza szerokość całego kontenera
+                minWidth: "unset",      // usuwa ewentualne minimalne szerokości
+                maxWidth: width,
+                minHeight: sizeStyles.controlHeight,
+                height: sizeStyles.controlHeight,
+                fontSize: sizeStyles.fontSize,
+            };
+        },
+        valueContainer: (provided) => ({
+            ...provided,
+            height: sizeStyles.controlHeight,
+            padding: sizeStyles.padding,
+        }),
+        indicatorsContainer: (provided) => ({
+            ...provided,
+            height: sizeStyles.controlHeight,
+        }),
+        // Możesz dodatkowo zmniejszyć odstępy w menu:
+        menu: (provided) => ({
+            ...provided,
+            fontSize: sizeStyles.fontSize,
+            width: "100%",
+        }),
+    };
+
+    const noArrowComponents = {
+        IndicatorSeparator: () => null,
+        DropdownIndicator: () => null,
+    };
+
+    return (
+        <Box>
+            {label && (
+                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                    {label}
+                </Text>
+            )}
+            <Select
+                options={options}
+                isDisabled={disabled}
+                value={selectedValue}
+                onChange={(selectedOption: any) => {
+                    onChange(selectedOption.value);
+                }}
+                styles={customSelectStyles}
+                isSearchable={false}  // jeśli nie chcesz pola wyszukiwania
+                components={hideArrow ? noArrowComponents : undefined} // usuwamy strzałkę i separator
+            />
+        </Box>
+    );
+};
+
 interface CustomTextAreaFieldProps {
     name: string;
     label?: string;
     placeholder?: string;
     width?: string;
     rows?: number;
+    disabled?: boolean
 }
 
 const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
@@ -164,6 +297,7 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                                                                      placeholder,
                                                                      width,
                                                                      rows = 3,
+                                                                     disabled = false
                                                                  }) => {
     return (
         <Field name={name}>
@@ -177,12 +311,14 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                     <Textarea
                         {...field}
                         placeholder={placeholder}
+                        _placeholder={{color: themeColorsHex.fontColor()}}
                         size="sm"
                         color={themeColors.fontColor()}
                         bg={themeColors.bgColorPrimary()}
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}
+                        disabled={disabled}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -195,4 +331,55 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
     );
 };
 
-export {CustomTextAreaField, CustomInputField};
+export interface CustomInputSearchFieldProps {
+    name?: string;
+    label?: string;
+    placeholder: string;
+    searchTerm: string;
+    setSearchTerm: (value: string) => void;
+    handleSearch: () => void;
+}
+
+const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
+                                                                           name,
+                                                                           label,
+                                                                           placeholder,
+                                                                           searchTerm,
+                                                                           setSearchTerm,
+                                                                           handleSearch,
+                                                                       }) => {
+    const {t} = useTranslation();
+
+    return (
+        <Box mb={1}>
+            {label && (
+                <Text fontSize={"sm"} fontWeight={"bold"} mb={"1"} color={themeColors.fontColor()}>
+                    {label}
+                </Text>
+            )}
+            <Input
+                name={name}
+                placeholder={placeholder}
+                _placeholder={{color: themeColorsHex.fontColor()}}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                size={"sm"}
+                color={themeColors.fontColor()}
+                bg={themeColors.bgColorPrimary()}
+                borderRadius={"md"}
+            />
+            <Button
+                mt={1}
+                mb={1}
+                onClick={handleSearch}
+                colorScheme={"orange"}
+                size={"xs"}
+            >
+                {t("common:search")}
+            </Button>
+        </Box>
+    );
+};
+
+
+export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect};

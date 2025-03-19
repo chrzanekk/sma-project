@@ -113,7 +113,6 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 {t('clearFilters')}
                             </Button>
                         </Flex>
-
                     </Form>
                 );
             }}

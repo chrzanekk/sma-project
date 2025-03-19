@@ -2,17 +2,16 @@ import React, {useCallback, useEffect, useState} from "react";
 import {deleteContractorById} from "@/services/contractor-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
-import {ContactDTO} from "@/types/contact-types.ts";
+import {FetchableContactDTO} from "@/types/contact-types.ts";
 import {getContactsByFilter} from "@/services/contact-service.ts";
-import AddContactDrawer from "@/components/contact/AddContactDrawer.tsx";
 import AddContactDialog from "@/components/contact/AddContactDialog.tsx";
-import ContactTable from "@/components/contact/ContactTable.tsx";
 import ContactFilterForm from "@/components/contact/ContactFilterForm.tsx";
 import ContactLayout from "@/components/contact/ContactLayout.tsx";
+import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
 
 
 const ContactManagement: React.FC = () => {
-    const [contacts, setContacts] = useState<ContactDTO[]>([]);
+    const [contacts, setContacts] = useState<FetchableContactDTO[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -98,18 +97,18 @@ const ContactManagement: React.FC = () => {
             filters={<ContactFilterForm onSubmit={handleFilterSubmit}/>}
             addContactButton={
                 <Flex justifyContent={"center"} gap={2}>
-                    <AddContactDrawer fetchContacts={fetchContacts}/>
                     <AddContactDialog fetchContacts={fetchContacts}/>
                 </Flex>
             }
             table={
-                <ContactTable
+                <GenericContactTable
                     contacts={contacts}
                     onDelete={handleDelete}
                     fetchContacts={fetchContacts}
                     onSortChange={handleSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}
+                    extended={true}
                 />}
             pagination={
                 <Pagination

@@ -36,6 +36,8 @@
     "createdBy": "Utworzony przez",
     "lastModifiedDate": "Data ost. mod.",
     "lastModifiedBy":"Ost. zmod. przez",
+    "summary": "Podsumowanie",
+    "resetSelected": "Resetuj wybór",
     "notifications": {
         "emailAlreadyExists": "Email {email} już istnieje w bazie",
         "loginAlreadyExists": "Login {login} istnieje już  w bazie",

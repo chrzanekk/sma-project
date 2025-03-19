@@ -80,7 +80,7 @@ public class ContractorQuerySpec {
     public JPQLQuery<Contractor> buildQuery(BooleanBuilder builder, Pageable pageable) {
         QContractor contractor = QContractor.contractor;
 
-        JPQLQuery<Contractor> query = new JPAQuery<>(em).select(contractor).from(contractor);
+        JPQLQuery<Contractor> query = new JPAQuery<>(em).select(contractor).distinct().from(contractor);
         if (builder != null) {
             query.where(builder);
         }

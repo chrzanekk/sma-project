@@ -10,6 +10,8 @@ import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -18,9 +20,8 @@ import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -31,14 +32,17 @@ public class ContractorServiceImpl implements ContractorService {
     private final ContractorMapper contractorMapper;
     private final UserService userService;
     private final EntityManager entityManager;
+    private final ContactService contactService;
+
 
     public ContractorServiceImpl(ContractorDao contractorDao,
                                  ContractorMapper contractorMapper,
-                                 UserService userService, EntityManager entityManager) {
+                                 UserService userService, EntityManager entityManager, ContactService contactService) {
         this.contractorDao = contractorDao;
         this.contractorMapper = contractorMapper;
         this.userService = userService;
         this.entityManager = entityManager;
+        this.contactService = contactService;
     }
 
     @Override
@@ -65,10 +69,15 @@ public class ContractorServiceImpl implements ContractorService {
         validateRequiredFields(contractorDTO);
         UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
 
-        Contractor existingContractor = contractorDao.findById(contractorDTO.getId()).orElseThrow(()
+        //todo save new contact if exists in contractorDTO contactList
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts());
+
+        ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
+
+        Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId()).orElseThrow(()
                 -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
 
-        Contractor updatedContractor = contractorMapper.toEntity(contractorDTO);
+        Contractor updatedContractor = contractorMapper.toEntity(contractorWithSavedContacts);
         updatedContractor.setId(existingContractor.getId());
         updatedContractor.setCreatedBy(existingContractor.getCreatedBy());
         updatedContractor.setCreatedDatetime(existingContractor.getCreatedDatetime());
@@ -76,6 +85,47 @@ public class ContractorServiceImpl implements ContractorService {
         updatedContractor.setLastModifiedDatetime(Instant.now());
         Contractor savedContractor = contractorDao.save(updatedContractor);
         return contractorMapper.toDto(savedContractor);
+    }
+
+    private static ContractorDTO updateContractorContacts(ContractorDTO contractorDTO, Set<ContactBaseDTO> updatedContacts) {
+        return ContractorDTO.builder()
+                .id(contractorDTO.getId())
+                .name(contractorDTO.getName())
+                .taxNumber(contractorDTO.getTaxNumber())
+                .street(contractorDTO.getStreet())
+                .buildingNo(contractorDTO.getBuildingNo())
+                .apartmentNo(contractorDTO.getApartmentNo())
+                .postalCode(contractorDTO.getPostalCode())
+                .city(contractorDTO.getCity())
+                .country(contractorDTO.getCountry())
+                .customer(contractorDTO.getCustomer())
+                .supplier(contractorDTO.getSupplier())
+                .scaffoldingUser(contractorDTO.getScaffoldingUser())
+                .createdDatetime(contractorDTO.getCreatedDatetime())
+                .lastModifiedDatetime(contractorDTO.getLastModifiedDatetime())
+                .createdById(contractorDTO.getCreatedById())
+                .createdByFirstName(contractorDTO.getCreatedByFirstName())
+                .createdByLastName(contractorDTO.getCreatedByLastName())
+                .modifiedById(contractorDTO.getModifiedById())
+                .modifiedByFirstName(contractorDTO.getModifiedByFirstName())
+                .modifiedByLastName(contractorDTO.getModifiedByLastName())
+                .contacts(updatedContacts).build();
+    }
+
+    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts) {
+        if (contacts != null) {
+            List<ContactBaseDTO> newContacts = contacts.stream()
+                    .filter(contact -> contact.getId() == null)
+                    .collect(Collectors.toList());
+
+            if (!newContacts.isEmpty()) {
+                List<ContactBaseDTO> savedContacts = contactService.saveAllBaseContacts(newContacts);
+                newContacts.forEach(contacts::remove);
+                contacts.addAll(savedContacts);
+            }
+            return new HashSet<>(contacts);
+        }
+        return Collections.emptySet();
     }
 
 

@@ -12,16 +12,21 @@ import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
+import pl.com.chrzanowski.sma.contact.dto.AbstractContactDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
+import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Instant;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -31,12 +36,14 @@ public class ContactServiceImpl implements ContactService {
 
     private final ContactDao contactDao;
     private final ContactMapper contactMapper;
+    private final ContactBaseMapper contactBaseMapper;
     private final UserService userService;
     private final EntityManager entityManager;
 
-    public ContactServiceImpl(ContactDao contactDao, ContactMapper contactMapper, UserService userService, EntityManager entityManager) {
+    public ContactServiceImpl(ContactDao contactDao, ContactMapper contactMapper, ContactBaseMapper contactBaseMapper, UserService userService, EntityManager entityManager) {
         this.contactDao = contactDao;
         this.contactMapper = contactMapper;
+        this.contactBaseMapper = contactBaseMapper;
         this.userService = userService;
         this.entityManager = entityManager;
     }
@@ -58,6 +65,30 @@ public class ContactServiceImpl implements ContactService {
         return contactMapper.toDto(savedContact);
     }
 
+    //todo test this method in service and dao
+    @Transactional
+    @Override
+    public List<ContactBaseDTO> saveAllBaseContacts(Collection<ContactBaseDTO> contactDTOs) {
+        log.debug("Request to save Contacts: {}", contactDTOs);
+        UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
+
+        List<Contact> contacts = contactDTOs.stream()
+                .peek(this::validateRequiredFields) // Walidacja dla każdego ContactDTO
+                .map(contactDTO -> {
+                    Contact contact = contactBaseMapper.toEntity(contactDTO);
+                    contact.setCreatedBy(entityManager.getReference(User.class, userInfoResponse.id()));
+                    contact.setModifiedBy(entityManager.getReference(User.class, userInfoResponse.id()));
+                    contact.setCreatedDatetime(Instant.now());
+                    contact.setLastModifiedDatetime(Instant.now());
+                    return contact;
+                })
+                .collect(Collectors.toList());
+        List<Contact> savedContacts = contactDao.saveAll(contacts);
+
+        return savedContacts.stream()
+                .map(contactBaseMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
@@ -98,7 +129,7 @@ public class ContactServiceImpl implements ContactService {
         contactDao.deleteById(id);
     }
 
-    private static void validateRequiredFields(ContactDTO contactDTO) {
+    private void validateRequiredFields(AbstractContactDTO contactDTO) {
         if (StringUtils.isBlank(contactDTO.getFirstName())) {
             throw new PropertyMissingException(ContactErrorCode.FIRST_NAME_MISSING, "First name must not be empty", Map.of("firstName", contactDTO.getFirstName()));
         }

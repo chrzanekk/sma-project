@@ -35,6 +35,12 @@ public class ContactJPADaoImpl implements ContactDao {
     }
 
     @Override
+    public List<Contact> saveAll(List<Contact> contacts) {
+        log.debug("DAO: Save all contacts: {}", contacts);
+        return contactRepository.saveAll(contacts);
+    }
+
+    @Override
     public Optional<Contact> findById(Long id) {
         log.debug("DAO: Find contact: {}", id);
         return contactRepository.findById(id);

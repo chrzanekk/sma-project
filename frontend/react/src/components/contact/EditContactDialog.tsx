@@ -31,11 +31,11 @@ const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, 
                 <DialogBackdrop/>
                 <DialogTrigger asChild>
                     <Button
-                        colorPalette="green"
+                        colorPalette="blue"
                         size={"2xs"}
                         p={1}
                     >
-                        {t('data', {ns: "common"}) + "(D)"}
+                        {t('data', {ns: "common"})}
                     </Button>
                 </DialogTrigger>
                 <DialogContent bg={themeColors.bgColorSecondary()}

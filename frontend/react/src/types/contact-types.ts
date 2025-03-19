@@ -1,12 +1,8 @@
-import {ContractorBaseDTO} from "@/types/contractor-types.ts";
+import {BaseContractorDTOForContact} from "@/types/contractor-types.ts";
 
-export interface ContactBaseDTO {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    email: string;
-    additionalInfo: string;
+//tylko do pobierania danych i wyświetlania - ma dodatkowe pola audytujace
+export interface FetchableContactDTO extends BaseContactDTOForContractor {
+    contractors?: Array<BaseContractorDTOForContact>
     createdDatetime: string;
     lastModifiedDatetime: string;
     createdById: number;
@@ -17,40 +13,8 @@ export interface ContactBaseDTO {
     modifiedByLastName: string;
 }
 
-export interface ContactDTO {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    email: string;
-    additionalInfo: string;
-    contractors?: Array<ContractorBaseDTO>
-    createdDatetime: string;
-    lastModifiedDatetime: string;
-    createdById: number;
-    createdByFirstName: string;
-    createdByLastName: string;
-    modifiedById: number;
-    modifiedByFirstName: string;
-    modifiedByLastName: string;
-}
-
-export interface AddContactFormValues {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    email: string;
-    additionalInfo: string;
-}
-
-export interface AddContactDTO {
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
-    email: string;
-    additionalInfo: string;
-}
-export interface EditContactFormValues {
+//interfejs do listy kontaktów w obiekcie Contractor by uniknąć odwołania cyklicznego
+export interface BaseContactDTOForContractor {
     id?: number;
     firstName: string;
     lastName: string;
@@ -59,7 +23,14 @@ export interface EditContactFormValues {
     additionalInfo: string;
 }
 
-export interface EditContactDTO {
+
+//interfejs użyty w serwisie - contractors może byc puste
+export interface ContactDTO extends BaseContactDTOForContractor{
+    contractors?: Array<BaseContractorDTOForContact>
+}
+
+//interfejs używany w formularzach
+export interface BaseContactFormValues {
     id?: number;
     firstName: string;
     lastName: string;

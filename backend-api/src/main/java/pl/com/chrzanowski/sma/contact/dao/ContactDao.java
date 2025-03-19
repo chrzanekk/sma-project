@@ -12,6 +12,8 @@ public interface ContactDao {
 
     Contact save(Contact contact);
 
+    List<Contact> saveAll(List<Contact> contacts);
+
     Optional<Contact> findById(Long id);
 
     List<Contact> findAll();
