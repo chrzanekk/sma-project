@@ -48,7 +48,7 @@ public class ContactQuerySpec {
     public JPQLQuery<Contact> buildQuery(BooleanBuilder builder, Pageable pageable) {
         QContact contact = QContact.contact;
 
-        JPQLQuery<Contact> query = new JPAQuery<>(em).select(contact).from(contact);
+        JPQLQuery<Contact> query = new JPAQuery<>(em).select(contact).distinct().from(contact);
         if (builder != null) {
             query.where(builder);
         }
