@@ -72,15 +72,12 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
 
     const validationSchema = getContractorValidationSchema(t, countryOptions);
 
-    // Obsługa kolejnych kroków
     const handleNext = async () => {
         if (currentStep === 0) {
-            // Zatwierdzenie formularza kontrahenta
             if (contractorFormRef.current) {
                 await contractorFormRef.current.submitForm();
             }
         } else if (currentStep === 1) {
-            // Krok kontaktów – dodatkowe zatwierdzenie nie jest wymagane, ale można dodać walidację jeśli potrzeba.
             if (contactFormRef.current) {
                 await contactFormRef.current.submitForm();
             }
