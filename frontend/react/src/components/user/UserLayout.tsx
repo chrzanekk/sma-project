@@ -23,7 +23,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
         <Grid
             templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
             bgColor={themeColors.bgColorSecondary()}
-            height="100vh" // Pełna wysokość ekranu
+            height="auto" // Pełna wysokość ekranu
             gap={1}
         >
             <GridItem

@@ -19,9 +19,9 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                      }) => {
     return (
         <Grid
-            templateRows="30% 40% 30%"
-            height="80vh"
-            gap={2}
+            templateRows="30% 30% 30%"
+            height={"calc(100vh - 110px)"}
+            gap={3}
         >
             {/* Górny wiersz */}
             <GridItem
@@ -47,7 +47,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                         bg={bgColor}
                         p={2}
                         borderRadius="lg"
-                        minHeight={"40%"}
+                        minHeight={"30%"}
                         overflowY="auto"
                     >
                         <Text color={fontColor} fontWeight="bold">

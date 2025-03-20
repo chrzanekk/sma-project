@@ -22,7 +22,7 @@ const Layout = ({children}: { children: React.ReactNode }) => (
              flex={"1"}
              w="100%"
              overflowY="auto"
-             px={[2, 4, 6]}
+             px={2}
         >
             {children}
         </Box>

@@ -23,7 +23,7 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
         <Grid
             templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorSecondary()}
-            height="100vh" // Pełna wysokość ekranu
+            height="auto" // Pełna wysokość ekranu
             gap={1}
         >
             <GridItem
