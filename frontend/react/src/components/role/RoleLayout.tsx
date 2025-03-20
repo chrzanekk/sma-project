@@ -23,7 +23,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
         <Grid
             templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorSecondary()}
-            height="100vh"
+            height="auto"
             gap={1}
         >
             <GridItem

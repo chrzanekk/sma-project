@@ -9,11 +9,12 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
-import {Box, Flex, Grid, GridItem, Heading, Separator, Steps, Table, Text} from "@chakra-ui/react";
+import {Box, Flex, Heading, Steps, Table, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
 import {StepsNextTrigger, StepsPrevTrigger,} from "@/components/ui/steps";
 import {themeColors} from "@/theme/theme-colors.ts";
+import ContractorSummary from "@/components/contractor/ContractorSummary.tsx";
 
 interface EditContractorWithContactFormStepsProps {
     onSuccess: () => void;
@@ -71,15 +72,12 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
 
     const validationSchema = getContractorValidationSchema(t, countryOptions);
 
-    // Obsługa kolejnych kroków
     const handleNext = async () => {
         if (currentStep === 0) {
-            // Zatwierdzenie formularza kontrahenta
             if (contractorFormRef.current) {
                 await contractorFormRef.current.submitForm();
             }
         } else if (currentStep === 1) {
-            // Krok kontaktów – dodatkowe zatwierdzenie nie jest wymagane, ale można dodać walidację jeśli potrzeba.
             if (contactFormRef.current) {
                 await contactFormRef.current.submitForm();
             }
@@ -120,6 +118,9 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
+            customer: contractorData.customer ?? false,
+            supplier: contractorData.supplier ?? false,
+            scaffoldingUser: contractorData.scaffoldingUser ?? false,
             contacts: contacts,
         };
         try {
@@ -278,142 +279,8 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     <Heading size="md" color={themeColors.fontColor()}>
                         {t("common:summary", "Podsumowanie")}
                     </Heading>
-                    <Box mt={2}>
-                        <Text textStyle={"lg"} fontWeight={"bold"}
-                              color={themeColors.fontColor()}>{t("contractors:details")}</Text>
-                        {contractorData && (<Box borderWidth="1px" borderRadius="md" overflow="hidden">
-                            <Grid templateColumns="repeat(6, 1fr)" gap={0}>
-                                {/* Wiersz 1: NAME i TAX NUMBER */}
-                                <GridItem
-                                    colSpan={3}
-                                    borderRightWidth="1px"
-                                    borderBottomWidth="1px"
-                                    borderColor="gray.400"
-                                    p={2}
-                                >
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:name", "NAME")}
-                                    </Text>
-                                    <Text color={themeColors.fontColor()}>{contractorData!.name}</Text>
-                                </GridItem>
-                                <GridItem
-                                    colSpan={3}
-                                    borderBottomWidth="1px"
-                                    borderColor="gray.400"
-                                    p={2}
-                                >
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:taxNumber", "Tax Number")}
-                                    </Text>
-                                    <Text color={themeColors.fontColor()}>{contractorData!.taxNumber}</Text>
-                                </GridItem>
-
-                                {/* Wiersz 2: Address – łączony w jeden wiersz */}
-                                <GridItem
-                                    colSpan={6}
-                                    borderBottomWidth="1px"
-                                    borderColor="gray.400"
-                                    p={2}
-                                >
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:address", "Address")}
-                                    </Text>
-                                    <Text color={themeColors.fontColor()}>
-                                        {contractorData!.street} {contractorData!.buildingNo}
-                                        {contractorData!.apartmentNo && contractorData!.apartmentNo.trim() !== ""
-                                            ? "/" + contractorData!.apartmentNo
-                                            : ""}
-                                        , {contractorData!.postalCode} {contractorData!.city},{" "}
-                                        {typeof contractorData!.country === "object"
-                                            ? (contractorData!.country as { name: string }).name
-                                            : contractorData!.country}
-                                    </Text>
-                                </GridItem>
-
-                                {/* Wiersz 3: Boolean values – Customer, Supplier, ScaffoldingUser */}
-                                <GridItem
-                                    colSpan={2}
-                                    borderRightWidth="1px"
-                                    borderColor="gray.400"
-                                    p={2}
-                                >
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:customer", "Customer")}
-                                    </Text>
-                                    <Text
-                                        color={themeColors.fontColor()}>{contractorData!.customer ? t("common:yes", "Yes") : t("common:no", "No")}</Text>
-                                </GridItem>
-                                <GridItem
-                                    colSpan={2}
-                                    borderRightWidth="1px"
-                                    borderColor={"gray.400"}
-                                    p={2}
-                                >
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:supplier", "Supplier")}
-                                    </Text>
-                                    <Text
-                                        color={themeColors.fontColor()}>{contractorData!.supplier ? t("common:yes", "Yes") : t("common:no", "No")}</Text>
-                                </GridItem>
-                                <GridItem colSpan={2} p={2}>
-                                    <Text fontWeight="bold" mb={1} color={themeColors.fontColor()}>
-                                        {t("contractors:scaffoldingUser", "Scaffolding User")}
-                                    </Text>
-                                    <Text color={themeColors.fontColor()}>
-                                        {contractorData!.scaffoldingUser ? t("common:yes", "Yes") : t("common:no", "No")}
-                                    </Text>
-                                </GridItem>
-                            </Grid>
-                        </Box>)}
-
-                        <Separator/>
-                        <Box mt={2}>
-                            <Text textStyle={"lg"} fontWeight={"bold"} color={themeColors.fontColor()}>
-                                {t("contacts:list", "Lista kontaktów")}
-                            </Text>
-
-                            <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
-                                <Table.Root size={"sm"}
-                                            stickyHeader
-                                            showColumnBorder
-                                            interactive
-                                            color={themeColors.fontColor()}
-                                >
-                                    <Table.Header>
-                                        <Table.Row bg={themeColors.bgColorPrimary()}>
-                                            <Table.ColumnHeader color={themeColors.fontColor()}
-                                                                textAlign={"center"}>{t("contacts:firstName")}</Table.ColumnHeader>
-                                            <Table.ColumnHeader color={themeColors.fontColor()}
-                                                                textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
-                                            <Table.ColumnHeader color={themeColors.fontColor()}
-                                                                textAlign={"center"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
-                                        </Table.Row>
-                                    </Table.Header>
-
-                                    <Table.Body>
-                                        {contacts.length > 0 ? (contacts.map((contact, idx) => (
-                                            <Table.Row key={idx}
-                                                       bg={themeColors.bgColorSecondary()}
-                                                       _hover={{
-                                                           textDecoration: 'none',
-                                                           bg: themeColors.highlightBgColor(),
-                                                           color: themeColors.fontColorHover()
-                                                       }}
-                                            >
-                                                <Table.Cell textAlign={"center"}>{contact.firstName}</Table.Cell>
-                                                <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
-                                                <Table.Cell textAlign={"center"}>{contact.phoneNumber}</Table.Cell>
-                                            </Table.Row>
-                                        ))) : (
-                                            <Box textAlign="center" py={2}>
-                                                {t("contacts:noContacts", "Brak kontaktów")}
-                                            </Box>
-                                        )}
-                                    </Table.Body>
-                                </Table.Root>
-                            </Table.ScrollArea>
-                        </Box>
-                    </Box>
+                    <ContractorSummary contractorData={contractorData} contacts={contacts} t={t}
+                                       themeColors={themeColors}/>
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>
