@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public List<RoleDTO> findAll() {
-        log.debug("DAO: Fetching all roles.");
+        log.debug("Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
         return roleMapper.toDtoList(roleList);
     }
