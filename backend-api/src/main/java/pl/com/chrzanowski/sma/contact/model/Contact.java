@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.model.AuditableEntity;
+import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.util.Set;
@@ -42,4 +43,9 @@ public class Contact extends AuditableEntity {
     @ManyToMany(mappedBy = "contacts", fetch = FetchType.LAZY)
     @ToString.Exclude
     private Set<Contractor> contractors;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    @ToString.Exclude
+    private Company company;
 }

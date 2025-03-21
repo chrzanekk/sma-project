@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
-import pl.com.chrzanowski.sma.common.exception.RoleException;
 import pl.com.chrzanowski.sma.role.dao.RoleDao;
 import pl.com.chrzanowski.sma.role.dao.RoleJPADaoImpl;
 import pl.com.chrzanowski.sma.role.model.Role;
@@ -36,9 +35,6 @@ class RoleJPADaoImplTest {
 
     @Mock
     private RoleQuerySpec roleQuerySpec;
-
-    @Mock
-    private RoleDao roleDao;
 
     private AutoCloseable closeable;
 
@@ -118,13 +114,14 @@ class RoleJPADaoImplTest {
     void saveRole_Positive() {
         // Given
         Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
-        when(roleRepository.save(role)).thenReturn(role);
+        Role savedRole = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        when(roleRepository.save(role)).thenReturn(savedRole);
 
         // When
-        Role savedRole = roleJPADaoImpl.saveRole(role);
+        Role returnedRole = roleJPADaoImpl.saveRole(role);
 
         // Then
-        assertEquals(role, savedRole);
+        assertEquals(returnedRole, savedRole);
         verify(roleRepository, times(1)).save(role);
     }
 
@@ -142,9 +139,6 @@ class RoleJPADaoImplTest {
     @Test
     void testDeleteById_Success() {
         Long roleId = 3L;
-        Role role = Role.builder().id(roleId).name("ROLE_CUSTOMER").build();
-
-        when(roleRepository.findById(roleId)).thenReturn(Optional.of(role));
 
         assertDoesNotThrow(() -> roleJPADaoImpl.deleteById(roleId));
 

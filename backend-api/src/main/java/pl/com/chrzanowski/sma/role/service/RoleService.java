@@ -7,13 +7,13 @@ import java.util.Set;
 
 public interface RoleService {
 
-    List<RoleDTO> findAll();
+    RoleDTO saveRole(RoleDTO role);
 
     RoleDTO findByName(String name);
 
-    RoleDTO saveRole(RoleDTO role);
-
-    boolean deleteById(Long id);
+    List<RoleDTO> findAll();
 
     Set<RoleDTO> findAllByListOfNames(List<String> names);
+
+    boolean deleteById(Long id);
 }

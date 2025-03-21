@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.role.model.Role;
 
 import java.time.Instant;
@@ -68,6 +69,12 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_companies",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "company_id"))
+    private Set<Company> companies = new HashSet<>();
 
     @Column(name = "create_date")
     private Instant createdDatetime;

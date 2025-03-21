@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 
 import java.time.Instant;
@@ -25,6 +26,7 @@ public class UserDTO {
     Boolean locked;
     Boolean enabled;
     Set<RoleDTO> roles;
+    Set<CompanyBaseDTO> companies;
     Instant createdDatetime;
     Instant lastModifiedDatetime;
 }
