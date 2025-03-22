@@ -4,7 +4,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {BaseContactFormValues, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getContactById, updateContact} from "@/services/contact-service.ts";
-import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
+import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
 
 
@@ -52,7 +52,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
 
     const validationSchema = getContactValidationSchema(t);
 
-    const handleSubmit = async (values: ContactFormValues) => {
+    const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
                 ...values

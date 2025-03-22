@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.contact.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
@@ -27,12 +28,18 @@ public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact>
     @Mapping(target = "contractors", expression = "java(contractorBaseMapper.toDtoSet(contact.getContractors()))")
     public abstract ContactDTO toDto(Contact contact);
 
-    // Mapowanie z pełnego DTO do encji – odwrotnie, używamy metody toEntitySet.
-    @Mapping(target = "contractors", expression = "java(contractorBaseMapper.toEntitySet(contactDTO.getContractors()))")
-    @Mapping(source = "createdById", target = "createdBy.id")
-    @Mapping(source = "modifiedById", target = "modifiedBy.id")
-    @Mapping(source = "createdDatetime", target = "createdDatetime")
-    @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
+    @Mapping(target = "contractors", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    public abstract void updateContactFromDto(ContactDTO contactDTO, @MappingTarget Contact contact);
+
+    @Mapping(target = "contractors", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
     public abstract Contact toEntity(ContactDTO contactDTO);
 
     // Mapowanie do wersji bazowej

@@ -12,6 +12,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.contact.repository.ContactRepository;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 
 import java.time.Duration;
@@ -33,6 +35,9 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
     private UserHelper userHelper;
 
     private String jwtToken;
+
+    @Autowired
+    private ContactRepository contactRepository;
 
     @BeforeEach
     void setUp() {
@@ -97,6 +102,8 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .expectStatus().isOk()
                 .expectBody(ContactBaseDTO.class)
                 .returnResult().getResponseBody();
+
+        List<Contact> contacts = contactRepository.findAll();
 
         // Modyfikujemy np. numer telefonu
         ContactBaseDTO updatedContactBaseDTO = ContactBaseDTO.builder()

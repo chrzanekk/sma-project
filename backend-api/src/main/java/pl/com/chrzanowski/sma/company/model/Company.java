@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.company.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.com.chrzanowski.sma.common.model.AuditableEntity;
+import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.user.model.User;
 
 import java.util.Set;
@@ -11,7 +11,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @SuperBuilder
 @AllArgsConstructor

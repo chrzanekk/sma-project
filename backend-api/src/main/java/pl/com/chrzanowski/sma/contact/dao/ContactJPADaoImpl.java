@@ -30,13 +30,13 @@ public class ContactJPADaoImpl implements ContactDao {
 
     @Override
     public Contact save(Contact contact) {
-        log.debug("DAO: Save contact: {}", contact);
+        log.debug("DAO: Save contact: {}", contact.getId());
         return contactRepository.save(contact);
     }
 
     @Override
     public List<Contact> saveAll(List<Contact> contacts) {
-        log.debug("DAO: Save all contacts: {}", contacts);
+        log.debug("DAO: Save all contacts");
         return contactRepository.saveAll(contacts);
     }
 

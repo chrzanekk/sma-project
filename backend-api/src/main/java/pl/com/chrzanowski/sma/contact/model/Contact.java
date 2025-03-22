@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.contact.model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.com.chrzanowski.sma.common.model.AuditableEntity;
+import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
@@ -12,7 +12,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor

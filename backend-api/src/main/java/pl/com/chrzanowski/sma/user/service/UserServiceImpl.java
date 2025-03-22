@@ -3,6 +3,8 @@ package pl.com.chrzanowski.sma.user.service;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
+import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
@@ -264,8 +267,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserInfoResponse getUserWithAuthorities() {
         log.debug("Get user with authorities.");
-        String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        User currentUser = userDao.findByLogin(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User currentUser = getCurrentLoggedUser().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         return new UserInfoResponse(
                 currentUser.getId(),
@@ -275,6 +277,23 @@ public class UserServiceImpl implements UserService {
                 currentUser.getLastName(),
                 currentUser.getPosition(),
                 currentRoles);
+    }
+
+    @Override
+    public Optional<User> getCurrentLoggedUser() {
+        log.debug("Get current logged user.");
+        String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userDao.findByLogin(currentLogin);
+    }
+
+    @Override
+    public Long getCurrentUserIdFromSecurityContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getId(); // zakładamy, że Twoja klasa UserDetailsImpl posiada metodę getId()
+        }
+        return null;
     }
 
     @Override

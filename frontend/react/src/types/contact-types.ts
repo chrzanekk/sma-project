@@ -25,7 +25,7 @@ export interface BaseContactDTOForContractor {
 
 
 //interfejs użyty w serwisie - contractors może byc puste
-export interface ContactDTO extends BaseContactDTOForContractor{
+export interface ContactDTO extends BaseContactDTOForContractor {
     contractors?: Array<BaseContractorDTOForContact>
 }
 

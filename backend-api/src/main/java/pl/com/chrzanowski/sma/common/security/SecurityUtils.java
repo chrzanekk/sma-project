@@ -41,21 +41,15 @@ public class SecurityUtils {
     public static Optional<String> getCurrentUserLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
-            log.debug("SecurityContext is empty.");
             return Optional.empty();
         }
 
-        log.debug("Authentication principal: {}", authentication.getPrincipal());
         if (authentication.getPrincipal() instanceof UserDetails) {
             String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-            log.debug("Found username: {}", username);
             return Optional.of(username);
         } else if (authentication.getPrincipal() instanceof String) {
-            log.debug("Found username: {}", authentication.getPrincipal());
             return Optional.of((String) authentication.getPrincipal());
         }
-
-        log.debug("No username found.");
         return Optional.empty();
     }
 

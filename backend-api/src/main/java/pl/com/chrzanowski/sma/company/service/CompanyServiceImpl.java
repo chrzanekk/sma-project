@@ -12,10 +12,8 @@ import pl.com.chrzanowski.sma.company.dao.CompanyDao;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
-import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,35 +44,41 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyBaseDTO save(CompanyBaseDTO companyBaseDTO) {
         log.debug("Request to save Company : {}", companyBaseDTO);
-
-        UserInfoResponse loggedUser = userService.getUserWithAuthorities();
-
         Company company = companyMapper.toEntity(companyBaseDTO);
-        company.setCreatedBy(em.getReference(User.class, loggedUser.id()));
-        company.setModifiedBy(em.getReference(User.class, loggedUser.id()));
-        company.setCreatedDatetime(Instant.now());
-        company.setLastModifiedDatetime(Instant.now());
         Company savedCompany = companyDao.save(company);
         return companyMapper.toDto(savedCompany);
     }
 
     @Override
     public CompanyBaseDTO update(CompanyBaseDTO companyBaseDTO) {
-        return null;
+        log.debug("Request to update Company : {}", companyBaseDTO);
+        UserInfoResponse loggedUser = userService.getUserWithAuthorities();
+
+        Company existingCompany = companyDao.findById(companyBaseDTO.getId())
+                .orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + companyBaseDTO.getId()));
+
+        companyMapper.updateFromDto(companyBaseDTO, existingCompany);
+        Company savedCompany = companyDao.save(existingCompany);
+        return companyMapper.toDto(savedCompany);
     }
 
     @Override
-    public CompanyBaseDTO findById(Long aLong) {
-        return null;
+    public CompanyBaseDTO findById(Long id) {
+        log.debug("Request to get company by id : {}", id);
+        Optional<Company> company = companyDao.findById(id);
+        return companyMapper.toDto(company.orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + id)));
     }
 
     @Override
     public List<CompanyBaseDTO> findAll() {
-        return List.of();
+        log.debug("Request to get all company");
+        List<Company> allCompany = companyDao.findAll();
+        return companyMapper.toDtoList(allCompany);
     }
 
     @Override
-    public void delete(Long aLong) {
-
+    public void delete(Long id) {
+        log.debug("Request to delete Company : {}", id);
+        companyDao.deleteById(id);
     }
 }

@@ -1,12 +1,10 @@
 package pl.com.chrzanowski.sma.contractor.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
@@ -16,10 +14,7 @@ import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.service.UserService;
 
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,18 +25,14 @@ public class ContractorServiceImpl implements ContractorService {
     private final Logger log = LoggerFactory.getLogger(ContractorServiceImpl.class);
     private final ContractorDao contractorDao;
     private final ContractorMapper contractorMapper;
-    private final UserService userService;
-    private final EntityManager entityManager;
     private final ContactService contactService;
 
 
     public ContractorServiceImpl(ContractorDao contractorDao,
                                  ContractorMapper contractorMapper,
-                                 UserService userService, EntityManager entityManager, ContactService contactService) {
+                                 ContactService contactService) {
         this.contractorDao = contractorDao;
         this.contractorMapper = contractorMapper;
-        this.userService = userService;
-        this.entityManager = entityManager;
         this.contactService = contactService;
     }
 
@@ -50,14 +41,7 @@ public class ContractorServiceImpl implements ContractorService {
     public ContractorDTO save(ContractorDTO contractorDTO) {
         log.debug("Save contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
-        UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
-
         Contractor contractor = contractorMapper.toEntity(contractorDTO);
-        contractor.setCreatedBy(entityManager.getReference(User.class, userInfoResponse.id()));
-        contractor.setModifiedBy(entityManager.getReference(User.class, userInfoResponse.id()));
-        contractor.setCreatedDatetime(Instant.now());
-        contractor.setLastModifiedDatetime(Instant.now());
-
         Contractor savedContractor = contractorDao.save(contractor);
         return contractorMapper.toDto(savedContractor);
     }
@@ -67,7 +51,6 @@ public class ContractorServiceImpl implements ContractorService {
     public ContractorDTO update(ContractorDTO contractorDTO) {
         log.debug("Update contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
-        UserInfoResponse userInfoResponse = userService.getUserWithAuthorities();
 
         //todo save new contact if exists in contractorDTO contactList
         Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts());
@@ -77,13 +60,8 @@ public class ContractorServiceImpl implements ContractorService {
         Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId()).orElseThrow(()
                 -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
 
-        Contractor updatedContractor = contractorMapper.toEntity(contractorWithSavedContacts);
-        updatedContractor.setId(existingContractor.getId());
-        updatedContractor.setCreatedBy(existingContractor.getCreatedBy());
-        updatedContractor.setCreatedDatetime(existingContractor.getCreatedDatetime());
-        updatedContractor.setModifiedBy(entityManager.getReference(User.class, userInfoResponse.id()));
-        updatedContractor.setLastModifiedDatetime(Instant.now());
-        Contractor savedContractor = contractorDao.save(updatedContractor);
+        contractorMapper.updateContractorFromDto(contractorDTO, existingContractor);
+        Contractor savedContractor = contractorDao.save(existingContractor);
         return contractorMapper.toDto(savedContractor);
     }
 

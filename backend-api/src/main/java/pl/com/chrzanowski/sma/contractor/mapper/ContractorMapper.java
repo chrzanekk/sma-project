@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.contractor.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
@@ -29,11 +30,18 @@ public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Co
     @Mapping(target = "contacts", expression = "java(contactBaseMapper.toDtoSet(contractor.getContacts()))")
     public abstract ContractorDTO toDto(Contractor contractor);
 
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "contacts", expression = "java(contactBaseMapper.toEntitySet(contractorDTO.getContacts()))")
+    public abstract void updateContractorFromDto(ContractorDTO contractorDTO, @MappingTarget Contractor contractor);
+
     @Override
-    @Mapping(source = "createdById", target = "createdBy.id")
-    @Mapping(source = "modifiedById", target = "modifiedBy.id")
-    @Mapping(source = "createdDatetime", target = "createdDatetime")
-    @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "contacts", expression = "java(contactBaseMapper.toEntitySet(contractorDTO.getContacts()))")
     public abstract Contractor toEntity(ContractorDTO contractorDTO);
 
