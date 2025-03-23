@@ -81,6 +81,7 @@ public class ContractorQuerySpec {
         QContractor contractor = QContractor.contractor;
 
         JPQLQuery<Contractor> query = new JPAQuery<>(em).select(contractor).distinct().from(contractor);
+
         if (builder != null) {
             query.where(builder);
         }
@@ -96,7 +97,7 @@ public class ContractorQuerySpec {
             }
         }
 
-        query.leftJoin(contractor.contacts).fetchJoin();
+//        query.leftJoin(contractor.contacts).fetchJoin();
         return query;
     }
 }

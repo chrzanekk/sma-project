@@ -64,7 +64,7 @@ public class ContactQuerySpec {
             }
         }
 
-        query.leftJoin(contact.contractors).fetchJoin();
+//        query.leftJoin(contact.contractors).fetchJoin();
         return query;
     }
 }

@@ -2,6 +2,9 @@ package pl.com.chrzanowski.sma.unitTests.company.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import pl.com.chrzanowski.sma.company.dao.CompanyDao;
 import pl.com.chrzanowski.sma.company.dao.CompanyJPADaoImpl;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
@@ -34,6 +36,9 @@ public class CompanyJPADaoImplTest {
 
     @Mock
     private CompanyQuerySpec companyQuerySpec;
+
+    @Mock
+    private EntityManager em;
 
     private AutoCloseable closeable;
 
@@ -174,16 +179,22 @@ public class CompanyJPADaoImplTest {
     @Test
     void findAll_withSpecAndPage_Positive() {
         //Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Company> query = mock(JPQLQuery.class);
         Pageable pageable = PageRequest.of(0, 2);
         Company company = Company.builder().id(1L).name("First Company").build();
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(query);
-        when(query.offset(pageable.getOffset())).thenReturn(query);
-        when(query.limit(pageable.getPageSize())).thenReturn(query);
-        when(query.fetchCount()).thenReturn(1L);
-        when(query.fetch()).thenReturn(List.of(company));
+        BooleanBuilder specification = mock(BooleanBuilder.class);
+        @SuppressWarnings("unchecked")
+        JPAQuery<Company> mockQuery = mock(JPAQuery.class);
+        @SuppressWarnings("unchecked")
+        EntityGraph<Company> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
+
+        when(companyQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(1L);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(List.of(company));
 
         //When
         Page<Company> page = companyJPADaoImpl.findAll(specification, pageable);
@@ -193,24 +204,29 @@ public class CompanyJPADaoImplTest {
         assertEquals(1, page.getContent().size());
         assertTrue(page.getContent().contains(company));
         verify(companyQuerySpec, times(1)).buildQuery(specification);
-        verify(query, times(1)).offset(pageable.getOffset());
-        verify(query, times(1)).limit(pageable.getPageSize());
-        verify(query, times(1)).fetchCount();
-        verify(query, times(1)).fetch();
+        verify(mockQuery, times(1)).offset(pageable.getOffset());
+        verify(mockQuery, times(1)).limit(pageable.getPageSize());
+        verify(mockQuery, times(1)).fetch();
     }
 
     @Test
     void findAll_withSpecAndPage_Negative() {
         //Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Company> query = mock(JPQLQuery.class);
+
+        @SuppressWarnings("unchecked")
+        JPAQuery<Company> mockQuery = mock(JPAQuery.class);
+        @SuppressWarnings("unchecked")
+        EntityGraph<Company> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
         Pageable pageable = PageRequest.of(0, 2);
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(query);
-        when(query.offset(pageable.getOffset())).thenReturn(query);
-        when(query.limit(pageable.getPageSize())).thenReturn(query);
-        when(query.fetchCount()).thenReturn(0L);
-        when(query.fetch()).thenReturn(Collections.emptyList());
+        when(companyQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(0L);
+        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         //When
         Page<Company> page = companyJPADaoImpl.findAll(specification, pageable);
@@ -219,10 +235,9 @@ public class CompanyJPADaoImplTest {
 
         assertTrue(page.isEmpty());
         verify(companyQuerySpec, times(1)).buildQuery(specification);
-        verify(query, times(1)).offset(pageable.getOffset());
-        verify(query, times(1)).limit(pageable.getPageSize());
-        verify(query, times(1)).fetchCount();
-        verify(query, times(1)).fetch();
+        verify(mockQuery, times(1)).offset(pageable.getOffset());
+        verify(mockQuery, times(1)).limit(pageable.getPageSize());
+        verify(mockQuery, times(1)).fetch();
     }
 
     @Test

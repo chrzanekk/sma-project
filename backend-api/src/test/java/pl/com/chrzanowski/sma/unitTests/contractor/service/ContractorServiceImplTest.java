@@ -126,7 +126,7 @@ class ContractorServiceImplTest {
         assertNotNull(result);
         assertEquals("Contractor 1", result.getName());
 
-        verify(contractorMapper, times(1)).toEntity(any(ContractorDTO.class));
+        verify(contractorMapper, times(1)).updateContractorFromDto(any(ContractorDTO.class), any(Contractor.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
         verify(contractorMapper, times(1)).toDto(any(Contractor.class));
     }

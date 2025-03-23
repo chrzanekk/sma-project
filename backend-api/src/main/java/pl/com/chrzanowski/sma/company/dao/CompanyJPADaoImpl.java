@@ -2,6 +2,9 @@ package pl.com.chrzanowski.sma.company.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,10 +24,12 @@ public class CompanyJPADaoImpl implements CompanyDao {
     private final Logger log = LoggerFactory.getLogger(CompanyJPADaoImpl.class);
     private final CompanyRepository companyRepository;
     private final CompanyQuerySpec companyQuerySpec;
+    private final EntityManager em;
 
-    public CompanyJPADaoImpl(CompanyRepository companyRepository, CompanyQuerySpec companyQuerySpec) {
+    public CompanyJPADaoImpl(CompanyRepository companyRepository, CompanyQuerySpec companyQuerySpec, EntityManager em) {
         this.companyRepository = companyRepository;
         this.companyQuerySpec = companyQuerySpec;
+        this.em = em;
     }
 
 
@@ -68,9 +73,25 @@ public class CompanyJPADaoImpl implements CompanyDao {
     @Override
     public Page<Company> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("JPA DAO: Finding all companies by specification and page: {}, {}", specification, pageable);
-        JPQLQuery<Company> query = companyQuerySpec.buildQuery(specification);
-        long count = query.fetchCount();
-        List<Company> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        JPQLQuery<Company> baseQuery = companyQuerySpec.buildQuery(specification);
+
+        long count = baseQuery.fetchCount();
+        JPAQuery<Company> jpaQuery = getPaginationQuery(baseQuery);
+
+        List<Company> content = jpaQuery
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
         return new PageImpl<>(content, pageable, count);
+    }
+
+    private JPAQuery<Company> getPaginationQuery(JPQLQuery<Company> baseQuery) {
+        JPAQuery<Company> jpaQuery = (JPAQuery<Company>) baseQuery;
+
+        EntityGraph<Company> entityGraph = em.createEntityGraph(Company.class);
+        entityGraph.addSubgraph("users");
+
+        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        return jpaQuery;
     }
 }
