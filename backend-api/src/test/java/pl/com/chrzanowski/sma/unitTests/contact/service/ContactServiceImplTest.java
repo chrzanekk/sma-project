@@ -7,15 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactServiceImpl;
-import pl.com.chrzanowski.sma.user.model.User;
-import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.time.Instant;
 import java.util.Collections;
@@ -33,9 +30,6 @@ class ContactServiceImplTest {
 
     @Mock
     private ContactMapper contactMapper;
-
-    @Mock
-    private UserService userService;
 
     @Mock
     private EntityManager entityManager;
@@ -66,14 +60,6 @@ class ContactServiceImplTest {
         contact.setLastName("Doe");
         contact.setEmail("john@doe.com");
         contact.setPhoneNumber("555-555-555");
-
-        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null);
-        when(userService.getUserWithAuthorities()).thenReturn(mockUser);
-
-        User user = new User();
-        user.setId(mockUser.id());
-        user.setLogin(mockUser.login());
-        when(entityManager.getReference(User.class, mockUser.id())).thenReturn(user);
     }
 
     @AfterEach

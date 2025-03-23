@@ -52,7 +52,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyBaseDTO update(CompanyBaseDTO companyBaseDTO) {
         log.debug("Request to update Company : {}", companyBaseDTO);
-        UserInfoResponse loggedUser = userService.getUserWithAuthorities();
 
         Company existingCompany = companyDao.findById(companyBaseDTO.getId())
                 .orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + companyBaseDTO.getId()));
