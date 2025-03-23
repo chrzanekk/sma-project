@@ -2,11 +2,12 @@ package pl.com.chrzanowski.sma.company.service;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.exception.CompanyException;
+import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.CompanyErrorCode;
 import pl.com.chrzanowski.sma.company.dao.CompanyDao;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
@@ -15,6 +16,7 @@ import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -44,6 +46,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyBaseDTO save(CompanyBaseDTO companyBaseDTO) {
         log.debug("Request to save Company : {}", companyBaseDTO);
+        validateRequiredFields(companyBaseDTO);
         Company company = companyMapper.toEntity(companyBaseDTO);
         Company savedCompany = companyDao.save(company);
         return companyMapper.toDto(savedCompany);
@@ -52,7 +55,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public CompanyBaseDTO update(CompanyBaseDTO companyBaseDTO) {
         log.debug("Request to update Company : {}", companyBaseDTO);
-
+        validateRequiredFields(companyBaseDTO);
         Company existingCompany = companyDao.findById(companyBaseDTO.getId())
                 .orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + companyBaseDTO.getId()));
 
@@ -79,5 +82,11 @@ public class CompanyServiceImpl implements CompanyService {
     public void delete(Long id) {
         log.debug("Request to delete Company : {}", id);
         companyDao.deleteById(id);
+    }
+
+    private static void validateRequiredFields(CompanyBaseDTO companyBaseDTO) {
+        if (StringUtils.isBlank(companyBaseDTO.getName())) {
+            throw new PropertyMissingException(CompanyErrorCode.NAME_MISSING, "Company name is required", Map.of("name", companyBaseDTO.getName()));
+        }
     }
 }

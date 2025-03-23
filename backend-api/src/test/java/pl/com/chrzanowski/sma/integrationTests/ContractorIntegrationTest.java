@@ -207,7 +207,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
@@ -235,7 +235,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
@@ -332,7 +332,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     void shouldGetAllContractorsWithPaginationSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "1");
+        queryParams.add("size", "1");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
@@ -344,14 +344,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
-        assertThat(contractors).hasSize(2);
+        assertThat(contractors).hasSize(1);
     }
 
     @Test
     void shouldReturnEmptyListWhenPageIsOutOfBounds() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "10");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
@@ -443,7 +443,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     void shouldFailToGetContractorsWithInvalidPaginationParams() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "1");
-        queryParams.add("pageSize", "1");
+        queryParams.add("size", "1");
         queryParams.add("nameStartsWith", "Third");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
