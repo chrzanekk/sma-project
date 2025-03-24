@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.contact.dto;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 
 import java.time.Instant;
 
@@ -14,6 +15,7 @@ public abstract class AbstractContactDTO {
     protected final String phoneNumber;
     protected final String email;
     protected final String additionalInfo;
+    protected final CompanyBaseDTO company;
     protected final Instant createdDatetime;
     protected final Instant lastModifiedDatetime;
     protected final Long createdById;

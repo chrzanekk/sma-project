@@ -27,7 +27,7 @@ export interface FetchableContractorDTO {
     modifiedByLastName: string;
 }
 
-//podstawowy interfejs użyty jako typ do wyświetlania kontaktó z kontrahentami (by uniknąć odwołania cyklicznego)
+//podstawowy interfejs użyty jako typ do wyświetlania kontaktów z kontrahentami (by uniknąć odwołania cyklicznego)
 export interface BaseContractorDTOForContact {
 id?: number;
 name: string;

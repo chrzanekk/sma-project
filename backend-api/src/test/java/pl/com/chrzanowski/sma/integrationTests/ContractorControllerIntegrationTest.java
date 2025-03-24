@@ -43,8 +43,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
-@Import(ContractorIntegrationTest.TestConfig.class)
-public class ContractorIntegrationTest extends AbstractTestContainers {
+@Import(ContractorControllerIntegrationTest.TestConfig.class)
+public class ContractorControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private WebTestClient webTestClient;

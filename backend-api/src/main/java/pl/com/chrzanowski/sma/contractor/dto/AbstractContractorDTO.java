@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.json.CountryDeserializer;
 import pl.com.chrzanowski.sma.common.json.CountrySerializer;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 
 import java.time.Instant;
 
@@ -29,6 +30,7 @@ public abstract class AbstractContractorDTO {
     protected final Boolean customer;
     protected final Boolean supplier;
     protected final Boolean scaffoldingUser;
+    protected final CompanyBaseDTO company;
     protected final Instant createdDatetime;
     protected final Instant lastModifiedDatetime;
     protected final Long createdById;
