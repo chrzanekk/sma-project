@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, Button, Flex, Heading, Text} from "@chakra-ui/react";
 import {FaTools} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 
 interface UnderConstructionProps {
@@ -18,13 +18,14 @@ const UnderConstruction: React.FC<UnderConstructionProps> = ({
                                                                  onBackToHome
                                                              }) => {
     const {t} = useTranslation();
+    const themeColors = useThemeColors();
     return (
         <Flex
             direction="column"
             align="center"
             justify="center"
             height="100vh"
-            bg={themeColors.bgColorSecondary()}
+            bg={themeColors.bgColorSecondary}
             px={4}
             textAlign="center"
         >
@@ -32,7 +33,7 @@ const UnderConstruction: React.FC<UnderConstructionProps> = ({
             <Heading size="lg" mb={2}>
                 {title}
             </Heading>
-            <Text fontSize="md" color={themeColors.fontColor()} mb={6}>
+            <Text fontSize="md" color={themeColors.fontColor} mb={6}>
                 {description}
             </Text>
             {onBackToHome && (

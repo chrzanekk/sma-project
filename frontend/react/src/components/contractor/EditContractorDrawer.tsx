@@ -11,7 +11,7 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
 import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditContractorForm from "@/components/contractor/EditContractorForm.tsx";
@@ -24,6 +24,7 @@ interface EditContractorDrawerProps {
 
 const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContractors, contractorId}) => {
     const {t} = useTranslation(['common', 'contractors']);
+    const themeColors = useThemeColors();
 
     return (
         <Box>
@@ -38,7 +39,7 @@ const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContrac
                         {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}
+                <DrawerContent bg={themeColors.bgColorSecondary}
                                offset={"2"}
                                borderRadius={"md"}>
                     <DrawerContext>
@@ -46,7 +47,7 @@ const EditContractorDrawer: React.FC<EditContractorDrawerProps> = ({fetchContrac
                             <Box>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
                                         {t("contractors:edit")}
                                     </Heading>
                                 </DrawerHeader>

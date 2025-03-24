@@ -1,5 +1,3 @@
-// src/components/form/RegisterForm.tsx
-
 import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {Box, Button, Heading, Stack} from "@chakra-ui/react";
@@ -8,12 +6,13 @@ import {registerUser} from "@/services/auth-service.ts";
 import {RegisterRequest} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useNavigate} from "react-router-dom";
 
 const RegisterForm = () => {
     const {t} = useTranslation(['auth', 'common']);
     const navigate = useNavigate();
+    const themeColors = useThemeColors();
 
     return (
         <Formik
@@ -64,7 +63,7 @@ const RegisterForm = () => {
             {({isValid, isSubmitting}) => (
                 <Form>
                     <Box display="flex" justifyContent="center">
-                        <Heading fontSize="2xl" mb={15} color={themeColors.fontColor()}>{t('register.header')}</Heading>
+                        <Heading fontSize="2xl" mb={15} color={themeColors.fontColor}>{t('register.header')}</Heading>
                     </Box>
                     <Stack gap={2}>
                         <CustomInputField

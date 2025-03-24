@@ -30,7 +30,7 @@ const ContactManagement: React.FC = () => {
             setContacts(response.contacts);
             setTotalPages(response.totalPages);
         } catch (err) {
-            console.error('Error fetching contractors: ', err);
+            console.error('Error fetching contacts: ', err);
         }
     }, [rowsPerPage, sortField, sortDirection])
 
@@ -88,7 +88,7 @@ const ContactManagement: React.FC = () => {
             ...filter,
             sort: sortField ? `${sortField},${sortDirection}` : undefined
         }, currentPage).then(() => {
-            console.log("Contractors fetched successfully");
+            console.log("Contacts fetched successfully");
         });
     }, [fetchContacts, currentPage, filter, sortField, sortDirection]);
 

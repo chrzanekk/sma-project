@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer.tsx";
 import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContractorForm from "@/components/contractor/AddContractorForm.tsx";
 
@@ -23,6 +23,7 @@ interface AddContractorDrawerProps {
 
 const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContractors}) => {
     const {t} = useTranslation('contractors');
+    const themeColors = useThemeColors();
     return (
         <Box>
             <DrawerRoot size={"lg"}>
@@ -36,14 +37,14 @@ const AddContractorDrawer: React.FC<AddContractorDrawerProps> = ({fetchContracto
                         {t('add')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
+                <DrawerContent bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                     <DrawerContext>
                         {(store) => (
                             <Box>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("contractors:details")}
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
+                                        {t("contractors:details")}
                                     </Heading>
                                 </DrawerHeader>
                                 <DrawerBody>

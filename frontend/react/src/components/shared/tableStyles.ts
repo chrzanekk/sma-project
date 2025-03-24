@@ -1,8 +1,7 @@
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 export const useTableStyles = () => {
-    // Przykład: zwróć kolor w zależności od trybu (jasny/ciemny)
-    const fontColor = themeColors.fontColor()
+    const themeColors = useThemeColors();
 
     const commonCellProps = {
         textAlign: "center",
@@ -11,7 +10,7 @@ export const useTableStyles = () => {
 
     const commonColumnHeaderProps = {
         cursor: "pointer",
-        color: fontColor,
+        color: themeColors.fontColor,
         textAlign: "center",
         borderColor: "gray.400",
         fontSize: "x-small"

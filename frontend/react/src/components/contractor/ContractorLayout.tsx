@@ -1,5 +1,5 @@
 import React from "react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Grid, GridItem, Heading} from "@chakra-ui/react";
 
@@ -16,13 +16,15 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
                                                                addContractorButton,
                                                                table,
                                                                pagination,
-                                                               bgColor = themeColors.bgColorPrimary()
+                                                               bgColor = useThemeColors().bgColorPrimary
                                                            }) => {
-    const {t} = useTranslation(['common','contractors']);
+    const {t} = useTranslation(['common', 'contractors']);
+    const themeColors = useThemeColors();
+
     return (
         <Grid
             templateRows="auto auto auto auto 1fr"
-            bgColor={themeColors.bgColorSecondary()}
+            bgColor={themeColors.bgColorSecondary}
             height="auto" // Pełna wysokość ekranu
             gap={1}
         >
@@ -32,7 +34,7 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
                 mt={1}
                 bg={bgColor}
                 borderRadius={"lg"}
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('contractors:contractorList')}
             </Heading>
             </GridItem>
@@ -42,7 +44,7 @@ const ContractorLayout: React.FC<ContractorLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('filters')}
             </Heading>
 

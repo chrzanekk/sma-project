@@ -4,7 +4,7 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
 import {addContact} from "@/services/contact-service.ts";
 import {BaseContactFormValues, ContactDTO} from "@/types/contact-types.ts";
-import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
+import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
 
 
@@ -14,8 +14,7 @@ interface AddContactFormProps {
 
 const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'contacts', 'errors']);
-
-    const initialValues: ContactFormValues = {
+    const initialValues: BaseContactFormValues = {
         firstName: '',
         lastName: '',
         phoneNumber: '',
@@ -25,7 +24,7 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
 
     const validationSchema = getContactValidationSchema(t);
 
-    const handleSubmit = async (values: ContactFormValues) => {
+    const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
                 ...values

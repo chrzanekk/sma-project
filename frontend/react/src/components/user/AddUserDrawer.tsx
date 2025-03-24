@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import React from "react";
 import AddUserForm from "@/components/user/AddUserForm.tsx";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {
     DrawerActionTrigger,
     DrawerBackdrop,
@@ -22,6 +22,7 @@ interface AddUserDrawerProps {
 
 const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
     const {t} = useTranslation('auth');
+    const themeColors = useThemeColors();
     return (
         <>
             <DrawerRoot size={"md"}>
@@ -35,13 +36,13 @@ const AddUserDrawer: React.FC<AddUserDrawerProps> = ({fetchUsers}) => {
                         {t('shared.addUser')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary}>
                     <DrawerContext>
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
                                         {t("shared.userDetails")}
                                     </Heading>
                                 </DrawerHeader>

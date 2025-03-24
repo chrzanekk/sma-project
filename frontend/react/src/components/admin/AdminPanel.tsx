@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {getAdminPanelMenuItems} from "@/components/admin/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
@@ -12,6 +12,7 @@ export type AdminPanelView = 'roles' | 'users';
 const AdminPanel: React.FC = () => {
     const {t} = useTranslation('adminPanelMenu');
     const [activeView, setActiveView] = useState<AdminPanelView>('users');
+    const themeColors = useThemeColors();
 
     const renderActiveView = () => {
         switch (activeView) {
@@ -29,7 +30,7 @@ const AdminPanel: React.FC = () => {
     return (
         <Grid
             height={"90%"}
-            bgColor={themeColors.bgColorSecondary()}
+            bgColor={themeColors.bgColorSecondary}
             gap={1}
             px={1}
             py={1}
@@ -38,7 +39,7 @@ const AdminPanel: React.FC = () => {
             <GridItem
                 w={"100%"}
                 p={1}
-                bg={themeColors.bgColorPrimary()}
+                bg={themeColors.bgColorPrimary}
                 borderRadius={"lg"}
                 color={"white"}
             >
@@ -48,19 +49,19 @@ const AdminPanel: React.FC = () => {
                     <Heading size={"lg"}
                              fontSize={"16px"}
                              textAlign={"center"}
-                             color={themeColors.fontColor()}>
+                             color={themeColors.fontColor}>
                         {t('adminPanel')}
                     </Heading>
                     <MenuRoot>
                         <MenuTrigger asChild>
                             <Button
-                                bg={themeColors.bgColorPrimary()}
+                                bg={themeColors.bgColorPrimary}
                                 p={2}
-                                color={themeColors.fontColor()}
+                                color={themeColors.fontColor}
                                 _hover={{
                                     textDecoration: 'none',
-                                    bg: themeColors.highlightBgColor(),
-                                    color: themeColors.popoverBgColor()
+                                    bg: themeColors.highlightBgColor,
+                                    color: themeColors.popoverBgColor
                                 }}
                                 variant="outline"
                                 size="2xs"
@@ -74,19 +75,19 @@ const AdminPanel: React.FC = () => {
                             </Button>
                         </MenuTrigger>
                         <MenuContent
-                            bgColor={themeColors.bgColorSecondary()}
+                            bgColor={themeColors.bgColorSecondary}
                         >
                             {adminMenuItems.map((item, index) => (
                                 <MenuItem
                                     key={item.label || index}
-                                    bg={themeColors.bgColorSecondary()}
+                                    bg={themeColors.bgColorSecondary}
                                     rounded={'md'}
-                                    color={themeColors.fontColor()}
+                                    color={themeColors.fontColor}
                                     p={[2, 3]}
                                     _hover={{
                                         textDecoration: 'none',
-                                        bg: themeColors.highlightBgColor(),
-                                        color: themeColors.popoverBgColor(),
+                                        bg: themeColors.highlightBgColor,
+                                        color: themeColors.popoverBgColor,
                                         border: '1px solid white'
                                     }}
                                     value={item.label}
@@ -104,7 +105,7 @@ const AdminPanel: React.FC = () => {
 
             <GridItem
                 w="100%"
-                bg={themeColors.bgColorPrimary()}
+                bg={themeColors.bgColorPrimary}
                 borderRadius="lg"
                 overflowY={"auto"}
             >

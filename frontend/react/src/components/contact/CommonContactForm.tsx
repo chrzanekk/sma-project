@@ -24,6 +24,7 @@ const CommonContactForm: React.FC<CommonContactFormProps> = (({
                                                                   innerRef,
                                                               }) => {
             const {t} = useTranslation(['common', 'contractors']);
+
             return (
                 <Formik<BaseContactFormValues>
                     initialValues={initialValues}

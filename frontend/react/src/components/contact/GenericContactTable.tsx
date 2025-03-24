@@ -4,11 +4,9 @@ import {useState} from "react";
 import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import "@/theme/css/global-table-styles.css";
-import "@/theme/css/contact-table-styles.css";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
 import {BaseContactDTOForContractor, FetchableContactDTO} from "@/types/contact-types.ts";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 function isFetchableContact(
@@ -25,22 +23,23 @@ interface Props<T extends BaseContactDTOForContractor> {
     onSortChange: (field: string) => void;
     sortField: string | null;
     sortDirection: "asc" | "desc";
-    extended?: boolean; // jeśli true, renderujemy dodatkowe kolumny
+    extended?: boolean;
 }
 
-const ContactTable = <T extends BaseContactDTOForContractor>({
-                                                                 contacts,
-                                                                 onDelete,
-                                                                 fetchContacts,
-                                                                 onSortChange,
-                                                                 sortField,
-                                                                 sortDirection,
-                                                                 extended = false,
-                                                             }: Props<T>) => {
+const GenericContactTable = <T extends BaseContactDTOForContractor>({
+                                                                        contacts,
+                                                                        onDelete,
+                                                                        fetchContacts,
+                                                                        onSortChange,
+                                                                        sortField,
+                                                                        sortDirection,
+                                                                        extended = false,
+                                                                    }: Props<T>) => {
     const {t} = useTranslation(["common", "contacts"]);
     const {open, onOpen, onClose} = useDisclosure();
-    const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
+    const [selectedContactId, setSelectedContactId] = useState<number | null>(null);
+    const themeColors = useThemeColors();
 
     const handleDeleteClick = (id: number) => {
         setSelectedContactId(id);
@@ -54,6 +53,14 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
         onClose();
     };
 
+    const renderSortIndicator = (field: string) => {
+
+        if (sortField === field) {
+            return sortDirection === "asc" ? "↑" : "↓";
+        }
+        return null;
+    };
+
     if (!contacts || contacts.length === 0) {
         return (
             <Field alignContent="center">
@@ -62,24 +69,16 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
         );
     }
 
-    const renderSortIndicator = (field: string) => {
-        if (sortField === field) {
-            return sortDirection === "asc" ? "↑" : "↓";
-        }
-        return null;
-    };
-
-
     return (
         <Box>
             <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
                 <Table.Root size={"sm"}
                             interactive
                             showColumnBorder
-                            color={themeColors.fontColor()}
+                            color={themeColors.fontColor}
                 >
                     <Table.Header>
-                        <Table.Row bg={themeColors.bgColorPrimary()}>
+                        <Table.Row bg={themeColors.bgColorPrimary}>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
                                 onClick={() => onSortChange("id")}
@@ -142,23 +141,21 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
                                     >
                                         {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader color={themeColors.fontColor()}
-                                                        textAlign={"center"}
+                                    <Table.ColumnHeader {...commonColumnHeaderProps}
                                     >{t("edit")}
                                     </Table.ColumnHeader>
                                 </>
                             )}
-
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {contacts.map((contact) => (
                             <Table.Row key={contact.id}
-                                       bg={themeColors.bgColorSecondary()}
+                                       bg={themeColors.bgColorSecondary}
                                        _hover={{
                                            textDecoration: 'none',
-                                           bg: themeColors.highlightBgColor(),
-                                           color: themeColors.fontColorHover()
+                                           bg: themeColors.highlightBgColor,
+                                           color: themeColors.fontColorHover
                                        }}
                             >
                                 <Table.Cell {...commonCellProps} width={"2%"}>{contact.id}</Table.Cell>
@@ -236,4 +233,4 @@ const ContactTable = <T extends BaseContactDTOForContractor>({
     );
 };
 
-export default ContactTable;
+export default GenericContactTable;

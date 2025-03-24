@@ -1,7 +1,7 @@
 import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import AddRoleForm from "@/components/role/AddRoleForm.tsx";
 import React from "react";
 import {
@@ -22,6 +22,8 @@ interface AddRoleDrawerProps {
 
 const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
     const {t} = useTranslation('auth');
+    const themeColors = useThemeColors();
+
     return (
         <>
             <DrawerRoot size={"md"}>
@@ -32,16 +34,16 @@ const AddRoleDrawer: React.FC<AddRoleDrawerProps> = ({fetchRoles}) => {
                         {t('shared.addRole')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary}>
                     <DrawerContext>
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("shared.roleDetails")}
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
+                                        {t("shared.roleDetails")}
                                     </Heading>
-                                    </DrawerHeader>
+                                </DrawerHeader>
                                 <DrawerBody>
                                     <AddRoleForm
                                         onSuccess={() => {

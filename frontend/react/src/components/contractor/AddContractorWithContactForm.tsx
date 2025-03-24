@@ -12,7 +12,7 @@ import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.ts
 import {Box, Flex, Heading, Steps, Table, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSummary from "@/components/contractor/ContractorSummary.tsx";
 
 interface AddContractorWithContactFormProps {
@@ -28,6 +28,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     const [currentStep, setCurrentStep] = useState(0);
     const [isContractorValid, setIsContractorValid] = useState(false);
     const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
+    const themeColors = useThemeColors();
 
 
     const contractorInitialValues: ContractorFormValues = {
@@ -115,24 +116,24 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     return (
         <Steps.Root defaultStep={0} count={3} variant={"solid"} colorPalette={'green'} size={"sm"}>
             <Steps.List>
-                <Steps.Item key={0} index={0} color={themeColors.fontColor()}>
+                <Steps.Item key={0} index={0} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("contractors:add")}</Text>}
+                                        color={themeColors.fontColor}>{t("contractors:add")}</Text>}
                     </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
-                <Steps.Item key={1} index={1} color={themeColors.fontColor()}>
+                <Steps.Item key={1} index={1} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>}
+                                        color={themeColors.fontColor}>{t("contacts:addOptional")}</Text>}
                     </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
-                <Steps.Item key={2} index={2} color={themeColors.fontColor()}>
+                <Steps.Item key={2} index={2} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("common:summary")}</Text>} </Steps.Title>
+                                        color={themeColors.fontColor}>{t("common:summary")}</Text>} </Steps.Title>
                 </Steps.Item>
             </Steps.List>
 
@@ -149,7 +150,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
 
             <Steps.Content key={1} index={1}>
-                <Heading size="md" mb={2} color={themeColors.fontColor()}>
+                <Heading size="md" mb={2} color={themeColors.fontColor}>
                     {t("contacts:addOptional")}
                 </Heading>
                 <ContactFormWithSearch onSuccess={handleAddContact}
@@ -171,24 +172,24 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
                 {/* Lista kontaktów (opcjonalnie z przyciskiem usuń) */}
                 <Box mt={4}>
-                    <Heading size="sm" mb={2} color={themeColors.fontColor()}>
+                    <Heading size="sm" mb={2} color={themeColors.fontColor}>
                         {t("contacts:list", "Lista kontaktów")}
                     </Heading>
 
                     <Table.ScrollArea borderWidth="1px" rounded="sm" height="200px">
-                        <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor()}>
+                        <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor}>
                             <Table.Header>
-                                <Table.Row bg={themeColors.bgColorPrimary()}>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                <Table.Row bg={themeColors.bgColorPrimary}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:firstName")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:lastName")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:phoneNumber")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("common:actions", "Akcje")}
                                     </Table.ColumnHeader>
                                 </Table.Row>
@@ -199,11 +200,11 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                                     contacts.map((contact, idx) => (
                                         <Table.Row
                                             key={idx}
-                                            bg={themeColors.bgColorSecondary()}
+                                            bg={themeColors.bgColorSecondary}
                                             _hover={{
                                                 textDecoration: "none",
-                                                bg: themeColors.highlightBgColor(),
-                                                color: themeColors.fontColorHover(),
+                                                bg: themeColors.highlightBgColor,
+                                                color: themeColors.fontColorHover,
                                             }}
                                         >
                                             <Table.Cell textAlign="center">{contact.firstName}</Table.Cell>
@@ -235,9 +236,8 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
             <Steps.Content key={2} index={2}>
                 <Box direction="column" textAlign="center" mb={2}>
-                    <Heading size="md" color={themeColors.fontColor()}>{t("common:summary")}</Heading>
-                    <ContractorSummary contractorData={contractorData!!} contacts={contacts} t={t}
-                                       themeColors={themeColors}/>
+                    <Heading size="md" color={themeColors.fontColor}>{t("common:summary")}</Heading>
+                    <ContractorSummary contractorData={contractorData!!} contacts={contacts}/>
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>

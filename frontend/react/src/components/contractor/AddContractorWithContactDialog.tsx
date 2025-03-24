@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContractorWithContactForm from "@/components/contractor/AddContractorWithContactForm";
 
@@ -22,6 +22,7 @@ interface AddContractorWithContactDialogProps {
 
 const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogProps> = ({fetchContractors}) => {
     const {t} = useTranslation("contractors");
+    const themeColors = useThemeColors();
 
     return (
         <Box>
@@ -32,13 +33,13 @@ const AddContractorWithContactDialog: React.FC<AddContractorWithContactDialogPro
                         <FaPlus/> {t("add")}
                     </Button>
                 </DialogTrigger>
-                <DialogContent bg={themeColors.bgColorSecondary()} offset="4" borderRadius="md">
+                <DialogContent bg={themeColors.bgColorSecondary} offset="4" borderRadius="md">
                     <DialogContext>
                         {(store) => (
                             <Box>
                                 <DialogCloseTrigger/>
                                 <DialogHeader>
-                                    <Heading size="xl" color={themeColors.fontColor()}>
+                                    <Heading size="xl" color={themeColors.fontColor}>
                                         {t("contractors:details")}
                                     </Heading>
                                 </DialogHeader>

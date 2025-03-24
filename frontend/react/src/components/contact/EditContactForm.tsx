@@ -14,7 +14,6 @@ interface EditContactFormProps {
 }
 
 const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId}) => {
-    const {t} = useTranslation(['common', 'contractors', 'errors'])
     const defaultValues: BaseContactFormValues = {
         id: 0,
         firstName: '',
@@ -23,10 +22,9 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         email: '',
         additionalInfo: ''
     }
-
+    const {t} = useTranslation(['common', 'contractors', 'errors'])
     const [initialValues, setInitialValues] = useState<BaseContactFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
 
     useEffect(() => {
         const fetchContact = async () => {

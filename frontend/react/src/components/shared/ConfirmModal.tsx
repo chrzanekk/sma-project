@@ -1,16 +1,6 @@
 import React from "react";
-import {Button, DialogBackdrop, Text} from "@chakra-ui/react";
-import {
-    DialogActionTrigger,
-    DialogBody,
-    DialogCloseTrigger,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogRoot,
-    DialogTitle,
-} from "@/components/ui/dialog";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {Button, Dialog, Portal, Text} from "@chakra-ui/react";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -31,33 +21,38 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                                                        confirmText = "Confirm",
                                                        cancelText = "Cancel",
                                                    }) => {
+    const themeColors = useThemeColors();
     return (
-        <DialogRoot
+        <Dialog.Root
             open={isOpen}
             onOpenChange={(open) => !open && onClose()}
             role="alertdialog"
         >
-            <DialogBackdrop/>
-            <DialogContent backgroundColor={themeColors.bgColorSecondary()}>
-                <DialogCloseTrigger/>
-                <DialogHeader color={themeColors.fontColor()}>
-                    <DialogTitle>{title}</DialogTitle>
-                </DialogHeader>
-                <DialogBody asChild>
-                    <Text color={themeColors.fontColor()}>{message}</Text>
-                </DialogBody>
-                <DialogFooter>
-                    <DialogActionTrigger asChild>
-                        <Button variant="outline" onClick={onClose}>
-                            {cancelText}
-                        </Button>
-                    </DialogActionTrigger>
-                    <Button colorPalette="red" onClick={onConfirm}>
-                        {confirmText}
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </DialogRoot>
+            <Portal>
+                <Dialog.Backdrop/>
+                <Dialog.Positioner>
+                    <Dialog.Content backgroundColor={themeColors.bgColorSecondary}>
+                        <Dialog.CloseTrigger/>
+                        <Dialog.Header color={themeColors.fontColor}>
+                            <Dialog.Title>{title}</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body asChild>
+                            <Text color={themeColors.fontColor}>{message}</Text>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline" onClick={onClose}>
+                                    {cancelText}
+                                </Button>
+                            </Dialog.ActionTrigger>
+                            <Button colorPalette="red" onClick={onConfirm}>
+                                {confirmText}
+                            </Button>
+                        </Dialog.Footer>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
+        </Dialog.Root>
     );
 };
 

@@ -6,7 +6,7 @@ import DateFormatter from "@/utils/date-formatter";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
 import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 
@@ -39,6 +39,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                                      contactSortDirection,
                                                                                  }) => {
     const {t} = useTranslation(["common", "contractors"]);
+    const themeColors = useThemeColors();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
@@ -68,9 +69,9 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                 <Table.Root size={"sm"}
                             interactive
                             showColumnBorder
-                            color={themeColors.fontColor()}>
+                            color={themeColors.fontColor}>
                     <Table.Header>
-                        <Table.Row bg={themeColors.bgColorPrimary()}>
+                        <Table.Row bg={themeColors.bgColorPrimary}>
                             <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("id")}>
                                 ID {renderSortIndicator("id")}
                             </Table.ColumnHeader>
@@ -118,11 +119,11 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                             return (
                                 <React.Fragment key={contractorId}>
                                     <Table.Row
-                                        bg={themeColors.bgColorSecondary()}
+                                        bg={themeColors.bgColorSecondary}
                                         _hover={{
                                             textDecoration: 'none',
-                                            bg: themeColors.highlightBgColor(),
-                                            color: themeColors.fontColorHover()
+                                            bg: themeColors.highlightBgColor,
+                                            color: themeColors.fontColorHover
                                         }}
                                         onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}
                                     >
@@ -170,7 +171,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps}
                                                     onClick={(e) => e.stopPropagation()}
-                                                    >
+                                        >
                                             <HStack gap={1} justifyContent={"center"}>
                                                 <EditContractorDialog
                                                     fetchContractors={fetchContractors}
@@ -190,11 +191,11 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                     {/* Wiersz rozwijany z tabelą kontaktów */}
                                     {expandedRows[contractorId] && (
                                         <Table.Row
-                                            bg={themeColors.bgColorSecondary()}
+                                            bg={themeColors.bgColorSecondary}
                                             _hover={{
                                                 textDecoration: 'none',
-                                                bg: themeColors.highlightBgColor(),
-                                                color: themeColors.fontColorHover()
+                                                bg: themeColors.highlightBgColor,
+                                                color: themeColors.fontColorHover
                                             }}
                                         >
                                             <Table.Cell colSpan={13} {...commonCellProps}>
@@ -202,13 +203,13 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                     <Collapsible.Content>
                                                         <Box>
                                                             <GenericContactTable
-                                                                contacts={contractor.contacts}
+                                                                contacts={contractor.contacts!!}
                                                                 onDelete={contactOnDelete}
                                                                 fetchContacts={contactFetchContacts}
                                                                 onSortChange={contactOnSortChange}
                                                                 sortField={contactSortField}
                                                                 sortDirection={contactSortDirection}
-                                                                extended={false}
+                                                                extended={true}
                                                             />
                                                         </Box>
                                                     </Collapsible.Content>

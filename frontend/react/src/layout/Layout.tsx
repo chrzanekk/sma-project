@@ -2,16 +2,17 @@ import React from "react";
 import Navbar from "@/layout/Navbar.tsx";
 import Footer from "@/layout/Footer.tsx";
 import {Box} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
-const Layout = ({children}: { children: React.ReactNode }) => (
-    <Box
+const Layout = ({children}: { children: React.ReactNode }) => {
+    const themeColors = useThemeColors();
+        return <Box
         minH="100vh"
         display="flex"
         w={"auto"}
         flexDirection="column"
         overflow={"hidden"}
-        bg={themeColors.bgColorSecondary()}
+        bg={themeColors.bgColorSecondary}
     >
 
         <Box as="header" w="100%" position="sticky" top="0" zIndex="10">
@@ -31,6 +32,6 @@ const Layout = ({children}: { children: React.ReactNode }) => (
             <Footer/>
         </Box>
     </Box>
-)
+}
 
 export default Layout;

@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {Box, Button, Table} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {CustomInputSearchField} from "@/components/shared/CustomFormFields.tsx";
 
 interface ContactFormWithSearchProps {
@@ -20,6 +20,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
     const [searchResults, setSearchResults] = useState<BaseContactFormValues[]>([]);
     const [selectedContact, setSelectedContact] = useState<BaseContactFormValues | null>(null);
     const validationSchema = getContactValidationSchema(t);
+    const themeColors = useThemeColors();
 
     const defaultValues: BaseContactFormValues = {
         firstName: "",
@@ -68,15 +69,15 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
                                     stickyHeader
                                     showColumnBorder
                                     interactive
-                                    color={themeColors.fontColor()}
+                                    color={themeColors.fontColor}
                         >
                             <Table.Header>
-                                <Table.Row bg={themeColors.bgColorPrimary()} >
+                                <Table.Row bg={themeColors.bgColorPrimary}>
                                     <Table.ColumnHeader
-                                        color={themeColors.fontColor()}>{t("contacts:firstName")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                        color={themeColors.fontColor}>{t("contacts:firstName")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader color={themeColors.fontColor}
                                                         textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader color={themeColors.fontColor()}
+                                    <Table.ColumnHeader color={themeColors.fontColor}
                                                         textAlign={"end"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
                                 </Table.Row>
                             </Table.Header>
@@ -86,11 +87,11 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
                                     <Table.Row key={idx}
                                                onClick={() => handleSelectContact(contact)}
                                                style={{cursor: "pointer"}}
-                                               bg={themeColors.bgColorSecondary()}
+                                               bg={themeColors.bgColorSecondary}
                                                _hover={{
                                                    textDecoration: 'none',
-                                                   bg: themeColors.highlightBgColor(),
-                                                   color: themeColors.fontColorHover()
+                                                   bg: themeColors.highlightBgColor,
+                                                   color: themeColors.fontColorHover
                                                }}
                                     >
                                         <Table.Cell>{contact.firstName}</Table.Cell>

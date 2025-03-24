@@ -1,6 +1,6 @@
 import React from "react";
 import {Grid, GridItem, Heading} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 
 interface UserLayoutProps {
@@ -12,17 +12,19 @@ interface UserLayoutProps {
 }
 
 const UserLayout: React.FC<UserLayoutProps> = ({
-                                                         filters,
-                                                         addUserButton,
-                                                         table,
-                                                         pagination,
-                                                         bgColor = themeColors.bgColorPrimary()
-                                                     }) => {
+                                                   filters,
+                                                   addUserButton,
+                                                   table,
+                                                   pagination,
+                                                   bgColor = useThemeColors().bgColorPrimary
+                                               }) => {
     const {t} = useTranslation();
+    const themeColors = useThemeColors();
+
     return (
         <Grid
             templateRows="auto auto auto auto 1fr" // Ostatni rząd elastyczny
-            bgColor={themeColors.bgColorSecondary()}
+            bgColor={themeColors.bgColorSecondary}
             height="auto" // Pełna wysokość ekranu
             gap={1}
         >
@@ -31,7 +33,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('userList')}
             </Heading>
             </GridItem>
@@ -41,7 +43,7 @@ const UserLayout: React.FC<UserLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('filters')}
             </Heading>
 

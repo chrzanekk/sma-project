@@ -1,17 +1,19 @@
 'use client'
 
 import {Box, HStack, Image, Stack, Text} from '@chakra-ui/react'
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 
 export default function SmallWithLogoLeft() {
 
     const {t} = useTranslation('footer')
+    const themeColors = useThemeColors();
+
     return (
         <Box
             as="footer"
-            bg={themeColors.bgColorPrimary()}
-            color={themeColors.fontColor()}
+            bg={themeColors.bgColorPrimary}
+            color={themeColors.fontColor}
             width="100%"
             textAlign="center"
         >
@@ -24,7 +26,7 @@ export default function SmallWithLogoLeft() {
                         alt="Konrad Chrzanowski"
                         boxSize="50px"
                     />
-                    <Text fontWeight={700} color={themeColors.fontColor()}>{t('copyright')}</Text>
+                    <Text fontWeight={700} color={themeColors.fontColor}>{t('copyright')}</Text>
                 </HStack>
             </Stack>
         </Box>

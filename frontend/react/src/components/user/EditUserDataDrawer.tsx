@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import EditUserDataForm from './EditUserDataForm.tsx'
 import {
     DrawerActionTrigger,
@@ -23,7 +23,7 @@ interface EditUserDataDrawerProps {
 
 const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, userId}) => {
     const {t} = useTranslation('auth');
-
+    const themeColors = useThemeColors();
     return (
         <>
             <DrawerRoot size={"md"}>
@@ -37,16 +37,16 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                         {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary}>
                     <DrawerContext>
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("shared.editUserDetails")}
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
+                                        {t("shared.editUserDetails")}
                                     </Heading>
-                                    </DrawerHeader>
+                                </DrawerHeader>
                                 <DrawerBody>
                                     <EditUserDataForm
                                         onSuccess={() => {

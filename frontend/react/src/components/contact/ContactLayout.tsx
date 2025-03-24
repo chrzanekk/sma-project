@@ -1,5 +1,5 @@
 import React from "react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Grid, GridItem, Heading} from "@chakra-ui/react";
 
@@ -12,17 +12,18 @@ interface ContactLayoutProps {
 }
 
 const ContactLayout: React.FC<ContactLayoutProps> = ({
-                                                               filters,
-                                                               addContactButton,
-                                                               table,
-                                                               pagination,
-                                                               bgColor = themeColors.bgColorPrimary()
-                                                           }) => {
-    const {t} = useTranslation(['common','contacts']);
+                                                         filters,
+                                                         addContactButton,
+                                                         table,
+                                                         pagination,
+                                                         bgColor = useThemeColors().bgColorPrimary
+                                                     }) => {
+    const {t} = useTranslation(['common', 'contacts']);
+    const themeColors = useThemeColors();
     return (
         <Grid
             templateRows="auto auto auto auto 1fr"
-            bgColor={themeColors.bgColorSecondary()}
+            bgColor={themeColors.bgColorSecondary}
             height="auto"
             gap={1}
         >
@@ -32,7 +33,7 @@ const ContactLayout: React.FC<ContactLayoutProps> = ({
                 mt={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('contacts:contactList')}
             </Heading>
             </GridItem>
@@ -42,7 +43,7 @@ const ContactLayout: React.FC<ContactLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('filters')}
             </Heading>
                 {filters}

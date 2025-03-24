@@ -1,20 +1,9 @@
 import {useTranslation} from "react-i18next";
-import {
-    DialogActionTrigger,
-    DialogBackdrop,
-    DialogBody,
-    DialogCloseTrigger,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogRoot,
-    DialogTrigger
-} from "@/components/ui/dialog.tsx";
-import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
+import {Box, Button, Dialog, Heading, Portal} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContactForm from "@/components/contact/AddContactForm.tsx";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 
 interface AddContractorDialogProps {
@@ -23,11 +12,12 @@ interface AddContractorDialogProps {
 
 const AddContactDialog: React.FC<AddContractorDialogProps> = ({fetchContacts}) => {
     const {t} = useTranslation('contacts');
+    const themeColors = useThemeColors();
     return (
         <Box>
-            <DialogRoot size={"lg"} placement={"top"}>
-                <DialogBackdrop/>
-                <DialogTrigger asChild>
+            <Dialog.Root size={"lg"} placement={"top"}>
+
+                <Dialog.Trigger asChild>
                     <Button
                         colorPalette="green"
                         size={"2xs"}
@@ -35,40 +25,45 @@ const AddContactDialog: React.FC<AddContractorDialogProps> = ({fetchContacts}) =
                     ><FaPlus/>
                         {t('add')}
                     </Button>
-                </DialogTrigger>
-                <DialogContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
-                    <DialogContext>
-                        {(store) => (
-                            <>
-                                <DialogCloseTrigger/>
-                                <DialogHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
-                                        {t("contacts:details")}
-                                    </Heading>
-                                </DialogHeader>
-                                <DialogBody>
-                                    <AddContactForm
-                                        onSuccess={() => {
-                                            fetchContacts();
-                                            store.setOpen(false);
-                                        }}
-                                    />
-                                </DialogBody>
-                                <DialogFooter>
-                                    <DialogActionTrigger asChild>
-                                        <Button
-                                            colorPalette="red"
-                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
-                                        >
-                                            {t("close", {ns: "common"})}
-                                        </Button>
-                                    </DialogActionTrigger>
-                                </DialogFooter>
-                            </>
-                        )}
-                    </DialogContext>
-                </DialogContent>
-            </DialogRoot>
+                </Dialog.Trigger>
+                <Portal>
+                    <Dialog.Backdrop/>
+                    <Dialog.Positioner>
+                        <Dialog.Content bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
+                            <Dialog.Context>
+                                {(store) => (
+                                    <>
+                                        <Dialog.CloseTrigger/>
+                                        <Dialog.Header>
+                                            <Heading size={"xl"} color={themeColors.fontColor}>
+                                                {t("contacts:details")}
+                                            </Heading>
+                                        </Dialog.Header>
+                                        <Dialog.Body>
+                                            <AddContactForm
+                                                onSuccess={() => {
+                                                    fetchContacts();
+                                                    store.setOpen(false);
+                                                }}
+                                            />
+                                        </Dialog.Body>
+                                        <Dialog.Footer>
+                                            <Dialog.ActionTrigger asChild>
+                                                <Button
+                                                    colorPalette="red"
+                                                    onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                                >
+                                                    {t("close", {ns: "common"})}
+                                                </Button>
+                                            </Dialog.ActionTrigger>
+                                        </Dialog.Footer>
+                                    </>
+                                )}
+                            </Dialog.Context>
+                        </Dialog.Content>
+                    </Dialog.Positioner>
+                </Portal>
+            </Dialog.Root>
         </Box>
     )
 }

@@ -2,8 +2,8 @@ import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
 import {Box, Button, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
-import {themeColors, themeColorsHex} from "@/theme/theme-colors";
-import {selectStyles} from "@/components/shared/formOptions.ts";
+import {useThemeColors, useThemeColorsHex} from "@/theme/theme-colors";
+import {getSelectStyles} from "@/components/shared/formOptions.ts";
 import {useTranslation} from "react-i18next";
 // -----------------------------
 // Komponenty formularzowe
@@ -14,19 +14,21 @@ export interface CustomInputFilterFieldProps {
     placeholder: string;
 }
 
-export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({name, placeholder}) => (
-    <Field
+export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({name, placeholder}) => {
+    const themeColors = useThemeColors();
+    const themeColorsHex = useThemeColorsHex();
+    return <Field
         name={name}
         as={Input}
-        color={themeColors.fontColor()}
+        color={themeColors.fontColor}
         placeholder={placeholder}
-        _placeholder={{color: themeColorsHex.fontColor()}}
+        _placeholder={{color: themeColorsHex.fontColor}}
         size="sm"
-        bg={themeColors.bgColorSecondary()}
+        bg={themeColors.bgColorSecondary}
         borderRadius="md"
         width="150px"
     />
-);
+};
 
 
 interface CustomInputFieldProps {
@@ -46,23 +48,25 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                width,
                                                                disabled
                                                            }) => {
+    const themeColors = useThemeColors();
+    const themeColorsHex = useThemeColorsHex();
     return (
         <Field name={name}>
             {({field, meta}: FieldProps) => (
                 <Box mb={2}>
                     {label && (
-                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
                             {label}
                         </Text>
                     )}
                     <Input
                         {...field}
                         placeholder={placeholder}
-                        _placeholder={{color: themeColorsHex.fontColor()}}
+                        _placeholder={{color: themeColorsHex.fontColor}}
                         type={type}
                         size="sm"
-                        color={themeColors.fontColor()}
-                        bg={themeColors.bgColorPrimary()}
+                        color={themeColors.fontColor}
+                        bg={themeColors.bgColorPrimary}
                         borderRadius="md"
                         width={width || "100%"}
                         disabled={disabled}
@@ -101,7 +105,9 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                  disabled = false,
                                                              }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
+    const themeColors = useThemeColors();
     const [field, meta] = useField(name);
+    const selectStyles = getSelectStyles();
 
     const selectedValue = isMulti
         ? options.filter((option) => Array.isArray(field.value) && field.value.includes(option.value))
@@ -126,7 +132,7 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
     return (
         <Box mb={2}>
             {label && (
-                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
                     {label}
                 </Text>
             )}
@@ -159,7 +165,6 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
 
 
 interface CustomSimpleSelectProps {
-    label?: string;
     value: number;
     onChange: (value: number) => void;
     options: { value: number; label: string }[];
@@ -171,7 +176,6 @@ interface CustomSimpleSelectProps {
 }
 
 const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
-                                                                   label,
                                                                    value,
                                                                    onChange,
                                                                    options,
@@ -181,7 +185,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                                                                    size = "sm",
                                                                    hideArrow = false,
                                                                }) => {
-
+    const selectStyles = getSelectStyles();
     const selectedValue = options.find((option) => option.value === value) || null;
 
     const getSizeStyles = (size: string) => {
@@ -262,11 +266,6 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
 
     return (
         <Box>
-            {label && (
-                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
-                    {label}
-                </Text>
-            )}
             <Select
                 options={options}
                 isDisabled={disabled}
@@ -299,22 +298,24 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                                                                      rows = 3,
                                                                      disabled = false
                                                                  }) => {
+    const themeColors = useThemeColors();
+    const themeColorsHex = useThemeColorsHex();
     return (
         <Field name={name}>
             {({field, meta}: FieldProps) => (
                 <Box mb={2}>
                     {label && (
-                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor()}>
+                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
                             {label}
                         </Text>
                     )}
                     <Textarea
                         {...field}
                         placeholder={placeholder}
-                        _placeholder={{color: themeColorsHex.fontColor()}}
+                        _placeholder={{color: themeColorsHex.fontColor}}
                         size="sm"
-                        color={themeColors.fontColor()}
-                        bg={themeColors.bgColorPrimary()}
+                        color={themeColors.fontColor}
+                        bg={themeColors.bgColorPrimary}
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}
@@ -349,23 +350,24 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                                                                            handleSearch,
                                                                        }) => {
     const {t} = useTranslation();
-
+    const themeColors = useThemeColors();
+    const themeColorsHex = useThemeColorsHex();
     return (
         <Box mb={1}>
             {label && (
-                <Text fontSize={"sm"} fontWeight={"bold"} mb={"1"} color={themeColors.fontColor()}>
+                <Text fontSize={"sm"} fontWeight={"bold"} mb={"1"} color={themeColors.fontColor}>
                     {label}
                 </Text>
             )}
             <Input
                 name={name}
                 placeholder={placeholder}
-                _placeholder={{color: themeColorsHex.fontColor()}}
+                _placeholder={{color: themeColorsHex.fontColor}}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 size={"sm"}
-                color={themeColors.fontColor()}
-                bg={themeColors.bgColorPrimary()}
+                color={themeColors.fontColor}
+                bg={themeColors.bgColorPrimary}
                 borderRadius={"md"}
             />
             <Button

@@ -1,5 +1,5 @@
 import React from "react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Grid, GridItem, Heading} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 
@@ -16,13 +16,15 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                                                    addRoleButton,
                                                    table,
                                                    pagination,
-                                                   bgColor = themeColors.bgColorPrimary()
+                                                   bgColor = useThemeColors().bgColorPrimary
                                                }) => {
     const {t} = useTranslation();
+    const themeColors = useThemeColors();
+
     return (
         <Grid
             templateRows="auto auto auto auto 1fr"
-            bgColor={themeColors.bgColorSecondary()}
+            bgColor={themeColors.bgColorSecondary}
             height="auto"
             gap={1}
         >
@@ -31,7 +33,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('roleList')}
             </Heading>
             </GridItem>
@@ -41,7 +43,7 @@ const RoleLayout: React.FC<RoleLayoutProps> = ({
                 p={1}
                 bg={bgColor}
                 borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor()}>
+            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
                 {t('filters')}
             </Heading>
 

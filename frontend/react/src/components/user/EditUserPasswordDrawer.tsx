@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Button, DrawerContext, Heading} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditUserPasswordForm from "@/components/user/EditUserPasswordForm.tsx";
@@ -25,6 +25,8 @@ interface EditUserPasswordDrawerProps {
 
 const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUsers, userId, currentUserId, login}) => {
     const {t} = useTranslation('auth');
+    const themeColors = useThemeColors();
+
     return (
         <>
 
@@ -39,13 +41,13 @@ const EditUserPasswordDrawer: React.FC<EditUserPasswordDrawerProps> = ({fetchUse
                         {t('shared.password')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()}>
+                <DrawerContent bg={themeColors.bgColorSecondary}>
                     <DrawerContext>
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
                                         {t("newPassword.header")}
                                     </Heading>
                                 </DrawerHeader>
