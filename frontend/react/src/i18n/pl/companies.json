@@ -1,0 +1,16 @@
+{
+  "add": "Dodaj firmę",
+  "edit": "Edytuj dane firmy",
+  "details": "Dane firmy",
+  "name": "Nazwa firmy",
+  "taxNumber": "NIP",
+  "phoneNumber": "Telefon kontaktowy",
+  "email": "Email",
+  "additionalInfo": "Informacje dodatkowe",
+  "notifications" : {
+    "addContactSuccess" : "Firma {name} dodana pomyślnie",
+    "addContactError": "Błąd dodawania firmy",
+    "editContactSuccess" : "Dane firmy {name} zmieniono pomyślnie",
+    "editContactError": "Błąd edycji firmy {name}"
+  }
+}

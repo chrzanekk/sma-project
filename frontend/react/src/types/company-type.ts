@@ -1,6 +1,6 @@
 import {AuditableType} from "@/types/auditable-type.ts";
 
-export interface CompanyDTO extends CompanyBaseDTO, AuditableType {
+export interface FetchableCompanyDTO extends CompanyBaseDTO, AuditableType {
 }
 
 export interface CompanyBaseDTO {
