@@ -22,7 +22,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         email: '',
         additionalInfo: ''
     }
-    const {t} = useTranslation(['common', 'contractors', 'errors'])
+    const {t} = useTranslation(['common', 'contacts', 'errors'])
     const [initialValues, setInitialValues] = useState<BaseContactFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 

@@ -45,7 +45,7 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
             console.error(err);
             errorNotification(
                 t('error', {ns: "common"}),
-                err.response?.data?.message || t('contractors:notifications.addContactError')
+                err.response?.data?.message || t('contacts:notifications.addContactError')
             );
         }
     };

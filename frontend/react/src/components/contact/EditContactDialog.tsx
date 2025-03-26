@@ -6,12 +6,12 @@ import React from "react";
 import EditContactForm from "@/components/contact/EditContactForm.tsx";
 
 
-interface EditContractorDialogProps {
+interface EditContactDialogProps {
     fetchContacts: () => void;
     contactId: number;
 }
 
-const EditContactDialog: React.FC<EditContractorDialogProps> = ({fetchContacts, contactId}) => {
+const EditContactDialog: React.FC<EditContactDialogProps> = ({fetchContacts, contactId}) => {
     const {t} = useTranslation(['common', 'contacts']);
     const themeColors = useThemeColors();
 
