@@ -16,9 +16,12 @@ interface Props {
     users: UserDTO[];
     onDelete: (id: number) => void;
     fetchUsers: () => void;
+    onSortChange: (field: string) => void;
+    sortField: string | null;
+    sortDirection: "asc" | "desc";
 }
 
-const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
+const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, sortField, sortDirection}) => {
     const {t} = useTranslation("auth");
     const {user: currentUser} = useAuth();
     const {open, onOpen, onClose} = useDisclosure();
@@ -38,6 +41,14 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
         onClose();
     };
 
+    const renderSortIndicator = (field: string) => {
+
+        if (sortField === field) {
+            return sortDirection === "asc" ? "↑" : "↓";
+        }
+        return null;
+    };
+
     if (!users || users.length === 0) {
         return (
             <Field alignContent="center">
@@ -52,12 +63,30 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers}) => {
                 <Table.Root size="sm" interactive showColumnBorder color={themeColors.fontColor}>
                     <Table.Header>
                         <Table.Row bg={themeColors.bgColorPrimary}>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>ID</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.email")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.login")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.firstName")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.lastName")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.position")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("id")}
+                            >ID {renderSortIndicator("id")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("email")}
+                            >{t("shared.email")}{renderSortIndicator("email")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("login")}
+                            >{t("shared.login")}{renderSortIndicator("login")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("firstName")}
+                            >{t("shared.firstName")}{renderSortIndicator("firstName")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("lastName")}
+                            >{t("shared.lastName")}{renderSortIndicator("lastName")}</Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("position")}
+                            >{t("shared.position")}{renderSortIndicator("position")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.roles")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.locked")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.enabled")}</Table.ColumnHeader>

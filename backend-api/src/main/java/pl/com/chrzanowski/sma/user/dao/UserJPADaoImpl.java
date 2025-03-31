@@ -74,7 +74,7 @@ public class UserJPADaoImpl implements UserDao {
     @Override
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
-        JPQLQuery<User> query = userQuerySpec.buildQuery(specification);
+        JPQLQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
         long total = query.fetchCount();
         List<User> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, total);
@@ -83,7 +83,7 @@ public class UserJPADaoImpl implements UserDao {
     @Override
     public List<User> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all users by specification {}", specification);
-        JPQLQuery<User> query = userQuerySpec.buildQuery(specification);
+        JPQLQuery<User> query = userQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
 
