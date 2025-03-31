@@ -111,10 +111,10 @@ public class UserServiceImpl implements UserService {
         if (stringRoles == null || stringRoles.isEmpty()) {
             List<UserDTO> userDTOList = findAll();
             if (userDTOList.isEmpty()) {
-                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getRoleName());
+                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getName());
                 roleDTOSet.add(adminRole);
             } else {
-                RoleDTO userRole = roleService.findByName(ERole.ROLE_USER.getRoleName());
+                RoleDTO userRole = roleService.findByName(ERole.ROLE_USER.getName());
                 roleDTOSet.add(userRole);
             }
         } else {
@@ -315,6 +315,6 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             return true;
         } else
-            return userDTO.getRoles().stream().noneMatch(roleDTO -> roleDTO.getName().equals(ERole.ROLE_ADMIN.getRoleName()));
+            return userDTO.getRoles().stream().noneMatch(roleDTO -> roleDTO.getName().equals(ERole.ROLE_ADMIN.getName()));
     }
 }

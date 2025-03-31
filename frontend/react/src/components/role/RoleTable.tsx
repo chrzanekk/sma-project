@@ -1,24 +1,27 @@
-import React, { useState } from "react";
-import { Button, Table, Text, useDisclosure } from "@chakra-ui/react";
+import React, {useState} from "react";
+import {Button, Table, Text, useDisclosure} from "@chakra-ui/react";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import { RoleDTO } from "@/types/role-types.ts";
-import { useTranslation } from "react-i18next";
+import {RoleDTO} from "@/types/role-types.ts";
+import {useTranslation} from "react-i18next";
 import DateFormatter from "@/utils/date-formatter.ts";
-import { Field } from "@/components/ui/field.tsx";
-import { useThemeColors } from "@/theme/theme-colors";
-import { useTableStyles } from "@/components/shared/tableStyles";
+import {Field} from "@/components/ui/field.tsx";
+import {useThemeColors} from "@/theme/theme-colors";
+import {useTableStyles} from "@/components/shared/tableStyles";
 
 interface Props {
     roles: RoleDTO[];
     onDelete: (id: number) => void;
+    onSortChange: (field: string) => void;
+    sortField: string | null;
+    sortDirection: "asc" | "desc";
 }
 
-const RoleTable: React.FC<Props> = ({ roles, onDelete }) => {
-    const { t } = useTranslation("auth");
-    const { open, onOpen, onClose } = useDisclosure();
+const RoleTable: React.FC<Props> = ({roles, onDelete, onSortChange, sortField, sortDirection}) => {
+    const {t} = useTranslation("auth");
+    const {open, onOpen, onClose} = useDisclosure();
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
     const themeColors = useThemeColors();
-    const { commonCellProps, commonColumnHeaderProps } = useTableStyles();
+    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     const handleDeleteClick = (id: number) => {
         setSelectedRoleId(id);
@@ -32,10 +35,18 @@ const RoleTable: React.FC<Props> = ({ roles, onDelete }) => {
         onClose();
     };
 
+    const renderSortIndicator = (field: string) => {
+
+        if (sortField === field) {
+            return sortDirection === "asc" ? "↑" : "↓";
+        }
+        return null;
+    };
+
     if (!roles || roles.length === 0) {
         return (
             <Field alignContent="center">
-                <Text fontSize={20}>{t("dataNotFound", { ns: "common" })}</Text>
+                <Text fontSize={20}>{t("dataNotFound", {ns: "common"})}</Text>
             </Field>
         );
     }
@@ -46,18 +57,21 @@ const RoleTable: React.FC<Props> = ({ roles, onDelete }) => {
                 <Table.Root size="sm" interactive showColumnBorder color={themeColors.fontColor}>
                     <Table.Header>
                         <Table.Row bg={themeColors.bgColorPrimary}>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>ID</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}>
-                                {t("shared.roleName")}
+                            <Table.ColumnHeader {...commonColumnHeaderProps}
+                                                onClick={() => onSortChange("id")}>
+                                ID{renderSortIndicator("id")}</Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}
+                                                onClick={() => onSortChange("name")}>
+                                {t("shared.roleName")} {renderSortIndicator("name")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>
-                                {t("createDate", { ns: "common" })}
+                                {t("createDate", {ns: "common"})}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>
-                                {t("lastModifiedDate", { ns: "common" })}
+                                {t("lastModifiedDate", {ns: "common"})}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>
-                                {t("delete", { ns: "common" })}
+                                {t("delete", {ns: "common"})}
                             </Table.ColumnHeader>
                         </Table.Row>
                     </Table.Header>
@@ -82,7 +96,7 @@ const RoleTable: React.FC<Props> = ({ roles, onDelete }) => {
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <Button colorPalette="red" size="2xs" onClick={() => handleDeleteClick(role.id!)}>
-                                        {t("delete", { ns: "common" })}
+                                        {t("delete", {ns: "common"})}
                                     </Button>
                                 </Table.Cell>
                             </Table.Row>
@@ -95,10 +109,10 @@ const RoleTable: React.FC<Props> = ({ roles, onDelete }) => {
                 isOpen={open}
                 onClose={onClose}
                 onConfirm={confirmDelete}
-                title={t("deleteConfirmation.title", { ns: "common" })}
-                message={t("deleteConfirmation.message", { ns: "common" })}
-                confirmText={t("delete", { ns: "common" })}
-                cancelText={t("cancel", { ns: "common" })}
+                title={t("deleteConfirmation.title", {ns: "common"})}
+                message={t("deleteConfirmation.message", {ns: "common"})}
+                confirmText={t("delete", {ns: "common"})}
+                cancelText={t("cancel", {ns: "common"})}
             />
         </>
     );

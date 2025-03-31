@@ -1,9 +1,14 @@
 package pl.com.chrzanowski.sma.company.service.filter;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.model.QCompany;
@@ -30,8 +35,25 @@ public class CompanyQuerySpec {
         return predicate;
     }
 
-    public JPQLQuery<Company> buildQuery(BooleanBuilder booleanBuilder) {
+    public JPQLQuery<Company> buildQuery(BooleanBuilder booleanBuilder, Pageable pageable) {
         QCompany company = QCompany.company;
-        return new JPAQuery<Company>(em).select(company).from(company).where(booleanBuilder);
+
+        JPQLQuery<Company> query = new JPAQuery<>(em).select(company).from(company);
+
+        if (booleanBuilder != null) {
+            query.where(booleanBuilder);
+        }
+        if (pageable != null && pageable.getSort().isSorted()) {
+            PathBuilder<Company> companyPathBuilder = new PathBuilder<>(Company.class, "company");
+            for (Sort.Order order : pageable.getSort()) {
+                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
+                        order.isAscending() ? Order.ASC : Order.DESC,
+                        companyPathBuilder.getComparable(order.getProperty(), String.class)
+                );
+                query.orderBy(orderSpecifier);
+            }
+        }
+
+        return query;
     }
 }

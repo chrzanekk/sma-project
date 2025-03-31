@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -82,7 +81,7 @@ class UserServiceImplTest {
         registerRequest.setEmail("test@example.com");
         registerRequest.setPassword("password");
 
-        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
         user = User.builder().id(1L).login("testUser").email("test@example.com").roles(Set.of(roleUser)).build();
     }
 
@@ -93,8 +92,8 @@ class UserServiceImplTest {
 
     @Test
     void testRegisterUserWithDefaultRole() {
-        RoleDTO roleUser = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
-        when(roleService.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(roleUser);
+        RoleDTO roleUser = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
+        when(roleService.findByName(ERole.ROLE_USER.getName())).thenReturn(roleUser);
         when(encoder.encode(anyString())).thenReturn("encodedPassword");
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(new User());
         when(userDao.save(any(User.class))).thenReturn(new User());
@@ -288,7 +287,7 @@ class UserServiceImplTest {
             assertEquals("testUser", result.login());
             assertEquals("test@example.com", result.email());
             assertEquals(1L, result.id());
-            assertEquals(List.of(ERole.ROLE_USER.getRoleName()), result.roles());
+            assertEquals(List.of(ERole.ROLE_USER.getName()), result.roles());
 
             securityUtilsMockedStatic.verify(SecurityUtils::getCurrentUserLogin, times(1));
         }
@@ -355,14 +354,14 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserRoles_Success() {
-        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build(), RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build());
+        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build(), RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getName()).build());
         userDTO = userDTO.toBuilder().id(1L).roles(newRoles).build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
         when(userMapper.toDto(user)).thenReturn(userDTO);
         when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
-        when(roleService.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build());
-        when(roleService.findByName(ERole.ROLE_ADMIN.getRoleName())).thenReturn(RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build());
+        when(roleService.findByName(ERole.ROLE_USER.getName())).thenReturn(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build());
+        when(roleService.findByName(ERole.ROLE_ADMIN.getName())).thenReturn(RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getName()).build());
 
         UserDTO updatedUser = userService.updateUserRoles(1L, newRoles);
 
@@ -388,7 +387,7 @@ class UserServiceImplTest {
 
     @Test
     void testUpdateUserRoles_UserNotFound() {
-        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build());
+        Set<RoleDTO> newRoles = Set.of(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build());
 
         when(userDao.findById(1L)).thenReturn(Optional.empty());
 

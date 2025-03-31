@@ -66,14 +66,14 @@ public class CompanyJPADaoImpl implements CompanyDao {
     @Override
     public List<Company> findAll(BooleanBuilder specification) {
         log.debug("JPA DAO: Finding all companies by specification: {}", specification);
-        JPQLQuery<Company> query = companyQuerySpec.buildQuery(specification);
+        JPQLQuery<Company> query = companyQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
 
     @Override
     public Page<Company> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("JPA DAO: Finding all companies by specification and page: {}, {}", specification, pageable);
-        JPQLQuery<Company> baseQuery = companyQuerySpec.buildQuery(specification);
+        JPQLQuery<Company> baseQuery = companyQuerySpec.buildQuery(specification, pageable);
 
         long count = baseQuery.fetchCount();
         JPAQuery<Company> jpaQuery = getPaginationQuery(baseQuery);

@@ -10,7 +10,8 @@ export const getCompaniesByFilter = async (filter: Record<string, any>) => {
         const queryParams = serializeQueryParams({
             ...filter,
             size: filter.size || 10,
-            page: filter.page || 0
+            page: filter.page || 0,
+            sort: filter.sort || 'id,asc'
         });
         const response = await api.get(`${COMPANY_API_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);

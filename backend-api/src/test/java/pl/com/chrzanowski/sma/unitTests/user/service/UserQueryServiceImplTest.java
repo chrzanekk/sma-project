@@ -66,7 +66,7 @@ class UserQueryServiceImplTest {
         registerRequest.setPosition("position");
         registerRequest.setPassword("password");
 
-        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
         user = User.builder().id(1L)
                 .login("testUser")
                 .email("test@example.com")

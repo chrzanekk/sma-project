@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
-import pl.com.chrzanowski.sma.role.dao.RoleDao;
 import pl.com.chrzanowski.sma.role.dao.RoleJPADaoImpl;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
@@ -51,8 +50,8 @@ class RoleJPADaoImplTest {
     @Test
     void findAll_Positive() {
         // Given
-        Role role1 = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
-        Role role2 = Role.builder().name(ERole.ROLE_ADMIN.getRoleName()).build();
+        Role role1 = Role.builder().name(ERole.ROLE_USER.getName()).build();
+        Role role2 = Role.builder().name(ERole.ROLE_ADMIN.getName()).build();
         when(roleRepository.findAll()).thenReturn(List.of(role1, role2));
 
         // When
@@ -82,7 +81,7 @@ class RoleJPADaoImplTest {
     @Test
     void findByName_Positive() {
         // Given
-        String roleName = ERole.ROLE_USER.getRoleName();
+        String roleName = ERole.ROLE_USER.getName();
         Role role = Role.builder().name(roleName).build();
         when(roleRepository.findByName(roleName)).thenReturn(Optional.of(role));
 
@@ -98,7 +97,7 @@ class RoleJPADaoImplTest {
     @Test
     void findByName_Negative() {
         // Given
-        String roleName = ERole.ROLE_USER.getRoleName();
+        String roleName = ERole.ROLE_USER.getName();
         when(roleRepository.findByName(roleName)).thenReturn(Optional.empty());
 
         // When
@@ -113,8 +112,8 @@ class RoleJPADaoImplTest {
     @Test
     void saveRole_Positive() {
         // Given
-        Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
-        Role savedRole = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        Role role = Role.builder().name(ERole.ROLE_USER.getName()).build();
+        Role savedRole = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
         when(roleRepository.save(role)).thenReturn(savedRole);
 
         // When
@@ -128,7 +127,7 @@ class RoleJPADaoImplTest {
     @Test
     void saveRole_Negative() {
         // Given
-        Role role = Role.builder().name(ERole.ROLE_USER.getRoleName()).build();
+        Role role = Role.builder().name(ERole.ROLE_USER.getName()).build();
         when(roleRepository.save(role)).thenThrow(new RuntimeException("Save failed"));
 
         // When / Then
@@ -151,7 +150,7 @@ class RoleJPADaoImplTest {
         BooleanBuilder specification = mock(BooleanBuilder.class);
         JPQLQuery<Role> query = mock(JPQLQuery.class);
         Role role = Role.builder().name("ROLE_USER").build();
-        when(roleQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(roleQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(List.of(role));
 
         // When
@@ -160,7 +159,7 @@ class RoleJPADaoImplTest {
         // Then
         assertEquals(1, roles.size());
         assertTrue(roles.contains(role));
-        verify(roleQuerySpec, times(1)).buildQuery(specification);
+        verify(roleQuerySpec, times(1)).buildQuery(specification, null);
         verify(query, times(1)).fetch();
     }
 
@@ -169,7 +168,7 @@ class RoleJPADaoImplTest {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
         JPQLQuery<Role> query = mock(JPQLQuery.class);
-        when(roleQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(roleQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(Collections.emptyList());
 
         // When
@@ -177,7 +176,7 @@ class RoleJPADaoImplTest {
 
         // Then
         assertTrue(roles.isEmpty());
-        verify(roleQuerySpec, times(1)).buildQuery(specification);
+        verify(roleQuerySpec, times(1)).buildQuery(specification, null);
         verify(query, times(1)).fetch();
     }
 
@@ -189,7 +188,7 @@ class RoleJPADaoImplTest {
         Pageable pageable = PageRequest.of(0, 2);
         Role role = Role.builder().name("ROLE_ADMIN").build();
 
-        when(roleQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(roleQuerySpec.buildQuery(specification,pageable)).thenReturn(query);
         when(query.offset(pageable.getOffset())).thenReturn(query);
         when(query.limit(pageable.getPageSize())).thenReturn(query);
         when(query.fetchCount()).thenReturn(1L);
@@ -202,7 +201,7 @@ class RoleJPADaoImplTest {
         assertEquals(1, rolesPage.getTotalElements());
         assertEquals(1, rolesPage.getContent().size());
         assertTrue(rolesPage.getContent().contains(role));
-        verify(roleQuerySpec, times(1)).buildQuery(specification);
+        verify(roleQuerySpec, times(1)).buildQuery(specification,pageable);
         verify(query, times(1)).offset(pageable.getOffset());
         verify(query, times(1)).limit(pageable.getPageSize());
         verify(query, times(1)).fetchCount();
@@ -216,7 +215,7 @@ class RoleJPADaoImplTest {
         JPQLQuery<Role> query = mock(JPQLQuery.class);
         Pageable pageable = PageRequest.of(0, 2);
 
-        when(roleQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(roleQuerySpec.buildQuery(specification,pageable)).thenReturn(query);
         when(query.offset(pageable.getOffset())).thenReturn(query);
         when(query.limit(pageable.getPageSize())).thenReturn(query);
         when(query.fetchCount()).thenReturn(0L);
@@ -227,7 +226,7 @@ class RoleJPADaoImplTest {
 
         // Then
         assertTrue(rolesPage.isEmpty());
-        verify(roleQuerySpec, times(1)).buildQuery(specification);
+        verify(roleQuerySpec, times(1)).buildQuery(specification,pageable);
         verify(query, times(1)).offset(pageable.getOffset());
         verify(query, times(1)).limit(pageable.getPageSize());
         verify(query, times(1)).fetchCount();

@@ -189,7 +189,7 @@ public class CompanyJPADaoImplTest {
         EntityGraph<Company> mockEntityGraph = mock(EntityGraph.class);
         when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(companyQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
@@ -203,7 +203,7 @@ public class CompanyJPADaoImplTest {
         assertEquals(1, page.getTotalElements());
         assertEquals(1, page.getContent().size());
         assertTrue(page.getContent().contains(company));
-        verify(companyQuerySpec, times(1)).buildQuery(specification);
+        verify(companyQuerySpec, times(1)).buildQuery(specification, pageable);
         verify(mockQuery, times(1)).offset(pageable.getOffset());
         verify(mockQuery, times(1)).limit(pageable.getPageSize());
         verify(mockQuery, times(1)).fetch();
@@ -221,7 +221,7 @@ public class CompanyJPADaoImplTest {
         when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
         Pageable pageable = PageRequest.of(0, 2);
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(mockQuery);
+        when(companyQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
         when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
@@ -234,7 +234,7 @@ public class CompanyJPADaoImplTest {
         //Then
 
         assertTrue(page.isEmpty());
-        verify(companyQuerySpec, times(1)).buildQuery(specification);
+        verify(companyQuerySpec, times(1)).buildQuery(specification, pageable);
         verify(mockQuery, times(1)).offset(pageable.getOffset());
         verify(mockQuery, times(1)).limit(pageable.getPageSize());
         verify(mockQuery, times(1)).fetch();
@@ -247,7 +247,7 @@ public class CompanyJPADaoImplTest {
         JPQLQuery<Company> query = mock(JPQLQuery.class);
         Company company = Company.builder().id(1L).name("First Company").build();
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(companyQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(List.of(company));
 
         //When
@@ -256,7 +256,7 @@ public class CompanyJPADaoImplTest {
         //Then
         assertEquals(1, companies.size());
         assertTrue(companies.contains(company));
-        verify(companyQuerySpec, times(1)).buildQuery(specification);
+        verify(companyQuerySpec, times(1)).buildQuery(specification, null);
         verify(query, times(1)).fetch();
     }
 
@@ -266,7 +266,7 @@ public class CompanyJPADaoImplTest {
         BooleanBuilder specification = mock(BooleanBuilder.class);
         JPQLQuery<Company> query = mock(JPQLQuery.class);
 
-        when(companyQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(companyQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(Collections.emptyList());
 
         //When
@@ -275,7 +275,7 @@ public class CompanyJPADaoImplTest {
         //Then
 
         assertTrue(companies.isEmpty());
-        verify(companyQuerySpec, times(1)).buildQuery(specification);
+        verify(companyQuerySpec, times(1)).buildQuery(specification,null);
         verify(query, times(1)).fetch();
     }
 

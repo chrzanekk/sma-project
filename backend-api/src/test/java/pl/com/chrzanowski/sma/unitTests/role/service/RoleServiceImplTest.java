@@ -40,9 +40,9 @@ class RoleServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
 
-        roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
+        roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
     }
 
     @AfterEach
@@ -59,7 +59,7 @@ class RoleServiceImplTest {
 
         assertNotNull(roles);
         assertEquals(1, roles.size());
-        assertTrue(roles.stream().anyMatch(role -> Objects.equals(role.getName(), ERole.ROLE_USER.getRoleName())));
+        assertTrue(roles.stream().anyMatch(role -> Objects.equals(role.getName(), ERole.ROLE_USER.getName())));
 
         verify(roleDao, times(1)).findAll();
         verify(roleMapper, times(1)).toDtoList(anyList());
@@ -78,25 +78,25 @@ class RoleServiceImplTest {
 
     @Test
     void testFindByNameSuccess() {
-        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.of(roleUser));
+        when(roleDao.findByName(ERole.ROLE_USER.getName())).thenReturn(Optional.of(roleUser));
         when(roleMapper.toDto(roleUser)).thenReturn(roleUserDTO);
 
-        RoleDTO result = roleService.findByName(ERole.ROLE_USER.getRoleName());
+        RoleDTO result = roleService.findByName(ERole.ROLE_USER.getName());
 
         assertNotNull(result);
-        assertEquals(ERole.ROLE_USER.getRoleName(), result.getName());
+        assertEquals(ERole.ROLE_USER.getName(), result.getName());
 
-        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getName());
         verify(roleMapper, times(1)).toDto(roleUser);
     }
 
     @Test
     void testFindByNameRoleNotFound() {
-        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.empty());
+        when(roleDao.findByName(ERole.ROLE_USER.getName())).thenReturn(Optional.empty());
 
-        assertThrows(RoleException.class, () -> roleService.findByName(ERole.ROLE_USER.getRoleName()));
+        assertThrows(RoleException.class, () -> roleService.findByName(ERole.ROLE_USER.getName()));
 
-        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getName());
     }
 
     @Test
@@ -110,11 +110,11 @@ class RoleServiceImplTest {
         RoleDTO result = roleService.saveRole(roleUserDTO);
 
         assertNotNull(result);
-        assertEquals(ERole.ROLE_USER.getRoleName(), result.getName());
+        assertEquals(ERole.ROLE_USER.getName(), result.getName());
 
         verify(roleMapper).toEntity(captor.capture());
         RoleDTO capturedDTO = captor.getValue();
-        assertEquals(ERole.ROLE_USER.getRoleName(), capturedDTO.getName());
+        assertEquals(ERole.ROLE_USER.getName(), capturedDTO.getName());
         assertNotNull(capturedDTO.getCreatedDatetime());
     }
 
@@ -146,7 +146,7 @@ class RoleServiceImplTest {
     @Test
     void testDeleteById_CannotDeleteAdminRole() {
         Long roleId = 2L;
-        Role role = Role.builder().id(roleId).name(ERole.ROLE_ADMIN.getRoleName()).build();
+        Role role = Role.builder().id(roleId).name(ERole.ROLE_ADMIN.getName()).build();
 
         when(roleDao.findById(roleId)).thenReturn(Optional.of(role));
 
@@ -173,16 +173,16 @@ class RoleServiceImplTest {
     @Test
     void testFindAllByListOfNames_Success() {
         // Arrange
-        List<String> roleNames = List.of(ERole.ROLE_USER.getRoleName(), ERole.ROLE_ADMIN.getRoleName());
+        List<String> roleNames = List.of(ERole.ROLE_USER.getName(), ERole.ROLE_ADMIN.getName());
 
-        Role roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
-        Role roleAdmin = Role.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build();
+        Role roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
+        Role roleAdmin = Role.builder().id(2L).name(ERole.ROLE_ADMIN.getName()).build();
 
-        RoleDTO roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getRoleName()).build();
-        RoleDTO roleAdminDTO = RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getRoleName()).build();
+        RoleDTO roleUserDTO = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
+        RoleDTO roleAdminDTO = RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getName()).build();
 
-        when(roleDao.findByName(ERole.ROLE_USER.getRoleName())).thenReturn(Optional.of(roleUser));
-        when(roleDao.findByName(ERole.ROLE_ADMIN.getRoleName())).thenReturn(Optional.of(roleAdmin));
+        when(roleDao.findByName(ERole.ROLE_USER.getName())).thenReturn(Optional.of(roleUser));
+        when(roleDao.findByName(ERole.ROLE_ADMIN.getName())).thenReturn(Optional.of(roleAdmin));
 
         when(roleMapper.toDto(roleUser)).thenReturn(roleUserDTO);
         when(roleMapper.toDto(roleAdmin)).thenReturn(roleAdminDTO);
@@ -193,11 +193,11 @@ class RoleServiceImplTest {
         // Assert
         assertNotNull(result);
         assertEquals(2, result.size());
-        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER.getRoleName())));
-        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN.getRoleName())));
+        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_USER.getName())));
+        assertTrue(result.stream().anyMatch(role -> role.getName().equals(ERole.ROLE_ADMIN.getName())));
 
-        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getRoleName());
-        verify(roleDao, times(1)).findByName(ERole.ROLE_ADMIN.getRoleName());
+        verify(roleDao, times(1)).findByName(ERole.ROLE_USER.getName());
+        verify(roleDao, times(1)).findByName(ERole.ROLE_ADMIN.getName());
     }
 
     @Test
