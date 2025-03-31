@@ -39,7 +39,7 @@ const EditCompanyDialog: React.FC<EditCompanyDialogProps> = ({fetchCompanies, co
                                         <Dialog.CloseTrigger/>
                                         <Dialog.Header asChild>
                                             <Heading size={"xl"} color={themeColors.fontColor}>
-                                                {t("contacts:edit")}
+                                                {t("companies:edit")}
                                             </Heading>
                                         </Dialog.Header>
                                         <Dialog.Body>

@@ -1,7 +1,7 @@
 import React from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
-import {Grid, GridItem, Heading} from "@chakra-ui/react";
+import BasicLayout from "@/components/shared/BasicLayout.tsx";
 
 interface ContactLayoutProps {
     filters: React.ReactNode;
@@ -18,63 +18,14 @@ const ContactLayout: React.FC<ContactLayoutProps> = ({
                                                          pagination,
                                                          bgColor = useThemeColors().bgColorPrimary
                                                      }) => {
-    const {t} = useTranslation(['common', 'contacts']);
-    const themeColors = useThemeColors();
+    const {t} = useTranslation('contacts');
     return (
-        <Grid
-            templateRows="auto auto auto auto 1fr"
-            bgColor={themeColors.bgColorSecondary}
-            height="auto"
-            gap={1}
-        >
-            <GridItem
-                w="100%"
-                p={1}
-                mt={1}
-                bg={bgColor}
-                borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
-                {t('contacts:contactList')}
-            </Heading>
-            </GridItem>
-            {/* Wiersz 1: Filtry */}
-            <GridItem
-                w="100%"
-                p={1}
-                bg={bgColor}
-                borderRadius="lg"
-            ><Heading size={"sm"} fontSize={14} textAlign={"center"} color={themeColors.fontColor}>
-                {t('filters')}
-            </Heading>
-                {filters}
-            </GridItem>
-
-            {/* Wiersz 2: Przycisk Add User */}
-            <GridItem
-                w="100%"
-                bg={bgColor}
-                p={1}
-                borderRadius="lg"
-            >
-                {addContactButton}
-            </GridItem>
-
-            {/* Wiersz 3: Tabela */}
-            <GridItem
-                w="100%"
-                borderRadius="lg"
-                overflowY="auto"
-                p={2}
-            >
-                {table}
-            </GridItem>
-
-            {/* Wiersz 4: Paginacja */}
-            <GridItem
-            >
-                {pagination}
-            </GridItem>
-        </Grid>
+        <BasicLayout headerTitle={t('contacts:contactList')}
+                     filters={filters}
+                     addButton={addContactButton}
+                     table={table}
+                     pagination={pagination}
+                     bgColor={bgColor}/>
     );
 };
 

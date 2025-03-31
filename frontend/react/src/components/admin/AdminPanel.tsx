@@ -6,8 +6,9 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import {getAdminPanelMenuItems} from "@/components/admin/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
+import CompanyManagement from "@/components/company/CompanyManagement.tsx";
 
-export type AdminPanelView = 'roles' | 'users';
+export type AdminPanelView = 'roles' | 'users' | 'companies';
 
 const AdminPanel: React.FC = () => {
     const {t} = useTranslation('adminPanelMenu');
@@ -20,6 +21,8 @@ const AdminPanel: React.FC = () => {
                 return <RoleManagement/>;
             case 'users':
                 return <UserManagement/>;
+            case 'companies':
+                return <CompanyManagement/>
             default:
                 return <Heading size="md" textAlign="center">Invalid view</Heading>;
         }
