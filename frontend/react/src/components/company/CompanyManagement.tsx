@@ -2,12 +2,12 @@ import React, {useCallback, useEffect, useState} from "react";
 import {deleteContractorById} from "@/services/contractor-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
-import ContactLayout from "@/components/contact/ContactLayout.tsx";
 import {FetchableCompanyDTO} from "@/types/company-type.ts";
 import {getCompaniesByFilter} from "@/services/company-service.ts";
 import CompanyFilterForm from "@/components/company/CompanyFilterForm.tsx";
 import AddCompanyDialog from "@/components/company/AddCompanyDialog.tsx";
 import GenericCompanyTable from "@/components/company/GenericCompanyTable.tsx";
+import CompanyLayout from "@/components/company/CompanyLayout.tsx";
 
 const CompanyManagement: React.FC = () => {
     const [companies, setCompanies] = useState<FetchableCompanyDTO[]>([]);
@@ -92,9 +92,9 @@ const CompanyManagement: React.FC = () => {
     }, [fetchCompanies, currentPage, filter, sortField, sortDirection]);
 
     return (
-        <ContactLayout
+        <CompanyLayout
             filters={<CompanyFilterForm onSubmit={handleFilterSubmit}/>}
-            addContactButton={
+            addCompanyButton={
                 <Flex justifyContent={"center"} gap={2}>
                     <AddCompanyDialog fetchCompanies={fetchCompanies}/>
                 </Flex>

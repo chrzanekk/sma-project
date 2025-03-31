@@ -32,7 +32,7 @@ const AdminPanel: React.FC = () => {
 
     return (
         <Grid
-            height={"90%"}
+            height={"100%"}
             bgColor={themeColors.bgColorSecondary}
             gap={1}
             px={1}
@@ -111,6 +111,7 @@ const AdminPanel: React.FC = () => {
                 bg={themeColors.bgColorPrimary}
                 borderRadius="lg"
                 overflowY={"auto"}
+                mt={-1}
             >
                 {renderActiveView()}
             </GridItem>

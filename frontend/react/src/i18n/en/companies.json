@@ -4,10 +4,14 @@
   "details": "Dane firmy",
   "name": "Nazwa firmy",
   "additionalInfo": "Informacje dodatkowe",
-  "notifications" : {
-    "addCompanySuccess" : "Firma {name} dodana pomyślnie",
+  "taxNumber": "NIP",
+  "phoneNumber": "Telefon kontaktowy",
+  "email": "Email",
+  "companiesList": "Lista firm",
+  "notifications": {
+    "addCompanySuccess": "Firma {name} dodana pomyślnie",
     "addCompanyError": "Błąd dodawania firmy",
-    "editCompanySuccess" : "Dane firmy {name} zmieniono pomyślnie",
+    "editCompanySuccess": "Dane firmy {name} zmieniono pomyślnie",
     "editCompanyError": "Błąd edycji firmy {name}"
   }
 }

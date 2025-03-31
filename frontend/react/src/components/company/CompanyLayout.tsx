@@ -13,7 +13,7 @@ interface CompanyLayoutProps {
 const CompanyLayout: React.FC<CompanyLayoutProps> = ({filters, addCompanyButton, table, pagination, bgColor}) => {
     const {t} = useTranslation('companies');
     return (
-        <BasicLayout headerTitle={t('companies:companiesList')}
+        <BasicLayout headerTitle={t('companiesList')}
                      filters={filters}
                      addButton={addCompanyButton}
                      table={table}
