@@ -1,12 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Flex} from '@chakra-ui/react';
 import UserFilterForm from './UserFilterForm';
-import UserTable from './UserTable';
 import {UserDTO} from "@/types/user-types.ts";
 import {deleteUserById, getUsersByFilter} from "@/services/user-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import UserLayout from "@/components/user/UserLayout.tsx";
 import AddUserDrawer from "@/components/user/AddUserDrawer.tsx";
+import UserTable from "@/components/user/UserTable.tsx";
 
 
 const UserManagement: React.FC = () => {
@@ -60,9 +60,9 @@ const UserManagement: React.FC = () => {
         <UserLayout
             filters={<UserFilterForm onSubmit={handleFilterSubmit}/>}
             addUserButton={
-            <Flex justifyContent={"center"}>
-                <AddUserDrawer fetchUsers={fetchUsers}/>
-            </Flex>
+                <Flex justifyContent={"center"}>
+                    <AddUserDrawer fetchUsers={fetchUsers}/>
+                </Flex>
             }
             table={<UserTable
                 users={users}

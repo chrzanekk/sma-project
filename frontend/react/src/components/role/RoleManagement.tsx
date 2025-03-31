@@ -40,7 +40,8 @@ const RoleManagement: React.FC = () => {
     const handlePageChange = (page: number) => {
         if (page >= 0 && page < totalPages) {
             setCurrentPage(page); // Ustawiamy bieżącą stronę
-            fetchRoles({}, page, rowsPerPage).catch(() => {});
+            fetchRoles({}, page, rowsPerPage).catch(() => {
+            });
         }
     };
 
