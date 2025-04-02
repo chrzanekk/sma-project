@@ -12,6 +12,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {FaBars} from "react-icons/fa6";
 import {ThemeToggle} from "@/layout/ThemeToggle.tsx";
 import {NavItem} from "@/types/nav-item-types.ts";
+import CompanySelector from "@/layout/CompanySelector.tsx";
 
 const Navbar: React.FC = () => {
     const {open, onToggle} = useDisclosure();
@@ -50,6 +51,7 @@ const Navbar: React.FC = () => {
 
                 {/* User Menu */}
                 <HStack display={{base: 'none', md: 'flex'}}>
+                    <CompanySelector/>
                     <UserMenu/>
                     <LanguageSwitcher/>
                     <ThemeToggle/>

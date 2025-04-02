@@ -62,7 +62,7 @@ export const updateUserRoles = async (userRoleUpdateRequest: AdminEditRoleUpdate
         userRoleUpdateRequest.roles.map((role: string) => ({name: role}))
     );
     const payload: RoleUpdateRequest = {
-        userId: userRoleUpdateRequest.userId,
+        userId: userRoleUpdateRequest.userId!,
         roles
     }
     try {

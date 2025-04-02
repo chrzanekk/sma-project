@@ -28,6 +28,8 @@
     "cancel": "Anuluj",
     "save": "Zapisz",
     "data": "Dane",
+    "actions": "Akcje",
+    "companies" : "Firmy",
     "currentLanguage": "Language:",
     "polish": "Polski",
     "english": "Angielski",
@@ -49,6 +51,8 @@
         "userEditedError": "Błąd edycji użytkownika {login}",
         "userRolesEditedSuccess": "Role użytkownika {login} zmieniono pomyślnie",
         "userRolesEditedError": "Błąd edycji ról użytkownika {login}",
+        "userCompaniesUpdatedSuccess": "Lista firm użytkownika {login} zaktualizowana pomyślnie",
+        "userCompaniesUpdatedError" :"Błąd edycji firm użytkownika {login}",
         "addRoleSuccess": "Rola {role} dodana pomyślnie"
     },
     "deleteConfirmation": {

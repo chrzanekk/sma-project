@@ -1,9 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
-import {deleteContractorById} from "@/services/contractor-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
 import {FetchableCompanyDTO} from "@/types/company-type.ts";
-import {getCompaniesByFilter} from "@/services/company-service.ts";
+import {deleteCompanyById, getCompaniesByFilter} from "@/services/company-service.ts";
 import CompanyFilterForm from "@/components/company/CompanyFilterForm.tsx";
 import AddCompanyDialog from "@/components/company/AddCompanyDialog.tsx";
 import GenericCompanyTable from "@/components/company/GenericCompanyTable.tsx";
@@ -44,7 +43,7 @@ const CompanyManagement: React.FC = () => {
     };
 
     const handleDelete = async (id: number) => {
-        await deleteContractorById(id);
+        await deleteCompanyById(id);
         fetchCompanies({
             ...filter,
             sort: sortField ? `${sortField},${sortDirection}` : undefined

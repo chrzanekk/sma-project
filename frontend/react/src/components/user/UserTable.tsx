@@ -11,6 +11,7 @@ import EditUserRolesDrawer from "@/components/user/EditUserRolesDrawer.tsx";
 import {useThemeColors} from "@/theme/theme-colors";
 import {useTableStyles} from "@/components/shared/tableStyles";
 import {useAuth} from "@/context/AuthContext.tsx";
+import EditUserCompaniesDrawer from "@/components/user/EditUserCompaniesDrawer.tsx";
 
 interface Props {
     users: UserDTO[];
@@ -157,6 +158,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                             currentUserId={currentUser?.id}
                                             login={user.login}
                                         />
+                                        <EditUserCompaniesDrawer fetchUsers={fetchUsers} userId={user.id!}/>
                                     </HStack>
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>

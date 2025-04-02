@@ -1,4 +1,5 @@
 import {RoleDTO} from "@/types/role-types.ts";
+import {CompanyBaseDTO} from "@/types/company-type.ts";
 
 export interface LoginRequest {
     login: string;
@@ -36,6 +37,7 @@ export interface UserInfo {
     locked: boolean;
     enabled: boolean;
     roles?: string[];
+    companies: CompanyBaseDTO[];
 }
 
 export interface UserUpdateRequest {
@@ -48,6 +50,7 @@ export interface UserUpdateRequest {
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
+    companies: Array<CompanyBaseDTO>
     createdDatetime?: string;
     lastModifiedDatetime?: string;
 }
@@ -74,6 +77,7 @@ export interface UserDTO {
     locked: boolean;
     enabled: boolean;
     roles?: Array<RoleDTO>;
+    companies: Array<CompanyBaseDTO>
     createdDatetime?: string;
     lastModifiedDatetime?: string;
 }
@@ -89,6 +93,7 @@ export interface UserFormDTO {
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
+    companies: Array<CompanyBaseDTO>;
     createdDatetime?: string;
     lastModifiedDatetime?: string;
 }
@@ -100,16 +105,5 @@ export interface AdminEditPasswordChangeRequest {
 
 export interface AdminEditRoleUpdateRequest {
     userId?: number;
-    roles: string[];
-}
-
-export interface UserFilter {
-    emailStartsWith?: string;
-    loginStartsWith?: string;
-    firstNameStartsWith?: string;
-    lastNameStartsWith?: string;
-    positionStartsWith?: string;
-    isLocked?: boolean;
-    isEnabled?: boolean;
     roles: string[];
 }

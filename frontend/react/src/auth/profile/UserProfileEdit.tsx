@@ -75,6 +75,7 @@ const UserProfileEdit: React.FC = () => {
                 locked: currentUser?.locked,
                 enabled: currentUser?.enabled,
                 roles: currentUser?.roles || [],
+                companies: currentUser?.companies || []
             };
             try {
                 await updateUserAccount(userUpdateRequest);

@@ -374,7 +374,7 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                 mt={1}
                 mb={1}
                 onClick={handleSearch}
-                colorScheme={"orange"}
+                colorPalette={"orange"}
                 size={"xs"}
             >
                 {t("common:search")}

@@ -17,6 +17,8 @@ import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -51,11 +53,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
     private final SendEmailService sentEmailService;
+    private final CompanyMapper companyMapper;
 
     public UserServiceImpl(UserDao userDao,
                            UserMapper userMapper,
                            RoleService roleService, RoleMapper roleMapper,
-                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService) {
+                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyMapper companyMapper) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.roleService = roleService;
@@ -63,6 +66,7 @@ public class UserServiceImpl implements UserService {
         this.userTokenService = userTokenService;
         this.encoder = encoder;
         this.sentEmailService = sentEmailService;
+        this.companyMapper = companyMapper;
     }
 
     @Override
@@ -162,6 +166,7 @@ public class UserServiceImpl implements UserService {
         builder.position(userDTO.getPosition() != null ? userDTO.getPosition() : existingUserDTO.getPosition());
         builder.locked(userDTO.getLocked() != null ? userDTO.getLocked() : existingUserDTO.getLocked());
         builder.enabled(userDTO.getEnabled() != null ? userDTO.getEnabled() : existingUserDTO.getEnabled());
+        builder.companies(userDTO.getCompanies() != null ? userDTO.getCompanies() : existingUserDTO.getCompanies());
 
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
@@ -269,6 +274,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user with authorities.");
         User currentUser = getCurrentLoggedUser().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
+        List<CompanyBaseDTO> currentCompanies = currentUser.getCompanies().stream().map(companyMapper::toDto).toList();
         return new UserInfoResponse(
                 currentUser.getId(),
                 currentUser.getLogin(),
@@ -276,7 +282,8 @@ public class UserServiceImpl implements UserService {
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
                 currentUser.getPosition(),
-                currentRoles);
+                currentRoles,
+                currentCompanies);
     }
 
     @Override

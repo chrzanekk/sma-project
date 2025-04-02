@@ -44,7 +44,7 @@ export const addCompany = async (addCompany: CompanyBaseDTO) => {
 }
 export const updateCompany = async (updateCompany: CompanyBaseDTO) => {
     try {
-        const response = await api.post(`${COMPANY_API_BASE}/update`, updateCompany, getAuthConfig());
+        const response = await api.put(`${COMPANY_API_BASE}/update`, updateCompany, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
