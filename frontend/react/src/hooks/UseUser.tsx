@@ -68,6 +68,7 @@ const useUser = () => {
     const clearUser = () => {
         setUser(null);
         localStorage.removeItem("user");
+        localStorage.removeItem("selectedCompany")
     };
 
     return {user, updateUser, clearUser, tokenValid};

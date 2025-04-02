@@ -17,6 +17,10 @@ import CompanySelector from "@/layout/CompanySelector.tsx";
 const Navbar: React.FC = () => {
     const {open, onToggle} = useDisclosure();
     const themeColors = useThemeColors();
+    const { user } = useUser();
+
+    const userHasCompanies = user?.companies && user.companies.length > 0;
+
 
     return (
         <Box bg={themeColors.bgColorPrimary} h="50px">
@@ -45,7 +49,7 @@ const Navbar: React.FC = () => {
                         </Link>
                     </HStack>
                     <HStack as="nav" display={{base: 'none', md: 'flex'}}>
-                        <DesktopNav/>
+                        {userHasCompanies && <DesktopNav />}
                     </HStack>
                 </HStack>
 
@@ -77,7 +81,7 @@ const DesktopNav: React.FC = () => {
     return (
         <Stack direction="row" gap={2}>
             {navItems.map((navItem) => {
-                // Jeśli element ma children, opakowujemy go w MenuRoot
+
                 if (navItem.children && navItem.children.length > 0) {
                     return (
                         <MenuRoot key={navItem.label}>
@@ -124,7 +128,7 @@ const DesktopNav: React.FC = () => {
                         </MenuRoot>
                     );
                 }
-                // Jeśli nie ma children, renderuj jako zwykły Button
+
                 return (
                     <Button
                         key={navItem.label}

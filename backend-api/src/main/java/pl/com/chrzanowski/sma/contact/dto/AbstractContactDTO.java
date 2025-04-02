@@ -24,4 +24,5 @@ public abstract class AbstractContactDTO {
     protected final Long modifiedById;
     protected final String modifiedByFirstName;
     protected final String modifiedByLastName;
+    protected final Long companyId;
 }

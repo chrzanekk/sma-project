@@ -5,13 +5,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, ContractorBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserMapper.class, ContractorBaseMapper.class})
 public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact> {
 
     @Autowired
@@ -25,6 +26,7 @@ public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact>
     @Mapping(source = "createdBy.lastName", target = "createdByLastName")
     @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
     @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
+    @Mapping(source = "company.id", target = "companyId")
     @Mapping(target = "contractors", expression = "java(contractorBaseMapper.toDtoSet(contact.getContractors()))")
     public abstract ContactDTO toDto(Contact contact);
 
@@ -33,6 +35,7 @@ public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact>
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "company.id", source = "companyId")
     public abstract void updateContactFromDto(ContactDTO contactDTO, @MappingTarget Contact contact);
 
     @Mapping(target = "contractors", ignore = true)
@@ -40,6 +43,7 @@ public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact>
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "company.id", source = "companyId")
     public abstract Contact toEntity(ContactDTO contactDTO);
 
     // Mapowanie do wersji bazowej
