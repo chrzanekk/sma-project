@@ -15,6 +15,7 @@ export interface BaseContactDTOForContractor {
     phoneNumber: string;
     email: string;
     additionalInfo: string;
+    companyId?: number;
 }
 
 export interface BaseContactFormValues {

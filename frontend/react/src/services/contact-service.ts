@@ -2,14 +2,16 @@ import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
-
+import {getSelectedCompanyId} from "@/utils/company-utils";
 
 const CONTACTS_API_BASE = "/api/contacts";
+
 
 export const getContactsByFilter = async (filter: Record<string, any>) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
+            companyId: getSelectedCompanyId(),
             size: filter.size || 10,
             page: filter.page || 0
         });
@@ -36,7 +38,12 @@ export const getContactById = async (id: number) => {
 
 export const addContact = async (addContact: ContactDTO) => {
     try {
-        const response = await api.post(`${CONTACTS_API_BASE}/add`, addContact, getAuthConfig());
+        const companyId = getSelectedCompanyId();
+        const payload = {
+            ...addContact,
+            companyId
+        }
+        const response = await api.post(`${CONTACTS_API_BASE}/add`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -45,7 +52,12 @@ export const addContact = async (addContact: ContactDTO) => {
 
 export const updateContact = async (updateContact: ContactDTO) => {
     try {
-        const response = await api.put(`${CONTACTS_API_BASE}/update`, updateContact, getAuthConfig());
+        const companyId = getSelectedCompanyId();
+        const payload = {
+            ...updateContact,
+            companyId
+        }
+        const response = await api.put(`${CONTACTS_API_BASE}/update`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
