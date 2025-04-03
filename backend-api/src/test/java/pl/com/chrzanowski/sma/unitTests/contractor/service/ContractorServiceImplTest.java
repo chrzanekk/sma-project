@@ -82,7 +82,7 @@ class ContractorServiceImplTest {
         contractor.setSupplier(false);
         contractor.setScaffoldingUser(true);
 
-        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null);
+        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null, null);
         when(userService.getUserWithAuthorities()).thenReturn(mockUser);
 
         User user = new User();

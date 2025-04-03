@@ -74,6 +74,9 @@ public class ContractorQuerySpec {
         if (filter.getScaffoldingUser() != null) {
             builder.and(contractor.scaffoldingUser.eq(filter.getScaffoldingUser()));
         }
+        if (filter.getCompanyId() != null && filter.getCompanyId() > 0) {
+            builder.and(contractor.company.id.eq(filter.getCompanyId()));
+        }
         return builder;
     }
 
@@ -96,8 +99,6 @@ public class ContractorQuerySpec {
                 query.orderBy(orderSpecifier);
             }
         }
-
-//        query.leftJoin(contractor.contacts).fetchJoin();
         return query;
     }
 }

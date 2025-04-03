@@ -17,5 +17,5 @@ public class ContactFilter {
     private String lastNameStartsWith;
     private String emailStartsWith;
     private String phoneStartsWith;
-
+    private Long companyId;
 }
