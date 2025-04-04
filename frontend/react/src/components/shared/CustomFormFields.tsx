@@ -173,6 +173,7 @@ interface CustomSimpleSelectProps {
     disabled?: boolean;
     size?: "xs" | "sm" | "md" | "lg";
     hideArrow?: boolean;
+    placeholder?: string;
 }
 
 const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
@@ -184,6 +185,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                                                                    disabled = false,
                                                                    size = "sm",
                                                                    hideArrow = false,
+                                                                   placeholder
                                                                }) => {
     const selectStyles = getSelectStyles();
     const selectedValue = options.find((option) => option.value === value) || null;
@@ -267,6 +269,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
     return (
         <Box>
             <Select
+                placeholder={placeholder}
                 options={options}
                 isDisabled={disabled}
                 value={selectedValue}
@@ -274,8 +277,8 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                     onChange(selectedOption.value);
                 }}
                 styles={customSelectStyles}
-                isSearchable={false}  // jeśli nie chcesz pola wyszukiwania
-                components={hideArrow ? noArrowComponents : undefined} // usuwamy strzałkę i separator
+                isSearchable={false}
+                components={hideArrow ? noArrowComponents : undefined}
             />
         </Box>
     );

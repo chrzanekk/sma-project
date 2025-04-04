@@ -15,13 +15,16 @@ const Layout = ({children}: { children: React.ReactNode }) => {
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        if (user && !selectedCompany) {
+        const companyAlreadySelected = localStorage.getItem("companySelected") === "true";
+
+        if (user && !selectedCompany && !companyAlreadySelected) {
             setShowModal(true);
         }
     }, [user, selectedCompany]);
 
     const handleConfirmCompany = (company: CompanyBaseDTO | null) => {
         setSelectedCompany(company);
+        localStorage.setItem("companySelected", "true");
         setShowModal(false);
     };
 

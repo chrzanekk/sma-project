@@ -30,6 +30,8 @@ const useUser = () => {
         if (!token || isTokenExpired(token)) {
             localStorage.removeItem('auth');
             localStorage.removeItem('user');
+            localStorage.removeItem('companySelected');
+            localStorage.removeItem("selectedCompany");
             setUser(null);
             setTokenValid(false);
             setInitialized(true);
@@ -69,6 +71,7 @@ const useUser = () => {
         setUser(null);
         localStorage.removeItem("user");
         localStorage.removeItem("selectedCompany")
+        localStorage.removeItem('companySelected');
     };
 
     return {user, updateUser, clearUser, tokenValid};

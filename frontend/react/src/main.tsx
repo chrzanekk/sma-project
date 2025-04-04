@@ -15,12 +15,12 @@ createRoot(document.getElementById('root')!)
         <StrictMode>
             <ThemeProvider>
                 <ChakraProvider value={defaultSystem}>
-                    <AuthProvider>
-                        <CompanyProvider>
+                    <CompanyProvider>
+                        <AuthProvider>
                             <RouterProvider router={router}/>
                             <Toaster/>
-                        </CompanyProvider>
-                    </AuthProvider>
+                        </AuthProvider>
+                    </CompanyProvider>
                 </ChakraProvider>
             </ThemeProvider>
         </StrictMode>

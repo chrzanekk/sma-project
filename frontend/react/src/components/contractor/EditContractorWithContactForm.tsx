@@ -276,7 +276,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                                     </Table.Row>
                                 ))) : (
                                     <Table.Row bg={themeColors.bgColorSecondary}>
-                                        <Table.Cell colSpan={2} textAlign="center">
+                                        <Table.Cell colSpan={4} textAlign="center">
                                             <Box textAlign="center" py={2}>
                                                 {t("contacts:noContacts", "Brak kontaktów")}
                                             </Box>

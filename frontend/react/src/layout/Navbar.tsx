@@ -13,14 +13,16 @@ import {FaBars} from "react-icons/fa6";
 import {ThemeToggle} from "@/layout/ThemeToggle.tsx";
 import {NavItem} from "@/types/nav-item-types.ts";
 import CompanySelector from "@/layout/CompanySelector.tsx";
+import {useCompany} from "@/hooks/useCompany";
+
 
 const Navbar: React.FC = () => {
     const {open, onToggle} = useDisclosure();
     const themeColors = useThemeColors();
     const { user } = useUser();
-
+    const {selectedCompany} = useCompany();
     const userHasCompanies = user?.companies && user.companies.length > 0;
-
+    const showNav = userHasCompanies && selectedCompany;
 
     return (
         <Box bg={themeColors.bgColorPrimary} h="50px">
@@ -49,7 +51,7 @@ const Navbar: React.FC = () => {
                         </Link>
                     </HStack>
                     <HStack as="nav" display={{base: 'none', md: 'flex'}}>
-                        {userHasCompanies && <DesktopNav />}
+                        {showNav && <DesktopNav />}
                     </HStack>
                 </HStack>
 
@@ -66,6 +68,7 @@ const Navbar: React.FC = () => {
             <Collapsible.Root open={open} onOpenChange={onToggle}>
                 <Collapsible.Trigger/>
                 <Collapsible.Content>
+                    {showNav && <MobileNav />}
                     <MobileNav/>
                     <UserMenuMobile/>
                 </Collapsible.Content>
