@@ -7,6 +7,7 @@ import {RouterProvider} from "react-router-dom";
 import router from "@/routes/Router.tsx";
 import {ChakraProvider, defaultSystem} from "@chakra-ui/react";
 import {ThemeProvider} from "next-themes";
+import {CompanyProvider} from "@/context/CompanyContext.tsx";
 
 
 createRoot(document.getElementById('root')!)
@@ -15,8 +16,10 @@ createRoot(document.getElementById('root')!)
             <ThemeProvider>
                 <ChakraProvider value={defaultSystem}>
                     <AuthProvider>
-                        <RouterProvider router={router}/>
-                        <Toaster/>
+                        <CompanyProvider>
+                            <RouterProvider router={router}/>
+                            <Toaster/>
+                        </CompanyProvider>
                     </AuthProvider>
                 </ChakraProvider>
             </ThemeProvider>

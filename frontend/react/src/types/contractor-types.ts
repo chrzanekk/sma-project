@@ -1,6 +1,7 @@
 import {BaseContactDTOForContractor} from "@/types/contact-types.ts";
 import {Country} from "@/types/country-type.ts";
 import {AuditableType} from "@/types/auditable-type.ts";
+import {CompanyBaseDTO} from "@/types/company-type.ts";
 
 export interface FetchableContractorDTO extends ContractorDTO, AuditableType {
 }
@@ -23,6 +24,7 @@ export interface BaseContractorDTO {
     supplier: boolean | undefined;
     scaffoldingUser: boolean | undefined;
     companyId?: number;
+    company: CompanyBaseDTO;
 }
 
 export interface ContractorFormValues {

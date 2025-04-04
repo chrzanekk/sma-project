@@ -6,6 +6,7 @@ import {addContact} from "@/services/contact-service.ts";
 import {BaseContactFormValues, ContactDTO} from "@/types/contact-types.ts";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface AddContactFormProps {
@@ -14,6 +15,8 @@ interface AddContactFormProps {
 
 const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'contacts', 'errors']);
+    const currentCompany = getSelectedCompany();
+
     const initialValues: BaseContactFormValues = {
         firstName: '',
         lastName: '',
@@ -27,7 +30,9 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
     const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
-                ...values
+                ...values,
+                company: currentCompany!,
+                companyId: currentCompany!.id
             }
             const response = await addContact(mappedContact);
             successNotification(

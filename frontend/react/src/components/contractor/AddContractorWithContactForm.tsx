@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -14,6 +14,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSummary from "@/components/contractor/ContractorSummary.tsx";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 interface AddContractorWithContactFormProps {
     onSuccess: () => void;
@@ -29,7 +30,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     const [isContractorValid, setIsContractorValid] = useState(false);
     const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
     const themeColors = useThemeColors();
-
+    const currentCompany = getSelectedCompany();
 
     const contractorInitialValues: ContractorFormValues = {
         name: "",
@@ -89,13 +90,20 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
+        const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
+            ...contact,
+            company: currentCompany!,
+            companyId: currentCompany!.id
+        }));
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
             customer: contractorData.customer ?? false,
             supplier: contractorData.supplier ?? false,
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
-            contacts: contacts
+            contacts: contactsDTO,
+            company: currentCompany!,
+            companyId: currentCompany!.id
         };
         try {
             await addContractor(payload);
@@ -237,7 +245,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
             <Steps.Content key={2} index={2}>
                 <Box direction="column" textAlign="center" mb={2}>
                     <Heading size="md" color={themeColors.fontColor}>{t("common:summary")}</Heading>
-                    <ContractorSummary contractorData={contractorData!!} contacts={contacts}/>
+                    <ContractorSummary contractorData={contractorData!} contacts={contacts}/>
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>

@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues, FetchableContractorDTO} from "@/types/contractor-types.ts";
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
 import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
@@ -15,6 +15,7 @@ import {FormikProps} from "formik";
 import {StepsNextTrigger, StepsPrevTrigger,} from "@/components/ui/steps";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSummary from "@/components/contractor/ContractorSummary.tsx";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 interface EditContractorWithContactFormStepsProps {
     onSuccess: () => void;
@@ -29,6 +30,8 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     const themeColors = useThemeColors();
 
     const countryOptions = getCountryOptions(t);
+    const currentCompany = getSelectedCompany();
+
 
     // Stany dla danych kontrahenta i listy kontaktów
     const [contractorData, setContractorData] = useState<ContractorFormValues | null>(null);
@@ -117,13 +120,20 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     // Finalne zatwierdzenie – wysłanie zmodyfikowanych danych kontrahenta
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
+        const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
+            ...contact,
+            company: currentCompany!,
+            companyId: currentCompany!.id
+        }));
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
             customer: contractorData.customer ?? false,
             supplier: contractorData.supplier ?? false,
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
-            contacts: contacts,
+            contacts: contactsDTO,
+            company: currentCompany!,
+            companyId: currentCompany!.id
         };
         try {
             await updateContractor(payload);

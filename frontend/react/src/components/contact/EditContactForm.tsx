@@ -6,6 +6,7 @@ import {BaseContactFormValues, ContactDTO, FetchableContactDTO} from "@/types/co
 import {getContactById, updateContact} from "@/services/contact-service.ts";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface EditContactFormProps {
@@ -25,6 +26,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
     const {t} = useTranslation(['common', 'contacts', 'errors'])
     const [initialValues, setInitialValues] = useState<BaseContactFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const currentCompany = getSelectedCompany();
 
     useEffect(() => {
         const fetchContact = async () => {
@@ -53,7 +55,9 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
     const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
-                ...values
+                ...values,
+                company: currentCompany!,
+                companyId: currentCompany!.id
             }
             await updateContact(mappedContact);
             successNotification(

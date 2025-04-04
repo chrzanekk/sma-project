@@ -8,7 +8,7 @@ import {Flex} from "@chakra-ui/react";
 import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
 import ContractorTableWithContacts from "@/components/contractor/ContractorTableWithContacts.tsx";
 import useContactManagement from "@/hooks/UseContactManagement.tsx";
-
+import {useCompany} from "@/hooks/useCompany";
 
 const ContractorManagement: React.FC = () => {
     const [contractors, setContractors] = useState<FetchableContractorDTO[]>([]);
@@ -18,6 +18,8 @@ const ContractorManagement: React.FC = () => {
     const [sortField, setSortField] = useState<string | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [filter, setFilter] = useState<Record<string, any>>({});
+    const {selectedCompany} = useCompany();
+
 
     const {
         fetchContacts,
@@ -26,9 +28,12 @@ const ContractorManagement: React.FC = () => {
     } = useContactManagement();
 
     const fetchContractors = useCallback(async (customFilter = {}, page = 0, size = rowsPerPage) => {
+        if(!selectedCompany) return;
+
         try {
             const response = await getContractorsByFilter({
                 ...customFilter,
+                companyId: selectedCompany.id,
                 page,
                 size,
                 sort: sortField ? `${sortField},${sortDirection}` : undefined,
@@ -38,7 +43,7 @@ const ContractorManagement: React.FC = () => {
         } catch (err) {
             console.error('Error fetching contractors: ', err);
         }
-    }, [rowsPerPage, sortField, sortDirection])
+    }, [rowsPerPage, sortField, sortDirection, selectedCompany])
 
     const handleRowsPerPageChange = (size: number) => {
         setRowsPerPage(size);
@@ -96,7 +101,7 @@ const ContractorManagement: React.FC = () => {
         }, currentPage).then(() => {
             console.log("Contractors fetched successfully");
         });
-    }, [fetchContractors, currentPage, filter, sortField, sortDirection]);
+    }, [fetchContractors, currentPage, filter, sortField, sortDirection, selectedCompany]);
 
     return (
         <ContractorLayout

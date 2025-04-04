@@ -7,6 +7,7 @@ import React from "react";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface AddContractorFormProps {
@@ -16,6 +17,7 @@ interface AddContractorFormProps {
 const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'contractors']);
     const countryOptions = getCountryOptions(t);
+    const currentCompany = getSelectedCompany();
 
     const initialValues: ContractorFormValues = {
         name: "",
@@ -42,6 +44,7 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
             const mappedContractor: ContractorDTO = {
                 ...values,
                 country: Country.fromCode(values.country),
+                company: currentCompany!
             };
             await addContractor(mappedContractor);
             successNotification(

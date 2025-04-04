@@ -1,34 +1,24 @@
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Box, HStack, Text, VStack} from "@chakra-ui/react";
 import useUser from "@/hooks/UseUser";
-import {CompanyBaseDTO} from "@/types/company-type"; // Typ firmy
+import {CompanyBaseDTO} from "@/types/company-type";
 import {Button} from "@/components/ui/button.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {FiChevronDown} from "react-icons/fi";
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
-
+import {useCompany} from "@/hooks/useCompany";
 
 const CompanySelector: React.FC = () => {
     const {user} = useUser();
     const {t} = useTranslation('navbar');
     const themeColors = useThemeColors();
-    const [selectedCompany, setSelectedCompany] = useState<CompanyBaseDTO | null>(null);
-
-    // Przy inicjalizacji sprawdzamy, czy w localStorage jest już wybrana firma.
-    useEffect(() => {
-        const storedCompany = localStorage.getItem("selectedCompany");
-        if (storedCompany) {
-            setSelectedCompany(JSON.parse(storedCompany));
-        }
-    }, []);
+    const {selectedCompany, setSelectedCompany} = useCompany();
 
     const handleSelectCompany = (company: CompanyBaseDTO) => {
         setSelectedCompany(company);
-        localStorage.setItem("selectedCompany", JSON.stringify(company));
     };
 
-    // Lista firm przypisanych do użytkownika (jeżeli user nie jest zalogowany lub nie ma firm, może być pusta)
     const companies: CompanyBaseDTO[] = user?.companies || [];
 
     return (
