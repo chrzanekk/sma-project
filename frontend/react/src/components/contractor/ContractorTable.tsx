@@ -2,15 +2,14 @@ import {FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {useTranslation} from "react-i18next";
 import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import React, {useState} from "react";
-import {useTheme} from "next-themes";
 import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import classNames from "classnames";
 import '@/theme/css/global-table-styles.css';
 import '@/theme/css/contractor-table-styles.css';
 import EditContractorDrawer from "@/components/contractor/EditContractorDrawer.tsx";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog.tsx";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 //left this component...will be changed to genericContractorTable and used in ContactTableWithContractors in future.
 
@@ -34,9 +33,8 @@ const ContractorTable: React.FC<Props> = ({
     const {t} = useTranslation(['common', 'contractors']);
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedContractorId, setSelectedContractorId] = useState<number | null>(null);
-    const {theme} = useTheme();
+    const themeColors = useThemeColors();
 
-    const tableClass = classNames('custom-table','contractor-table', {'dark-theme': theme === 'dark'});
 
     const handleDeleteClick = (id: number) => {
         setSelectedContractorId(id);
@@ -66,7 +64,10 @@ const ContractorTable: React.FC<Props> = ({
 
     return (
         <Box>
-            <Table.Root className={tableClass}>
+            <Table.Root size={"sm"}
+                        interactive
+                        showColumnBorder
+                        color={themeColors.fontColor}>
                 <Table.Header>
                     <Table.Row>
                         <Table.ColumnHeader cursor={"pointer"}
@@ -100,7 +101,7 @@ const ContractorTable: React.FC<Props> = ({
                                             onClick={() => onSortChange("lastModifiedDatetime")}>
                             {t('lastModifiedDate')}{renderSortIndicator("lastModifiedDatetime")}</Table.ColumnHeader>
                         <Table.ColumnHeader cursor={"pointer"}
-                                                  onClick={() => onSortChange("modifiedBy")}>
+                                            onClick={() => onSortChange("modifiedBy")}>
                             {t('lastModifiedBy')}{renderSortIndicator("modifiedBy")}</Table.ColumnHeader>
                         <Table.ColumnHeader>{t('edit')}</Table.ColumnHeader>
                     </Table.Row>
@@ -127,11 +128,15 @@ const ContractorTable: React.FC<Props> = ({
                             <Table.Cell>{contractor.supplier ? t("common:yes") : t("common:no")}</Table.Cell>
                             <Table.Cell>{contractor.scaffoldingUser ? t("common:yes") : t("common:no")}</Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
-                            <Table.Cell><div>{contractor.createdByFirstName}</div>
-                                <div>{contractor.createdByLastName}</div></Table.Cell>
+                            <Table.Cell>
+                                <div>{contractor.createdByFirstName}</div>
+                                <div>{contractor.createdByLastName}</div>
+                            </Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
-                            <Table.Cell><div>{contractor.modifiedByFirstName}</div>
-                                        <div>{contractor.modifiedByLastName}</div></Table.Cell>
+                            <Table.Cell>
+                                <div>{contractor.modifiedByFirstName}</div>
+                                <div>{contractor.modifiedByLastName}</div>
+                            </Table.Cell>
                             <Table.Cell>
                                 <HStack gap={1} alignContent={"center"}>
                                     <EditContractorDrawer

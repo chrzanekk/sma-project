@@ -1,12 +1,14 @@
 import React from 'react';
 import {useTranslation} from 'react-i18next';
 import {Box, Button, HStack, Text, VStack} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger} from "@/components/ui/menu.tsx";
 import {FiChevronDown} from "react-icons/fi";
 
 const LanguageSwitcher: React.FC = () => {
     const {t, i18n} = useTranslation();
+    const themeColors = useThemeColors();
+
     const changeLanguage = (lang: string): void => {
         i18n.changeLanguage(lang).then(() => {
             console.log(`Język zmieniony na: ${lang}`);
@@ -19,13 +21,13 @@ const LanguageSwitcher: React.FC = () => {
         <MenuRoot>
             <MenuTrigger asChild>
                 <Button
-                    bg={themeColors.bgColorPrimary()}
+                    bg={themeColors.bgColorPrimary}
                     ml={4}
-                    color={themeColors.fontColor()}
+                    color={themeColors.fontColor}
                     _hover={{
                         textDecoration: 'none',
-                        bg: themeColors.highlightBgColor(),
-                        color: themeColors.fontColorHover()
+                        bg: themeColors.highlightBgColor,
+                        color: themeColors.fontColorHover
                     }}
                     size="sm"
                     p={2}
@@ -50,16 +52,16 @@ const LanguageSwitcher: React.FC = () => {
                     </HStack>
                 </Button>
             </MenuTrigger>
-            <MenuContent bg={themeColors.bgColorSecondary()} mt={2} p={1}>
+            <MenuContent bg={themeColors.bgColorSecondary} mt={2} p={1}>
                 <MenuItem
-                    bg={themeColors.bgColorSecondary()}
+                    bg={themeColors.bgColorSecondary}
                     p={2}
-                    color={themeColors.fontColor()}
+                    color={themeColors.fontColor}
                     rounded={'md'}
                     _hover={{
                         textDecoration: 'none',
-                        bg: themeColors.highlightBgColor(),
-                        color: themeColors.fontColorHover(),
+                        bg: themeColors.highlightBgColor,
+                        color: themeColors.fontColorHover,
                     }}
                     value={'pl'}
                     valueText={'🇵🇱 Polski'}
@@ -67,13 +69,13 @@ const LanguageSwitcher: React.FC = () => {
                     🇵🇱 Polski
                 </MenuItem>
                 <MenuItem
-                    bg={themeColors.bgColorSecondary()}
+                    bg={themeColors.bgColorSecondary}
                     rounded={'md'}
-                    color={themeColors.fontColor()}
+                    color={themeColors.fontColor}
                     _hover={{
                         textDecoration: 'none',
-                        bg: themeColors.highlightBgColor(),
-                        color: themeColors.fontColorHover(),
+                        bg: themeColors.highlightBgColor,
+                        color: themeColors.fontColorHover,
                     }}
                     value={'en'}
                     valueText={'🇬🇧 English'}

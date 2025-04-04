@@ -22,4 +22,5 @@ public class UserUpdateRequest {
     Boolean locked;
     Boolean enabled;
     List<String> roles;
+    List<Long> companiesIds;
 }

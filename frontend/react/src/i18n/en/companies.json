@@ -1,0 +1,18 @@
+{
+  "add": "Dodaj firmę",
+  "edit": "Edytuj dane firmy",
+  "details": "Dane firmy",
+  "name": "Nazwa firmy",
+  "additionalInfo": "Informacje dodatkowe",
+  "taxNumber": "NIP",
+  "phoneNumber": "Telefon kontaktowy",
+  "email": "Email",
+  "companiesList": "Lista firm",
+  "noCompaniesInfo": "Nie masz przypisanych firm. Możesz kontynuować, ale dostęp do funkcji będzie ograniczony.",
+  "notifications": {
+    "addCompanySuccess": "Firma {name} dodana pomyślnie",
+    "addCompanyError": "Błąd dodawania firmy",
+    "editCompanySuccess": "Dane firmy {name} zmieniono pomyślnie",
+    "editCompanyError": "Błąd edycji firmy {name}"
+  }
+}

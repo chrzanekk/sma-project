@@ -8,13 +8,13 @@ public enum ERole {
     ROLE_MODERATOR("ROLE_MODERATOR"),
     ROLE_ADMIN("ROLE_ADMIN");
 
-    private final String roleName;
+    private final String name;
 
-    ERole(String roleName) {
-        this.roleName = roleName;
+    ERole(String name) {
+        this.name = name;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public String getName() {
+        return name;
     }
 }

@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.auth.dto.response;
 
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+
 import java.util.List;
 
 public record UserInfoResponse(
@@ -9,6 +11,7 @@ public record UserInfoResponse(
         String firstName,
         String lastName,
         String position,
-        List<String> roles
+        List<String> roles,
+        List<CompanyBaseDTO> companies
 ) {
 }

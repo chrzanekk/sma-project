@@ -2,8 +2,6 @@ package pl.com.chrzanowski.sma.unitTests.user.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -262,12 +260,12 @@ class UserJPADaoImplTest {
         when(query.limit(2)).thenReturn(query);
         when(query.fetchCount()).thenReturn(1L);
         when(query.fetch()).thenReturn(userList);
+        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
 
         // Mock buildQuery
-        when(userQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
 
         // When
-        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
         var result = userJPADaoImpl.findAll(specification, pageable);
 
         // Then
@@ -289,10 +287,10 @@ class UserJPADaoImplTest {
         when(query.fetch()).thenReturn(Collections.emptyList());
 
         // Mock buildQuery
-        when(userQuerySpec.buildQuery(specification)).thenReturn(query);
+        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
+        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
 
         // When
-        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
         var result = userJPADaoImpl.findAll(specification, pageable);
 
         // Then
@@ -316,7 +314,7 @@ class UserJPADaoImplTest {
         when(query.fetch()).thenReturn(userList);
 
         // Mock buildQuery
-        when(userQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(userQuerySpec.buildQuery(specification, null)).thenReturn(query);
 
         // When
         List<User> result = userJPADaoImpl.findAll(specification);
@@ -339,7 +337,7 @@ class UserJPADaoImplTest {
         when(query.fetch()).thenReturn(Collections.emptyList());
 
         // Mock buildQuery
-        when(userQuerySpec.buildQuery(specification)).thenReturn(query);
+        when(userQuerySpec.buildQuery(specification, null)).thenReturn(query);
 
         // When
         List<User> result = userJPADaoImpl.findAll(specification);

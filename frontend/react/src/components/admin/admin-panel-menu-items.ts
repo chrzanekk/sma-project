@@ -7,5 +7,6 @@ export const getAdminPanelMenuItems = (setActiveView: (view: AdminPanelView) => 
     return [
         {label: t('roles'), href: '#', onClick: () => setActiveView('roles'), value:'roles'},
         {label: t('users'), href: '#', onClick: () => setActiveView('users'), value:'users'},
+        {label: t('companies'), href: '#', onClick: () => setActiveView('companies'), value:'companies'},
     ];
 }

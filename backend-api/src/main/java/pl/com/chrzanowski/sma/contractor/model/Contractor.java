@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.common.model.AuditableEntity;
+import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
+import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 
 import java.util.HashSet;
@@ -15,7 +16,6 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString(callSuper = true)
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -68,6 +68,11 @@ public class Contractor extends AuditableEntity {
     @ToString.Exclude
     @JoinTable(name = "contractor_contacts",
             joinColumns = @JoinColumn(name = "contractor_id"),
-            inverseJoinColumns = @JoinColumn(name="contact_id"))
+            inverseJoinColumns = @JoinColumn(name = "contact_id"))
     private Set<Contact> contacts = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 }

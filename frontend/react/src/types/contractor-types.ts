@@ -1,66 +1,32 @@
 import {BaseContactDTOForContractor} from "@/types/contact-types.ts";
 import {Country} from "@/types/country-type.ts";
+import {AuditableType} from "@/types/auditable-type.ts";
+import {CompanyBaseDTO} from "@/types/company-type.ts";
 
-
-//interfejs do wyswietlania kontrahentów wraz z kontaktami
-export interface FetchableContractorDTO {
-    id?: number;
-    name: string;
-    taxNumber: string;
-    street: string;
-    buildingNo: string;
-    apartmentNo: string;
-    postalCode: string;
-    city: string;
-    country: Country;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
-    contacts: Array<BaseContactDTOForContractor>
-    createdDatetime: string;
-    lastModifiedDatetime: string;
-    createdById: number;
-    createdByFirstName: string;
-    createdByLastName: string;
-    modifiedById: number;
-    modifiedByFirstName: string;
-    modifiedByLastName: string;
+export interface FetchableContractorDTO extends ContractorDTO, AuditableType {
 }
 
-//podstawowy interfejs użyty jako typ do wyświetlania kontaktó z kontrahentami (by uniknąć odwołania cyklicznego)
-export interface BaseContractorDTOForContact {
-id?: number;
-name: string;
-taxNumber: string;
-street: string;
-buildingNo: string;
-apartmentNo: string;
-postalCode: string;
-city: string;
-country: Country;
-customer: boolean;
-supplier: boolean;
-scaffoldingUser: boolean;
-}
-
-//interfejs do dodania kontrahenta wraz z kontaktami (lub pusta lista jeśli user nie dodał nic)
-export interface ContractorDTO {
-    id?: number;
-    name: string;
-    taxNumber: string;
-    street: string;
-    buildingNo: string;
-    apartmentNo: string;
-    postalCode: string;
-    city: string;
-    country: Country;
-    customer: boolean;
-    supplier: boolean;
-    scaffoldingUser: boolean;
+export interface ContractorDTO extends BaseContractorDTO {
     contacts?: Array<BaseContactDTOForContractor>;
 }
 
-//interfejs używany w formularzach - country jako string - mapowany na enum
+export interface BaseContractorDTO {
+    id?: number;
+    name: string;
+    taxNumber: string;
+    street: string;
+    buildingNo: string;
+    apartmentNo: string;
+    postalCode: string;
+    city: string;
+    country: Country;
+    customer: boolean | undefined;
+    supplier: boolean | undefined;
+    scaffoldingUser: boolean | undefined;
+    companyId?: number;
+    company: CompanyBaseDTO;
+}
+
 export interface ContractorFormValues {
     id?: number;
     name: string;

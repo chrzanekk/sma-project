@@ -4,8 +4,9 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
 import {addContact} from "@/services/contact-service.ts";
 import {BaseContactFormValues, ContactDTO} from "@/types/contact-types.ts";
-import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
+import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface AddContactFormProps {
@@ -14,8 +15,9 @@ interface AddContactFormProps {
 
 const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'contacts', 'errors']);
+    const currentCompany = getSelectedCompany();
 
-    const initialValues: ContactFormValues = {
+    const initialValues: BaseContactFormValues = {
         firstName: '',
         lastName: '',
         phoneNumber: '',
@@ -25,10 +27,12 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
 
     const validationSchema = getContactValidationSchema(t);
 
-    const handleSubmit = async (values: ContactFormValues) => {
+    const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
-                ...values
+                ...values,
+                company: currentCompany!,
+                companyId: currentCompany!.id
             }
             const response = await addContact(mappedContact);
             successNotification(
@@ -46,7 +50,7 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
             console.error(err);
             errorNotification(
                 t('error', {ns: "common"}),
-                err.response?.data?.message || t('contractors:notifications.addContactError')
+                err.response?.data?.message || t('contacts:notifications.addContactError')
             );
         }
     };

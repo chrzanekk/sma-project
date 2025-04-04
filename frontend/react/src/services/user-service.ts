@@ -12,6 +12,7 @@ export const getUsersByFilter = async (filter: Record<string, any>) => {
             ...filter,
             size: filter.size || 10,
             page: filter.page || 0,
+            sort: filter.sort || 'id,asc'
         });
         const response = await api.get(`${USERS_API_BASE}/page?${queryParams}`,
             getAuthConfig());
@@ -60,8 +61,6 @@ export const updateUser = async (user: UserFormDTO) => {
         );
         const userDTO: UserDTO = {
             ...user,
-            // locked: toBoolean(user.locked),
-            // enabled: toBoolean(user.enabled),
             roles
         }
         const response = await api.put(`${USERS_API_BASE}/update`, userDTO, getAuthConfig());

@@ -1,19 +1,14 @@
-import {BaseContractorDTOForContact} from "@/types/contractor-types.ts";
+import {BaseContractorDTO} from "@/types/contractor-types.ts";
+import {AuditableType} from "@/types/auditable-type.ts";
+import {CompanyBaseDTO} from "@/types/company-type.ts";
 
-//tylko do pobierania danych i wyświetlania - ma dodatkowe pola audytujace
-export interface FetchableContactDTO extends BaseContactDTOForContractor {
-    contractors?: Array<BaseContractorDTOForContact>
-    createdDatetime: string;
-    lastModifiedDatetime: string;
-    createdById: number;
-    createdByFirstName: string;
-    createdByLastName: string;
-    modifiedById: number;
-    modifiedByFirstName: string;
-    modifiedByLastName: string;
+export interface FetchableContactDTO extends ContactDTO, AuditableType {
 }
 
-//interfejs do listy kontaktów w obiekcie Contractor by uniknąć odwołania cyklicznego
+export interface ContactDTO extends BaseContactDTOForContractor {
+    contractors?: Array<BaseContractorDTO>
+}
+
 export interface BaseContactDTOForContractor {
     id?: number;
     firstName: string;
@@ -21,15 +16,10 @@ export interface BaseContactDTOForContractor {
     phoneNumber: string;
     email: string;
     additionalInfo: string;
+    companyId?: number;
+    company: CompanyBaseDTO;
 }
 
-
-//interfejs użyty w serwisie - contractors może byc puste
-export interface ContactDTO extends BaseContactDTOForContractor{
-    contractors?: Array<BaseContractorDTOForContact>
-}
-
-//interfejs używany w formularzach
 export interface BaseContactFormValues {
     id?: number;
     firstName: string;

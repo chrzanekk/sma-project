@@ -4,8 +4,9 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {BaseContactFormValues, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getContactById, updateContact} from "@/services/contact-service.ts";
-import CommonContactForm, {ContactFormValues} from "@/components/contact/CommonContactForm.tsx";
+import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface EditContactFormProps {
@@ -14,7 +15,6 @@ interface EditContactFormProps {
 }
 
 const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId}) => {
-    const {t} = useTranslation(['common', 'contractors', 'errors'])
     const defaultValues: BaseContactFormValues = {
         id: 0,
         firstName: '',
@@ -23,10 +23,10 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         email: '',
         additionalInfo: ''
     }
-
+    const {t} = useTranslation(['common', 'contacts', 'errors'])
     const [initialValues, setInitialValues] = useState<BaseContactFormValues>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
+    const currentCompany = getSelectedCompany();
 
     useEffect(() => {
         const fetchContact = async () => {
@@ -52,10 +52,12 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
 
     const validationSchema = getContactValidationSchema(t);
 
-    const handleSubmit = async (values: ContactFormValues) => {
+    const handleSubmit = async (values: BaseContactFormValues) => {
         try {
             const mappedContact: ContactDTO = {
-                ...values
+                ...values,
+                company: currentCompany!,
+                companyId: currentCompany!.id
             }
             await updateContact(mappedContact);
             successNotification(

@@ -6,6 +6,7 @@ import {AuthContextType} from "@/types/auth-context-types.ts";
 import {isTokenExpired} from "@/utils/token-utils.ts";
 import {getUserInfo} from "@/services/account-service.ts";
 import {login} from "@/services/auth-service.ts";
+import {useCompany} from "@/hooks/useCompany";
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
@@ -16,6 +17,7 @@ interface AuthProviderProps {
 export const AuthProvider = ({children}: AuthProviderProps) => {
     const {user, updateUser, clearUser} = useUser();
     const {t} = useTranslation('auth');
+    const {resetSelectedCompany} = useCompany();
 
     const loginUser = async (usernameAndPassword: any): Promise<void> => {
         try {
@@ -43,7 +45,10 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
     const logOut = () => {
         localStorage.removeItem('auth');
         localStorage.removeItem('theme');
+        localStorage.removeItem('companySelected');
+        localStorage.removeItem("selectedCompany");
         clearUser();
+        resetSelectedCompany();
     };
 
     const isAuthenticated = () => {

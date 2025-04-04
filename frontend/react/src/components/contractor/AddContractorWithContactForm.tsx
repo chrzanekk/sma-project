@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -12,8 +12,9 @@ import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.ts
 import {Box, Flex, Heading, Steps, Table, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSummary from "@/components/contractor/ContractorSummary.tsx";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 interface AddContractorWithContactFormProps {
     onSuccess: () => void;
@@ -28,7 +29,8 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     const [currentStep, setCurrentStep] = useState(0);
     const [isContractorValid, setIsContractorValid] = useState(false);
     const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
-
+    const themeColors = useThemeColors();
+    const currentCompany = getSelectedCompany();
 
     const contractorInitialValues: ContractorFormValues = {
         name: "",
@@ -88,13 +90,20 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
+        const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
+            ...contact,
+            company: currentCompany!,
+            companyId: currentCompany!.id
+        }));
         const payload: ContractorDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
             customer: contractorData.customer ?? false,
             supplier: contractorData.supplier ?? false,
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
-            contacts: contacts
+            contacts: contactsDTO,
+            company: currentCompany!,
+            companyId: currentCompany!.id
         };
         try {
             await addContractor(payload);
@@ -115,24 +124,24 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     return (
         <Steps.Root defaultStep={0} count={3} variant={"solid"} colorPalette={'green'} size={"sm"}>
             <Steps.List>
-                <Steps.Item key={0} index={0} color={themeColors.fontColor()}>
+                <Steps.Item key={0} index={0} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("contractors:add")}</Text>}
+                                        color={themeColors.fontColor}>{t("contractors:add")}</Text>}
                     </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
-                <Steps.Item key={1} index={1} color={themeColors.fontColor()}>
+                <Steps.Item key={1} index={1} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("contacts:addOptional")}</Text>}
+                                        color={themeColors.fontColor}>{t("contacts:addOptional")}</Text>}
                     </Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
-                <Steps.Item key={2} index={2} color={themeColors.fontColor()}>
+                <Steps.Item key={2} index={2} color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text ml={2}
-                                        color={themeColors.fontColor()}>{t("common:summary")}</Text>} </Steps.Title>
+                                        color={themeColors.fontColor}>{t("common:summary")}</Text>} </Steps.Title>
                 </Steps.Item>
             </Steps.List>
 
@@ -149,7 +158,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
 
             <Steps.Content key={1} index={1}>
-                <Heading size="md" mb={2} color={themeColors.fontColor()}>
+                <Heading size="md" mb={2} color={themeColors.fontColor}>
                     {t("contacts:addOptional")}
                 </Heading>
                 <ContactFormWithSearch onSuccess={handleAddContact}
@@ -171,24 +180,24 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
                 {/* Lista kontaktów (opcjonalnie z przyciskiem usuń) */}
                 <Box mt={4}>
-                    <Heading size="sm" mb={2} color={themeColors.fontColor()}>
+                    <Heading size="sm" mb={2} color={themeColors.fontColor}>
                         {t("contacts:list", "Lista kontaktów")}
                     </Heading>
 
                     <Table.ScrollArea borderWidth="1px" rounded="sm" height="200px">
-                        <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor()}>
+                        <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor}>
                             <Table.Header>
-                                <Table.Row bg={themeColors.bgColorPrimary()}>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                <Table.Row bg={themeColors.bgColorPrimary}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:firstName")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:lastName")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("contacts:phoneNumber")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor()}>
+                                    <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
                                         {t("common:actions", "Akcje")}
                                     </Table.ColumnHeader>
                                 </Table.Row>
@@ -199,11 +208,11 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                                     contacts.map((contact, idx) => (
                                         <Table.Row
                                             key={idx}
-                                            bg={themeColors.bgColorSecondary()}
+                                            bg={themeColors.bgColorSecondary}
                                             _hover={{
                                                 textDecoration: "none",
-                                                bg: themeColors.highlightBgColor(),
-                                                color: themeColors.fontColorHover(),
+                                                bg: themeColors.highlightBgColor,
+                                                color: themeColors.fontColorHover,
                                             }}
                                         >
                                             <Table.Cell textAlign="center">{contact.firstName}</Table.Cell>
@@ -222,9 +231,13 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                                         </Table.Row>
                                     ))
                                 ) : (
-                                    <Box textAlign="center" py={2}>
-                                        {t("contacts:noContacts", "Brak kontaktów")}
-                                    </Box>
+                                    <Table.Row bg={themeColors.bgColorSecondary}>
+                                        <Table.Cell colSpan={4} textAlign="center">
+                                            <Box textAlign="center" py={2}>
+                                                {t("contacts:noContacts", "Brak kontaktów")}
+                                            </Box>
+                                        </Table.Cell>
+                                    </Table.Row>
                                 )}
                             </Table.Body>
                         </Table.Root>
@@ -235,9 +248,8 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
             <Steps.Content key={2} index={2}>
                 <Box direction="column" textAlign="center" mb={2}>
-                    <Heading size="md" color={themeColors.fontColor()}>{t("common:summary")}</Heading>
-                    <ContractorSummary contractorData={contractorData!!} contacts={contacts} t={t}
-                                       themeColors={themeColors}/>
+                    <Heading size="md" color={themeColors.fontColor}>{t("common:summary")}</Heading>
+                    <ContractorSummary contractorData={contractorData!} contacts={contacts}/>
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>

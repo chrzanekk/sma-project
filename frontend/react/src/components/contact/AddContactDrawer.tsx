@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/drawer.tsx";
 import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContactForm from "@/components/contact/AddContactForm.tsx";
 
@@ -23,6 +23,7 @@ interface AddContractorDrawerProps {
 
 const AddContactDrawer: React.FC<AddContractorDrawerProps> = ({fetchContacts}) => {
     const {t} = useTranslation('contacts');
+    const themeColors = useThemeColors();
     return (
         <Box>
             <DrawerRoot size={"lg"}>
@@ -36,13 +37,13 @@ const AddContactDrawer: React.FC<AddContractorDrawerProps> = ({fetchContacts}) =
                         {t('add')}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
+                <DrawerContent bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                     <DrawerContext>
                         {(store) => (
                             <>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
                                         {t("contacts:details")}
                                     </Heading>
                                 </DrawerHeader>

@@ -62,14 +62,14 @@ public class RoleJPADaoImpl implements RoleDao {
     @Override
     public List<Role> findAll(BooleanBuilder specification) {
         log.debug("JPA DAO: Fetching all roles by specification {}", specification);
-        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification);
+        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
 
     @Override
     public Page<Role> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("JPA DAO: Fetching all roles by specification {}", specification);
-        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification);
+        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification, pageable);
         long totalElements = query.fetchCount();
         List<Role> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, totalElements);

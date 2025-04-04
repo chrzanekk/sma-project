@@ -14,6 +14,7 @@ import AdminPanel from "@/components/admin/AdminPanel.tsx";
 import UnderConstructionRoute from "@/routes/UnderConstructionRoute.tsx";
 import ContractorManagement from "@/components/contractor/ContractorManagement.tsx";
 import ContactManagement from "@/components/contact/ContactManagement.tsx";
+import CompanyManagement from "@/components/company/CompanyManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -59,7 +60,7 @@ const router = createBrowserRouter([
             path: "users",
             element: (
                 <ProtectedRoute>
-                        <UserManagement/>
+                    <UserManagement/>
                 </ProtectedRoute>
             )
         },
@@ -67,8 +68,16 @@ const router = createBrowserRouter([
             path: "roles",
             element: (
                 <ProtectedRoute>
-                        <RoleManagement/>
+                    <RoleManagement/>
                 </ProtectedRoute>)
+        },
+        {
+            path: "companies",
+            element: (
+                <ProtectedRoute>
+                    <CompanyManagement/>
+                </ProtectedRoute>
+            )
         },
         {
             path: "adminPanel",
@@ -92,7 +101,7 @@ const router = createBrowserRouter([
             path: "contacts",
             element: <ProtectedRoute>
                 <Layout>
-                   <ContactManagement/>
+                    <ContactManagement/>
                 </Layout>
             </ProtectedRoute>
         },

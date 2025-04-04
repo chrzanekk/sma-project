@@ -36,7 +36,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional
     public List<RoleDTO> findAll() {
-        log.debug("DAO: Fetching all roles.");
+        log.debug("Fetching all roles.");
         List<Role> roleList = roleDao.findAll();
         return roleMapper.toDtoList(roleList);
     }
@@ -91,8 +91,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private boolean isRoleIsBase(Role role) {
-        return role.getName().equals(ERole.ROLE_USER.getRoleName())
-                || role.getName().equals(ERole.ROLE_ADMIN.getRoleName())
-                || role.getName().equals(ERole.ROLE_MODERATOR.getRoleName());
+        return role.getName().equals(ERole.ROLE_USER.getName())
+                || role.getName().equals(ERole.ROLE_ADMIN.getName())
+                || role.getName().equals(ERole.ROLE_MODERATOR.getName());
     }
 }

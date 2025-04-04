@@ -29,4 +29,5 @@ public class ContractorFilter {
     private Instant createDateEndWith;
     private Instant modifyDateStartWith;
     private Instant modifyDateEndWith;
+    private Long companyId;
 }

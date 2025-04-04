@@ -2,6 +2,9 @@ package pl.com.chrzanowski.sma.contractor.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,14 +21,16 @@ import java.util.Optional;
 @Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
 
-    private Logger log = LoggerFactory.getLogger(ContractorJPADaoImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ContractorJPADaoImpl.class);
 
     private final ContractorRepository repository;
     private final ContractorQuerySpec querySpec;
+    private final EntityManager em;
 
-    public ContractorJPADaoImpl(ContractorRepository repository, ContractorQuerySpec querySpec) {
+    public ContractorJPADaoImpl(ContractorRepository repository, ContractorQuerySpec querySpec, EntityManager em) {
         this.repository = repository;
         this.querySpec = querySpec;
+        this.em = em;
     }
 
     @Override
@@ -61,10 +66,27 @@ public class ContractorJPADaoImpl implements ContractorDao {
     @Override
     public Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contractors with specification for page {}, {}", specification, pageable);
-        JPQLQuery<Contractor> query = querySpec.buildQuery(specification, pageable);
-        long count = query.fetchCount();
-        List<Contractor> contractors = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+        JPQLQuery<Contractor> baseQuery = querySpec.buildQuery(specification, pageable);
+
+        long count = baseQuery.fetchCount();
+
+        JPAQuery<Contractor> jpaQuery = getPaginationQuery(baseQuery);
+
+        List<Contractor> contractors = jpaQuery
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
         return new PageImpl<>(contractors, pageable, count);
+    }
+
+    private JPAQuery<Contractor> getPaginationQuery(JPQLQuery<Contractor> baseQuery) {
+        JPAQuery<Contractor> jpaQuery = (JPAQuery<Contractor>) baseQuery;
+
+        EntityGraph<Contractor> entityGraph = em.createEntityGraph(Contractor.class);
+        entityGraph.addSubgraph("contacts");
+//        entityGraph.addAttributeNodes("company");
+        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        return jpaQuery;
     }
 
     @Override

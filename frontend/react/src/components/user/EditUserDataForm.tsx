@@ -9,6 +9,7 @@ import React, {useEffect, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
+import useUser from "@/hooks/UseUser.tsx";
 
 
 interface EditUserDataFormProps {
@@ -18,6 +19,7 @@ interface EditUserDataFormProps {
 
 const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) => {
     const {t} = useTranslation(['auth', 'common'])
+    const { user: currentUser, updateUser: updateLocalUser } = useUser();
     const defaultValues: UserFormDTO = {
         id: 0,
         login: '',
@@ -28,7 +30,8 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
         position: '',
         locked: false,
         enabled: true,
-        roles: []
+        roles: [],
+        companies: []
     };
     const [initialValues, setInitialValues] = useState<UserFormDTO>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,7 +51,8 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     position: user.position,
                     locked: user.locked,
                     enabled: user.enabled,
-                    roles: user.roles ? Array.from(user.roles).map(role => role.name) : []
+                    roles: user.roles ? Array.from(user.roles).map(role => role.name) : [],
+                    companies: user.companies
                 });
             } catch (err) {
                 console.error('Error fetching user:', err);
@@ -89,6 +93,17 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                         t('success', {ns: "common"}),
                         formatMessage('notifications.userEditedSuccess', {login: user.login})
                     );
+
+                    if (currentUser && currentUser.id === userId) {
+                        updateLocalUser({
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            email: user.email,
+                            position: user.position,
+                            // Możesz uzupełnić inne pola, które uległy zmianie
+                        });
+                    }
+
                     onSuccess();
                 } catch (err: any) {
                     console.error(err);

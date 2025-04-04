@@ -6,13 +6,15 @@ import {successNotification} from "@/notifications/notifications.ts";
 import {Box, Button, Heading, Stack} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 
 const LoginForm = () => {
     const {loginUser} = useAuth();
     const navigate = useNavigate();
     const {t} = useTranslation(['auth', 'common'])
+    const themeColors = useThemeColors();
+
     return (
         <Formik
             validateOnMount={true}
@@ -42,7 +44,8 @@ const LoginForm = () => {
                 <Form>
                     <Stack gap={4}>
                         <Box display="flex" justifyContent="center">
-                            <Heading fontSize={'2xl'} mb={15} color={themeColors.fontColor()}>{t('login.header')}</Heading>
+                            <Heading fontSize={'2xl'} mb={15}
+                                     color={themeColors.fontColor}>{t('login.header')}</Heading>
                         </Box>
                         <CustomInputField
                             label={t('shared.login')}

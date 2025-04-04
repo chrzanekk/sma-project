@@ -1,6 +1,9 @@
 {
   "dashboard": "Main page",
   "loggedAs": "Logged as:",
+  "company": "Current company",
+  "chooseCompany": "Choose company",
+  "noCompanies" : "Brak firm",
   "diary": "Dziennik rusztowań",
   "diaryList": "Lista dzienników",
   "diaryListSubLabel": "Przeglądaj utworzone dzienniki rusztowań",

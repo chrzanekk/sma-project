@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import {Box, Button, Dialog, Heading, Portal} from "@chakra-ui/react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {FaTimes} from "react-icons/fa";
 import React from "react";
 import EditContractorWithContactForm from "@/components/contractor/EditContractorWithContactForm.tsx";
@@ -13,6 +13,7 @@ interface EditContractorDialogProps {
 
 const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContractors, contractorId}) => {
     const {t} = useTranslation(['common', 'contractors']);
+    const themeColors = useThemeColors();
 
     return (
         <Dialog.Root size={"xl"} placement={"top"}>
@@ -27,7 +28,7 @@ const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContrac
             <Portal>
                 <Dialog.Backdrop/>
                 <Dialog.Positioner>
-                    <Dialog.Content bg={themeColors.bgColorSecondary()}
+                    <Dialog.Content bg={themeColors.bgColorSecondary}
                                     offset={"2"}
                                     borderRadius={"md"}>
                         <Dialog.Context>
@@ -35,7 +36,7 @@ const EditContractorDialog: React.FC<EditContractorDialogProps> = ({fetchContrac
                                 <Box>
                                     <Dialog.CloseTrigger/>
                                     <Dialog.Header>
-                                        <Heading size={"xl"} color={themeColors.fontColor()}>
+                                        <Heading size={"xl"} color={themeColors.fontColor}>
                                             {t("contractors:edit")}
                                         </Heading>
                                     </Dialog.Header>

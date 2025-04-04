@@ -1,4 +1,3 @@
-// ReusableContactForm.tsx
 import React from 'react';
 import {Form, Formik, FormikHelpers, FormikProps} from 'formik';
 import * as Yup from 'yup';
@@ -25,6 +24,7 @@ const CommonContactForm: React.FC<CommonContactFormProps> = (({
                                                                   innerRef,
                                                               }) => {
             const {t} = useTranslation(['common', 'contractors']);
+
             return (
                 <Formik<BaseContactFormValues>
                     initialValues={initialValues}

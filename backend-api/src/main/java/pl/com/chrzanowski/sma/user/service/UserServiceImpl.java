@@ -3,6 +3,8 @@ package pl.com.chrzanowski.sma.user.service;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,7 +15,10 @@ import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.common.security.SecurityUtils;
+import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -48,11 +53,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
     private final SendEmailService sentEmailService;
+    private final CompanyMapper companyMapper;
 
     public UserServiceImpl(UserDao userDao,
                            UserMapper userMapper,
                            RoleService roleService, RoleMapper roleMapper,
-                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService) {
+                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyMapper companyMapper) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.roleService = roleService;
@@ -60,6 +66,7 @@ public class UserServiceImpl implements UserService {
         this.userTokenService = userTokenService;
         this.encoder = encoder;
         this.sentEmailService = sentEmailService;
+        this.companyMapper = companyMapper;
     }
 
     @Override
@@ -108,10 +115,10 @@ public class UserServiceImpl implements UserService {
         if (stringRoles == null || stringRoles.isEmpty()) {
             List<UserDTO> userDTOList = findAll();
             if (userDTOList.isEmpty()) {
-                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getRoleName());
+                RoleDTO adminRole = roleService.findByName(ERole.ROLE_ADMIN.getName());
                 roleDTOSet.add(adminRole);
             } else {
-                RoleDTO userRole = roleService.findByName(ERole.ROLE_USER.getRoleName());
+                RoleDTO userRole = roleService.findByName(ERole.ROLE_USER.getName());
                 roleDTOSet.add(userRole);
             }
         } else {
@@ -159,6 +166,7 @@ public class UserServiceImpl implements UserService {
         builder.position(userDTO.getPosition() != null ? userDTO.getPosition() : existingUserDTO.getPosition());
         builder.locked(userDTO.getLocked() != null ? userDTO.getLocked() : existingUserDTO.getLocked());
         builder.enabled(userDTO.getEnabled() != null ? userDTO.getEnabled() : existingUserDTO.getEnabled());
+        builder.companies(userDTO.getCompanies() != null ? userDTO.getCompanies() : existingUserDTO.getCompanies());
 
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
@@ -264,9 +272,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserInfoResponse getUserWithAuthorities() {
         log.debug("Get user with authorities.");
-        String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        User currentUser = userDao.findByLogin(currentLogin).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User currentUser = getCurrentLoggedUser().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
+        List<CompanyBaseDTO> currentCompanies;
+        if (currentUser.getCompanies() != null && !currentUser.getCompanies().isEmpty()) {
+            currentCompanies = currentUser.getCompanies().stream().map(companyMapper::toDto).toList();
+        } else {
+            currentCompanies = Collections.emptyList();
+        }
         return new UserInfoResponse(
                 currentUser.getId(),
                 currentUser.getLogin(),
@@ -274,7 +287,25 @@ public class UserServiceImpl implements UserService {
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
                 currentUser.getPosition(),
-                currentRoles);
+                currentRoles,
+                currentCompanies);
+    }
+
+    @Override
+    public Optional<User> getCurrentLoggedUser() {
+        log.debug("Get current logged user.");
+        String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return userDao.findByLogin(currentLogin);
+    }
+
+    @Override
+    public Long getCurrentUserIdFromSecurityContext() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            return userDetails.getId(); // zakładamy, że Twoja klasa UserDetailsImpl posiada metodę getId()
+        }
+        return null;
     }
 
     @Override
@@ -296,6 +327,6 @@ public class UserServiceImpl implements UserService {
         if (userDTO.getRoles() == null || userDTO.getRoles().isEmpty()) {
             return true;
         } else
-            return userDTO.getRoles().stream().noneMatch(roleDTO -> roleDTO.getName().equals(ERole.ROLE_ADMIN.getRoleName()));
+            return userDTO.getRoles().stream().noneMatch(roleDTO -> roleDTO.getName().equals(ERole.ROLE_ADMIN.getName()));
     }
 }

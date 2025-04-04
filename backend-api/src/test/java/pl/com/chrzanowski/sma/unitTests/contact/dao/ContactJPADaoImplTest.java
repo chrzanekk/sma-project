@@ -1,7 +1,9 @@
 package pl.com.chrzanowski.sma.unitTests.contact.dao;
 
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,9 @@ class ContactJPADaoImplTest {
 
     @Mock
     private ContactQuerySpec contactQuerySpec;
+
+    @Mock
+    private EntityManager em;
 
     private AutoCloseable closeable;
 
@@ -98,7 +103,7 @@ class ContactJPADaoImplTest {
         List<Contact> contacts = contactJPADaoImpl.findAll();
 
         assertEquals(1, contacts.size());
-        assertEquals(contact, contacts.get(0));
+        assertEquals(contact, contacts.getFirst());
         verify(contactRepository, times(1)).findAll();
     }
 
@@ -119,18 +124,21 @@ class ContactJPADaoImplTest {
         Contact contact = new Contact();
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contact> mockQuery = mock(JPQLQuery.class);
+        JPAQuery<Contact> mockQuery = mock(JPAQuery.class);
+        EntityGraph<Contact> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Contact.class)).thenReturn(mockEntityGraph);
 
         when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(List.of(contact));
 
         Page<Contact> result = contactJPADaoImpl.findAll(specification, pageable);
 
         assertEquals(1, result.getTotalElements());
-        assertEquals(contact, result.getContent().get(0));
+        assertEquals(contact, result.getContent().getFirst());
         verify(contactQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
@@ -140,12 +148,15 @@ class ContactJPADaoImplTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contact> mockQuery = mock(JPQLQuery.class);
+        JPAQuery<Contact> mockQuery = mock(JPAQuery.class);
+        EntityGraph<Contact> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Contact.class)).thenReturn(mockEntityGraph);
 
         when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(0L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         Page<Contact> result = contactJPADaoImpl.findAll(specification, pageable);

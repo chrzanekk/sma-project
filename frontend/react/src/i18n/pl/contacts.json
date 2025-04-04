@@ -11,7 +11,7 @@
   "contactList": "Lista kontaktów",
   "notifications" : {
     "addContactSuccess" : "Kontakt {firstName} {lastName} dodany pomyślnie",
-    "addContactError": "Błąd dodawania kontrahenta",
+    "addContactError": "Błąd dodawania kontaktu",
     "editContactSuccess" : "Dane kontaktu {firstName} {lastName} zmieniono pomyślnie",
     "editContactError": "Błąd edycji kontaktu {firstName} {lastName}"
   }

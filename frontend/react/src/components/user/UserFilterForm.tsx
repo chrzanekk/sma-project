@@ -6,7 +6,7 @@ import {useTranslation} from "react-i18next";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
-import {themeColorsHex} from "@/theme/theme-colors.ts";
+import {useThemeColorsHex} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     emailStartsWith?: string;
@@ -38,6 +38,7 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
     const {t} = useTranslation('auth');
     const booleanOptions = getBooleanOptions(t);
     const {roles: roleOptions, isLoading, error} = useRoles();
+    const themeColorsHex = useThemeColorsHex();
 
     if (isLoading) return <div>{t('processing', {ns: "common"})}</div>;
     if (error) return <div>{t('error', {ns: "common"})}: {error}</div>;
@@ -78,16 +79,16 @@ const UserFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomSelectField name={"locked"}
                                                placeholder={t("shared.locked")}
                                                options={booleanOptions}
-                                               bgColor={themeColorsHex.bgColorSecondary()}/>
+                                               bgColor={themeColorsHex.bgColorSecondary}/>
                             <CustomSelectField name={"enabled"}
                                                placeholder={t("shared.enabled")}
                                                options={booleanOptions}
-                                               bgColor={themeColorsHex.bgColorSecondary()}/>
+                                               bgColor={themeColorsHex.bgColorSecondary}/>
                             <CustomSelectField name={"roles"}
                                                isMulti={true}
                                                placeholder={t("shared.chooseRoles")}
                                                options={roleOptions}
-                                               bgColor={themeColorsHex.bgColorSecondary()}/>                        </Flex>
+                                               bgColor={themeColorsHex.bgColorSecondary}/> </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
                                     size={"2xs"}>

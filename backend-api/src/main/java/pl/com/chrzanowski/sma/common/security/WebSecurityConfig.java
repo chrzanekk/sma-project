@@ -76,6 +76,9 @@ public class WebSecurityConfig {
                         //CONTACT CONTROLLER
                         .requestMatchers("/api/contacts/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
 
+                        //COMPANY CONTROLLER
+                        .requestMatchers("/api/companies/**").hasAnyAuthority("ROLE_ADMIN")
+
 
                         .anyRequest().authenticated()
                 ).httpBasic(Customizer.withDefaults());

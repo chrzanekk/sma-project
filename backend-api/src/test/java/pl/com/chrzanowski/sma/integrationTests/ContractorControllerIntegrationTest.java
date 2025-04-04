@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,6 +21,10 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -43,8 +48,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @AutoConfigureWebTestClient
-@Import(ContractorIntegrationTest.TestConfig.class)
-public class ContractorIntegrationTest extends AbstractTestContainers {
+@Import(ContractorControllerIntegrationTest.TestConfig.class)
+public class ContractorControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private WebTestClient webTestClient;
@@ -72,7 +77,15 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanyMapper companyMapper;
+
     private ContractorDTO firstContractor;
+
+    private Company company;
 
     @TestConfiguration
     static class TestConfig {
@@ -82,6 +95,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
             return Mockito.mock(SendEmailService.class);
         }
     }
+
 
     @BeforeEach
     void setUp() {
@@ -114,11 +128,15 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
 
         createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
                 "00-002", "Krakow", Country.POLAND, secondRegisteredUser);
+        companyRepository.deleteAll();
+        company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
+        company = companyRepository.saveAndFlush(company);
 
     }
 
     private ContractorDTO createContractor(String name, String taxNumber, String street, String buildingNo,
                                            String apartmentNo, String postalCode, String city, Country country, User user) {
+
         Contractor contractor = Contractor.builder()
                 .name(name)
                 .taxNumber(taxNumber)
@@ -134,6 +152,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .createdDatetime(Instant.now())
                 .createdBy(user)
                 .lastModifiedDatetime(null)
+                .company(company)
                 .build();
         Contractor savedContractor = contractorRepository.save(contractor);
         return contractorMapper.toDto(savedContractor);
@@ -153,6 +172,8 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .company(companyMapper.toDto(company))
+                .companyId(company.getId())
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
@@ -207,7 +228,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
@@ -235,7 +256,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
         queryParams.add("postalCodeStartsWith", "00-001");
         queryParams.add("country", Country.POLAND.name());
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
@@ -265,6 +286,8 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .companyId(company.getId())
+                .company(companyMapper.toDto(company))
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
@@ -332,7 +355,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     void shouldGetAllContractorsWithPaginationSuccessfully() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "0");
-        queryParams.add("pageSize", "1");
+        queryParams.add("size", "1");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
@@ -344,14 +367,14 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
                 .expectBodyList(ContractorBaseDTO.class)
                 .returnResult().getResponseBody();
 
-        assertThat(contractors).hasSize(2);
+        assertThat(contractors).hasSize(1);
     }
 
     @Test
     void shouldReturnEmptyListWhenPageIsOutOfBounds() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "10");
-        queryParams.add("pageSize", "10");
+        queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
@@ -443,7 +466,7 @@ public class ContractorIntegrationTest extends AbstractTestContainers {
     void shouldFailToGetContractorsWithInvalidPaginationParams() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("page", "1");
-        queryParams.add("pageSize", "1");
+        queryParams.add("size", "1");
         queryParams.add("nameStartsWith", "Third");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()

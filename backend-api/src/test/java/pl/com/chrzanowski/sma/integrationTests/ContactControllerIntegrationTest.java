@@ -11,7 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.contact.repository.ContactRepository;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 
 import java.time.Duration;
@@ -34,6 +40,18 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
 
     private String jwtToken;
 
+    @Autowired
+    private ContactRepository contactRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanyMapper companyMapper;
+
+    private CompanyBaseDTO companyBaseDTO;
+    private Company company;
+
     @BeforeEach
     void setUp() {
         // Ustawienie timeoutu dla WebTestClient
@@ -48,18 +66,25 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Rejestracja i autoryzacja pierwszego użytkownika
         LoginRequest firstUserLogin = userHelper.registerFirstUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUserLogin, webTestClient);
+
+        companyRepository.deleteAll();
+        company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
+        company = companyRepository.saveAndFlush(company);
+        companyBaseDTO = companyMapper.toDto(company);
     }
 
     /**
      * Helper – tworzy przykładowy obiekt ContactDTO.
      */
     private ContactBaseDTO createSampleContact() {
+
         return ContactBaseDTO.builder()
                 .firstName("John")
                 .lastName("Doe")
                 .phoneNumber("123456789")
                 .email("john.doe@example.com")
                 .additionalInfo("Test contact")
+                .company(companyBaseDTO)
                 .build();
     }
 
@@ -98,6 +123,8 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .expectBody(ContactBaseDTO.class)
                 .returnResult().getResponseBody();
 
+        List<Contact> contacts = contactRepository.findAll();
+
         // Modyfikujemy np. numer telefonu
         ContactBaseDTO updatedContactBaseDTO = ContactBaseDTO.builder()
                 .id(savedContact.getId())
@@ -106,6 +133,8 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .phoneNumber("987654321") // nowy numer telefonu
                 .email(savedContact.getEmail())
                 .additionalInfo(savedContact.getAdditionalInfo())
+                .company(savedContact.getCompany())
+                .companyId(savedContact.getCompany().getId())
                 .build();
 
         ContactBaseDTO updatedContact = webTestClient.put()

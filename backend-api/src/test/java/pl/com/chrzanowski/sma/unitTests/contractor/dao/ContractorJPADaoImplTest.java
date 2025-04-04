@@ -2,6 +2,9 @@ package pl.com.chrzanowski.sma.unitTests.contractor.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +36,8 @@ class ContractorJPADaoImplTest {
     @Mock
     private ContractorQuerySpec querySpec;
 
+    @Mock
+    private EntityManager em;
 
     private AutoCloseable closeable;
 
@@ -170,7 +175,7 @@ class ContractorJPADaoImplTest {
 
         // Then
         assertEquals(1, contractors.size());
-        assertEquals(contractor, contractors.get(0));
+        assertEquals(contractor, contractors.getFirst());
         verify(contractorRepository, times(1)).findAll();
     }
 
@@ -217,13 +222,15 @@ class ContractorJPADaoImplTest {
         PageRequest pageable = PageRequest.of(0, 10);
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
 
-        // Przygotowujemy mock JPQLQuery
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+        JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
+        @SuppressWarnings("unchecked")
+        EntityGraph<Contractor> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Contractor.class)).thenReturn(mockEntityGraph);
 
-        // Ustalamy zachowanie dla querySpec.buildQuery(...)
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(List.of(contractor));
@@ -233,7 +240,7 @@ class ContractorJPADaoImplTest {
 
         // Then
         assertEquals(1, result.getTotalElements());
-        assertEquals(contractor, result.getContent().get(0));
+        assertEquals(contractor, result.getContent().getFirst());
         verify(querySpec, times(1)).buildQuery(specification, pageable);
     }
 
@@ -244,9 +251,13 @@ class ContractorJPADaoImplTest {
         PageRequest pageable = PageRequest.of(0, 10);
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+        JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
+        @SuppressWarnings("unchecked")
+        EntityGraph<Contractor> mockEntityGraph = mock(EntityGraph.class);
+        when(em.createEntityGraph(Contractor.class)).thenReturn(mockEntityGraph);
 
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
+        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(0L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
@@ -277,7 +288,7 @@ class ContractorJPADaoImplTest {
 
         // Then
         assertEquals(1, result.size());
-        assertEquals(contractor, result.get(0));
+        assertEquals(contractor, result.getFirst());
         verify(querySpec, times(1)).buildQuery(specification, null);
     }
 

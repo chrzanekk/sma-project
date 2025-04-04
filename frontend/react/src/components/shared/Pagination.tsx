@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Flex, Input, Text} from '@chakra-ui/react';
-import {themeColors, themeColorsHex} from "@/theme/theme-colors.ts";
+import {useThemeColors, useThemeColorsHex} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {CustomSimpleSelect} from "@/components/shared/CustomFormFields.tsx";
 
@@ -22,6 +22,8 @@ const Pagination: React.FC<PaginationProps> = ({
 
     const [gotoPage, setGotoPage] = useState("");
     const {t} = useTranslation('auth')
+    const themeColors = useThemeColors();
+    const themeColorsHex = useThemeColorsHex();
 
     const handleGotoPage = () => {
         const page = parseInt(gotoPage, 10) - 1;
@@ -36,7 +38,7 @@ const Pagination: React.FC<PaginationProps> = ({
               mt={1}
               mb={1}
               p={1}
-              bg={themeColors.bgColorPrimary()}
+              bg={themeColors.bgColorPrimary}
               borderRadius={"md"}
               fontSize={"sm"}
         >
@@ -51,8 +53,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     {value: 50, label: "50"},
                     {value: 100, label: "100"},
                 ]}
-                bgColor={themeColorsHex.bgColorSecondary()}
-                disabled={currentPage + 1 === totalPages}
+                bgColor={themeColorsHex.bgColorSecondary}
                 width="100px"
                 size="xs"
                 hideArrow={true}
@@ -67,7 +68,7 @@ const Pagination: React.FC<PaginationProps> = ({
             >
                 {t('previous', {ns: 'common'})}
             </Button>
-            <Text color={themeColors.fontColor()}>
+            <Text color={themeColors.fontColor}>
                 {t('page', {ns: 'common'})} {currentPage + 1} {t('of', {ns: 'common'})} {totalPages}
             </Text>
             <Button
@@ -85,14 +86,14 @@ const Pagination: React.FC<PaginationProps> = ({
                 width="110px"
                 size={"2xs"}
                 borderRadius={"md"}
-                bg={themeColors.bgColorSecondary()}
-                color={themeColors.fontColor()}
+                bg={themeColors.bgColorSecondary}
+                color={themeColors.fontColor}
                 mr={2}
                 value={gotoPage}
                 disabled={currentPage + 1 === totalPages}
                 onChange={(e) => setGotoPage(e.target.value)}
                 placeholder={t('goToPage', {ns: 'common'})}
-                _placeholder={{color: themeColorsHex.fontColor()}}
+                _placeholder={{color: themeColorsHex.fontColor}}
             />
             <Button size={"2xs"}
                     onClick={handleGotoPage}

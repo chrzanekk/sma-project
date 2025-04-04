@@ -41,6 +41,9 @@ public class ContactQuerySpec {
             if (filter.getPhoneStartsWith() != null && !filter.getPhoneStartsWith().isEmpty()) {
                 predicate.and(contact.phoneNumber.startsWith(filter.getPhoneStartsWith()));
             }
+            if (filter.getCompanyId() != null && filter.getCompanyId() > 0) {
+                predicate.and(contact.company.id.eq(filter.getCompanyId()));
+            }
         }
         return predicate;
     }
@@ -63,8 +66,6 @@ public class ContactQuerySpec {
                 query.orderBy(orderSpecifier);
             }
         }
-
-        query.leftJoin(contact.contractors).fetchJoin();
         return query;
     }
 }

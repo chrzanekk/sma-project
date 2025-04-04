@@ -2,5 +2,6 @@
   "adminPanel": "Panel Administratora",
   "selectView": "Wybierz widok",
     "users": "Użytkownicy",
-    "roles": "Role"
+    "roles": "Role",
+    "companies": "Firmy"
 }

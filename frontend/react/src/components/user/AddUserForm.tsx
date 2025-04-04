@@ -6,7 +6,7 @@ import {addUser} from "@/services/user-service.ts";
 import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React from "react";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import Select from 'react-select';
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
@@ -21,6 +21,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['auth', 'common']);
     const booleanOptions = getBooleanOptions(t);
     const {roles: roleOptions, isLoading, error} = useRoles();
+    const themeColors = useThemeColors();
 
     if (isLoading) return <div>{t('processing', {ns: "common"})}</div>;
     if (error) return <div>{t('error', {ns: "common"})}: {error}</div>;
@@ -145,8 +146,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                         styles={{
                                             control: (provided) => ({
                                                 ...provided,
-                                                backgroundColor: themeColors.bgColorSecondary(),
-                                                borderColor: themeColors.borderColor(),
+                                                backgroundColor: themeColors.bgColorSecondary,
+                                                borderColor: themeColors.borderColor,
                                                 borderRadius: "md",
                                                 boxShadow: "none",
                                             })

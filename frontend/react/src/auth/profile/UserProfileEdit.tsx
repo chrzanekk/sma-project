@@ -7,7 +7,7 @@ import {changeUserPassword, updateUserAccount,} from "@/services/account-service
 import {useAuth} from "@/context/AuthContext.tsx";
 import {successNotification} from "@/notifications/notifications.ts";
 import {useTranslation} from "react-i18next";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Field} from "@/components/ui/field.tsx";
 
 const UserProfileEdit: React.FC = () => {
@@ -15,7 +15,7 @@ const UserProfileEdit: React.FC = () => {
     const navigate = useNavigate();
     const {t} = useTranslation("auth");
     const [isLoading, setIsLoading] = useState(false);
-
+    const themeColors = useThemeColors();
 
     useEffect(() => {
         if (!currentUser) {
@@ -75,6 +75,7 @@ const UserProfileEdit: React.FC = () => {
                 locked: currentUser?.locked,
                 enabled: currentUser?.enabled,
                 roles: currentUser?.roles || [],
+                companies: currentUser?.companies || []
             };
             try {
                 await updateUserAccount(userUpdateRequest);
@@ -121,7 +122,7 @@ const UserProfileEdit: React.FC = () => {
     });
 
     if (isLoading) {
-        return <Box>{t("loading", { ns: "common" })}...</Box>;
+        return <Box>{t("loading", {ns: "common"})}...</Box>;
     }
 
     return (
@@ -139,38 +140,38 @@ const UserProfileEdit: React.FC = () => {
             >
                 <Tabs.Root
                     variant="enclosed"
-                    color={themeColors.fontColor()}
+                    color={themeColors.fontColor}
                     defaultValue={"account"}
                     fitted
-                    background={themeColors.bgColorPrimary()}
+                    background={themeColors.bgColorPrimary}
                     borderRadius={"lg"}
                 >
                     <Tabs.List
-                    background={themeColors.bgColorPrimary()}
-                    gap={1}
+                        background={themeColors.bgColorPrimary}
+                        gap={1}
                     >
                         <Tabs.Trigger
                             value="account"
                             borderRadius={"md"}
-                            color={themeColors.fontColor()}
-                            background={themeColors.bgColorSecondary()}
+                            color={themeColors.fontColor}
+                            background={themeColors.bgColorSecondary}
                             _hover={{
                                 textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
-                                color: themeColors.fontColorHover()
+                                bg: themeColors.highlightBgColor,
+                                color: themeColors.fontColorHover
                             }}
 
                         >{t('updateProfile.accountInfo')}
                         </Tabs.Trigger>
                         <Tabs.Trigger
                             value="passwordReset"
-                            color={themeColors.fontColor()}
-                            background={themeColors.bgColorSecondary()}
+                            color={themeColors.fontColor}
+                            background={themeColors.bgColorSecondary}
                             borderRadius={"md"}
                             _hover={{
                                 textDecoration: 'none',
-                                bg: themeColors.highlightBgColor(),
-                                color: themeColors.fontColorHover()
+                                bg: themeColors.highlightBgColor,
+                                color: themeColors.fontColorHover
                             }}
                         >{t('updateProfile.changePassword')}
                         </Tabs.Trigger>
@@ -187,8 +188,8 @@ const UserProfileEdit: React.FC = () => {
                                         name="firstName"
                                         value={accountForm.values.firstName}
                                         onChange={accountForm.handleChange}
-                                        bgColor={themeColors.bgColorSecondary()}
-                                        color={themeColors.fontColor()}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
                                     />
                                 </Field>
 
@@ -201,8 +202,8 @@ const UserProfileEdit: React.FC = () => {
                                         name="lastName"
                                         value={accountForm.values.lastName}
                                         onChange={accountForm.handleChange}
-                                        bgColor={themeColors.bgColorSecondary()}
-                                        color={themeColors.fontColor()}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
                                     />
                                 </Field>
 
@@ -214,8 +215,8 @@ const UserProfileEdit: React.FC = () => {
                                     name="position"
                                     value={accountForm.values.position}
                                     onChange={accountForm.handleChange}
-                                    bgColor={themeColors.bgColorSecondary()}
-                                    color={themeColors.fontColor()}
+                                    bgColor={themeColors.bgColorSecondary}
+                                    color={themeColors.fontColor}
                                 />
                                 </Field>
 
@@ -239,7 +240,7 @@ const UserProfileEdit: React.FC = () => {
                                     name="password"
                                     value={passwordForm.values.password}
                                     onChange={passwordForm.handleChange}
-                                    bgColor={themeColors.bgColorSecondary()}
+                                    bgColor={themeColors.bgColorSecondary}
                                 />
                                 </Field>
 
@@ -253,7 +254,7 @@ const UserProfileEdit: React.FC = () => {
                                         name="newPassword"
                                         value={passwordForm.values.newPassword}
                                         onChange={passwordForm.handleChange}
-                                        bgColor={themeColors.bgColorSecondary()}
+                                        bgColor={themeColors.bgColorSecondary}
                                     />
                                 </Field>
 
@@ -267,7 +268,7 @@ const UserProfileEdit: React.FC = () => {
                                         name="confirmPassword"
                                         value={passwordForm.values.confirmPassword}
                                         onChange={passwordForm.handleChange}
-                                        bgColor={themeColors.bgColorSecondary()}
+                                        bgColor={themeColors.bgColorSecondary}
                                     />
                                 </Field>
 

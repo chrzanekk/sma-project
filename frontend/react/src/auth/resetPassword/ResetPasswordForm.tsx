@@ -6,13 +6,14 @@ import {Box, Button, Heading, Stack} from "@chakra-ui/react";
 import {requestPasswordReset} from "@/services/auth-service.ts";
 import {useTranslation} from "react-i18next";
 import {CustomInputField} from "@/components/shared/CustomFormFields.tsx";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 
 const ResetPasswordForm = () => {
 
     const navigate = useNavigate();
     const {t} = useTranslation(['auth', 'common']);
+    const themeColors = useThemeColors();
 
     return (
         <Formik
@@ -46,7 +47,7 @@ const ResetPasswordForm = () => {
                 <Form>
                     <Stack gap={15}>
                         <Box display="flex" justifyContent="center">
-                            <Heading fontSize="2xl" mb={15} color={themeColors.fontColor()}>
+                            <Heading fontSize="2xl" mb={15} color={themeColors.fontColor}>
                                 {t('resetPassword.header')}
                             </Heading>
                         </Box>

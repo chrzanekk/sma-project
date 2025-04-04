@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {Box, Button, DialogContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 import React from "react";
 import AddContractorForm from "@/components/contractor/AddContractorForm.tsx";
 
@@ -23,6 +23,7 @@ interface AddContractorDialogProps {
 
 const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContractors}) => {
     const {t} = useTranslation('contractors');
+    const themeColors = useThemeColors();
     return (
         <Box>
             <DialogRoot size={"lg"} placement={"top"}>
@@ -36,14 +37,14 @@ const AddContractorDialog: React.FC<AddContractorDialogProps> = ({fetchContracto
                         {t('add') + "(DIALOG)"}
                     </Button>
                 </DialogTrigger>
-                <DialogContent bg={themeColors.bgColorSecondary()} offset={"4"} borderRadius={"md"}>
+                <DialogContent bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                     <DialogContext>
                         {(store) => (
                             <Box>
                                 <DialogCloseTrigger/>
                                 <DialogHeader>
-                                    <Heading size={"xl"} color={themeColors.fontColor()}>
-                                    {t("contractors:details")}
+                                    <Heading size={"xl"} color={themeColors.fontColor}>
+                                        {t("contractors:details")}
                                     </Heading>
                                 </DialogHeader>
                                 <DialogBody>
