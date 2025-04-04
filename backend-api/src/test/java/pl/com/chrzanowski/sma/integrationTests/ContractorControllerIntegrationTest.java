@@ -1,6 +1,7 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
 import org.flywaydb.core.Flyway;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -20,6 +21,10 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -72,7 +77,15 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private CompanyMapper companyMapper;
+
     private ContractorDTO firstContractor;
+
+    private Company company;
 
     @TestConfiguration
     static class TestConfig {
@@ -82,6 +95,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
             return Mockito.mock(SendEmailService.class);
         }
     }
+
 
     @BeforeEach
     void setUp() {
@@ -114,11 +128,15 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
 
         createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
                 "00-002", "Krakow", Country.POLAND, secondRegisteredUser);
+        companyRepository.deleteAll();
+        company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
+        company = companyRepository.saveAndFlush(company);
 
     }
 
     private ContractorDTO createContractor(String name, String taxNumber, String street, String buildingNo,
                                            String apartmentNo, String postalCode, String city, Country country, User user) {
+
         Contractor contractor = Contractor.builder()
                 .name(name)
                 .taxNumber(taxNumber)
@@ -134,6 +152,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .createdDatetime(Instant.now())
                 .createdBy(user)
                 .lastModifiedDatetime(null)
+                .company(company)
                 .build();
         Contractor savedContractor = contractorRepository.save(contractor);
         return contractorMapper.toDto(savedContractor);
@@ -153,6 +172,8 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .company(companyMapper.toDto(company))
+                .companyId(company.getId())
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
@@ -265,6 +286,8 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .companyId(company.getId())
+                .company(companyMapper.toDto(company))
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();

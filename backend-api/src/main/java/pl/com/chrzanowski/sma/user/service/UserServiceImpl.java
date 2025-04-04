@@ -274,7 +274,12 @@ public class UserServiceImpl implements UserService {
         log.debug("Get user with authorities.");
         User currentUser = getCurrentLoggedUser().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
-        List<CompanyBaseDTO> currentCompanies = currentUser.getCompanies().stream().map(companyMapper::toDto).toList();
+        List<CompanyBaseDTO> currentCompanies;
+        if (currentUser.getCompanies() != null && !currentUser.getCompanies().isEmpty()) {
+            currentCompanies = currentUser.getCompanies().stream().map(companyMapper::toDto).toList();
+        } else {
+            currentCompanies = Collections.emptyList();
+        }
         return new UserInfoResponse(
                 currentUser.getId(),
                 currentUser.getLogin(),

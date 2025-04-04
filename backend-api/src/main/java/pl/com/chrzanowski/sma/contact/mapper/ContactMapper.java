@@ -43,7 +43,7 @@ public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact>
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
-    @Mapping(target = "company.id", source = "companyId")
+    @Mapping(target = "company.id", source = "company.id")
     public abstract Contact toEntity(ContactDTO contactDTO);
 
     // Mapowanie do wersji bazowej
