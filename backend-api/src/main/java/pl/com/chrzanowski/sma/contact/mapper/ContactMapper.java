@@ -3,15 +3,20 @@ package pl.com.chrzanowski.sma.contact.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.ReportingPolicy;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserMapper.class, ContractorBaseMapper.class})
+@Mapper(componentModel = "spring",
+        uses = {CompanyMapper.class, UserAuditMapper.class, ContractorBaseMapper.class},
+        unmappedTargetPolicy = ReportingPolicy.IGNORE
+)
 public abstract class ContactMapper implements EntityMapper<ContactDTO, Contact> {
+
 
     @Mapping(source = "createdBy", target = "createdBy")
     @Mapping(source = "modifiedBy", target = "modifiedBy")

@@ -5,13 +5,13 @@ import org.mapstruct.Mapping;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserAuditMapper.class})
 public interface ContactBaseMapper {
 
     @Mapping(source = "createdBy", target = "createdBy")

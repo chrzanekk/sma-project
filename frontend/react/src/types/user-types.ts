@@ -107,3 +107,10 @@ export interface AdminEditRoleUpdateRequest {
     userId?: number;
     roles: string[];
 }
+
+
+export interface UserAuditDTO {
+    id?: number;
+    firstName: string;
+    lastName: string;
+}

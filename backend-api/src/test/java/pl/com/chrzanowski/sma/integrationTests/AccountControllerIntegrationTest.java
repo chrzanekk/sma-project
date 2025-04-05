@@ -14,6 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.shaded.com.google.common.net.HttpHeaders;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserEditRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
@@ -24,7 +25,6 @@ import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
@@ -71,6 +71,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     private String jwtToken;
     private User registeredUser;
+    private LoginRequest firstUser;
 
 
     @BeforeEach
@@ -91,7 +92,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
         when(sendEmailService.sendAfterPasswordChange(any(), any()))
                 .thenReturn(new MessageResponse("Password changed successfully"));
 
-        LoginRequest firstUser = userHelper.registerFirstUser(webTestClient);
+        firstUser = userHelper.registerFirstUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUser, webTestClient);
     }
 
@@ -112,7 +113,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldUpdateAccountSuccessfully() {
-        registeredUser = userRepository.findAll().get(0);
+        registeredUser = userRepository.findByLogin(firstUser.getLogin()).get();
         Set<Role> roleList = registeredUser.getRoles();
         List<String> roleNames = new ArrayList<>();
         for (Role role : roleList) {
@@ -198,7 +199,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldUpdateRolesSuccessfully() {
-        registeredUser = userRepository.findAll().get(0);
+        registeredUser = userRepository.findByLogin(firstUser.getLogin()).get();
 
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -216,7 +217,7 @@ public class AccountControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isNoContent();
 
-        User updatedUser = userRepository.findById(registeredUser.getId()).orElseThrow();
+        User updatedUser = userRepository.findByLogin(registeredUser.getLogin()).orElseThrow();
         Set<Role> roleSet = updatedUser.getRoles();
         assertThat(roleSet).isNotNull();
         assertThat(roleSet).doesNotContain(adminRole);

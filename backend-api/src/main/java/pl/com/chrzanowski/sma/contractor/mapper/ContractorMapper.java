@@ -11,10 +11,10 @@ import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
 @Mapper(componentModel = "spring",
-        uses = {UserMapper.class, ContactBaseMapper.class, CompanyMapper.class},
+        uses = {UserAuditMapper.class, ContactBaseMapper.class, CompanyMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Contractor> {
 
