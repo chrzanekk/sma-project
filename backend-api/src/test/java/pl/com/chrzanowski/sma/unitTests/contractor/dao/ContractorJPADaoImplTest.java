@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.sma.unitTests.contractor.dao;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Path;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityGraph;
@@ -13,8 +15,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorJPADaoImpl;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
+import pl.com.chrzanowski.sma.contractor.model.QContractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
@@ -224,13 +228,13 @@ class ContractorJPADaoImplTest {
 
         @SuppressWarnings("unchecked")
         JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
-        @SuppressWarnings("unchecked")
-        EntityGraph<Contractor> mockEntityGraph = mock(EntityGraph.class);
-        when(em.createEntityGraph(Contractor.class)).thenReturn(mockEntityGraph);
+        when(mockQuery.leftJoin(eq(QContractor.contractor.contacts), any(Path.class))).thenReturn(mockQuery);
+        when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
+        when(mockQuery.fetchJoin()).thenReturn(mockQuery);
+
 
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(1L);
-        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(List.of(contractor));
@@ -252,12 +256,12 @@ class ContractorJPADaoImplTest {
 
         @SuppressWarnings("unchecked")
         JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
-        @SuppressWarnings("unchecked")
-        EntityGraph<Contractor> mockEntityGraph = mock(EntityGraph.class);
-        when(em.createEntityGraph(Contractor.class)).thenReturn(mockEntityGraph);
+        when(mockQuery.leftJoin(eq(QContractor.contractor.contacts), any(Path.class))).thenReturn(mockQuery);
+        when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
+        when(mockQuery.fetchJoin()).thenReturn(mockQuery);
+
 
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
         when(mockQuery.fetchCount()).thenReturn(0L);
         when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
         when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);

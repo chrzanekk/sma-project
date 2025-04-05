@@ -3,8 +3,6 @@ package pl.com.chrzanowski.sma.contact.dao;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,6 +16,9 @@ import pl.com.chrzanowski.sma.contact.service.filter.ContactQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
+
 @Repository("contactJPA")
 public class ContactJPADaoImpl implements ContactDao {
 
@@ -25,12 +26,12 @@ public class ContactJPADaoImpl implements ContactDao {
 
     private final ContactRepository contactRepository;
     private final ContactQuerySpec contactQuerySpec;
-    private final EntityManager em;
 
-    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, EntityManager em) {
+
+    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec) {
         this.contactRepository = contactRepository;
         this.contactQuerySpec = contactQuerySpec;
-        this.em = em;
+
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ContactJPADaoImpl implements ContactDao {
 
     @Override
     public Page<Contact> findAll(BooleanBuilder specification, Pageable pageable) {
-        log.debug("DAO: Find all contacts by specificaiton with page: {}", specification);
+        log.debug("DAO: Find all contacts by specification with page: {}", specification);
         JPQLQuery<Contact> baseQuery = contactQuerySpec.buildQuery(specification, pageable);
 
         long totalElements = baseQuery.fetchCount();
@@ -76,10 +77,9 @@ public class ContactJPADaoImpl implements ContactDao {
     private JPAQuery<Contact> getPaginationQuery(JPQLQuery<Contact> baseQuery) {
         JPAQuery<Contact> jpaQuery = (JPAQuery<Contact>) baseQuery;
 
-        EntityGraph<Contact> entityGraph = em.createEntityGraph(Contact.class);
-        entityGraph.addSubgraph("contractors");
-
-        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        jpaQuery
+                .leftJoin(contact.contractor, contractor).fetchJoin()
+                .leftJoin(contractor.company).fetchJoin();
         return jpaQuery;
     }
 
@@ -89,6 +89,7 @@ public class ContactJPADaoImpl implements ContactDao {
         JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
+
 
     @Override
     public void deleteById(Long id) {

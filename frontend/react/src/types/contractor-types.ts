@@ -23,7 +23,6 @@ export interface BaseContractorDTO {
     customer: boolean | undefined;
     supplier: boolean | undefined;
     scaffoldingUser: boolean | undefined;
-    companyId?: number;
     company: CompanyBaseDTO;
 }
 

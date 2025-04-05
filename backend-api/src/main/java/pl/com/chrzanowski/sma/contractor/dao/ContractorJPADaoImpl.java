@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.contractor.dao;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,9 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
@@ -82,10 +84,9 @@ public class ContractorJPADaoImpl implements ContractorDao {
     private JPAQuery<Contractor> getPaginationQuery(JPQLQuery<Contractor> baseQuery) {
         JPAQuery<Contractor> jpaQuery = (JPAQuery<Contractor>) baseQuery;
 
-        EntityGraph<Contractor> entityGraph = em.createEntityGraph(Contractor.class);
-        entityGraph.addSubgraph("contacts");
-//        entityGraph.addAttributeNodes("company");
-        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        jpaQuery
+                .leftJoin(contractor.contacts, contact).fetchJoin() // jawne dociąganie kontaktów
+                .leftJoin(contractor.company).fetchJoin();
         return jpaQuery;
     }
 

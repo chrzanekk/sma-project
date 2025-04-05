@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring",uses = {CompanyMapper.class})
 public interface ContractorBaseMapper {
 
-    @Mapping(source = "company.id", target = "companyId")
+    @Mapping(source = "company", target = "company")
     ContractorBaseDTO toDto(Contractor contractor);
 
-    @Mapping(source = "companyId",target = "company.id")
+    @Mapping(source = "company",target = "company")
     Contractor toEntity(ContractorBaseDTO dto);
 
     default Set<ContractorBaseDTO> toDtoSet(Set<Contractor> contractors) {

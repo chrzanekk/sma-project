@@ -6,7 +6,7 @@ export interface FetchableContactDTO extends ContactDTO, AuditableType {
 }
 
 export interface ContactDTO extends BaseContactDTOForContractor {
-    contractors?: Array<BaseContractorDTO>
+    contractor?: BaseContractorDTO
 }
 
 export interface BaseContactDTOForContractor {
@@ -16,7 +16,6 @@ export interface BaseContactDTOForContractor {
     phoneNumber: string;
     email: string;
     additionalInfo: string;
-    companyId?: number;
     company: CompanyBaseDTO;
 }
 

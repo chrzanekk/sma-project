@@ -9,6 +9,7 @@ import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
@@ -47,7 +48,7 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Save contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompanyId());
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany());
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
         Contractor contractor = contractorMapper.toEntity(contractorWithSavedContacts);
@@ -64,26 +65,52 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Update contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        //todo save new contact if exists in contractorDTO contactList
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompanyId());
-
+        // Zapis nowych kontaktów jeśli trzeba
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany());
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
-        Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId()).orElseThrow(()
-                -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
+        Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId())
+                .orElseThrow(() -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
 
+        // Wstrzyknięcie ContactBaseMapper (jeśli jeszcze nie masz to dodaj @Autowired lub konstruktor)
+        Set<Contact> updatedContactEntities = contractorWithSavedContacts.getContacts().stream()
+                .map(dto -> contactDao.findById(dto.getId())
+                        .orElseThrow(() -> new ContractorException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact not found: " + dto.getId())))
+                .collect(Collectors.toSet());
+
+        // Usuń powiązanie poprzednich kontaktów
+        for (Contact contact : existingContractor.getContacts()) {
+            contact.setContractor(null);
+        }
+
+        // Wyczyść starą kolekcję kontaktów z encji (ważne!)
+        existingContractor.getContacts().clear();
+
+        // Ustaw nowe kontakty i powiąż je z kontraktorem
+        for (Contact contact : updatedContactEntities) {
+            contact.setContractor(existingContractor);
+            existingContractor.getContacts().add(contact);
+        }
+
+        // Zaktualizuj pozostałe pola (po kontaktach!)
         contractorMapper.updateContractorFromDto(contractorWithSavedContacts, existingContractor);
 
         Contractor savedContractor = contractorDao.save(existingContractor);
         return contractorMapper.toDto(savedContractor);
     }
 
-    private void setPersistedContacts(ContractorDTO contractorWithSavedContacts, Contractor existingContractor) {
+
+    private void setPersistedContacts(ContractorDTO contractorWithSavedContacts, Contractor contractor) {
+        if (!contractor.getContacts().isEmpty()) {
+            contractor.getContacts().clear();
+        }
         Set<Contact> persistedContacts = contractorWithSavedContacts.getContacts().stream()
-                .map(contactDTO -> contactDao.findById(contactDTO.getId())
-                        .orElseThrow(() -> new ContractorException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact not found: " + contactDTO.getId())))
+                .map(dto -> contactDao.findById(dto.getId())
+                        .orElseThrow(() -> new ContractorException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact not found: " + dto.getId())))
                 .collect(Collectors.toSet());
-        existingContractor.setContacts(persistedContacts);
+
+        persistedContacts.forEach(c -> c.setContractor(contractor));
+        contractor.getContacts().addAll(persistedContacts);
     }
 
     private static ContractorDTO updateContractorContacts(ContractorDTO contractorDTO, Set<ContactBaseDTO> updatedContacts) {
@@ -102,18 +129,13 @@ public class ContractorServiceImpl implements ContractorService {
                 .scaffoldingUser(contractorDTO.getScaffoldingUser())
                 .createdDatetime(contractorDTO.getCreatedDatetime())
                 .lastModifiedDatetime(contractorDTO.getLastModifiedDatetime())
-                .createdById(contractorDTO.getCreatedById())
-                .createdByFirstName(contractorDTO.getCreatedByFirstName())
-                .createdByLastName(contractorDTO.getCreatedByLastName())
-                .modifiedById(contractorDTO.getModifiedById())
-                .modifiedByFirstName(contractorDTO.getModifiedByFirstName())
-                .modifiedByLastName(contractorDTO.getModifiedByLastName())
+                .createdBy(contractorDTO.getCreatedBy())
+                .modifiedBy(contractorDTO.getModifiedBy())
                 .company(contractorDTO.getCompany())
-                .companyId(contractorDTO.getCompanyId())
                 .contacts(updatedContacts).build();
     }
 
-    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts, Long companyId) {
+    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts, CompanyBaseDTO company) {
         if (contacts != null) {
             List<ContactBaseDTO> filtered = contacts.stream().filter(contactBaseDTO -> contactBaseDTO.getId() != null).toList();
             List<ContactBaseDTO> result = new ArrayList<>(filtered);
@@ -126,19 +148,13 @@ public class ContractorServiceImpl implements ContractorService {
                             .phoneNumber(contact.getPhoneNumber())
                             .email(contact.getEmail())
                             .additionalInfo(contact.getAdditionalInfo())
-                            .company(contact.getCompany())
+                            .company(company)
                             .createdDatetime(contact.getCreatedDatetime())
                             .lastModifiedDatetime(contact.getLastModifiedDatetime())
-                            .createdById(contact.getCreatedById())
-                            .createdByFirstName(contact.getCreatedByFirstName())
-                            .createdByLastName(contact.getCreatedByLastName())
-                            .modifiedById(contact.getModifiedById())
-                            .modifiedByFirstName(contact.getModifiedByFirstName())
-                            .modifiedByLastName(contact.getModifiedByLastName())
-                            .companyId(companyId)
+                            .createdBy(contact.getCreatedBy())
+                            .modifiedBy(contact.getModifiedBy())
                             .build())
                     .collect(Collectors.toList());
-
 
             if (!newContacts.isEmpty()) {
                 List<ContactBaseDTO> savedContacts = contactService.saveAllBaseContacts(newContacts);

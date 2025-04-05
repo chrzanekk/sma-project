@@ -157,7 +157,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>
-                                                {contractor.createdByFirstName.charAt(0)}. {contractor.createdByLastName}
+                                                {contractor.createdBy.firstName.charAt(0)}. {contractor.createdBy.lastName}
                                             </Box>
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"}
@@ -166,7 +166,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>
-                                                {contractor.modifiedByFirstName.charAt(0)}. {contractor.modifiedByLastName}
+                                                {contractor.modifiedBy.firstName.charAt(0)}. {contractor.modifiedBy.lastName}
                                             </Box>
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps}
@@ -209,7 +209,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                 onSortChange={contactOnSortChange}
                                                                 sortField={contactSortField}
                                                                 sortDirection={contactSortDirection}
-                                                                extended={true}
+                                                                extended={false}
                                                             />
                                                         </Box>
                                                     </Collapsible.Content>

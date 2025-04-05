@@ -64,11 +64,7 @@ public class Contractor extends AuditableEntity {
     @Column(name = "scaffolding_user", nullable = false)
     private Boolean scaffoldingUser;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @ToString.Exclude
-    @JoinTable(name = "contractor_contacts",
-            joinColumns = @JoinColumn(name = "contractor_id"),
-            inverseJoinColumns = @JoinColumn(name = "contact_id"))
+    @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Contact> contacts = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

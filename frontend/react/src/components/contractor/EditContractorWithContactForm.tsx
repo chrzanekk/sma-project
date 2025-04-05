@@ -122,8 +122,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         if (!contractorData) return;
         const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
             ...contact,
-            company: currentCompany!,
-            companyId: currentCompany!.id
+            company: currentCompany!
         }));
         const payload: ContractorDTO = {
             ...contractorData,
@@ -132,8 +131,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
             supplier: contractorData.supplier ?? false,
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
             contacts: contactsDTO,
-            company: currentCompany!,
-            companyId: currentCompany!.id
+            company: currentCompany!
         };
         try {
             await updateContractor(payload);

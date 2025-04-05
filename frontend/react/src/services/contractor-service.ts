@@ -2,7 +2,8 @@ import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
-import {getSelectedCompanyId} from "@/utils/company-utils";
+import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
+import {CompanyBaseDTO} from "@/types/company-type.ts";
 
 const CONTRACTOR_API_BASE = "/api/contractors";
 
@@ -17,11 +18,11 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
         });
         const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
-        const result = {
+        console.table(response.data);
+        return  {
             contractors: items as FetchableContractorDTO[],
             totalPages
         };
-        return result;
     } catch (err) {
         return {contractors: [], totalPages: 1};
     }
@@ -39,10 +40,10 @@ export const getContractorById = async (id: number) => {
 
 export const addContractor = async (addContractor: ContractorDTO) => {
     try {
-        const companyId = getSelectedCompanyId();
+        const company: CompanyBaseDTO | null = getSelectedCompany();
         const payload = {
             ...addContractor,
-            companyId
+            company
         }
         const response = await api.post(`${CONTRACTOR_API_BASE}/add`, payload, getAuthConfig());
         return response.data;
@@ -53,10 +54,10 @@ export const addContractor = async (addContractor: ContractorDTO) => {
 
 export const updateContractor = async (updateContractor: ContractorDTO) => {
     try {
-        const companyId = getSelectedCompanyId();
+        const company: CompanyBaseDTO | null = getSelectedCompany();
         const payload = {
             ...updateContractor,
-            companyId
+            company
         }
         const response = await api.put(`${CONTRACTOR_API_BASE}/update`, payload, getAuthConfig());
         return response.data;

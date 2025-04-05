@@ -134,7 +134,6 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .email(savedContact.getEmail())
                 .additionalInfo(savedContact.getAdditionalInfo())
                 .company(savedContact.getCompany())
-                .companyId(savedContact.getCompany().getId())
                 .build();
 
         ContactBaseDTO updatedContact = webTestClient.put()

@@ -174,10 +174,10 @@ const GenericContactTable = <T extends BaseContactDTOForContractor>({
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"createdByFirstName" in contact && (
+                                        {"createdBy" in contact && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(contact as FetchableContactDTO).createdByFirstName.charAt(0)}. {(contact as FetchableContactDTO).createdByLastName}
+                                                    {(contact as FetchableContactDTO).createdBy.firstName.charAt(0)}. {(contact as FetchableContactDTO).createdBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}
@@ -188,10 +188,10 @@ const GenericContactTable = <T extends BaseContactDTOForContractor>({
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"modifiedByFirstName" in contact && (
+                                        {"modifiedBy" in contact && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(contact as FetchableContactDTO).modifiedByFirstName.charAt(0)}. {(contact as FetchableContactDTO).modifiedByLastName}
+                                                    {(contact as FetchableContactDTO).modifiedBy.firstName.charAt(0)}. {(contact as FetchableContactDTO).modifiedBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}

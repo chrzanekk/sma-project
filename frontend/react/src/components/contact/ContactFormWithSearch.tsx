@@ -1,6 +1,6 @@
 import {BaseContactFormValues} from "@/types/contact-types.ts";
 import React, {useState} from "react";
-import {getContactsByFilter} from "@/services/contact-service.ts";
+import {getFreeContactsByFilter} from "@/services/contact-service.ts";
 import {useTranslation} from "react-i18next";
 import {Box, Button, Table} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
@@ -32,7 +32,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
 
     const handleSearch = async () => {
         try {
-            const result = await getContactsByFilter({lastNameStartsWith: searchTerm});
+            const result = await getFreeContactsByFilter({lastNameStartsWith: searchTerm});
             setSearchResults(result.contacts);
         } catch (err) {
             console.error("Błąd wyszukiwania kontaktu", err);

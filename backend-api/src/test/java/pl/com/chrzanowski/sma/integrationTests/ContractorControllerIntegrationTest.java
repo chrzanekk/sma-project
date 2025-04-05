@@ -1,7 +1,6 @@
 package pl.com.chrzanowski.sma.integrationTests;
 
 import org.flywaydb.core.Flyway;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,10 +20,11 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -39,6 +39,7 @@ import pl.com.chrzanowski.sma.user.service.UserService;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -136,7 +137,12 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
 
     private ContractorDTO createContractor(String name, String taxNumber, String street, String buildingNo,
                                            String apartmentNo, String postalCode, String city, Country country, User user) {
-
+        Contact contactBaseDTO = Contact.builder()
+                .firstName("test name")
+                .lastName("lastName")
+                .email("email@email.com")
+                .phoneNumber("771238181")
+                .additionalInfo("information").build();
         Contractor contractor = Contractor.builder()
                 .name(name)
                 .taxNumber(taxNumber)
@@ -149,6 +155,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .contacts(Set.of(contactBaseDTO))
                 .createdDatetime(Instant.now())
                 .createdBy(user)
                 .lastModifiedDatetime(null)
@@ -160,7 +167,13 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
 
     @Test
     void shouldAddContractorSuccessfully() {
-        ContractorBaseDTO newContractor = ContractorBaseDTO.builder()
+        ContactBaseDTO contactBaseDTO = ContactBaseDTO.builder()
+                .firstName("firstname")
+                .lastName("lastName")
+                .email("email@email.com")
+                .phoneNumber("777818181")
+                .additionalInfo("testtt").build();
+        ContractorDTO newContractor = ContractorDTO.builder()
                 .name("New Contractor")
                 .taxNumber("5555555555")
                 .street("New Street")
@@ -172,22 +185,22 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
+                .contacts(Set.of(contactBaseDTO))
                 .company(companyMapper.toDto(company))
-                .companyId(company.getId())
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
 
         List<Contractor> contractorListBefore = contractorRepository.findAll();
 
-        ContractorBaseDTO savedContractor = webTestClient.post()
+        ContractorDTO savedContractor = webTestClient.post()
                 .uri("/api/contractors/add")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(newContractor)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ContractorBaseDTO.class)
+                .expectBody(ContractorDTO.class)
                 .returnResult().getResponseBody();
 
         List<Contractor> contractorListAfter = contractorRepository.findAll();
@@ -258,14 +271,14 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("page", "0");
         queryParams.add("size", "10");
 
-        List<ContractorBaseDTO> contractors = webTestClient.get()
+        List<ContractorDTO> contractors = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBodyList(ContractorBaseDTO.class)
+                .expectBodyList(ContractorDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(contractors).hasSize(0);
@@ -273,7 +286,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
 
     @Test
     void shouldUpdateContractorSuccessfully() {
-        ContractorBaseDTO updateContractor = ContractorBaseDTO.builder()
+        ContractorDTO updateContractor = ContractorDTO.builder()
                 .id(firstContractor.getId())
                 .name("Updated Contractor")
                 .taxNumber("1111111111")
@@ -286,20 +299,20 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
-                .companyId(company.getId())
+                .contacts(firstContractor.getContacts())
                 .company(companyMapper.toDto(company))
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
 
-        ContractorBaseDTO updatedContractor = webTestClient.put()
+        ContractorDTO updatedContractor = webTestClient.put()
                 .uri("/api/contractors/update")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateContractor)
                 .exchange()
                 .expectStatus().isOk()
-                .expectBody(ContractorBaseDTO.class)
+                .expectBody(ContractorDTO.class)
                 .returnResult().getResponseBody();
 
         assertThat(updatedContractor).isNotNull();
