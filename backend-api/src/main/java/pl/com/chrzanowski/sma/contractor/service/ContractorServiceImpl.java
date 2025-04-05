@@ -65,34 +65,28 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Update contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        // Zapis nowych kontaktów jeśli trzeba
         Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany());
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
         Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId())
                 .orElseThrow(() -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
 
-        // Wstrzyknięcie ContactBaseMapper (jeśli jeszcze nie masz to dodaj @Autowired lub konstruktor)
         Set<Contact> updatedContactEntities = contractorWithSavedContacts.getContacts().stream()
                 .map(dto -> contactDao.findById(dto.getId())
                         .orElseThrow(() -> new ContractorException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact not found: " + dto.getId())))
                 .collect(Collectors.toSet());
 
-        // Usuń powiązanie poprzednich kontaktów
         for (Contact contact : existingContractor.getContacts()) {
             contact.setContractor(null);
         }
 
-        // Wyczyść starą kolekcję kontaktów z encji (ważne!)
         existingContractor.getContacts().clear();
 
-        // Ustaw nowe kontakty i powiąż je z kontraktorem
         for (Contact contact : updatedContactEntities) {
             contact.setContractor(existingContractor);
             existingContractor.getContacts().add(contact);
         }
 
-        // Zaktualizuj pozostałe pola (po kontaktach!)
         contractorMapper.updateContractorFromDto(contractorWithSavedContacts, existingContractor);
 
         Contractor savedContractor = contractorDao.save(existingContractor);
