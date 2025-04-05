@@ -4,6 +4,7 @@ import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {ContactDTO} from "@/types/contact-types.ts";
 
 const CONTRACTOR_API_BASE = "/api/contractors";
 
@@ -27,6 +28,25 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
         return {contractors: [], totalPages: 1};
     }
 }
+
+export const getContactsByContractorIdPaged = async (
+    contractorId: number,
+    page: number,
+    size: number
+) => {
+    const response = await api.get(`/api/contacts/page`, {
+        params: {
+            contractorId,
+            page,
+            size,
+            sort: 'id,asc',
+        },
+        ...getAuthConfig(),
+    });
+
+    return parsePaginationResponse<ContactDTO>(response); // powinno zwrócić { items, totalPages }
+};
+
 
 export const getContractorById = async (id: number) => {
     try {

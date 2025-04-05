@@ -29,7 +29,7 @@ interface Props<T extends BaseContactDTOForContractor> {
 const GenericContactTable = <T extends BaseContactDTOForContractor>({
                                                                         contacts,
                                                                         onDelete,
-                                                                        fetchContacts,
+                                                                         fetchContacts,
                                                                         onSortChange,
                                                                         sortField,
                                                                         sortDirection,

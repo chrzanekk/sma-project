@@ -10,4 +10,6 @@ import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
 public interface ContactQueryService extends QueryService<ContactDTO, ContactFilter> {
 
     Page<ContactBaseDTO> findUnassignedContacts(ContactFilter contactFilter, Pageable pageable);
+
+    Page<ContactBaseDTO> findByContractorId(Long contractorId, Pageable pageable);
 }

@@ -3,6 +3,8 @@ package pl.com.chrzanowski.sma.contact.dao;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -10,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contact.repository.ContactRepository;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactQuerySpec;
 
@@ -26,12 +29,16 @@ public class ContactJPADaoImpl implements ContactDao {
 
     private final ContactRepository contactRepository;
     private final ContactQuerySpec contactQuerySpec;
+    private final EntityManager entityManager;
+    private final JPAQueryFactory queryFactory;
 
 
-    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec) {
+    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, EntityManager entityManager, JPAQueryFactory queryFactory) {
         this.contactRepository = contactRepository;
         this.contactQuerySpec = contactQuerySpec;
 
+        this.entityManager = entityManager;
+        this.queryFactory = queryFactory;
     }
 
     @Override
@@ -95,5 +102,25 @@ public class ContactJPADaoImpl implements ContactDao {
     public void deleteById(Long id) {
         log.debug("DAO: Delete contact: {}", id);
         contactRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Contact> findByContractorId(Long contractorId, Pageable pageable) {
+        QContact contact = QContact.contact;
+        List<Contact> contacts = queryFactory
+                .selectFrom(contact)
+                .where(contact.contractor.id.eq(contractorId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(contact.id.asc()) // lub inna kolumna jeśli trzeba
+                .fetch();
+
+        Long total = queryFactory
+                .select(contact.count())
+                .from(contact)
+                .where(contact.contractor.id.eq(contractorId))
+                .fetchOne();
+
+        return new PageImpl<>(contacts, pageable, total != null ? total : 0);
     }
 }
