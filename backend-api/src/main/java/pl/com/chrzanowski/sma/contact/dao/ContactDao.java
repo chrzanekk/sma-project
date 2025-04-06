@@ -24,4 +24,5 @@ public interface ContactDao {
 
     void deleteById(Long id);
 
+    Page<Contact> findByContractorId(Long contractorId, Pageable pageable);
 }

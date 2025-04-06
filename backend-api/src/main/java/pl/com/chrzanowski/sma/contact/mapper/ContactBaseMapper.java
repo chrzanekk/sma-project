@@ -5,27 +5,25 @@ import org.mapstruct.Mapping;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring",uses = {CompanyMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserAuditMapper.class})
 public interface ContactBaseMapper {
 
-    @Mapping(source = "createdBy.id", target = "createdById")
-    @Mapping(source = "modifiedBy.id", target = "modifiedById")
-    @Mapping(source = "createdBy.firstName", target = "createdByFirstName")
-    @Mapping(source = "createdBy.lastName", target = "createdByLastName")
-    @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
-    @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
-    @Mapping(source = "company.id", target = "companyId")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @Mapping(source = "modifiedBy", target = "modifiedBy")
+    @Mapping(source = "company", target = "company")
     ContactBaseDTO toDto(Contact contact);
 
-    @Mapping(source = "createdById", target = "createdBy.id")
-    @Mapping(source = "modifiedById", target = "modifiedBy.id")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @Mapping(source = "modifiedBy", target = "modifiedBy")
     @Mapping(source = "createdDatetime", target = "createdDatetime")
     @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
-    @Mapping(source = "companyId",target = "company.id")
+    @Mapping(source = "company", target = "company")
     Contact toEntity(ContactBaseDTO dto);
 
     default Set<ContactBaseDTO> toDtoSet(Set<Contact> contacts) {
@@ -40,5 +38,19 @@ public interface ContactBaseMapper {
             return null;
         }
         return contacts.stream().map(this::toEntity).collect(Collectors.toSet());
+    }
+
+    default List<ContactBaseDTO> toDtoList(List<Contact> contacts) {
+        if (contacts == null) {
+            return null;
+        }
+        return contacts.stream().map(this::toDto).toList();
+    }
+
+    default List<Contact> toEntityList(List<ContactBaseDTO> contacts) {
+        if (contacts == null) {
+            return null;
+        }
+        return contacts.stream().map(this::toEntity).toList();
     }
 }

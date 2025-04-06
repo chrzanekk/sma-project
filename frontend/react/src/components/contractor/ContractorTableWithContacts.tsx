@@ -1,6 +1,6 @@
 // ContractorTableWithContacts.tsx
 import React, {useState} from "react";
-import {Box, Button, Collapsible, HStack, Table, Text,} from "@chakra-ui/react";
+import {Box, Button, Collapsible, HStack, Spinner, Table, Text,} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import DateFormatter from "@/utils/date-formatter";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
@@ -8,6 +8,8 @@ import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
+import {getContactsByContractorIdPaged} from "@/services/contractor-service.ts";
+import {ContactDTO} from "@/types/contact-types.ts";
 
 
 interface ContractorTableWithContactsProps {
@@ -25,6 +27,13 @@ interface ContractorTableWithContactsProps {
     contactSortDirection: "asc" | "desc";
 }
 
+type ContactState = {
+    contacts: ContactDTO[];
+    page: number;
+    hasMore: boolean;
+    loading: boolean;
+};
+
 const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = ({
                                                                                      contractors,
                                                                                      onDelete,
@@ -41,11 +50,63 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
     const {t} = useTranslation(["common", "contractors"]);
     const themeColors = useThemeColors();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
-
     const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
+    const [contactStates, setContactStates] = useState<{ [key: number]: ContactState }>({});
 
-    const toggleExpand = (id: number) => {
-        setExpandedRows((prev) => ({...prev, [id]: !prev[id]}));
+    const toggleExpand = async (contractorId: number) => {
+        setExpandedRows((prev) => ({...prev, [contractorId]: !prev[contractorId]}));
+
+        if (!contactStates[contractorId]) {
+            setContactStates((prev) => ({
+                ...prev,
+                [contractorId]: {
+                    contacts: [],
+                    page: 0,
+                    hasMore: true,
+                    loading: true,
+                },
+            }));
+
+            try {
+                const initialContacts = await getContactsByContractorIdPaged(contractorId, 0, 10);
+                setContactStates((prev) => ({
+                    ...prev,
+                    [contractorId]: {
+                        contacts: initialContacts.items,
+                        page: 1,
+                        hasMore: initialContacts.totalPages > 1,
+                        loading: false,
+                    },
+                }));
+            } catch (error) {
+                console.error("Błąd ładowania kontaktów:", error);
+            }
+        }
+    };
+
+    const loadMoreContacts = async (contractorId: number) => {
+        const state = contactStates[contractorId];
+        if (!state || !state.hasMore || state.loading) return;
+
+        setContactStates((prev) => ({
+            ...prev,
+            [contractorId]: {...state, loading: true},
+        }));
+
+        try {
+            const more = await getContactsByContractorIdPaged(contractorId, state.page, 10);
+            setContactStates((prev) => ({
+                ...prev,
+                [contractorId]: {
+                    contacts: [...state.contacts, ...more.items],
+                    page: state.page + 1,
+                    hasMore: state.page + 1 < more.totalPages,
+                    loading: false,
+                },
+            }));
+        } catch (error) {
+            console.error("Błąd ładowania kontaktów:", error);
+        }
     };
 
     const renderSortIndicator = (field: string) => {
@@ -116,6 +177,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                         {contractors.map((contractor) => {
                             // Używamy asercji, że id jest zdefiniowane
                             const contractorId = contractor.id!;
+                            const contactState = contactStates[contractorId];
                             return (
                                 <React.Fragment key={contractorId}>
                                     <Table.Row
@@ -157,7 +219,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>
-                                                {contractor.createdByFirstName.charAt(0)}. {contractor.createdByLastName}
+                                                {contractor.createdBy.firstName.charAt(0)}. {contractor.createdBy.lastName}
                                             </Box>
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"}
@@ -166,7 +228,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                             <Box>
-                                                {contractor.modifiedByFirstName.charAt(0)}. {contractor.modifiedByLastName}
+                                                {contractor.modifiedBy.firstName.charAt(0)}. {contractor.modifiedBy.lastName}
                                             </Box>
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps}
@@ -198,10 +260,21 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                 color: themeColors.fontColorHover
                                             }}
                                         >
-                                            <Table.Cell colSpan={13} {...commonCellProps}>
+                                            <Table.Cell colSpan={12} {...commonCellProps}>
                                                 <Collapsible.Root open={expandedRows[contractorId]}>
                                                     <Collapsible.Content>
-                                                        <Box>
+                                                        <Box
+                                                            maxH="300px"
+                                                            overflowY="auto"
+                                                            onScroll={(e) => {
+                                                                const target = e.target as HTMLElement;
+                                                                if (
+                                                                    target.scrollHeight - target.scrollTop <=
+                                                                    target.clientHeight + 20
+                                                                ) {
+                                                                    loadMoreContacts(contractorId);
+                                                                }
+                                                            }}>
                                                             <GenericContactTable
                                                                 contacts={contractor.contacts!!}
                                                                 onDelete={contactOnDelete}
@@ -209,8 +282,9 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                 onSortChange={contactOnSortChange}
                                                                 sortField={contactSortField}
                                                                 sortDirection={contactSortDirection}
-                                                                extended={true}
+                                                                extended={false}
                                                             />
+                                                            {contactState?.loading && <Spinner size="sm" mt={2} />}
                                                         </Box>
                                                     </Collapsible.Content>
                                                 </Collapsible.Root>

@@ -39,9 +39,9 @@ public class Contact extends AuditableEntity {
     @Column(name = "additional_info", length = 250)
     private String additionalInfo;
 
-    @ManyToMany(mappedBy = "contacts", fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<Contractor> contractors;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contractor_id")
+    private Contractor contractor;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)

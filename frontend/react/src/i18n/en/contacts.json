@@ -9,6 +9,9 @@
   "email": "E-mail",
   "additionalInfo": "Informacje dodatkowe",
   "contactList": "Lista kontaktów",
+  "contactDeletedList": "Lista usuniętych kontaktów",
+  "contactAddedList": "Lista dodanych kontaktów",
+  "manage": "Edycja kontaktów",
   "notifications" : {
     "addContactSuccess" : "Kontakt {firstName} {lastName} dodany pomyślnie",
     "addContactError": "Błąd dodawania kontaku",

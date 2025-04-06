@@ -10,6 +10,12 @@ export interface ContractorDTO extends BaseContractorDTO {
     contacts?: Array<BaseContactDTOForContractor>;
 }
 
+export interface ContractorUpdateDTO extends BaseContractorDTO {
+    addedContacts?: Array<BaseContactDTOForContractor>;
+    deletedContacts?: Array<BaseContactDTOForContractor>;
+}
+
+
 export interface BaseContractorDTO {
     id?: number;
     name: string;
@@ -23,7 +29,6 @@ export interface BaseContractorDTO {
     customer: boolean | undefined;
     supplier: boolean | undefined;
     scaffoldingUser: boolean | undefined;
-    companyId?: number;
     company: CompanyBaseDTO;
 }
 

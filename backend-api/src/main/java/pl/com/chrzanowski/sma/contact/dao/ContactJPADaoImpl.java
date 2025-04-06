@@ -3,7 +3,7 @@ package pl.com.chrzanowski.sma.contact.dao;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +12,15 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.contact.model.Contact;
+import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contact.repository.ContactRepository;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Repository("contactJPA")
 public class ContactJPADaoImpl implements ContactDao {
@@ -25,12 +29,16 @@ public class ContactJPADaoImpl implements ContactDao {
 
     private final ContactRepository contactRepository;
     private final ContactQuerySpec contactQuerySpec;
-    private final EntityManager em;
+    private final EntityManager entityManager;
+    private final JPAQueryFactory queryFactory;
 
-    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, EntityManager em) {
+
+    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, EntityManager entityManager, JPAQueryFactory queryFactory) {
         this.contactRepository = contactRepository;
         this.contactQuerySpec = contactQuerySpec;
-        this.em = em;
+
+        this.entityManager = entityManager;
+        this.queryFactory = queryFactory;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class ContactJPADaoImpl implements ContactDao {
 
     @Override
     public Page<Contact> findAll(BooleanBuilder specification, Pageable pageable) {
-        log.debug("DAO: Find all contacts by specificaiton with page: {}", specification);
+        log.debug("DAO: Find all contacts by specification with page: {}", specification);
         JPQLQuery<Contact> baseQuery = contactQuerySpec.buildQuery(specification, pageable);
 
         long totalElements = baseQuery.fetchCount();
@@ -76,10 +84,9 @@ public class ContactJPADaoImpl implements ContactDao {
     private JPAQuery<Contact> getPaginationQuery(JPQLQuery<Contact> baseQuery) {
         JPAQuery<Contact> jpaQuery = (JPAQuery<Contact>) baseQuery;
 
-        EntityGraph<Contact> entityGraph = em.createEntityGraph(Contact.class);
-        entityGraph.addSubgraph("contractors");
-
-        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        jpaQuery
+                .leftJoin(contact.contractor, contractor).fetchJoin()
+                .leftJoin(contractor.company).fetchJoin();
         return jpaQuery;
     }
 
@@ -90,9 +97,30 @@ public class ContactJPADaoImpl implements ContactDao {
         return query.fetch();
     }
 
+
     @Override
     public void deleteById(Long id) {
         log.debug("DAO: Delete contact: {}", id);
         contactRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Contact> findByContractorId(Long contractorId, Pageable pageable) {
+        QContact contact = QContact.contact;
+        List<Contact> contacts = queryFactory
+                .selectFrom(contact)
+                .where(contact.contractor.id.eq(contractorId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(contact.id.asc()) // lub inna kolumna jeśli trzeba
+                .fetch();
+
+        Long total = queryFactory
+                .select(contact.count())
+                .from(contact)
+                .where(contact.contractor.id.eq(contractorId))
+                .fetchOne();
+
+        return new PageImpl<>(contacts, pageable, total != null ? total : 0);
     }
 }

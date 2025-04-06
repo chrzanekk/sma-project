@@ -9,6 +9,7 @@ import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.json.CountryDeserializer;
 import pl.com.chrzanowski.sma.common.json.CountrySerializer;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.user.dto.UserDTO;
 
 import java.time.Instant;
 
@@ -33,11 +34,6 @@ public abstract class AbstractContractorDTO {
     protected final CompanyBaseDTO company;
     protected final Instant createdDatetime;
     protected final Instant lastModifiedDatetime;
-    protected final Long createdById;
-    protected final String createdByFirstName;
-    protected final String createdByLastName;
-    protected final Long modifiedById;
-    protected final String modifiedByFirstName;
-    protected final String modifiedByLastName;
-    protected final Long companyId;
+    protected final UserDTO createdBy;
+    protected final UserDTO modifiedBy;
 }

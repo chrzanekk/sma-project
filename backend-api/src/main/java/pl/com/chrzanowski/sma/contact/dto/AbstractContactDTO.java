@@ -3,6 +3,7 @@ package pl.com.chrzanowski.sma.contact.dto;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.user.dto.UserAuditDTO;
 
 import java.time.Instant;
 
@@ -18,11 +19,6 @@ public abstract class AbstractContactDTO {
     protected final CompanyBaseDTO company;
     protected final Instant createdDatetime;
     protected final Instant lastModifiedDatetime;
-    protected final Long createdById;
-    protected final String createdByFirstName;
-    protected final String createdByLastName;
-    protected final Long modifiedById;
-    protected final String modifiedByFirstName;
-    protected final String modifiedByLastName;
-    protected final Long companyId;
+    protected final UserAuditDTO createdBy;
+    protected final UserAuditDTO modifiedBy;
 }

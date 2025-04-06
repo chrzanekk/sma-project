@@ -10,6 +10,9 @@ import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.exception.ContractorException;
+import pl.com.chrzanowski.sma.contact.dao.ContactDao;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
@@ -22,6 +25,7 @@ import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,6 +35,9 @@ class ContractorServiceImplTest {
 
     @Mock
     private ContractorDao contractorDao;
+
+    @Mock
+    private ContactDao contactDao;
 
     @Mock
     private ContractorMapper contractorMapper;
@@ -66,6 +73,7 @@ class ContractorServiceImplTest {
                 .supplier(false)
                 .scaffoldingUser(true)
                 .createdDatetime(Instant.now())
+                .contacts(Set.of(ContactBaseDTO.builder().id(42L).build()))
                 .build();
 
         contractor = new Contractor();
@@ -99,6 +107,10 @@ class ContractorServiceImplTest {
 
     @Test
     void testSaveContractorSuccess() {
+        Contact mockContact = new Contact();
+        mockContact.setId(42L);
+
+        when(contactDao.findById(42L)).thenReturn(Optional.of(mockContact));
         when(contractorMapper.toEntity(any(ContractorDTO.class))).thenReturn(contractor);
         when(contractorDao.save(any(Contractor.class))).thenReturn(contractor);
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
@@ -115,6 +127,10 @@ class ContractorServiceImplTest {
 
     @Test
     void testUpdateContractorSuccess() {
+        Contact mockContact = new Contact();
+        mockContact.setId(42L);
+
+        when(contactDao.findById(42L)).thenReturn(Optional.of(mockContact));
         when(contractorDao.findById(anyLong())).thenReturn(Optional.of(contractor));
 
         when(contractorMapper.toEntity(any(ContractorDTO.class))).thenReturn(contractor);

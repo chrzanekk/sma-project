@@ -10,11 +10,12 @@ import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
 @Mapper(componentModel = "spring",
-        uses = {UserMapper.class, ContactBaseMapper.class, CompanyMapper.class},
+        uses = {UserAuditMapper.class, ContactBaseMapper.class, CompanyMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Contractor> {
 
@@ -22,13 +23,9 @@ public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Co
     protected ContactBaseMapper contactBaseMapper;
 
     @Override
-    @Mapping(source = "createdBy.id", target = "createdById")
-    @Mapping(source = "modifiedBy.id", target = "modifiedById")
-    @Mapping(source = "createdBy.firstName", target = "createdByFirstName")
-    @Mapping(source = "createdBy.lastName", target = "createdByLastName")
-    @Mapping(source = "modifiedBy.firstName", target = "modifiedByFirstName")
-    @Mapping(source = "modifiedBy.lastName", target = "modifiedByLastName")
-    @Mapping(source = "company.id", target = "companyId")
+    @Mapping(source = "createdBy", target = "createdBy")
+    @Mapping(source = "modifiedBy", target = "modifiedBy")
+    @Mapping(source = "company", target = "company")
     @Mapping(target = "contacts", expression = "java(contactBaseMapper.toDtoSet(contractor.getContacts()))")
     public abstract ContractorDTO toDto(Contractor contractor);
 
@@ -36,16 +33,24 @@ public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Co
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
-    @Mapping(target = "company.id", source = "companyId")
-    @Mapping(target = "contacts", expression = "java(contactBaseMapper.toEntitySet(contractorDTO.getContacts()))")
+    @Mapping(target = "company", source = "company")
+    @Mapping(target = "contacts", ignore = true)
     public abstract void updateContractorFromDto(ContractorDTO contractorDTO, @MappingTarget Contractor contractor);
+
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "company", source = "company")
+    @Mapping(target = "contacts", ignore = true)
+    public abstract void updateContractorFromUpdateDto(ContractorUpdateDTO contractorUpdateDTO, @MappingTarget Contractor contractor);
 
     @Override
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
-    @Mapping(target = "company.id", source = "companyId")
+    @Mapping(target = "company", source = "company")
     @Mapping(target = "contacts", expression = "java(contactBaseMapper.toEntitySet(contractorDTO.getContacts()))")
     public abstract Contractor toEntity(ContractorDTO contractorDTO);
 

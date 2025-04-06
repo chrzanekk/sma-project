@@ -4,13 +4,18 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryService;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
@@ -24,10 +29,12 @@ public class ContractorController {
     private final Logger log = LoggerFactory.getLogger(ContractorController.class);
 
     private final ContractorService contractorService;
+    private final ContactQueryService contactQueryService;
     private final ContractorQueryService contractorQueryService;
 
-    public ContractorController(ContractorService contractorService, ContractorQueryService contractorQueryService) {
+    public ContractorController(ContractorService contractorService, ContactQueryService contactQueryService, ContractorQueryService contractorQueryService) {
         this.contractorService = contractorService;
+        this.contactQueryService = contactQueryService;
         this.contractorQueryService = contractorQueryService;
     }
 
@@ -47,7 +54,7 @@ public class ContractorController {
 
     @GetMapping("/page")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
-                                                                                    Pageable pageable) {
+                                                                                Pageable pageable) {
         log.debug("REST request to get all contractors by filter with page: {}", contractorFilter);
         Page<ContractorDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
         HttpHeaders headers =
@@ -63,6 +70,17 @@ public class ContractorController {
         return ResponseEntity.ok().body(contractorBaseDTO);
     }
 
+    @GetMapping("/contractor/{contractorId}/contacts")
+    public ResponseEntity<List<ContactBaseDTO>> getPagedContactsForContractor(
+            @PathVariable Long contractorId,
+            Pageable pageable) {
+
+        Page<ContactBaseDTO> page = contactQueryService.findByContractorId(contractorId, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
+                ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
     @PostMapping("/add")
     public ResponseEntity<ContractorDTO> addContractor(@RequestBody ContractorDTO contractorDTO) {
         log.debug("REST request to add new contractor: {}", contractorDTO);
@@ -71,9 +89,9 @@ public class ContractorController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorDTO contractorDTO) {
+    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorUpdateDTO contractorDTO) {
         log.debug("RST request to update contractor: {}", contractorDTO);
-        ContractorDTO updatedContractorDTO = contractorService.update(contractorDTO);
+        ContractorDTO updatedContractorDTO = contractorService.updateWithChangedContacts(contractorDTO);
         return ResponseEntity.ok().body(updatedContractorDTO);
     }
 

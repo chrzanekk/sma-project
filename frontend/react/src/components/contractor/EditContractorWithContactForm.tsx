@@ -1,15 +1,15 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useRef, useState} from "react";
-import {ContractorDTO, ContractorFormValues, FetchableContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorFormValues, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
-import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
+import {getContactsByContractorIdPaged, getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-type.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import ContactFormWithSearch from "@/components/contact/ContactFormWithSearch.tsx";
-import {Box, Flex, Heading, Steps, Table, Text} from "@chakra-ui/react";
+import {Box, Flex, Heading, Spinner, Steps, Table, Text} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {FormikProps} from "formik";
 import {StepsNextTrigger, StepsPrevTrigger,} from "@/components/ui/steps";
@@ -22,20 +22,34 @@ interface EditContractorWithContactFormStepsProps {
     contractorId: number;
 }
 
+interface ContactState {
+    contacts: BaseContactFormValues[];
+    page: number;
+    hasMore: boolean;
+    loading: boolean;
+    addedContacts: BaseContactFormValues[];
+    deletedContacts: BaseContactFormValues[];
+}
+
 const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactFormStepsProps> = ({
                                                                                                    onSuccess,
                                                                                                    contractorId
                                                                                                }) => {
     const {t} = useTranslation(["common", "contractors", "errors", "contacts"]);
     const themeColors = useThemeColors();
-
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
 
-
     // Stany dla danych kontrahenta i listy kontaktów
     const [contractorData, setContractorData] = useState<ContractorFormValues | null>(null);
-    const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
+    const [contactState, setContactState] = useState<ContactState>({
+        contacts: [],
+        page: 0,
+        hasMore: true,
+        loading: false,
+        addedContacts: [],
+        deletedContacts: [],
+    });
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [currentStep, setCurrentStep] = useState<number>(0);
     const [isContractorValid, setIsContractorValid] = useState<boolean>(false);
@@ -43,6 +57,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     // Refs formularzy
     const contractorFormRef = useRef<FormikProps<ContractorFormValues>>(null);
     const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     // Pobranie danych kontrahenta przy montowaniu
     useEffect(() => {
@@ -65,7 +80,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     scaffoldingUser: contractor.scaffoldingUser,
                 };
                 setContractorData(initial);
-                setContacts(contractor.contacts || []);
+                await fetchContactsPage(0);
             } catch (err) {
                 console.error("Błąd pobierania kontrahenta: ", err);
             } finally {
@@ -74,6 +89,60 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         };
         fetchContractor().catch();
     }, [contractorId]);
+
+    const fetchContactsPage = async (page: number) => {
+        try {
+            setContactState((prev) => ({...prev, loading: true}));
+            const response = await getContactsByContractorIdPaged(contractorId, page, 5);
+            setContactState((prev) => ({
+                ...prev,
+                contacts: [...prev.contacts, ...response.items],
+                page: page + 1,
+                hasMore: page + 1 < response.totalPages,
+                loading: false,
+            }));
+        } catch (error) {
+            console.error("Błąd ładowania kontaktów:", error);
+            setContactState((prev) => ({...prev, loading: false}));
+        }
+    };
+
+    const onScroll = () => {
+        const container = scrollContainerRef.current;
+        if (container && contactState.hasMore && !contactState.loading) {
+            const {scrollTop, scrollHeight, clientHeight} = container;
+            if (scrollHeight - scrollTop <= clientHeight + 20) {
+                fetchContactsPage(contactState.page).catch();
+            }
+        }
+    };
+
+    const handleAddContact = (contact: BaseContactFormValues) => {
+        const exists = contactState.contacts.some(
+            (c) =>
+                c.firstName === contact.firstName &&
+                c.lastName === contact.lastName &&
+                c.phoneNumber === contact.phoneNumber
+        );
+        if (!exists) {
+            setContactState((prev) => ({
+                ...prev,
+                contacts: [...prev.contacts, contact],
+                addedContacts: [...prev.addedContacts, contact]
+            }));
+        }
+    };
+
+    const handleRemoveContact = (index: number) => {
+        setContactState((prev) => {
+            const contactToRemove = prev.contacts[index];
+            return {
+                ...prev,
+                contacts: prev.contacts.filter((_, i) => i !== index),
+                deletedContacts: [...prev.deletedContacts, contactToRemove],
+            };
+        });
+    };
 
     const validationSchema = getContractorValidationSchema(t, countryOptions);
 
@@ -99,41 +168,29 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         setCurrentStep(1);
     };
 
-    // Dodanie kontaktu – wykorzystujemy ContactFormWithSearch
-    const handleAddContact = (contact: BaseContactFormValues) => {
-        const alreadyExists = contacts.some(
-            (c) =>
-                c.firstName === contact.firstName &&
-                c.lastName === contact.lastName &&
-                c.phoneNumber === contact.phoneNumber
-        );
-        if (!alreadyExists) {
-            setContacts((prev) => [...prev, contact]);
-        }
-    };
-
-    // Usunięcie kontaktu z listy
-    const handleRemoveContact = (index: number) => {
-        setContacts((prev) => prev.filter((_, i) => i !== index));
-    };
-
     // Finalne zatwierdzenie – wysłanie zmodyfikowanych danych kontrahenta
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
-        const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
+
+        const addedContacts: BaseContactDTOForContractor[] = contactState.addedContacts.map((contact) => ({
             ...contact,
             company: currentCompany!,
-            companyId: currentCompany!.id
-        }));
-        const payload: ContractorDTO = {
+        }))
+
+        const deletedContacts: BaseContactDTOForContractor[] = contactState.deletedContacts.map((contact) => ({
+            ...contact,
+            company: currentCompany!,
+        }))
+
+        const payload: ContractorUpdateDTO = {
             ...contractorData,
             country: Country.fromCode(contractorData.country),
             customer: contractorData.customer ?? false,
             supplier: contractorData.supplier ?? false,
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
-            contacts: contactsDTO,
-            company: currentCompany!,
-            companyId: currentCompany!.id
+            addedContacts: addedContacts,
+            deletedContacts: deletedContacts,
+            company: currentCompany!
         };
         try {
             await updateContractor(payload);
@@ -162,7 +219,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text
-                        color={themeColors.fontColor}>{t("contractors:edit", "Edycja kontrahenta")}</Text>}</Steps.Title>
+                        color={themeColors.fontColor}>{t("contractors:edit")}</Text>}</Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
                 <Steps.Item
@@ -171,7 +228,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text
-                        color={themeColors.fontColor}>{t("contacts:manage", "Edycja kontaktów")}</Text>}</Steps.Title>
+                        color={themeColors.fontColor}>{t("contacts:manage")}</Text>}</Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
                 <Steps.Item
@@ -180,7 +237,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     color={themeColors.fontColor}>
                     <Steps.Indicator/>
                     <Steps.Title>{<Text
-                        color={themeColors.fontColor}>{t("common:summary", "Podsumowanie")}</Text>}</Steps.Title>
+                        color={themeColors.fontColor}>{t("common:summary")}</Text>}</Steps.Title>
                     <Steps.Separator/>
                 </Steps.Item>
             </Steps.List>
@@ -201,7 +258,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
             <Steps.Content key={1} index={1}>
                 <Box mb={2}>
                     <Heading size="md"
-                             color={themeColors.fontColor}>{t("contacts:manage", "Edycja kontaktów")}</Heading>
+                             color={themeColors.fontColor}>{t("contacts:manage")}</Heading>
                 </Box>
                 {/* Formularz wyszukiwania/dodawania kontaktu – przekazujemy innerRef */}
                 <ContactFormWithSearch
@@ -220,15 +277,15 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                         }
                     }}
                 >
-                    {t("contacts:add", "Dodaj kontakt")}
+                    {t("contacts:add")}
                 </Button>
                 {/* Lista kontaktów z możliwością usunięcia */}
                 <Box mt={2}>
-                    <Heading size="sm" mb={2}>
-                        {t("contacts:list", "Lista kontaktów")}
-                    </Heading>
-
-                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
+                    <Text textStyle="lg" fontWeight="bold" color={themeColors.fontColor}>
+                        {t("contacts:contactList")}
+                    </Text>
+                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}
+                                      onScroll={onScroll} ref={scrollContainerRef}>
                         <Table.Root size={"sm"}
                                     stickyHeader
                                     showColumnBorder
@@ -249,37 +306,23 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                             </Table.Header>
 
                             <Table.Body>
-                                {contacts.length > 0 ? (contacts.map((contact, idx) => (
-                                    <Table.Row key={idx}
-                                               style={{cursor: "pointer"}}
-                                               bg={themeColors.bgColorSecondary}
-                                               _hover={{
-                                                   textDecoration: 'none',
-                                                   bg: themeColors.highlightBgColor,
-                                                   color: themeColors.fontColorHover
-                                               }}
-                                    >
-                                        <Table.Cell textAlign={"center"}>{contact.firstName}</Table.Cell>
-                                        <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
-                                        <Table.Cell textAlign={"center"}>{contact.phoneNumber}</Table.Cell>
-                                        <Table.Cell textAlign={"center"}>
-                                            <Box>
-                                                <Button
-                                                    variant="ghost"
-                                                    colorScheme="red"
-                                                    size="2xs"
-                                                    onClick={() => handleRemoveContact(idx)}
-                                                >
-                                                    {t("common:delete", "Usuń")}
-                                                </Button>
-                                            </Box></Table.Cell>
+                                {contactState.contacts.map((contact, idx) => (
+                                    <Table.Row key={idx} bg={themeColors.bgColorSecondary}>
+                                        <Table.Cell textAlign="center">{contact.firstName}</Table.Cell>
+                                        <Table.Cell textAlign="center">{contact.lastName}</Table.Cell>
+                                        <Table.Cell textAlign="center">{contact.phoneNumber}</Table.Cell>
+                                        <Table.Cell textAlign="center">
+                                            <Button variant="ghost" colorScheme="red" size="2xs"
+                                                    onClick={() => handleRemoveContact(idx)}>
+                                                {t("common:delete")}
+                                            </Button>
+                                        </Table.Cell>
                                     </Table.Row>
-                                ))) : (
-                                    <Table.Row bg={themeColors.bgColorSecondary}>
+                                ))}
+                                {contactState.loading && (
+                                    <Table.Row>
                                         <Table.Cell colSpan={4} textAlign="center">
-                                            <Box textAlign="center" py={2}>
-                                                {t("contacts:noContacts", "Brak kontaktów")}
-                                            </Box>
+                                            <Spinner size="sm" mt={2}/>
                                         </Table.Cell>
                                     </Table.Row>
                                 )}
@@ -293,13 +336,17 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
             <Steps.Content key={2} index={2}>
                 <Box direction="column" textAlign="center" mb={2}>
                     <Heading size="md" color={themeColors.fontColor}>
-                        {t("common:summary", "Podsumowanie")}
+                        {t("common:summary")}
                     </Heading>
-                    <ContractorSummary contractorData={contractorData} contacts={contacts}/>
+                    <ContractorSummary
+                        contractorData={contractorData}
+                        addedContacts={contactState.addedContacts}
+                        deletedContacts={contactState.deletedContacts}
+                    />
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>
-                        {t("common:save", "Zapisz")}
+                        {t("common:save")}
                     </Button>
                 </Flex>
             </Steps.Content>

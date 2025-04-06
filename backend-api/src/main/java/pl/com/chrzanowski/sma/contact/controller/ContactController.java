@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
 import pl.com.chrzanowski.sma.contact.service.ContactService;
@@ -79,5 +80,12 @@ public class ContactController {
         log.debug("REST request to delete Contact : {}", id);
         contactService.delete(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/free/page")
+    public ResponseEntity<Page<ContactBaseDTO>> getFreeContactsPage(ContactFilter filter, Pageable pageable) {
+        Page<ContactBaseDTO> page = contactQueryService.findUnassignedContacts(filter, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page);
     }
 }
