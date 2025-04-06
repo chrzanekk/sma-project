@@ -10,6 +10,7 @@ import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
@@ -35,6 +36,14 @@ public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Co
     @Mapping(target = "company", source = "company")
     @Mapping(target = "contacts", ignore = true)
     public abstract void updateContractorFromDto(ContractorDTO contractorDTO, @MappingTarget Contractor contractor);
+
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "company", source = "company")
+    @Mapping(target = "contacts", ignore = true)
+    public abstract void updateContractorFromUpdateDto(ContractorUpdateDTO contractorUpdateDTO, @MappingTarget Contractor contractor);
 
     @Override
     @Mapping(target = "createdBy", ignore = true)

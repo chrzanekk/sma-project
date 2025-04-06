@@ -13,10 +13,11 @@ interface Contact {
 
 interface ContractorSummaryProps {
     contractorData?: ContractorFormValues;
-    contacts: Contact[];
+    addedContacts: Contact[];
+    deletedContacts?: Contact[] | [];
 }
 
-const ContractorSummary: React.FC<ContractorSummaryProps> = ({contractorData, contacts}) => {
+const ContractorSummary: React.FC<ContractorSummaryProps> = ({contractorData, addedContacts, deletedContacts}) => {
     const themeColors = useThemeColors();
     const {t} = useTranslation(["common", "contractors", "errors", "contacts"]);
 
@@ -94,7 +95,7 @@ const ContractorSummary: React.FC<ContractorSummaryProps> = ({contractorData, co
 
             <Box mt={2}>
                 <Text textStyle="lg" fontWeight="bold" color={themeColors.fontColor}>
-                    {t("contacts:list", "Lista kontaktów")}
+                    {t("contacts:contactAddedList", "Lista dodanych kontaktów")}
                 </Text>
 
                 <Table.ScrollArea borderWidth="1px" rounded="sm" height="150px">
@@ -120,8 +121,61 @@ const ContractorSummary: React.FC<ContractorSummaryProps> = ({contractorData, co
                         </Table.Header>
 
                         <Table.Body>
-                            {contacts.length > 0 ? (
-                                contacts.map((contact, idx) => (
+                            {addedContacts.length > 0 ? (
+                                addedContacts.map((contact, idx) => (
+                                    <Table.Row
+                                        key={idx}
+                                        bg={themeColors.bgColorSecondary}
+                                        _hover={{
+                                            textDecoration: 'none',
+                                            bg: themeColors.highlightBgColor,
+                                            color: themeColors.fontColorHover
+                                        }}
+                                    >
+                                        <Table.Cell textAlign="center">{contact.firstName}</Table.Cell>
+                                        <Table.Cell textAlign="center">{contact.lastName}</Table.Cell>
+                                        <Table.Cell textAlign="center">{contact.phoneNumber}</Table.Cell>
+                                    </Table.Row>
+                                ))
+                            ) : (
+                                <Box textAlign="center" py={2}>
+                                    {t("contacts:noContacts", "Brak kontaktów")}
+                                </Box>
+                            )}
+                        </Table.Body>
+                    </Table.Root>
+                </Table.ScrollArea>
+            </Box>
+            <Box mt={2}>
+                <Text textStyle="lg" fontWeight="bold" color={themeColors.fontColor}>
+                    {t("contacts:contactDeletedList", "Lista usuniętch kontaktów")}
+                </Text>
+
+                <Table.ScrollArea borderWidth="1px" rounded="sm" height="150px">
+                    <Table.Root
+                        size="sm"
+                        stickyHeader
+                        showColumnBorder
+                        interactive
+                        color={themeColors.fontColor}
+                    >
+                        <Table.Header>
+                            <Table.Row bg={themeColors.bgColorPrimary}>
+                                <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
+                                    {t("contacts:firstName")}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
+                                    {t("contacts:lastName")}
+                                </Table.ColumnHeader>
+                                <Table.ColumnHeader textAlign="center" color={themeColors.fontColor}>
+                                    {t("contacts:phoneNumber")}
+                                </Table.ColumnHeader>
+                            </Table.Row>
+                        </Table.Header>
+
+                        <Table.Body>
+                            {deletedContacts && deletedContacts!.length > 0 ? (
+                                deletedContacts!.map((contact, idx) => (
                                     <Table.Row
                                         key={idx}
                                         bg={themeColors.bgColorSecondary}

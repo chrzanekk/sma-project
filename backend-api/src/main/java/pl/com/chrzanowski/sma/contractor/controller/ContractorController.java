@@ -15,6 +15,7 @@ import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryService;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
@@ -88,9 +89,9 @@ public class ContractorController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorDTO contractorDTO) {
+    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorUpdateDTO contractorDTO) {
         log.debug("RST request to update contractor: {}", contractorDTO);
-        ContractorDTO updatedContractorDTO = contractorService.update(contractorDTO);
+        ContractorDTO updatedContractorDTO = contractorService.updateWithChangedContacts(contractorDTO);
         return ResponseEntity.ok().body(updatedContractorDTO);
     }
 

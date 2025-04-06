@@ -1,7 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorDTO, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-type.ts";
 import {ContactDTO} from "@/types/contact-types.ts";
@@ -34,7 +34,7 @@ export const getContactsByContractorIdPaged = async (
     page: number,
     size: number
 ) => {
-    const response = await api.get(`/api/contacts/page`, {
+    const response = await api.get(`${CONTRACTOR_API_BASE}/contractor/${contractorId}/contacts`, {
         params: {
             contractorId,
             page,
@@ -44,7 +44,7 @@ export const getContactsByContractorIdPaged = async (
         ...getAuthConfig(),
     });
 
-    return parsePaginationResponse<ContactDTO>(response); // powinno zwrócić { items, totalPages }
+    return parsePaginationResponse<ContactDTO>(response);
 };
 
 
@@ -72,7 +72,7 @@ export const addContractor = async (addContractor: ContractorDTO) => {
     }
 }
 
-export const updateContractor = async (updateContractor: ContractorDTO) => {
+export const updateContractor = async (updateContractor: ContractorUpdateDTO) => {
     try {
         const company: CompanyBaseDTO | null = getSelectedCompany();
         const payload = {

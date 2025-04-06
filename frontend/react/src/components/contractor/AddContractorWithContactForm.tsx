@@ -103,7 +103,6 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
             scaffoldingUser: contractorData.scaffoldingUser ?? false,
             contacts: contactsDTO,
             company: currentCompany!,
-            companyId: currentCompany!.id
         };
         try {
             await addContractor(payload);
@@ -175,13 +174,13 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
                         }
                     }}
                 >
-                    {t("contacts:add", "Dodaj kontakt")}
+                    {t("contacts:add")}
                 </Button>
 
                 {/* Lista kontaktów (opcjonalnie z przyciskiem usuń) */}
                 <Box mt={4}>
                     <Heading size="sm" mb={2} color={themeColors.fontColor}>
-                        {t("contacts:list", "Lista kontaktów")}
+                        {t("contacts:contactList")}
                     </Heading>
 
                     <Table.ScrollArea borderWidth="1px" rounded="sm" height="200px">
@@ -249,7 +248,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
             <Steps.Content key={2} index={2}>
                 <Box direction="column" textAlign="center" mb={2}>
                     <Heading size="md" color={themeColors.fontColor}>{t("common:summary")}</Heading>
-                    <ContractorSummary contractorData={contractorData!} contacts={contacts}/>
+                    <ContractorSummary contractorData={contractorData!} addedContacts={contacts}/>
                 </Box>
                 <Flex justify="center" gap={4}>
                     <Button onClick={handleFinalSubmit} colorPalette={"green"}>

@@ -12,10 +12,12 @@ import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
@@ -31,15 +33,17 @@ public class ContractorServiceImpl implements ContractorService {
     private final ContractorMapper contractorMapper;
     private final ContactService contactService;
     private final ContactDao contactDao;
+    private final ContactBaseMapper contactBaseMapper;
 
 
     public ContractorServiceImpl(ContractorDao contractorDao,
                                  ContractorMapper contractorMapper,
-                                 ContactService contactService, ContactDao contactDao) {
+                                 ContactService contactService, ContactDao contactDao, ContactBaseMapper contactBaseMapper) {
         this.contractorDao = contractorDao;
         this.contractorMapper = contractorMapper;
         this.contactService = contactService;
         this.contactDao = contactDao;
+        this.contactBaseMapper = contactBaseMapper;
     }
 
     @Override
@@ -159,6 +163,59 @@ public class ContractorServiceImpl implements ContractorService {
         return Collections.emptySet();
     }
 
+    @Override
+    public ContractorDTO updateWithChangedContacts(ContractorUpdateDTO updateDTO) {
+        // wczytaj istniejącego kontrahenta
+        Contractor existingContractor = contractorDao.findById(updateDTO.getId())
+                .orElseThrow(() -> new ContractorException(
+                        ContractorErrorCode.CONTRACTOR_NOT_FOUND,
+                        "Contractor not found with id: " + updateDTO.getId()));
+
+        // zaktualizuj dane kontrahenta (nazwa, adres, itp.) mapperem
+        contractorMapper.updateContractorFromUpdateDto(updateDTO, existingContractor);
+
+        // Dodaj nowe kontakty
+        if (updateDTO.getAddedContacts() != null) {
+            for (ContactBaseDTO added : updateDTO.getAddedContacts()) {
+                if (added.getId() == null) {
+                    // tworzymy NOWY kontakt
+                    Contact newContact = contactBaseMapper.toEntity(added);
+                    newContact.setContractor(existingContractor);
+                    contactDao.save(newContact); // zapisujemy
+                    existingContractor.getContacts().add(newContact);
+                } else {
+                    // załóżmy, że kontakt istnieje - trzeba go wczytać
+                    Contact existing = contactDao.findById(added.getId())
+                            .orElseThrow(() -> new ContractorException(
+                                    ContactErrorCode.CONTACT_NOT_FOUND,
+                                    "Contact not found: " + added.getId()));
+
+                    // przypisz go do kontrahenta (o ile nie jest przypisany)
+                    existing.setContractor(existingContractor);
+                    existingContractor.getContacts().add(existing);
+                }
+            }
+        }
+
+        // Usuń kontakty
+        if (updateDTO.getDeletedContacts() != null) {
+            for (ContactBaseDTO deleted : updateDTO.getDeletedContacts()) {
+                if (deleted.getId() != null) {
+                    Contact toRemove = contactDao.findById(deleted.getId())
+                            .orElseThrow(() -> new ContractorException(
+                                    ContactErrorCode.CONTACT_NOT_FOUND,
+                                    "Contact not found: " + deleted.getId()));
+                    existingContractor.getContacts().remove(toRemove);
+                    toRemove.setContractor(null);
+                    contactDao.save(toRemove);
+                }
+            }
+        }
+
+        // zapisujemy zaktualizowanego kontrahenta
+        Contractor savedContractor = contractorDao.save(existingContractor);
+        return contractorMapper.toDto(savedContractor);
+    }
 
     @Override
     public ContractorDTO findById(Long id) {
