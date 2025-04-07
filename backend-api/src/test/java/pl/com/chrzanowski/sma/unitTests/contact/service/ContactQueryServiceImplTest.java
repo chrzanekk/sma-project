@@ -12,8 +12,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
-import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
-import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryServiceImpl;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
@@ -31,12 +31,12 @@ class ContactQueryServiceImplTest {
     private ContactDao contactDao;
 
     @Mock
-    private ContactMapper contactMapper;
+    private ContactBaseMapper contactBaseMapper;
 
     @InjectMocks
     private ContactQueryServiceImpl contactQueryService;
 
-    private ContactDTO contactBaseDTO;
+    private ContactBaseDTO contactBaseDTO;
     private Contact contact;
     private AutoCloseable autoCloseable;
 
@@ -44,7 +44,7 @@ class ContactQueryServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        contactBaseDTO = ContactDTO.builder()
+        contactBaseDTO = ContactBaseDTO.builder()
                 .id(1L)
                 .firstName("John Doe")
                 .build();
@@ -64,15 +64,15 @@ class ContactQueryServiceImplTest {
         ContactFilter filter = new ContactFilter();
 
         when(contactDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.singletonList(contact));
-        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactBaseDTO));
+        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactBaseDTO));
 
-        List<ContactDTO> result = contactQueryService.findByFilter(filter);
+        List<ContactBaseDTO> result = contactQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.size());
 
         verify(contactDao, times(1)).findAll(any(BooleanBuilder.class));
-        verify(contactMapper, times(1)).toDtoList(anyList());
+        verify(contactBaseMapper, times(1)).toDtoList(anyList());
     }
 
     @Test
@@ -80,9 +80,9 @@ class ContactQueryServiceImplTest {
         ContactFilter filter = new ContactFilter();
 
         when(contactDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.emptyList());
-        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
+        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
 
-        List<ContactDTO> result = contactQueryService.findByFilter(filter);
+        List<ContactBaseDTO> result = contactQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -97,15 +97,15 @@ class ContactQueryServiceImplTest {
 
         Page<Contact> contactPage = new PageImpl<>(Collections.singletonList(contact));
         when(contactDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(contactPage);
-        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactBaseDTO);
+        when(contactBaseMapper.toDto(any(Contact.class))).thenReturn(contactBaseDTO);
 
-        Page<ContactDTO> result = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactBaseDTO> result = contactQueryService.findByFilter(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
 
         verify(contactDao, times(1)).findAll(any(BooleanBuilder.class), any(Pageable.class));
-        verify(contactMapper, times(1)).toDto(any(Contact.class));
+        verify(contactBaseMapper, times(1)).toDto(any(Contact.class));
     }
 
     @Test
@@ -116,7 +116,7 @@ class ContactQueryServiceImplTest {
         Page<Contact> contactPage = Page.empty();
         when(contactDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(contactPage);
 
-        Page<ContactDTO> result = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactBaseDTO> result = contactQueryService.findByFilter(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

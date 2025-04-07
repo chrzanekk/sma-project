@@ -40,18 +40,18 @@ public class ContactQueryServiceImpl implements ContactQueryService {
 
     @Override
     @Transactional
-    public Page<ContactDTO> findByFilter(ContactFilter filter, Pageable pageable) {
+    public Page<ContactBaseDTO> findByFilter(ContactFilter filter, Pageable pageable) {
         log.debug("Query: Find all contacts by filter: {}", filter.toString());
         BooleanBuilder specification = ContactQuerySpec.buildPredicate(filter);
-        return contactDao.findAll(specification, pageable).map(contactMapper::toDto);
+        return contactDao.findAll(specification, pageable).map(contactBaseMapper::toDto);
     }
 
     @Override
     @Transactional
-    public List<ContactDTO> findByFilter(ContactFilter filter) {
+    public List<ContactBaseDTO> findByFilter(ContactFilter filter) {
         log.debug("Query: Find all contacts by filter and page: {}", filter.toString());
         BooleanBuilder specification = ContactQuerySpec.buildPredicate(filter);
-        return contactMapper.toDtoList(contactDao.findAll(specification));
+        return contactBaseMapper.toDtoList(contactDao.findAll(specification));
     }
 
     @Override

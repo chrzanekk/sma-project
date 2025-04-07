@@ -7,7 +7,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import java.util.Collection;
 import java.util.List;
 
-public interface ContactService extends BaseCrudService<ContactDTO, Long> {
+public interface ContactService extends BaseCrudService<ContactBaseDTO, Long> {
 
     List<ContactBaseDTO> saveAllBaseContacts(Collection<ContactBaseDTO> contactDTOs);
 }

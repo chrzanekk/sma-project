@@ -7,7 +7,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
 
-public interface ContactQueryService extends QueryService<ContactDTO, ContactFilter> {
+public interface ContactQueryService extends QueryService<ContactBaseDTO, ContactFilter> {
 
     Page<ContactBaseDTO> findUnassignedContacts(ContactFilter contactFilter, Pageable pageable);
 

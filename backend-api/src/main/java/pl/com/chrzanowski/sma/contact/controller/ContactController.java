@@ -33,45 +33,45 @@ public class ContactController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ContactDTO>> getAllContacts() {
+    public ResponseEntity<List<ContactBaseDTO>> getAllContacts() {
         log.debug("REST request to get all contacts");
-        List<ContactDTO> contactDTOS = contactService.findAll();
+        List<ContactBaseDTO> contactDTOS = contactService.findAll();
         return ResponseEntity.ok().body(contactDTOS);
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<ContactDTO>> getAllContactsByFilter(ContactFilter filter) {
+    public ResponseEntity<List<ContactBaseDTO>> getAllContactsByFilter(ContactFilter filter) {
         log.debug("REST request to get all contacts by filter: {}", filter);
-        List<ContactDTO> contactBaseDTOS = contactQueryService.findByFilter(filter);
+        List<ContactBaseDTO> contactBaseDTOS = contactQueryService.findByFilter(filter);
         return ResponseEntity.ok().body(contactBaseDTOS);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<ContactDTO>> getAllContactsByFilterAndPage(ContactFilter filter, Pageable pageable) {
+    public ResponseEntity<List<ContactBaseDTO>> getAllContactsByFilterAndPage(ContactFilter filter, Pageable pageable) {
         log.debug("REST request to get all contacts by filter and page: {}", filter);
-        Page<ContactDTO> page = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactBaseDTO> page = contactQueryService.findByFilter(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ContactDTO> getContactById(@PathVariable Long id) {
+    public ResponseEntity<ContactBaseDTO> getContactById(@PathVariable Long id) {
         log.debug("REST request to get Contact : {}", id);
-        ContactDTO contactDTO = contactService.findById(id);
+        ContactBaseDTO contactDTO = contactService.findById(id);
         return ResponseEntity.ok().body(contactDTO);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ContactDTO> addContact(@RequestBody ContactDTO contactDTO) {
+    public ResponseEntity<ContactBaseDTO> addContact(@RequestBody ContactBaseDTO contactDTO) {
         log.debug("REST request to add Contact : {}", contactDTO);
-        ContactDTO savedContactBaseDTO = contactService.save(contactDTO);
+        ContactBaseDTO savedContactBaseDTO = contactService.save(contactDTO);
         return ResponseEntity.ok().body(savedContactBaseDTO);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ContactDTO> updateContact(@RequestBody ContactDTO contactDTO) {
+    public ResponseEntity<ContactBaseDTO> updateContact(@RequestBody ContactBaseDTO contactDTO) {
         log.debug("REST request to update Contact : {}", contactDTO);
-        ContactDTO updatedContactDTO = contactService.update(contactDTO);
+        ContactBaseDTO updatedContactDTO = contactService.update(contactDTO);
         return ResponseEntity.ok().body(updatedContactDTO);
     }
 

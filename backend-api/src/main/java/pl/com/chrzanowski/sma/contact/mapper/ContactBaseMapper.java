@@ -2,8 +2,10 @@ package pl.com.chrzanowski.sma.contact.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
@@ -25,6 +27,13 @@ public interface ContactBaseMapper {
     @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
     @Mapping(source = "company", target = "company")
     Contact toEntity(ContactBaseDTO dto);
+
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "company", source = "company")
+    void updateContactFromDto(ContactBaseDTO contactDTO, @MappingTarget Contact contact);
 
     default Set<ContactBaseDTO> toDtoSet(Set<Contact> contacts) {
         if (contacts == null) {

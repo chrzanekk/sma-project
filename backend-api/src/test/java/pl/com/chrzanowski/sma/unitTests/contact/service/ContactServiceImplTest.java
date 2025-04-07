@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.unitTests.contact.service;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,8 +8,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
-import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
-import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
+import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactServiceImpl;
 
@@ -29,15 +28,12 @@ class ContactServiceImplTest {
     private ContactDao contactDao;
 
     @Mock
-    private ContactMapper contactMapper;
-
-    @Mock
-    private EntityManager entityManager;
+    private ContactBaseMapper contactBaseMapper;
 
     @InjectMocks
     private ContactServiceImpl contactService;
 
-    private ContactDTO contactDTO;
+    private ContactBaseDTO contactDTO;
     private Contact contact;
     private AutoCloseable autoCloseable;
 
@@ -45,7 +41,7 @@ class ContactServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        contactDTO = ContactDTO.builder()
+        contactDTO = ContactBaseDTO.builder()
                 .id(1L)
                 .firstName("John")
                 .lastName("Doe")
@@ -69,11 +65,11 @@ class ContactServiceImplTest {
 
     @Test
     void testSaveContact() {
-        when(contactMapper.toEntity(any(ContactDTO.class))).thenReturn(contact);
+        when(contactBaseMapper.toEntity(any(ContactBaseDTO.class))).thenReturn(contact);
         when(contactDao.save(any(Contact.class))).thenReturn(contact);
-        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
+        when(contactBaseMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
 
-        ContactDTO result = contactService.save(contactDTO);
+        ContactBaseDTO result = contactService.save(contactDTO);
         assertNotNull(result);
         assertEquals("John", result.getFirstName());
         assertEquals("Doe", result.getLastName());
@@ -81,12 +77,12 @@ class ContactServiceImplTest {
         assertEquals("john@doe.com", result.getEmail());
 
         verify(contactDao, times(1)).save(any(Contact.class));
-        verify(contactMapper, times(1)).toDto(any(Contact.class));
+        verify(contactBaseMapper, times(1)).toDto(any(Contact.class));
     }
 
     @Test
     void testSaveContactFailure() {
-        when(contactMapper.toEntity(any(ContactDTO.class))).thenReturn(contact);
+        when(contactBaseMapper.toEntity(any(ContactBaseDTO.class))).thenReturn(contact);
         when(contactDao.save(any(Contact.class))).thenThrow(new RuntimeException("Database error"));
 
         assertThrows(RuntimeException.class, () -> contactService.save(contactDTO));
@@ -96,9 +92,9 @@ class ContactServiceImplTest {
     @Test
     void testFindById() {
         when(contactDao.findById(1L)).thenReturn(Optional.of(contact));
-        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
+        when(contactBaseMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
 
-        ContactDTO result = contactService.findById(1L);
+        ContactBaseDTO result = contactService.findById(1L);
         assertNotNull(result);
         assertEquals("John", result.getFirstName());
 
@@ -116,9 +112,9 @@ class ContactServiceImplTest {
     @Test
     void testFindAll() {
         when(contactDao.findAll()).thenReturn(Collections.singletonList(contact));
-        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactDTO));
+        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactDTO));
 
-        List<ContactDTO> result = contactService.findAll();
+        List<ContactBaseDTO> result = contactService.findAll();
         assertNotNull(result);
         assertEquals(1, result.size());
 
@@ -128,9 +124,9 @@ class ContactServiceImplTest {
     @Test
     void testFindAllEmpty() {
         when(contactDao.findAll()).thenReturn(Collections.emptyList());
-        when(contactMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
+        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
 
-        List<ContactDTO> result = contactService.findAll();
+        List<ContactBaseDTO> result = contactService.findAll();
         assertTrue(result.isEmpty());
 
         verify(contactDao, times(1)).findAll();
@@ -139,11 +135,11 @@ class ContactServiceImplTest {
     @Test
     void testUpdateContact() {
         when(contactDao.findById(anyLong())).thenReturn(Optional.of(contact));
-        when(contactMapper.toEntity(any(ContactDTO.class))).thenReturn(contact);
+        when(contactBaseMapper.toEntity(any(ContactBaseDTO.class))).thenReturn(contact);
         when(contactDao.save(any(Contact.class))).thenReturn(contact);
-        when(contactMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
+        when(contactBaseMapper.toDto(any(Contact.class))).thenReturn(contactDTO);
 
-        ContactDTO result = contactService.update(contactDTO);
+        ContactBaseDTO result = contactService.update(contactDTO);
         assertNotNull(result);
         assertEquals("John", result.getFirstName());
 
