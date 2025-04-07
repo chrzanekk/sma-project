@@ -32,12 +32,7 @@ public class ContactController {
         this.contactQueryService = contactQueryService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ContactBaseDTO>> getAllContacts() {
-        log.debug("REST request to get all contacts");
-        List<ContactBaseDTO> contactDTOS = contactService.findAll();
-        return ResponseEntity.ok().body(contactDTOS);
-    }
+
 
     @GetMapping("/find")
     public ResponseEntity<List<ContactBaseDTO>> getAllContactsByFilter(ContactFilter filter) {

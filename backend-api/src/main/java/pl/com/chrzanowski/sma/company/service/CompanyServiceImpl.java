@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.company.service;
 
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -11,11 +10,9 @@ import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.CompanyErrorCode;
 import pl.com.chrzanowski.sma.company.dao.CompanyDao;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
-import pl.com.chrzanowski.sma.user.service.UserService;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,31 +22,21 @@ public class CompanyServiceImpl implements CompanyService {
 
     private final Logger log = LoggerFactory.getLogger(CompanyServiceImpl.class);
     private final CompanyDao companyDao;
-    private final CompanyMapper companyMapper;
-    private final UserService userService;
-    private final EntityManager em;
+    private final CompanyBaseMapper companyBaseMapper;
 
-    public CompanyServiceImpl(CompanyDao companyDao, CompanyMapper companyMapper, UserService userService, EntityManager em) {
+    public CompanyServiceImpl(CompanyDao companyDao, CompanyBaseMapper companyBaseMapper) {
         this.companyDao = companyDao;
-        this.companyMapper = companyMapper;
-        this.userService = userService;
-        this.em = em;
+        this.companyBaseMapper = companyBaseMapper;
     }
 
-    @Override
-    public CompanyBaseDTO findByName(String name) {
-        log.debug("Request to get company by name : {}", name);
-        Optional<Company> company = companyDao.findByName(name);
-        return company.map(companyMapper::toDto).orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with name " + name));
-    }
 
     @Override
     public CompanyBaseDTO save(CompanyBaseDTO companyBaseDTO) {
         log.debug("Request to save Company : {}", companyBaseDTO);
         validateRequiredFields(companyBaseDTO);
-        Company company = companyMapper.toEntity(companyBaseDTO);
+        Company company = companyBaseMapper.toEntity(companyBaseDTO);
         Company savedCompany = companyDao.save(company);
-        return companyMapper.toDto(savedCompany);
+        return companyBaseMapper.toDto(savedCompany);
     }
 
     @Override
@@ -59,24 +46,18 @@ public class CompanyServiceImpl implements CompanyService {
         Company existingCompany = companyDao.findById(companyBaseDTO.getId())
                 .orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + companyBaseDTO.getId()));
 
-        companyMapper.updateFromDto(companyBaseDTO, existingCompany);
+        companyBaseMapper.updateFromDto(companyBaseDTO, existingCompany);
         Company savedCompany = companyDao.save(existingCompany);
-        return companyMapper.toDto(savedCompany);
+        return companyBaseMapper.toDto(savedCompany);
     }
 
     @Override
     public CompanyBaseDTO findById(Long id) {
         log.debug("Request to get company by id : {}", id);
         Optional<Company> company = companyDao.findById(id);
-        return companyMapper.toDto(company.orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + id)));
+        return companyBaseMapper.toDto(company.orElseThrow(() -> new CompanyException(CompanyErrorCode.COMPANY_NOT_FOUND, "Company not found with id " + id)));
     }
 
-    @Override
-    public List<CompanyBaseDTO> findAll() {
-        log.debug("Request to get all company");
-        List<Company> allCompany = companyDao.findAll();
-        return companyMapper.toDtoList(allCompany);
-    }
 
     @Override
     public void delete(Long id) {

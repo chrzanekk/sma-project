@@ -38,13 +38,6 @@ public class ContractorController {
         this.contractorQueryService = contractorQueryService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<ContractorDTO>> getAllContractors() {
-        log.debug("REST request to get all contractors");
-        List<ContractorDTO> contractorDTOS = contractorService.findAll();
-        return ResponseEntity.ok().body(contractorDTOS);
-    }
-
     @GetMapping("/find")
     public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
         log.debug("REST request to get all contractors by filter: {}", contractorFilter);

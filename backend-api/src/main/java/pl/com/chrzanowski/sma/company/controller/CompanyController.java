@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.company.dto.CompanyAuditableDTO;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.service.CompanyQueryService;
 import pl.com.chrzanowski.sma.company.service.CompanyService;
@@ -31,24 +32,17 @@ public class CompanyController {
         this.companyQueryService = companyQueryService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CompanyBaseDTO>> getAll() {
-        log.info("REST: Request to get all companies");
-        List<CompanyBaseDTO> companyBaseDTOS = companyService.findAll();
-        return ResponseEntity.ok(companyBaseDTOS);
-    }
-
     @GetMapping("/find")
-    public ResponseEntity<List<CompanyBaseDTO>> getAllByFilter(CompanyFilter filter) {
+    public ResponseEntity<List<CompanyAuditableDTO>> getAllByFilter(CompanyFilter filter) {
         log.info("REST: request to get all companies by filter: {}", filter);
-        List<CompanyBaseDTO> companyBaseDTOS = companyQueryService.findByFilter(filter);
+        List<CompanyAuditableDTO> companyBaseDTOS = companyQueryService.findByFilter(filter);
         return ResponseEntity.ok(companyBaseDTOS);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<CompanyBaseDTO>> getAllByFilter(CompanyFilter filter, Pageable pageable) {
+    public ResponseEntity<List<CompanyAuditableDTO>> getAllByFilter(CompanyFilter filter, Pageable pageable) {
         log.info("REST: request to get all companies by filter with page: {}", filter);
-        Page<CompanyBaseDTO> page = companyQueryService.findByFilter(filter, pageable);
+        Page<CompanyAuditableDTO> page = companyQueryService.findByFilter(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -70,8 +64,8 @@ public class CompanyController {
     @PutMapping("/update")
     public ResponseEntity<CompanyBaseDTO> update(@RequestBody CompanyBaseDTO companyBaseDTO) {
         log.debug("REST: request to update company: {}", companyBaseDTO.getId());
-        CompanyBaseDTO companyBaseDTOupdated = companyService.update(companyBaseDTO);
-        return ResponseEntity.ok(companyBaseDTOupdated);
+        CompanyBaseDTO companyBaseDTOUpdated = companyService.update(companyBaseDTO);
+        return ResponseEntity.ok(companyBaseDTOUpdated);
     }
 
     @DeleteMapping("/delete/{id}")

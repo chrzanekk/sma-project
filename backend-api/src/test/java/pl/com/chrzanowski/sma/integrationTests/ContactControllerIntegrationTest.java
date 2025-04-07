@@ -12,7 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
@@ -47,7 +47,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
     private CompanyRepository companyRepository;
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyBaseMapper companyBaseMapper;
 
     private CompanyBaseDTO companyBaseDTO;
     private Company company;
@@ -70,7 +70,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         companyRepository.deleteAll();
         company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
         company = companyRepository.saveAndFlush(company);
-        companyBaseDTO = companyMapper.toDto(company);
+        companyBaseDTO = companyBaseMapper.toDto(company);
     }
 
     /**

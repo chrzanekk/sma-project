@@ -9,4 +9,5 @@ public interface QueryService<T, F> {
     List<T> findByFilter(F filter);
 
     Page<T> findByFilter(F filter, Pageable pageable);
+
 }

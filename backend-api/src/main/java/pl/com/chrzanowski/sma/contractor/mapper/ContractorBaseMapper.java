@@ -2,7 +2,7 @@ package pl.com.chrzanowski.sma.contractor.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
@@ -10,7 +10,7 @@ import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring",uses = {CompanyMapper.class, UserAuditMapper.class})
+@Mapper(componentModel = "spring",uses = {CompanyBaseMapper.class, UserAuditMapper.class})
 public interface ContractorBaseMapper {
 
     @Mapping(source = "createdBy", target = "createdBy")

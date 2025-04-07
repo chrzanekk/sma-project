@@ -18,7 +18,7 @@ import pl.com.chrzanowski.sma.common.security.SecurityUtils;
 import pl.com.chrzanowski.sma.common.security.service.UserDetailsImpl;
 import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserTokenService userTokenService;
     private final SendEmailService sentEmailService;
-    private final CompanyMapper companyMapper;
+    private final CompanyBaseMapper companyBaseMapper;
 
     public UserServiceImpl(UserDao userDao,
                            UserMapper userMapper,
                            RoleService roleService, RoleMapper roleMapper,
-                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyMapper companyMapper) {
+                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyBaseMapper companyBaseMapper) {
         this.userDao = userDao;
         this.userMapper = userMapper;
         this.roleService = roleService;
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
         this.userTokenService = userTokenService;
         this.encoder = encoder;
         this.sentEmailService = sentEmailService;
-        this.companyMapper = companyMapper;
+        this.companyBaseMapper = companyBaseMapper;
     }
 
     @Override
@@ -276,7 +276,7 @@ public class UserServiceImpl implements UserService {
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         List<CompanyBaseDTO> currentCompanies;
         if (currentUser.getCompanies() != null && !currentUser.getCompanies().isEmpty()) {
-            currentCompanies = currentUser.getCompanies().stream().map(companyMapper::toDto).toList();
+            currentCompanies = currentUser.getCompanies().stream().map(companyBaseMapper::toDto).toList();
         } else {
             currentCompanies = Collections.emptyList();
         }

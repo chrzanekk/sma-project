@@ -85,13 +85,6 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
-    public List<ContactBaseDTO> findAll() {
-        log.debug("Find all contacts");
-        List<Contact> contacts = contactDao.findAll();
-        return contactBaseMapper.toDtoList(contacts);
-    }
-
-    @Override
     public void delete(Long id) {
         log.debug("Delete contact: {}", id);
         contactDao.deleteById(id);

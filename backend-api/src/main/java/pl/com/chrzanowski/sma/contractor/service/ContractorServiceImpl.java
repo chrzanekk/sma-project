@@ -226,13 +226,6 @@ public class ContractorServiceImpl implements ContractorService {
     }
 
     @Override
-    public List<ContractorDTO> findAll() {
-        log.debug("Find all contractors.");
-        List<Contractor> contractorList = contractorDao.findAll();
-        return contractorMapper.toDtoList(contractorList);
-    }
-
-    @Override
     public void delete(Long id) {
         log.debug("Delete contractor by id: {}", id);
         contractorDao.deleteById(id);

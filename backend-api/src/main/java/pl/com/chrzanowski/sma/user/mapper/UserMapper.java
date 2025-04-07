@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -15,11 +15,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {RoleMapper.class, CompanyMapper.class})
+@Mapper(componentModel = "spring", uses = {RoleMapper.class, CompanyBaseMapper.class})
 public abstract class UserMapper implements EntityMapper<UserDTO, User> {
 
     @Autowired
-    protected CompanyMapper companyMapper;
+    protected CompanyBaseMapper companyBaseMapper;
 
     @Mapping(target = "roles", source = "roles")
     @Mapping(target = "companies", expression = "java(mapCompanies(user.getCompanies()))")
@@ -48,7 +48,7 @@ public abstract class UserMapper implements EntityMapper<UserDTO, User> {
                 .collect(Collectors.toSet());
     }
     // Metoda, którą MapStruct wstrzyknie – pozwala uzyskać dostęp do bean CompanyMapper
-    public CompanyMapper getCompanyMapper() {
-        return companyMapper;
+    public CompanyBaseMapper getCompanyMapper() {
+        return companyBaseMapper;
     }
 }

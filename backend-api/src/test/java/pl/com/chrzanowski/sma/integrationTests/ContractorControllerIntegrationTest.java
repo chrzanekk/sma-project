@@ -20,7 +20,7 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
@@ -82,7 +82,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     private CompanyRepository companyRepository;
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyBaseMapper companyBaseMapper;
 
     private ContractorDTO firstContractor;
 
@@ -186,7 +186,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .supplier(true)
                 .scaffoldingUser(true)
                 .contacts(Set.of(contactBaseDTO))
-                .company(companyMapper.toDto(company))
+                .company(companyBaseMapper.toDto(company))
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();
@@ -300,7 +300,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .supplier(true)
                 .scaffoldingUser(true)
                 .contacts(firstContractor.getContacts())
-                .company(companyMapper.toDto(company))
+                .company(companyBaseMapper.toDto(company))
                 .createdDatetime(Instant.now())
                 .lastModifiedDatetime(Instant.now())
                 .build();

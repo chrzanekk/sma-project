@@ -3,9 +3,8 @@ package pl.com.chrzanowski.sma.contact.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
-import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {CompanyMapper.class, UserAuditMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class, UserAuditMapper.class})
 public interface ContactBaseMapper {
 
     @Mapping(source = "createdBy", target = "createdBy")

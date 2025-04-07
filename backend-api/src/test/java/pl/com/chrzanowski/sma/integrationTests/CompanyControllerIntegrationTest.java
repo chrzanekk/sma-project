@@ -18,7 +18,7 @@ import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.company.service.CompanyService;
@@ -59,7 +59,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     private CompanyService companyService;
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyBaseMapper companyBaseMapper;
 
     @Autowired
     private UserHelper userHelper;
@@ -127,7 +127,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .createdBy(user)
                 .build();
         Company savedCompany = companyRepository.save(company);
-        return companyMapper.toDto(savedCompany);
+        return companyBaseMapper.toDto(savedCompany);
     }
 
     @Test

@@ -6,7 +6,7 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
@@ -15,7 +15,7 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
 @Mapper(componentModel = "spring",
-        uses = {UserAuditMapper.class, ContactBaseMapper.class, CompanyMapper.class},
+        uses = {UserAuditMapper.class, ContactBaseMapper.class, CompanyBaseMapper.class},
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public abstract class ContractorMapper implements EntityMapper<ContractorDTO, Contractor> {
 
