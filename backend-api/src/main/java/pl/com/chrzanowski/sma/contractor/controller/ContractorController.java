@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorAuditableDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryService;
@@ -39,17 +41,17 @@ public class ContractorController {
     }
 
     @GetMapping("/find")
-    public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
+    public ResponseEntity<List<ContractorAuditableDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
         log.debug("REST request to get all contractors by filter: {}", contractorFilter);
-        List<ContractorDTO> contractorDTOS = contractorQueryService.findByFilter(contractorFilter);
+        List<ContractorAuditableDTO> contractorDTOS = contractorQueryService.findByFilter(contractorFilter);
         return ResponseEntity.ok().body(contractorDTOS);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<ContractorDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
+    public ResponseEntity<List<ContractorAuditableDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
                                                                                 Pageable pageable) {
         log.debug("REST request to get all contractors by filter with page: {}", contractorFilter);
-        Page<ContractorDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
+        Page<ContractorAuditableDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
         HttpHeaders headers =
                 PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(),
                         page);
@@ -64,11 +66,11 @@ public class ContractorController {
     }
 
     @GetMapping("/contractor/{contractorId}/contacts")
-    public ResponseEntity<List<ContactBaseDTO>> getPagedContactsForContractor(
+    public ResponseEntity<List<ContactDTO>> getPagedContactsForContractor(
             @PathVariable Long contractorId,
             Pageable pageable) {
 
-        Page<ContactBaseDTO> page = contactQueryService.findByContractorId(contractorId, pageable);
+        Page<ContactDTO> page = contactQueryService.findByContractorId(contractorId, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
                 ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

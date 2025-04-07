@@ -10,10 +10,10 @@ import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
-import pl.com.chrzanowski.sma.contact.dto.AbstractContactDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
-import pl.com.chrzanowski.sma.contact.mapper.ContactMapper;
+import pl.com.chrzanowski.sma.contact.mapper.ContactDTOMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 
 import java.util.Collection;
@@ -29,59 +29,59 @@ public class ContactServiceImpl implements ContactService {
     private final Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
 
     private final ContactDao contactDao;
-    private final ContactMapper contactMapper;
     private final ContactBaseMapper contactBaseMapper;
+    private final ContactDTOMapper contactDTOMapper;
 
-    public ContactServiceImpl(ContactDao contactDao, ContactMapper contactMapper, ContactBaseMapper contactBaseMapper) {
+    public ContactServiceImpl(ContactDao contactDao, ContactBaseMapper contactBaseMapper, ContactDTOMapper contactDTOMapper) {
         this.contactDao = contactDao;
-        this.contactMapper = contactMapper;
         this.contactBaseMapper = contactBaseMapper;
+        this.contactDTOMapper = contactDTOMapper;
     }
 
     @Override
     @Transactional
-    public ContactBaseDTO save(ContactBaseDTO contactBaseDTO) {
+    public ContactDTO save(ContactDTO contactBaseDTO) {
         log.debug("Request to save Contact : {}", contactBaseDTO.getId());
         validateRequiredFields(contactBaseDTO);
-        Contact contact = contactBaseMapper.toEntity(contactBaseDTO);
+        Contact contact = contactDTOMapper.toEntity(contactBaseDTO);
         Contact savedContact = contactDao.save(contact);
-        return contactBaseMapper.toDto(savedContact);
+        return contactDTOMapper.toDto(savedContact);
     }
 
     //todo test this method in service and dao
     @Transactional
     @Override
-    public List<ContactBaseDTO> saveAllBaseContacts(Collection<ContactBaseDTO> ContactBaseDTOs) {
+    public List<ContactDTO> saveAllBaseContacts(Collection<ContactDTO> contactDTOS) {
         log.debug("Request to save Contacts.");
-        List<Contact> contacts = ContactBaseDTOs.stream()
+        List<Contact> contacts = contactDTOS.stream()
                 .peek(this::validateRequiredFields)
-                .map(contactBaseMapper::toEntity)
+                .map(contactDTOMapper::toEntity)
                 .collect(Collectors.toList());
 
         List<Contact> savedContacts = contactDao.saveAll(contacts);
 
         return savedContacts.stream()
-                .map(contactBaseMapper::toDto)
+                .map(contactDTOMapper::toDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public ContactBaseDTO update(ContactBaseDTO ContactBaseDTO) {
-        log.debug("Update contact: {}", ContactBaseDTO.getId());
-        validateRequiredFields(ContactBaseDTO);
-        Contact existingContact = contactDao.findById(ContactBaseDTO.getId()).orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + ContactBaseDTO.getId() + " not found"));
+    public ContactDTO update(ContactDTO contactDTO) {
+        log.debug("Update contact: {}", contactDTO.getId());
+        validateRequiredFields(contactDTO);
+        Contact existingContact = contactDao.findById(contactDTO.getId()).orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + contactDTO.getId() + " not found"));
 
-        contactBaseMapper.updateContactFromDto(ContactBaseDTO, existingContact);
+        contactDTOMapper.updateFromDto(contactDTO, existingContact);
         Contact updatedContact = contactDao.save(existingContact);
-        return contactBaseMapper.toDto(updatedContact);
+        return contactDTOMapper.toDto(updatedContact);
     }
 
     @Override
-    public ContactBaseDTO findById(Long id) {
+    public ContactDTO findById(Long id) {
         log.debug("Find contact by id: {}", id);
         Optional<Contact> optionalContact = contactDao.findById(id);
-        return contactBaseMapper.toDto(optionalContact.orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + id + " not found")));
+        return contactDTOMapper.toDto(optionalContact.orElseThrow(() -> new ContactException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact with id " + id + " not found")));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class ContactServiceImpl implements ContactService {
         contactDao.deleteById(id);
     }
 
-    private void validateRequiredFields(AbstractContactDTO contactBaseDTO) {
+    private void validateRequiredFields(ContactBaseDTO contactBaseDTO) {
         if (StringUtils.isBlank(contactBaseDTO.getFirstName())) {
             throw new PropertyMissingException(ContactErrorCode.FIRST_NAME_MISSING, "First name must not be empty", Map.of("firstName", contactBaseDTO.getFirstName()));
         }

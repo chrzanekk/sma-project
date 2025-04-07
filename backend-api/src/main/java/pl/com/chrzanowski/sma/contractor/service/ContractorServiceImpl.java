@@ -12,13 +12,14 @@ import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.util.*;
@@ -30,17 +31,17 @@ public class ContractorServiceImpl implements ContractorService {
 
     private final Logger log = LoggerFactory.getLogger(ContractorServiceImpl.class);
     private final ContractorDao contractorDao;
-    private final ContractorMapper contractorMapper;
+    private final ContractorDTOMapper contractorDTOMapper;
     private final ContactService contactService;
     private final ContactDao contactDao;
     private final ContactBaseMapper contactBaseMapper;
 
 
     public ContractorServiceImpl(ContractorDao contractorDao,
-                                 ContractorMapper contractorMapper,
+                                 ContractorDTOMapper contractorDTOMapper,
                                  ContactService contactService, ContactDao contactDao, ContactBaseMapper contactBaseMapper) {
         this.contractorDao = contractorDao;
-        this.contractorMapper = contractorMapper;
+        this.contractorDTOMapper = contractorDTOMapper;
         this.contactService = contactService;
         this.contactDao = contactDao;
         this.contactBaseMapper = contactBaseMapper;
@@ -52,15 +53,15 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Save contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany());
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany(), contractorDTO);
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
-        Contractor contractor = contractorMapper.toEntity(contractorWithSavedContacts);
+        Contractor contractor = contractorDTOMapper.toEntity(contractorWithSavedContacts);
 
         setPersistedContacts(contractorWithSavedContacts, contractor);
 
         Contractor savedContractor = contractorDao.save(contractor);
-        return contractorMapper.toDto(savedContractor);
+        return contractorDTOMapper.toDto(savedContractor);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Update contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany());
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany(), contractorDTO);
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
         Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId())
@@ -91,10 +92,10 @@ public class ContractorServiceImpl implements ContractorService {
             existingContractor.getContacts().add(contact);
         }
 
-        contractorMapper.updateContractorFromDto(contractorWithSavedContacts, existingContractor);
+        contractorDTOMapper.updateFromDto(contractorWithSavedContacts, existingContractor);
 
         Contractor savedContractor = contractorDao.save(existingContractor);
-        return contractorMapper.toDto(savedContractor);
+        return contractorDTOMapper.toDto(savedContractor);
     }
 
 
@@ -125,21 +126,17 @@ public class ContractorServiceImpl implements ContractorService {
                 .customer(contractorDTO.getCustomer())
                 .supplier(contractorDTO.getSupplier())
                 .scaffoldingUser(contractorDTO.getScaffoldingUser())
-                .createdDatetime(contractorDTO.getCreatedDatetime())
-                .lastModifiedDatetime(contractorDTO.getLastModifiedDatetime())
-                .createdBy(contractorDTO.getCreatedBy())
-                .modifiedBy(contractorDTO.getModifiedBy())
                 .company(contractorDTO.getCompany())
                 .contacts(updatedContacts).build();
     }
 
-    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts, CompanyBaseDTO company) {
+    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts, CompanyBaseDTO company, ContractorDTO contractorDTO) {
         if (contacts != null) {
             List<ContactBaseDTO> filtered = contacts.stream().filter(contactBaseDTO -> contactBaseDTO.getId() != null).toList();
             List<ContactBaseDTO> result = new ArrayList<>(filtered);
-            List<ContactBaseDTO> newContacts = contacts.stream()
+            List<ContactDTO> newContacts = contacts.stream()
                     .filter(contact -> contact.getId() == null)
-                    .map(contact -> ContactBaseDTO.builder()
+                    .map(contact -> ContactDTO.builder()
                             .id(contact.getId())
                             .firstName(contact.getFirstName())
                             .lastName(contact.getLastName())
@@ -147,15 +144,12 @@ public class ContractorServiceImpl implements ContractorService {
                             .email(contact.getEmail())
                             .additionalInfo(contact.getAdditionalInfo())
                             .company(company)
-                            .createdDatetime(contact.getCreatedDatetime())
-                            .lastModifiedDatetime(contact.getLastModifiedDatetime())
-                            .createdBy(contact.getCreatedBy())
-                            .modifiedBy(contact.getModifiedBy())
+                            .contractor(contractorDTO)
                             .build())
                     .collect(Collectors.toList());
 
             if (!newContacts.isEmpty()) {
-                List<ContactBaseDTO> savedContacts = contactService.saveAllBaseContacts(newContacts);
+                List<ContactDTO> savedContacts = contactService.saveAllBaseContacts(newContacts);
                 result.addAll(savedContacts);
             }
             return new HashSet<>(result);
@@ -172,7 +166,7 @@ public class ContractorServiceImpl implements ContractorService {
                         "Contractor not found with id: " + updateDTO.getId()));
 
         // zaktualizuj dane kontrahenta (nazwa, adres, itp.) mapperem
-        contractorMapper.updateContractorFromUpdateDto(updateDTO, existingContractor);
+        contractorDTOMapper.updateFromUpdateDto(updateDTO, existingContractor);
 
         // Dodaj nowe kontakty
         if (updateDTO.getAddedContacts() != null) {
@@ -214,14 +208,14 @@ public class ContractorServiceImpl implements ContractorService {
 
         // zapisujemy zaktualizowanego kontrahenta
         Contractor savedContractor = contractorDao.save(existingContractor);
-        return contractorMapper.toDto(savedContractor);
+        return contractorDTOMapper.toDto(savedContractor);
     }
 
     @Override
     public ContractorDTO findById(Long id) {
         log.debug("Find contractor by id: {}", id);
         Optional<Contractor> optionalContractor = contractorDao.findById(id);
-        return contractorMapper.toDto(optionalContractor.orElseThrow(()
+        return contractorDTOMapper.toDto(optionalContractor.orElseThrow(()
                 -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found")));
     }
 

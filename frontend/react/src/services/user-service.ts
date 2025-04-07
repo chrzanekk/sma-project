@@ -30,6 +30,7 @@ export const getUserById = async (id: number) => {
     try {
         const response = await api.get(`${USERS_API_BASE}/getById/${id}`, getAuthConfig());
         const userDTO: UserDTO = response.data;
+        console.table(userDTO)
         return userDTO;
     } catch (err) {
         throw err;

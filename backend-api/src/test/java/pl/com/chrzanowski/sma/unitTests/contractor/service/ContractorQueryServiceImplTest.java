@@ -12,8 +12,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorAuditableDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryServiceImpl;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
@@ -33,7 +34,7 @@ class ContractorQueryServiceImplTest {
     private ContractorDao contractorDao;
 
     @Mock
-    private ContractorMapper contractorMapper;
+    private ContractorDTOMapper contractorMapper;
 
     @InjectMocks
     private ContractorQueryServiceImpl contractorQueryService;
@@ -69,7 +70,7 @@ class ContractorQueryServiceImplTest {
         when(contractorDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.singletonList(contractor));
         when(contractorMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorDTO));
 
-        List<ContractorDTO> result = contractorQueryService.findByFilter(filter);
+        List<ContractorAuditableDTO> result = contractorQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.size());

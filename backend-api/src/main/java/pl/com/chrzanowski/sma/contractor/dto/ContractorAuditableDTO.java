@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.company.dto;
+package pl.com.chrzanowski.sma.contractor.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.EqualsAndHashCode;
@@ -11,8 +11,9 @@ import pl.com.chrzanowski.sma.common.audit.AuditableDTO;
 @Jacksonized
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @ToString(callSuper = true)
-public class CompanyAuditableDTO extends AuditableDTO {
+public class ContractorAuditableDTO extends AuditableDTO {
     @JsonUnwrapped
-    private final CompanyDTO base;
+    private ContractorDTO base;
 }

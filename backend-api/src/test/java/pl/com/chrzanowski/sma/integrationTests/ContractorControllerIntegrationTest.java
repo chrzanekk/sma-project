@@ -27,7 +27,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
@@ -73,7 +73,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     private UserMapper userMapper;
 
     @Autowired
-    private ContractorMapper contractorMapper;
+    private ContractorDTOMapper contractorMapper;
 
     @Autowired
     private UserService userService;
@@ -187,8 +187,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .scaffoldingUser(true)
                 .contacts(Set.of(contactBaseDTO))
                 .company(companyBaseMapper.toDto(company))
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         List<Contractor> contractorListBefore = contractorRepository.findAll();
@@ -301,8 +299,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .scaffoldingUser(true)
                 .contacts(firstContractor.getContacts())
                 .company(companyBaseMapper.toDto(company))
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         ContractorDTO updatedContractor = webTestClient.put()
@@ -425,8 +421,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.post()
@@ -453,8 +447,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.put()

@@ -15,7 +15,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
 import pl.com.chrzanowski.sma.user.model.User;
@@ -40,7 +40,7 @@ class ContractorServiceImplTest {
     private ContactDao contactDao;
 
     @Mock
-    private ContractorMapper contractorMapper;
+    private ContractorDTOMapper contractorMapper;
 
     @Mock
     private UserService userService;
@@ -72,7 +72,6 @@ class ContractorServiceImplTest {
                 .customer(true)
                 .supplier(false)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
                 .contacts(Set.of(ContactBaseDTO.builder().id(42L).build()))
                 .build();
 

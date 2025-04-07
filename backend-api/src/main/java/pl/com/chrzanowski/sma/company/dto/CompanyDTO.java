@@ -8,7 +8,6 @@ import lombok.extern.jackson.Jacksonized;
 
 @Jacksonized
 @SuperBuilder
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class CompanyDTO extends CompanyBaseDTO {

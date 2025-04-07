@@ -134,8 +134,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     void shouldAddCompanySuccessfully() {
         CompanyBaseDTO newCompany = CompanyBaseDTO.builder()
                 .name("New Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         List<Company> companiesBefore = companyRepository.findAll();
@@ -218,8 +216,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         CompanyBaseDTO updateCompany = CompanyBaseDTO.builder()
                 .id(firstCompany.getId())
                 .name("Updated Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         CompanyBaseDTO updatedCompany = webTestClient.put()
@@ -331,8 +327,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     void shouldFailToAddCompanyWithInvalidData() {
         CompanyBaseDTO invalidCompany = CompanyBaseDTO.builder()
                 .name("") // pole wymagane, brak nazwy
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.post()
@@ -349,8 +343,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         CompanyBaseDTO nonExistentCompany = CompanyBaseDTO.builder()
                 .id(9999L) // zakładamy, że taki ID nie istnieje
                 .name("Nonexistent Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.put()

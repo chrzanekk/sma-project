@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
+import pl.com.chrzanowski.sma.contact.dto.ContactAuditableDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
@@ -35,38 +36,38 @@ public class ContactController {
 
 
     @GetMapping("/find")
-    public ResponseEntity<List<ContactBaseDTO>> getAllContactsByFilter(ContactFilter filter) {
+    public ResponseEntity<List<ContactAuditableDTO>> getAllContactsByFilter(ContactFilter filter) {
         log.debug("REST request to get all contacts by filter: {}", filter);
-        List<ContactBaseDTO> contactBaseDTOS = contactQueryService.findByFilter(filter);
+        List<ContactAuditableDTO> contactBaseDTOS = contactQueryService.findByFilter(filter);
         return ResponseEntity.ok().body(contactBaseDTOS);
     }
 
     @GetMapping("/page")
-    public ResponseEntity<List<ContactBaseDTO>> getAllContactsByFilterAndPage(ContactFilter filter, Pageable pageable) {
+    public ResponseEntity<List<ContactAuditableDTO>> getAllContactsByFilterAndPage(ContactFilter filter, Pageable pageable) {
         log.debug("REST request to get all contacts by filter and page: {}", filter);
-        Page<ContactBaseDTO> page = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactAuditableDTO> page = contactQueryService.findByFilter(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<ContactBaseDTO> getContactById(@PathVariable Long id) {
+    public ResponseEntity<ContactDTO> getContactById(@PathVariable Long id) {
         log.debug("REST request to get Contact : {}", id);
-        ContactBaseDTO contactDTO = contactService.findById(id);
+        ContactDTO contactDTO = contactService.findById(id);
         return ResponseEntity.ok().body(contactDTO);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<ContactBaseDTO> addContact(@RequestBody ContactBaseDTO contactDTO) {
+    public ResponseEntity<ContactDTO> addContact(@RequestBody ContactDTO contactDTO) {
         log.debug("REST request to add Contact : {}", contactDTO);
-        ContactBaseDTO savedContactBaseDTO = contactService.save(contactDTO);
+        ContactDTO savedContactBaseDTO = contactService.save(contactDTO);
         return ResponseEntity.ok().body(savedContactBaseDTO);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ContactBaseDTO> updateContact(@RequestBody ContactBaseDTO contactDTO) {
+    public ResponseEntity<ContactDTO> updateContact(@RequestBody ContactDTO contactDTO) {
         log.debug("REST request to update Contact : {}", contactDTO);
-        ContactBaseDTO updatedContactDTO = contactService.update(contactDTO);
+        ContactDTO updatedContactDTO = contactService.update(contactDTO);
         return ResponseEntity.ok().body(updatedContactDTO);
     }
 
@@ -78,8 +79,8 @@ public class ContactController {
     }
 
     @GetMapping("/free/page")
-    public ResponseEntity<Page<ContactBaseDTO>> getFreeContactsPage(ContactFilter filter, Pageable pageable) {
-        Page<ContactBaseDTO> page = contactQueryService.findUnassignedContacts(filter, pageable);
+    public ResponseEntity<Page<ContactDTO>> getFreeContactsPage(ContactFilter filter, Pageable pageable) {
+        Page<ContactDTO> page = contactQueryService.findUnassignedContacts(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page);
     }

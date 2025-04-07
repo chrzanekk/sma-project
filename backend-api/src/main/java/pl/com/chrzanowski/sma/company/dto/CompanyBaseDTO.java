@@ -10,11 +10,10 @@ import lombok.extern.jackson.Jacksonized;
 @Jacksonized
 @SuperBuilder
 @EqualsAndHashCode
-@NoArgsConstructor
 @ToString
 @Getter
 public class CompanyBaseDTO {
-    protected Long id;
-    protected String name;
-    protected String additionalInfo;
+    protected final Long id;
+    protected final String name;
+    protected final String additionalInfo;
 }

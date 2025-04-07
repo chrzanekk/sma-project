@@ -27,6 +27,7 @@ import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
+import pl.com.chrzanowski.sma.user.mapper.UserDTOMapper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
     private final static String USER_WITH_ID_NOT_FOUND = "user with id %d not found";
 
     private final UserDao userDao;
-    private final UserMapper userMapper;
+    private final UserDTOMapper userDTOMapper;
     private final RoleService roleService;
     private final RoleMapper roleMapper;
     private final PasswordEncoder encoder;
@@ -56,11 +57,11 @@ public class UserServiceImpl implements UserService {
     private final CompanyBaseMapper companyBaseMapper;
 
     public UserServiceImpl(UserDao userDao,
-                           UserMapper userMapper,
+                           UserDTOMapper userDTOMapper,
                            RoleService roleService, RoleMapper roleMapper,
                            PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyBaseMapper companyBaseMapper) {
         this.userDao = userDao;
-        this.userMapper = userMapper;
+        this.userDTOMapper = userDTOMapper;
         this.roleService = roleService;
         this.roleMapper = roleMapper;
         this.userTokenService = userTokenService;
@@ -131,13 +132,13 @@ public class UserServiceImpl implements UserService {
                 .roles(roleDTOSet)
                 .build();
 
-        User userEntity = userMapper.toEntity(userDTOToSave);
+        User userEntity = userDTOMapper.toEntity(userDTOToSave);
         Set<Role> managedRoles = userEntity.getRoles().stream()
                 .map(role -> roleMapper.toEntity(roleService.findByName(role.getName())))
                 .collect(Collectors.toSet());
         userEntity.setRoles(managedRoles);
 
-        return userMapper.toDto(userDao.save(userEntity));
+        return userDTOMapper.toDto(userDao.save(userEntity));
     }
 
 
@@ -171,7 +172,7 @@ public class UserServiceImpl implements UserService {
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
 
-        return userMapper.toDto(userDao.save(userMapper.toEntity(updatedUserDTO)));
+        return userDTOMapper.toDto(userDao.save(userDTOMapper.toEntity(updatedUserDTO)));
     }
 
     @Override
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService {
         builder.password(encodedPassword);
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
-        userDao.save(userMapper.toEntity(updatedUserDTO));
+        userDao.save(userDTOMapper.toEntity(updatedUserDTO));
     }
 
 
@@ -208,7 +209,7 @@ public class UserServiceImpl implements UserService {
         builder.roles(roleSet);
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
-        userDao.save(userMapper.toEntity(updatedUserDTO));
+        userDao.save(userDTOMapper.toEntity(updatedUserDTO));
         return updatedUserDTO;
     }
 
@@ -218,14 +219,14 @@ public class UserServiceImpl implements UserService {
     public UserDTO findById(Long id) {
         log.debug("Find user by id: {}", id);
         Optional<User> optionalUser = userDao.findById(id);
-        return userMapper.toDto(optionalUser.orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_FOUND, id))));
+        return userDTOMapper.toDto(optionalUser.orElseThrow(() -> new UserNotFoundException(String.format(USER_WITH_ID_NOT_FOUND, id))));
     }
 
     @Override
     @Transactional
     public List<UserDTO> findAll() {
         log.debug("Fetching all users. ");
-        return userMapper.toDtoList(userDao.findAll());
+        return userDTOMapper.toDtoList(userDao.findAll());
     }
 
     @Override
@@ -243,7 +244,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Fetching user by email: {} ", email);
         User user = userDao.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found", Map.of("email", email)));
-        return userMapper.toDto(user);
+        return userDTOMapper.toDto(user);
     }
 
     @Override
@@ -251,7 +252,7 @@ public class UserServiceImpl implements UserService {
         log.debug("Fetching user by login: {} ", login);
         User user = userDao.findByLogin(login)
                 .orElseThrow(() -> new UserNotFoundException("User not found", Map.of("login", login)));
-        return userMapper.toDto(user);
+        return userDTOMapper.toDto(user);
     }
 
     @Override
@@ -320,7 +321,7 @@ public class UserServiceImpl implements UserService {
         builder.password(encodedPassword);
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();
-        userDao.save(userMapper.toEntity(updatedUserDTO));
+        userDao.save(userDTOMapper.toEntity(updatedUserDTO));
     }
 
     private boolean lockUserWithoutAdminRole(UserDTO userDTO) {

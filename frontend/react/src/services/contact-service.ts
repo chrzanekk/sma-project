@@ -18,6 +18,7 @@ export const getContactsByFilter = async (filter: Record<string, any>) => {
         });
         const response = await api.get(`${CONTACTS_API_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
+        console.table(response)
         return {
             contacts: items as FetchableContactDTO[],
             totalPages

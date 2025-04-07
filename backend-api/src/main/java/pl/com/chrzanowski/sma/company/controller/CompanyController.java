@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.company.dto.CompanyAuditableDTO;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
 import pl.com.chrzanowski.sma.company.service.CompanyQueryService;
 import pl.com.chrzanowski.sma.company.service.CompanyService;
 import pl.com.chrzanowski.sma.company.service.filter.CompanyFilter;
@@ -48,23 +49,23 @@ public class CompanyController {
     }
 
     @GetMapping("/getById/{id}")
-    public ResponseEntity<CompanyBaseDTO> getById(@Valid @PathVariable Long id) {
+    public ResponseEntity<CompanyDTO> getById(@Valid @PathVariable Long id) {
         log.debug("REST: request to get company by id: {}", id);
-        CompanyBaseDTO companyBaseDTO = companyService.findById(id);
-        return ResponseEntity.ok(companyBaseDTO);
+        CompanyDTO companyDTO = companyService.findById(id);
+        return ResponseEntity.ok(companyDTO);
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CompanyBaseDTO> add(@RequestBody CompanyBaseDTO companyBaseDTO) {
-        log.debug("REST: request to save company: {}", companyBaseDTO.getId());
-        CompanyBaseDTO companyBaseDTOSaved = companyService.save(companyBaseDTO);
-        return ResponseEntity.ok(companyBaseDTOSaved);
+    public ResponseEntity<CompanyDTO> add(@RequestBody CompanyDTO companyDTO) {
+        log.debug("REST: request to save company: {}", companyDTO.getId());
+        CompanyDTO companyDTOSaved = companyService.save(companyDTO);
+        return ResponseEntity.ok(companyDTOSaved);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<CompanyBaseDTO> update(@RequestBody CompanyBaseDTO companyBaseDTO) {
-        log.debug("REST: request to update company: {}", companyBaseDTO.getId());
-        CompanyBaseDTO companyBaseDTOUpdated = companyService.update(companyBaseDTO);
+    public ResponseEntity<CompanyBaseDTO> update(@RequestBody CompanyDTO companyDTO) {
+        log.debug("REST: request to update company: {}", companyDTO.getId());
+        CompanyDTO companyBaseDTOUpdated = companyService.update(companyDTO);
         return ResponseEntity.ok(companyBaseDTOUpdated);
     }
 

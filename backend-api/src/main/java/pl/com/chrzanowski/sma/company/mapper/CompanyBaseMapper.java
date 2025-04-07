@@ -15,7 +15,7 @@ public interface CompanyBaseMapper extends EntityMapper<CompanyBaseDTO, Company>
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
-    void updateFromDto(CompanyBaseDTO dto, @MappingTarget Company company);
+    void updateFromBaseDto(CompanyBaseDTO dto, @MappingTarget Company company);
 
     CompanyBaseDTO toDto(Company company);
 
