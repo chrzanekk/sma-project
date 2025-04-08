@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface ContactService extends BaseCrudService<ContactDTO, Long> {
 
-    List<ContactBaseDTO> saveAllBaseContacts(Collection<ContactBaseDTO> contactDTOs);
+    List<ContactDTO> saveAllBaseContacts(Collection<ContactDTO> contactDTOs);
 }

@@ -15,15 +15,12 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
-import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,7 +37,7 @@ class ContractorServiceImplTest {
     private ContactDao contactDao;
 
     @Mock
-    private ContractorMapper contractorMapper;
+    private ContractorDTOMapper contractorMapper;
 
     @Mock
     private UserService userService;
@@ -72,7 +69,6 @@ class ContractorServiceImplTest {
                 .customer(true)
                 .supplier(false)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
                 .contacts(Set.of(ContactBaseDTO.builder().id(42L).build()))
                 .build();
 
@@ -142,7 +138,7 @@ class ContractorServiceImplTest {
         assertNotNull(result);
         assertEquals("Contractor 1", result.getName());
 
-        verify(contractorMapper, times(1)).updateContractorFromDto(any(ContractorDTO.class), any(Contractor.class));
+        verify(contractorMapper, times(1)).updateFromDto(any(ContractorDTO.class), any(Contractor.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
         verify(contractorMapper, times(1)).toDto(any(Contractor.class));
     }
@@ -168,20 +164,6 @@ class ContractorServiceImplTest {
         assertThrows(ContractorException.class, () -> contractorService.findById(1L));
 
         verify(contractorDao, times(1)).findById(1L);
-    }
-
-    @Test
-    void testFindAllSuccess() {
-        when(contractorDao.findAll()).thenReturn(Collections.singletonList(contractor));
-        when(contractorMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorDTO));
-
-        List<ContractorDTO> result = contractorService.findAll();
-
-        assertNotNull(result);
-        assertEquals(1, result.size());
-
-        verify(contractorDao, times(1)).findAll();
-        verify(contractorMapper, times(1)).toDtoList(anyList());
     }
 
     @Test

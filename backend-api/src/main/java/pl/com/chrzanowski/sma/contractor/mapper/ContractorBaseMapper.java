@@ -2,38 +2,25 @@ package pl.com.chrzanowski.sma.contractor.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import org.mapstruct.MappingTarget;
+import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+@Mapper(componentModel = "spring")
+public interface ContractorBaseMapper extends EntityMapper<ContractorBaseDTO, Contractor> {
 
-@Mapper(componentModel = "spring",uses = {CompanyMapper.class, UserAuditMapper.class})
-public interface ContractorBaseMapper {
-
-    @Mapping(source = "createdBy", target = "createdBy")
-    @Mapping(source = "modifiedBy", target = "modifiedBy")
-    @Mapping(source = "company", target = "company")
-    ContractorBaseDTO toDto(Contractor contractor);
-
-    @Mapping(source = "createdBy", target = "createdBy")
-    @Mapping(source = "modifiedBy", target = "modifiedBy")
-    @Mapping(source = "company",target = "company")
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
     Contractor toEntity(ContractorBaseDTO dto);
 
-    default Set<ContractorBaseDTO> toDtoSet(Set<Contractor> contractors) {
-        if (contractors == null) {
-            return null;
-        }
-        return contractors.stream().map(this::toDto).collect(Collectors.toSet());
-    }
+    ContractorBaseDTO toDto(Contractor contractor);
 
-    default Set<Contractor> toEntitySet(Set<ContractorBaseDTO> contractors) {
-        if (contractors == null) {
-            return null;
-        }
-        return contractors.stream().map(this::toEntity).collect(Collectors.toSet());
-    }
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    void updateFromBaseDto(ContractorBaseDTO dto, @MappingTarget Contractor entity);
 }

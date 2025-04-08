@@ -20,14 +20,14 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
@@ -73,7 +73,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     private UserMapper userMapper;
 
     @Autowired
-    private ContractorMapper contractorMapper;
+    private ContractorDTOMapper contractorMapper;
 
     @Autowired
     private UserService userService;
@@ -82,7 +82,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     private CompanyRepository companyRepository;
 
     @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyBaseMapper companyBaseMapper;
 
     private ContractorDTO firstContractor;
 
@@ -128,7 +128,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 "00-001", "Warsaw", Country.POLAND, firstRegisteredUser);
 
         createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
-                "00-002", "Krakow", Country.POLAND, secondRegisteredUser);
+                "00-002", "Krakow", Country.ENGLAND, secondRegisteredUser);
         companyRepository.deleteAll();
         company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
         company = companyRepository.saveAndFlush(company);
@@ -186,9 +186,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .supplier(true)
                 .scaffoldingUser(true)
                 .contacts(Set.of(contactBaseDTO))
-                .company(companyMapper.toDto(company))
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
+                .company(companyBaseMapper.toDto(company))
                 .build();
 
         List<Contractor> contractorListBefore = contractorRepository.findAll();
@@ -300,9 +298,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .supplier(true)
                 .scaffoldingUser(true)
                 .contacts(firstContractor.getContacts())
-                .company(companyMapper.toDto(company))
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
+                .company(companyBaseMapper.toDto(company))
                 .build();
 
         ContractorDTO updatedContractor = webTestClient.put()
@@ -344,13 +340,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .exchange()
                 .expectStatus().isOk();
 
-        List<ContractorBaseDTO> contractors = webTestClient.get()
-                .uri("/api/contractors/all")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(ContractorBaseDTO.class)
-                .returnResult().getResponseBody();
+        List<Contractor> contractors = contractorRepository.findAll();
 
         assertThat(contractors).hasSize(1);
     }
@@ -425,8 +415,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.post()
@@ -453,8 +441,6 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .customer(true)
                 .supplier(true)
                 .scaffoldingUser(true)
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.put()

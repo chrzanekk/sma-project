@@ -12,13 +12,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorAuditableDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorAuditMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorQueryServiceImpl;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,11 +33,12 @@ class ContractorQueryServiceImplTest {
     private ContractorDao contractorDao;
 
     @Mock
-    private ContractorMapper contractorMapper;
+    private ContractorAuditMapper contractorAuditMapper;
 
     @InjectMocks
     private ContractorQueryServiceImpl contractorQueryService;
 
+    private ContractorAuditableDTO contractorAuditableDTO;
     private ContractorDTO contractorDTO;
     private Contractor contractor;
     private AutoCloseable autoCloseable;
@@ -45,11 +46,12 @@ class ContractorQueryServiceImplTest {
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-
-        contractorDTO = ContractorDTO.builder()
-                .id(1L)
+        contractorDTO = ContractorDTO.builder().id(1L)
                 .name("Workshop 1")
-                .createdDatetime(Instant.now())
+                .build();
+
+        contractorAuditableDTO = ContractorAuditableDTO.builder()
+                .base(contractorDTO)
                 .build();
 
         contractor = new Contractor();
@@ -67,15 +69,15 @@ class ContractorQueryServiceImplTest {
         ContractorFilter filter = new ContractorFilter();
 
         when(contractorDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.singletonList(contractor));
-        when(contractorMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorDTO));
+        when(contractorAuditMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contractorAuditableDTO));
 
-        List<ContractorDTO> result = contractorQueryService.findByFilter(filter);
+        List<ContractorAuditableDTO> result = contractorQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.size());
 
         verify(contractorDao, times(1)).findAll(any(BooleanBuilder.class));
-        verify(contractorMapper, times(1)).toDtoList(anyList());
+        verify(contractorAuditMapper, times(1)).toDtoList(anyList());
     }
 
     @Test
@@ -85,14 +87,14 @@ class ContractorQueryServiceImplTest {
 
         Page<Contractor> workshopPage = new PageImpl<>(Collections.singletonList(contractor));
         when(contractorDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(workshopPage);
-        when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
+        when(contractorAuditMapper.toDto(any(Contractor.class))).thenReturn(contractorAuditableDTO);
 
-        Page<ContractorDTO> result = contractorQueryService.findByFilter(filter, pageable);
+        Page<ContractorAuditableDTO> result = contractorQueryService.findByFilter(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
 
         verify(contractorDao, times(1)).findAll(any(BooleanBuilder.class), any(Pageable.class));
-        verify(contractorMapper, times(1)).toDto(any(Contractor.class));
+        verify(contractorAuditMapper, times(1)).toDto(any(Contractor.class));
     }
 }

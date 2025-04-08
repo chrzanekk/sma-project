@@ -1,20 +1,19 @@
 package pl.com.chrzanowski.sma.contractor.dto;
 
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
-
-import java.util.Set;
+import pl.com.chrzanowski.sma.common.audit.AuditableDTO;
 
 @Jacksonized
 @SuperBuilder
-@Getter
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @ToString(callSuper = true)
-public class ContractorUpdateDTO extends ContractorDTO {
-    private final Set<ContactDTO> addedContacts;
-    private final Set<ContactDTO> deletedContacts;
+public class ContractorAuditableDTO extends AuditableDTO {
+    @JsonUnwrapped
+    private ContractorDTO base;
 }

@@ -165,7 +165,6 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                                 <Table.Cell {...commonCellProps} width={"30%"}>{company.additionalInfo}</Table.Cell>
                                 {extended && isFetchableCompany(company) && (
                                     <>
-                                        {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
                                         {"createdDatetime" in company && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 {DateFormatter.formatDateTime(
@@ -173,10 +172,10 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"createdByFirstName" in company && (
+                                        {"createdBy" in company && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(company as FetchableCompanyDTO).createdByFirstName.charAt(0)}. {(company as FetchableCompanyDTO).createdByLastName}
+                                                    {(company as FetchableCompanyDTO).createdBy.firstName.charAt(0)}. {(company as FetchableCompanyDTO).createdBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}
@@ -187,10 +186,10 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"modifiedByFirstName" in company && (
+                                        {"modifiedBy" in company && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(company as FetchableCompanyDTO).modifiedByFirstName.charAt(0)}. {(company as FetchableCompanyDTO).modifiedByLastName}
+                                                    {(company as FetchableCompanyDTO).modifiedBy.firstName.charAt(0)}. {(company as FetchableCompanyDTO).modifiedBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}

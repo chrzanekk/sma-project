@@ -8,26 +8,15 @@ import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses = UserAuditMapper.class)
-public interface CompanyMapper extends EntityMapper<CompanyBaseDTO, Company> {
-
-    default Company fromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        Company company = new Company();
-        company.setId(id);
-        return company;
-    }
+@Mapper(componentModel = "spring")
+public interface CompanyBaseMapper extends EntityMapper<CompanyBaseDTO, Company> {
 
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
-    void updateFromDto(CompanyBaseDTO dto, @MappingTarget Company company);
+    void updateFromBaseDto(CompanyBaseDTO dto, @MappingTarget Company company);
 
-    @Mapping(source = "createdBy", target = "createdBy")
-    @Mapping(source = "modifiedBy", target = "modifiedBy")
     CompanyBaseDTO toDto(Company company);
 
     @Mapping(target = "createdBy", ignore = true)

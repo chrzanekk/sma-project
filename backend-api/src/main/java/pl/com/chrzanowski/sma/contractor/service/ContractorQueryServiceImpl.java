@@ -8,8 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorAuditableDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
-import pl.com.chrzanowski.sma.contractor.mapper.ContractorMapper;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorAuditMapper;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 
@@ -22,24 +23,24 @@ public class ContractorQueryServiceImpl implements ContractorQueryService {
     private final Logger log = LoggerFactory.getLogger(ContractorQueryServiceImpl.class);
 
     private final ContractorDao contractorDao;
-    private final ContractorMapper contractorMapper;
+    private final ContractorAuditMapper contractorAuditMapper;
 
-    public ContractorQueryServiceImpl(ContractorDao contractorDao, ContractorMapper contractorMapper) {
+    public ContractorQueryServiceImpl(ContractorDao contractorDao, ContractorAuditMapper contractorAuditMapper) {
         this.contractorDao = contractorDao;
-        this.contractorMapper = contractorMapper;
+        this.contractorAuditMapper = contractorAuditMapper;
     }
 
     @Override
-    public List<ContractorDTO> findByFilter(ContractorFilter contractorFilter) {
+    public List<ContractorAuditableDTO> findByFilter(ContractorFilter contractorFilter) {
         log.debug("Find all contractors by filter: {}", contractorFilter);
         BooleanBuilder specification = ContractorQuerySpec.buildPredicate(contractorFilter);
-        return contractorMapper.toDtoList(contractorDao.findAll(specification));
+        return contractorAuditMapper.toDtoList(contractorDao.findAll(specification));
     }
 
     @Override
-    public Page<ContractorDTO> findByFilter(ContractorFilter contractorFilter, Pageable pageable) {
+    public Page<ContractorAuditableDTO> findByFilter(ContractorFilter contractorFilter, Pageable pageable) {
         log.debug("Find all contractors by filter and page: {}", contractorFilter);
         BooleanBuilder specification = ContractorQuerySpec.buildPredicate(contractorFilter);
-        return contractorDao.findAll(specification, pageable).map(contractorMapper::toDto);
+        return contractorDao.findAll(specification, pageable).map(contractorAuditMapper::toDto);
     }
 }

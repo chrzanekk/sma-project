@@ -18,10 +18,9 @@ import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyMapper;
+import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
-import pl.com.chrzanowski.sma.company.service.CompanyService;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
@@ -56,10 +55,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     private CompanyRepository companyRepository;
 
     @Autowired
-    private CompanyService companyService;
-
-    @Autowired
-    private CompanyMapper companyMapper;
+    private CompanyBaseMapper companyBaseMapper;
 
     @Autowired
     private UserHelper userHelper;
@@ -127,15 +123,13 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .createdBy(user)
                 .build();
         Company savedCompany = companyRepository.save(company);
-        return companyMapper.toDto(savedCompany);
+        return companyBaseMapper.toDto(savedCompany);
     }
 
     @Test
     void shouldAddCompanySuccessfully() {
         CompanyBaseDTO newCompany = CompanyBaseDTO.builder()
                 .name("New Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         List<Company> companiesBefore = companyRepository.findAll();
@@ -218,8 +212,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         CompanyBaseDTO updateCompany = CompanyBaseDTO.builder()
                 .id(firstCompany.getId())
                 .name("Updated Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         CompanyBaseDTO updatedCompany = webTestClient.put()
@@ -260,13 +252,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isNoContent();
 
-        List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri("/api/companies/all")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(CompanyBaseDTO.class)
-                .returnResult().getResponseBody();
+        List<Company> companies = companyRepository.findAll();
 
         // Zakładamy, że po usunięciu pozostaną tylko 1 firma
         assertThat(companies).hasSize(1);
@@ -331,8 +317,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     void shouldFailToAddCompanyWithInvalidData() {
         CompanyBaseDTO invalidCompany = CompanyBaseDTO.builder()
                 .name("") // pole wymagane, brak nazwy
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.post()
@@ -349,8 +333,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         CompanyBaseDTO nonExistentCompany = CompanyBaseDTO.builder()
                 .id(9999L) // zakładamy, że taki ID nie istnieje
                 .name("Nonexistent Company")
-                .createdDatetime(Instant.now())
-                .lastModifiedDatetime(Instant.now())
                 .build();
 
         webTestClient.put()

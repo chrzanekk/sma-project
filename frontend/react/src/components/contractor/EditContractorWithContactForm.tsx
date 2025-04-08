@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ContractorFormValues, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
 import {getContactsByContractorIdPaged, getContractorById, updateContractor} from "@/services/contractor-service.ts";
@@ -59,6 +59,24 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+    const fetchContactsPage = useCallback(async (page: number, replace = false) => {
+        try {
+            setContactState((prev) => ({...prev, loading: true}));
+            const response = await getContactsByContractorIdPaged(contractorId, page, 5);
+            setContactState((prev) => ({
+                ...prev,
+                contacts: replace
+                    ? response.items
+                    : [...prev.contacts, ...response.items],
+                page: page + 1,
+                hasMore: page + 1 < response.totalPages,
+                loading: false,
+            }));
+        } catch (error) {
+            console.error("Błąd ładowania kontaktów:", error);
+            setContactState((prev) => ({...prev, loading: false}));
+        }
+    }, [contractorId]);
     // Pobranie danych kontrahenta przy montowaniu
     useEffect(() => {
         const fetchContractor = async () => {
@@ -80,7 +98,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
                     scaffoldingUser: contractor.scaffoldingUser,
                 };
                 setContractorData(initial);
-                await fetchContactsPage(0);
+                await fetchContactsPage(0, true);
             } catch (err) {
                 console.error("Błąd pobierania kontrahenta: ", err);
             } finally {
@@ -88,24 +106,9 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
             }
         };
         fetchContractor().catch();
-    }, [contractorId]);
+    }, [contractorId, fetchContactsPage]);
 
-    const fetchContactsPage = async (page: number) => {
-        try {
-            setContactState((prev) => ({...prev, loading: true}));
-            const response = await getContactsByContractorIdPaged(contractorId, page, 5);
-            setContactState((prev) => ({
-                ...prev,
-                contacts: [...prev.contacts, ...response.items],
-                page: page + 1,
-                hasMore: page + 1 < response.totalPages,
-                loading: false,
-            }));
-        } catch (error) {
-            console.error("Błąd ładowania kontaktów:", error);
-            setContactState((prev) => ({...prev, loading: false}));
-        }
-    };
+
 
     const onScroll = () => {
         const container = scrollContainerRef.current;
