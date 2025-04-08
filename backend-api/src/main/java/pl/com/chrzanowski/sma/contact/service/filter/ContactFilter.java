@@ -18,4 +18,5 @@ public class ContactFilter {
     private String emailStartsWith;
     private String phoneStartsWith;
     private Long companyId;
+    private String contractorNameStartsWith;
 }

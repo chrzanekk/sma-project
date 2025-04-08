@@ -34,5 +34,7 @@ public interface ContractorDTOMapper extends EntityMapper<ContractorDTO, Contrac
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "contacts", source = "contacts",ignore = true)
+    @Mapping(target = "company", source = "company",ignore = true)
     void updateFromUpdateDto(ContractorUpdateDTO contractorUpdateDTO, @MappingTarget Contractor contractor);
 }

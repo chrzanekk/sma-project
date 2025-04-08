@@ -30,19 +30,22 @@ public class ContactQuerySpec {
                 predicate.and(contact.id.eq(filter.getId()));
             }
             if (filter.getFirstNameStartsWith() != null && !filter.getFirstNameStartsWith().isEmpty()) {
-                predicate.and(contact.firstName.startsWith(filter.getFirstNameStartsWith()));
+                predicate.and(contact.firstName.containsIgnoreCase(filter.getFirstNameStartsWith()));
             }
             if (filter.getLastNameStartsWith() != null && !filter.getLastNameStartsWith().isEmpty()) {
-                predicate.and(contact.lastName.startsWith(filter.getLastNameStartsWith()));
+                predicate.and(contact.lastName.containsIgnoreCase(filter.getLastNameStartsWith()));
             }
             if (filter.getEmailStartsWith() != null && !filter.getEmailStartsWith().isEmpty()) {
-                predicate.and(contact.email.startsWith(filter.getEmailStartsWith()));
+                predicate.and(contact.email.containsIgnoreCase(filter.getEmailStartsWith()));
             }
             if (filter.getPhoneStartsWith() != null && !filter.getPhoneStartsWith().isEmpty()) {
-                predicate.and(contact.phoneNumber.startsWith(filter.getPhoneStartsWith()));
+                predicate.and(contact.phoneNumber.containsIgnoreCase(filter.getPhoneStartsWith()));
             }
             if (filter.getCompanyId() != null && filter.getCompanyId() > 0) {
                 predicate.and(contact.company.id.eq(filter.getCompanyId()));
+            }
+            if (filter.getContractorNameStartsWith() != null && !filter.getContractorNameStartsWith().isEmpty()) {
+                predicate.and(contact.contractor.name.containsIgnoreCase(filter.getContractorNameStartsWith()));
             }
         }
         return predicate;
