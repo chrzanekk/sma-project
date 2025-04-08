@@ -11,7 +11,7 @@ interface FilterValues {
     lastNameStartsWith?: string;
     emailStartsWith?: string;
     phoneStartsWith?: string;
-
+    contractorNameStartsWith?: string;
 }
 
 const validationSchema = Yup.object({
@@ -19,7 +19,7 @@ const validationSchema = Yup.object({
     lastNameStartsWith: Yup.string(),
     emailStartsWith: Yup.string(),
     phoneStartsWith: Yup.string(),
-
+    contractorNameStartsWith: Yup.string()
 });
 
 interface Props {
@@ -36,7 +36,8 @@ const ContactFilterForm: React.FC<Props> = ({onSubmit}) => {
                     firstNameStartsWith: '',
                     lastNameStartsWith: '',
                     emailStartsWith: '',
-                    phoneStartsWith: ''
+                    phoneStartsWith: '',
+                    contractorNameStartsWith: ''
                 }}
             validationSchema={validationSchema}
             onSubmit={(values, {setSubmitting}: FormikHelpers<FilterValues>) => {
@@ -57,6 +58,8 @@ const ContactFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomInputFilterField name="lastNameStartsWith" placeholder={t('contacts:lastName')}/>
                             <CustomInputFilterField name="emailStartsWith" placeholder={t('contacts:email')}/>
                             <CustomInputFilterField name="phoneStartsWith" placeholder={t('contacts:phoneNumber')}/>
+                            <CustomInputFilterField name="contractorNameStartsWith"
+                                                    placeholder={t('contacts:contractor')}/>
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"

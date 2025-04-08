@@ -5,7 +5,7 @@ import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
-import {BaseContactDTOForContractor, FetchableContactDTO} from "@/types/contact-types.ts";
+import {BaseContactDTOForContractor, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
@@ -26,15 +26,15 @@ interface Props<T extends BaseContactDTOForContractor> {
     extended?: boolean;
 }
 
-const GenericContactTable = <T extends BaseContactDTOForContractor>({
-                                                                        contacts,
-                                                                        onDelete,
-                                                                         fetchContacts,
-                                                                        onSortChange,
-                                                                        sortField,
-                                                                        sortDirection,
-                                                                        extended = false,
-                                                                    }: Props<T>) => {
+const GenericContactTable = <T extends ContactDTO>({
+                                                       contacts,
+                                                       onDelete,
+                                                       fetchContacts,
+                                                       onSortChange,
+                                                       sortField,
+                                                       sortDirection,
+                                                       extended = false,
+                                                   }: Props<T>) => {
     const {t} = useTranslation(["common", "contacts"]);
     const {open, onOpen, onClose} = useDisclosure();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
@@ -115,6 +115,12 @@ const GenericContactTable = <T extends BaseContactDTOForContractor>({
                             >
                                 {t("contacts:additionalInfo")} {renderSortIndicator("additionalInfo")}
                             </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("contractor")}
+                            >
+                                {t("contacts:contractor")} {renderSortIndicator("contractor")}
+                            </Table.ColumnHeader>
                             {extended && (
                                 <>
                                     <Table.ColumnHeader
@@ -162,8 +168,9 @@ const GenericContactTable = <T extends BaseContactDTOForContractor>({
                                 <Table.Cell {...commonCellProps} width={"10%"}>{contact.firstName}</Table.Cell>
                                 <Table.Cell {...commonCellProps} width={"10%"}>{contact.lastName}</Table.Cell>
                                 <Table.Cell {...commonCellProps} width={"10%"}>{contact.phoneNumber}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contact.email}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"30%"}>{contact.additionalInfo}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"15%"}>{contact.email}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contact.additionalInfo}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contact.contractor?.name}</Table.Cell>
                                 {extended && isFetchableContact(contact) && (
                                     <>
                                         {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
