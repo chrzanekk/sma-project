@@ -12,8 +12,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
-import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
-import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
+import pl.com.chrzanowski.sma.contact.dto.ContactAuditableDTO;
+import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
+import pl.com.chrzanowski.sma.contact.mapper.ContactAuditMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryServiceImpl;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
@@ -31,12 +32,13 @@ class ContactQueryServiceImplTest {
     private ContactDao contactDao;
 
     @Mock
-    private ContactBaseMapper contactBaseMapper;
+    private ContactAuditMapper contactAuditMapper;
 
     @InjectMocks
     private ContactQueryServiceImpl contactQueryService;
 
-    private ContactBaseDTO contactBaseDTO;
+    private ContactDTO contactDTO;
+    private ContactAuditableDTO contactAuditableDTO;
     private Contact contact;
     private AutoCloseable autoCloseable;
 
@@ -44,10 +46,13 @@ class ContactQueryServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        contactBaseDTO = ContactBaseDTO.builder()
+        contactDTO = ContactDTO.builder()
                 .id(1L)
                 .firstName("John Doe")
                 .build();
+
+        contactAuditableDTO = ContactAuditableDTO.builder()
+                .base(contactDTO).build();
 
         contact = new Contact();
         contact.setId(1L);
@@ -64,15 +69,15 @@ class ContactQueryServiceImplTest {
         ContactFilter filter = new ContactFilter();
 
         when(contactDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.singletonList(contact));
-        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactBaseDTO));
+        when(contactAuditMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(contactAuditableDTO));
 
-        List<ContactBaseDTO> result = contactQueryService.findByFilter(filter);
+        List<ContactAuditableDTO> result = contactQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertEquals(1, result.size());
 
         verify(contactDao, times(1)).findAll(any(BooleanBuilder.class));
-        verify(contactBaseMapper, times(1)).toDtoList(anyList());
+        verify(contactAuditMapper, times(1)).toDtoList(anyList());
     }
 
     @Test
@@ -80,9 +85,9 @@ class ContactQueryServiceImplTest {
         ContactFilter filter = new ContactFilter();
 
         when(contactDao.findAll(any(BooleanBuilder.class))).thenReturn(Collections.emptyList());
-        when(contactBaseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
+        when(contactAuditMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
 
-        List<ContactBaseDTO> result = contactQueryService.findByFilter(filter);
+        List<ContactAuditableDTO> result = contactQueryService.findByFilter(filter);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -97,15 +102,15 @@ class ContactQueryServiceImplTest {
 
         Page<Contact> contactPage = new PageImpl<>(Collections.singletonList(contact));
         when(contactDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(contactPage);
-        when(contactBaseMapper.toDto(any(Contact.class))).thenReturn(contactBaseDTO);
+        when(contactAuditMapper.toDto(any(Contact.class))).thenReturn(contactAuditableDTO);
 
-        Page<ContactBaseDTO> result = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactAuditableDTO> result = contactQueryService.findByFilter(filter, pageable);
 
         assertNotNull(result);
         assertEquals(1, result.getTotalElements());
 
         verify(contactDao, times(1)).findAll(any(BooleanBuilder.class), any(Pageable.class));
-        verify(contactBaseMapper, times(1)).toDto(any(Contact.class));
+        verify(contactAuditMapper, times(1)).toDto(any(Contact.class));
     }
 
     @Test
@@ -116,7 +121,7 @@ class ContactQueryServiceImplTest {
         Page<Contact> contactPage = Page.empty();
         when(contactDao.findAll(any(BooleanBuilder.class), any(Pageable.class))).thenReturn(contactPage);
 
-        Page<ContactBaseDTO> result = contactQueryService.findByFilter(filter, pageable);
+        Page<ContactAuditableDTO> result = contactQueryService.findByFilter(filter, pageable);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

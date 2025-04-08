@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.unitTests.company.service;
 
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,14 +8,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.exception.CompanyException;
 import pl.com.chrzanowski.sma.company.dao.CompanyDao;
-import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
+import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
+import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.service.CompanyServiceImpl;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,15 +26,12 @@ public class CompanyServiceImplTest {
     private CompanyDao companyDao;
 
     @Mock
-    private CompanyBaseMapper companyBaseMapper;
-
-    @Mock
-    private EntityManager entityManager;
+    private CompanyDTOMapper companyDTOMapper;
 
     @InjectMocks
     private CompanyServiceImpl companyServiceImpl;
 
-    private CompanyBaseDTO companyBaseDTO;
+    private CompanyDTO companyDTO;
     private Company company;
     private AutoCloseable autoCloseable;
     private String companyName;
@@ -49,11 +43,11 @@ public class CompanyServiceImplTest {
         additionalInfo = "Test additional info";
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        companyBaseDTO = CompanyBaseDTO.builder()
+        companyDTO = CompanyDTO.builder()
                 .id(1L)
                 .name(companyName)
                 .additionalInfo(additionalInfo)
-                .createdDatetime(Instant.now()).build();
+                .build();
 
         company = new Company();
         company.setId(1L);
@@ -69,25 +63,25 @@ public class CompanyServiceImplTest {
 
     @Test
     void testSaveCompany() {
-        when(companyBaseMapper.toEntity(any(CompanyBaseDTO.class))).thenReturn(company);
+        when(companyDTOMapper.toEntity(any(CompanyDTO.class))).thenReturn(company);
         when(companyDao.save(any(Company.class))).thenReturn(company);
-        when(companyBaseMapper.toDto(any(Company.class))).thenReturn(companyBaseDTO);
+        when(companyDTOMapper.toDto(any(Company.class))).thenReturn(companyDTO);
 
-        CompanyBaseDTO result = companyServiceImpl.save(companyBaseDTO);
+        CompanyDTO result = companyServiceImpl.save(companyDTO);
         assertNotNull(result);
         assertEquals(companyName, result.getName());
         assertEquals(additionalInfo, result.getAdditionalInfo());
 
         verify(companyDao, times(1)).save(any(Company.class));
-        verify(companyBaseMapper, times(1)).toDto(any(Company.class));
+        verify(companyDTOMapper, times(1)).toDto(any(Company.class));
     }
 
     @Test
     void testSaveCompany_Failure() {
-        when(companyBaseMapper.toEntity(any(CompanyBaseDTO.class))).thenReturn(company);
+        when(companyDTOMapper.toEntity(any(CompanyDTO.class))).thenReturn(company);
         when(companyDao.save(any(Company.class))).thenThrow(new RuntimeException("Error"));
 
-        assertThrows(RuntimeException.class, () -> companyServiceImpl.save(companyBaseDTO));
+        assertThrows(RuntimeException.class, () -> companyServiceImpl.save(companyDTO));
         verify(companyDao, times(1)).save(any(Company.class));
     }
 
@@ -95,22 +89,22 @@ public class CompanyServiceImplTest {
     void testUpdateCompany() {
         Company updatedCompany = company;
         updatedCompany.setName("Updated company");
-        CompanyBaseDTO updatedCompanyDTO = CompanyBaseDTO.builder()
-                .id(companyBaseDTO.getId())
+        CompanyDTO updatedCompanyDTO = CompanyDTO.builder()
+                .id(companyDTO.getId())
                 .name(updatedCompany.getName())
                 .additionalInfo(updatedCompany.getAdditionalInfo())
                 .build();
         when(companyDao.findById(anyLong())).thenReturn(Optional.of(company));
-        when(companyBaseMapper.toDto(any(Company.class))).thenReturn(updatedCompanyDTO);
+        when(companyDTOMapper.toDto(any(Company.class))).thenReturn(updatedCompanyDTO);
         when(companyDao.save(any(Company.class))).thenReturn(updatedCompany);
 
-        CompanyBaseDTO result = companyServiceImpl.update(companyBaseDTO);
+        CompanyDTO result = companyServiceImpl.update(companyDTO);
         assertNotNull(result);
         assertEquals(updatedCompany.getName(), result.getName());
         assertEquals(updatedCompany.getAdditionalInfo(), result.getAdditionalInfo());
 
         verify(companyDao, times(1)).findById(anyLong());
-        verify(companyBaseMapper, times(1)).toDto(any(Company.class));
+        verify(companyDTOMapper, times(1)).toDto(any(Company.class));
         verify(companyDao, times(1)).save(any(Company.class));
     }
 
@@ -118,16 +112,16 @@ public class CompanyServiceImplTest {
     void testUpdateCompany_Failure() {
         when(companyDao.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(CompanyException.class, () -> companyServiceImpl.update(companyBaseDTO));
+        assertThrows(CompanyException.class, () -> companyServiceImpl.update(companyDTO));
         verify(companyDao, times(1)).findById(anyLong());
     }
 
     @Test
     void testFindById() {
         when(companyDao.findById(1L)).thenReturn(Optional.of(company));
-        when(companyBaseMapper.toDto(any(Company.class))).thenReturn(companyBaseDTO);
+        when(companyDTOMapper.toDto(any(Company.class))).thenReturn(companyDTO);
 
-        CompanyBaseDTO result = companyServiceImpl.findById(1L);
+        CompanyDTO result = companyServiceImpl.findById(1L);
         assertNotNull(result);
         assertEquals(companyName, result.getName());
 
@@ -142,54 +136,10 @@ public class CompanyServiceImplTest {
         verify(companyDao, times(1)).findById(1L);
     }
 
-    @Test
-    void testFindByName() {
-        when(companyDao.findByName(companyName)).thenReturn(Optional.of(company));
-        when(companyBaseMapper.toDto(any(Company.class))).thenReturn(companyBaseDTO);
-
-        CompanyBaseDTO result = companyServiceImpl.findByName(companyName);
-        assertNotNull(result);
-        assertEquals(companyName, result.getName());
-
-        verify(companyDao, times(1)).findByName(companyName);
-    }
-
-    @Test
-    void testFindByNameNotFound() {
-        when(companyDao.findByName("NotExistingCompany")).thenReturn(Optional.empty());
-
-        assertThrows(CompanyException.class, () -> companyServiceImpl.findByName("NotExistingCompany"));
-        verify(companyDao, times(1)).findByName("NotExistingCompany");
-    }
-
-    @Test
-    void testFindAll() {
-        when(companyDao.findAll()).thenReturn(Collections.singletonList(company));
-        when(companyBaseMapper.toDtoList(anyList())).thenReturn(Collections.singletonList(companyBaseDTO));
-
-        List<CompanyBaseDTO> result = companyServiceImpl.findAll();
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        assertEquals(companyName, result.get(0).getName());
-        assertTrue(result.contains(companyBaseDTO));
-
-        verify(companyDao, times(1)).findAll();
-    }
-
-    @Test
-    void testFindAllNotFound() {
-        when(companyDao.findAll()).thenReturn(Collections.emptyList());
-        when(companyBaseMapper.toDtoList(anyList())).thenReturn(Collections.emptyList());
-
-        List<CompanyBaseDTO> result = companyServiceImpl.findAll();
-
-        assertTrue(result.isEmpty());
-        verify(companyDao, times(1)).findAll();
-    }
 
     @Test
     void testDeleteCompany() {
-        companyServiceImpl.delete(companyBaseDTO.getId());
-        verify(companyDao, times(1)).deleteById(companyBaseDTO.getId());
+        companyServiceImpl.delete(companyDTO.getId());
+        verify(companyDao, times(1)).deleteById(companyDTO.getId());
     }
 }

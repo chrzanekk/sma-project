@@ -10,27 +10,29 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
+import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
-import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.common.security.SecurityUtils;
+import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
+import pl.com.chrzanowski.sma.role.model.Role;
+import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
-import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
+import pl.com.chrzanowski.sma.user.mapper.UserDTOMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserServiceImpl;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
-import pl.com.chrzanowski.sma.common.enumeration.ERole;
-import pl.com.chrzanowski.sma.role.model.Role;
-import pl.com.chrzanowski.sma.role.dto.RoleDTO;
-import pl.com.chrzanowski.sma.common.security.SecurityUtils;
-import pl.com.chrzanowski.sma.role.service.RoleService;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,7 +44,7 @@ class UserServiceImplTest {
     private UserDao userDao;
 
     @Mock
-    private UserMapper userMapper;
+    private UserDTOMapper userDTOMapper;
 
     @Mock
     private RoleMapper roleMapper;
@@ -55,9 +57,6 @@ class UserServiceImplTest {
 
     @Mock
     private UserTokenService userTokenService;
-
-    @Mock
-    private SendEmailService sendEmailService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -95,9 +94,9 @@ class UserServiceImplTest {
         RoleDTO roleUser = RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
         when(roleService.findByName(ERole.ROLE_USER.getName())).thenReturn(roleUser);
         when(encoder.encode(anyString())).thenReturn("encodedPassword");
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(new User());
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(new User());
         when(userDao.save(any(User.class))).thenReturn(new User());
-        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDTOMapper.toDto(any(User.class))).thenReturn(userDTO);
 
         UserDTO result = userService.register(registerRequest);
 
@@ -121,9 +120,9 @@ class UserServiceImplTest {
         when(userTokenService.getTokenData(anyString())).thenReturn(tokenDTO);
         when(userTokenService.updateToken(any(UserTokenDTO.class))).thenReturn(confirmTokenDTO);
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(userDao.save(any(User.class))).thenReturn(user);
-        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDTOMapper.toDto(any(User.class))).thenReturn(userDTO);
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
 
         MessageResponse result = userService.confirm("token123");
@@ -144,9 +143,9 @@ class UserServiceImplTest {
         when(userTokenService.getTokenData(anyString())).thenReturn(tokenDTO);
         when(userTokenService.updateToken(any(UserTokenDTO.class))).thenReturn(tokenDTO);
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(userDao.save(any(User.class))).thenReturn(user);
-        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDTOMapper.toDto(any(User.class))).thenReturn(userDTO);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.confirm("token123"));
 
@@ -156,6 +155,7 @@ class UserServiceImplTest {
         verify(userTokenService, times(0)).updateToken(any(UserTokenDTO.class));
         verify(userDao, times(0)).save(any(User.class));
     }
+
     @Test
     void testConfirmTokenWhenTokenExpired() {
         UserTokenDTO tokenDTO = UserTokenDTO.builder()
@@ -177,7 +177,7 @@ class UserServiceImplTest {
     @Test
     void testFindById_UserExists() {
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
 
         UserDTO result = userService.findById(1L);
 
@@ -195,7 +195,7 @@ class UserServiceImplTest {
     @Test
     void testGetUser_UserByEmailExists() {
         when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
-        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDTOMapper.toDto(any(User.class))).thenReturn(userDTO);
 
         UserDTO result = userService.getUserByEmail("test@example.com");
 
@@ -248,25 +248,25 @@ class UserServiceImplTest {
 
     @Test
     void saveNewUser() {
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(roleMapper.toEntity(any(RoleDTO.class))).thenReturn(roleUser);
 
         userService.save(userDTO);
 
-        verify(userDao,times(1)).save(user);
+        verify(userDao, times(1)).save(user);
     }
 
     @Test
     void updateUserWithSuccess() {
         userDTO = userDTO.toBuilder().id(1L).build();
-        when(userMapper.toDto(any(User.class))).thenReturn(userDTO);
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toDto(any(User.class))).thenReturn(userDTO);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
         when(userDao.save(any(User.class))).thenReturn(user);
 
         UserDTO result = userService.update(userDTO);
 
-        verify(userDao,times(1)).save(user);
+        verify(userDao, times(1)).save(user);
 
         assertNotNull(result);
         assertEquals(userDTO.getId(), result.getId());
@@ -314,10 +314,10 @@ class UserServiceImplTest {
         userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
         when(encoder.matches("password", userDTO.getPassword())).thenReturn(true);
         when(encoder.encode("newPassword")).thenReturn("encodedNewPassword");
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
 
         assertDoesNotThrow(() -> userService.updateUserPassword(passwordChangeRequest));
 
@@ -330,7 +330,7 @@ class UserServiceImplTest {
         userDTO = userDTO.toBuilder().id(1L).password("encodedCurrentPassword").build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
         when(encoder.matches("wrongCurrentPassword", userDTO.getPassword())).thenReturn(false);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.updateUserPassword(passwordChangeRequest));
@@ -344,7 +344,7 @@ class UserServiceImplTest {
         UserEditPasswordChangeRequest passwordChangeRequest = new UserEditPasswordChangeRequest(1L, "password", "");
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> userService.updateUserPassword(passwordChangeRequest));
         assertEquals("New password cannot be empty", exception.getMessage());
@@ -358,8 +358,8 @@ class UserServiceImplTest {
         userDTO = userDTO.toBuilder().id(1L).roles(newRoles).build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
-        when(userMapper.toEntity(any(UserDTO.class))).thenReturn(user);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toEntity(any(UserDTO.class))).thenReturn(user);
         when(roleService.findByName(ERole.ROLE_USER.getName())).thenReturn(RoleDTO.builder().id(1L).name(ERole.ROLE_USER.getName()).build());
         when(roleService.findByName(ERole.ROLE_ADMIN.getName())).thenReturn(RoleDTO.builder().id(2L).name(ERole.ROLE_ADMIN.getName()).build());
 
@@ -376,7 +376,7 @@ class UserServiceImplTest {
         userDTO = userDTO.toBuilder().id(1L).roles(newRoles).build();
 
         when(userDao.findById(1L)).thenReturn(Optional.of(user));
-        when(userMapper.toDto(user)).thenReturn(userDTO);
+        when(userDTOMapper.toDto(user)).thenReturn(userDTO);
         when(roleService.findByName("ROLE_NON_EXISTING")).thenThrow(new IllegalArgumentException("Role not found"));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> userService.updateUserRoles(1L, newRoles));

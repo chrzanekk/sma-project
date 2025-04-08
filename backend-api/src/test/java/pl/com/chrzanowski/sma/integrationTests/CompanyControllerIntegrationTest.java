@@ -21,7 +21,6 @@ import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
-import pl.com.chrzanowski.sma.company.service.CompanyService;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
@@ -54,9 +53,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private CompanyRepository companyRepository;
-
-    @Autowired
-    private CompanyService companyService;
 
     @Autowired
     private CompanyBaseMapper companyBaseMapper;
@@ -256,13 +252,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .exchange()
                 .expectStatus().isNoContent();
 
-        List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri("/api/companies/all")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
-                .exchange()
-                .expectStatus().isOk()
-                .expectBodyList(CompanyBaseDTO.class)
-                .returnResult().getResponseBody();
+        List<Company> companies = companyRepository.findAll();
 
         // Zakładamy, że po usunięciu pozostaną tylko 1 firma
         assertThat(companies).hasSize(1);
