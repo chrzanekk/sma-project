@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.user.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,9 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pl.com.chrzanowski.sma.role.model.QRole.role;
+import static pl.com.chrzanowski.sma.user.model.QUser.user;
 
 @Repository("userJPA")
 public class UserJPADaoImpl implements UserDao {
@@ -75,9 +79,19 @@ public class UserJPADaoImpl implements UserDao {
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
         JPQLQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
+
         long total = query.fetchCount();
-        List<User> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
+
+        JPAQuery<User> jpaQuery = getPaginationQuery(query);
+
+        List<User> content = jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
         return new PageImpl<>(content, pageable, total);
+    }
+
+    private JPAQuery<User> getPaginationQuery(JPQLQuery<User> baseQuery) {
+        JPAQuery<User> jpaQuery = (JPAQuery<User>) baseQuery;
+        jpaQuery.leftJoin(user.roles, role).fetchJoin();
+        return jpaQuery;
     }
 
     @Override

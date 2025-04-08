@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.role.model.Role;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Builder(toBuilder = true)
 @AllArgsConstructor
+@BatchSize(size = 30)
 @Table(name = "users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
         @UniqueConstraint(columnNames = "login"),

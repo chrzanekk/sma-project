@@ -272,11 +272,11 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                     target.scrollHeight - target.scrollTop <=
                                                                     target.clientHeight + 20
                                                                 ) {
-                                                                    loadMoreContacts(contractorId);
+                                                                    loadMoreContacts(contractorId).catch();
                                                                 }
                                                             }}>
                                                             <GenericContactTable
-                                                                contacts={contractor.contacts!!}
+                                                                contacts={contactStates[contractorId]?.contacts ?? []}
                                                                 onDelete={contactOnDelete}
                                                                 fetchContacts={contactFetchContacts}
                                                                 onSortChange={contactOnSortChange}

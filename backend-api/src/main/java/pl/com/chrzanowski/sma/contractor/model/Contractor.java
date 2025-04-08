@@ -64,7 +64,7 @@ public class Contractor extends AuditableEntity {
     @Column(name = "scaffolding_user", nullable = false)
     private Boolean scaffoldingUser;
 
-    @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "contractor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Contact> contacts = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

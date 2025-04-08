@@ -26,7 +26,5 @@ public interface ContractorAuditMapper extends EntityMapper<ContractorAuditableD
     @Mapping(source = "customer", target = "base.customer")
     @Mapping(source = "supplier", target = "base.supplier")
     @Mapping(source = "scaffoldingUser", target = "base.scaffoldingUser")
-    @Mapping(source = "company", target = "base.company")
-    @Mapping(source = "contacts", target = "base.contacts")
     ContractorAuditableDTO toDto(Contractor contractor);
 }

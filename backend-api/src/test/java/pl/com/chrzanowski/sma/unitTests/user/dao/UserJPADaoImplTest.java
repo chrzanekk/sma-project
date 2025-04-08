@@ -1,14 +1,19 @@
 package pl.com.chrzanowski.sma.unitTests.user.dao;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Path;
 import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.user.dao.UserJPADaoImpl;
+import pl.com.chrzanowski.sma.user.model.QUser;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
@@ -27,6 +32,9 @@ class UserJPADaoImplTest {
 
     @Mock
     private UserRepository userRepository;
+
+    @Mock
+    private UserQuerySpec userQuerySpec;
 
     private AutoCloseable closeable;
 
@@ -244,57 +252,53 @@ class UserJPADaoImplTest {
         verify(userRepository, times(1)).findAll();
     }
 
-
     @Test
     void findAll_WithSpecificationAndPageable_Positive() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        UserQuerySpec userQuerySpec = mock(UserQuerySpec.class);
-        JPQLQuery<User> query = mock(JPQLQuery.class);
-        UserJPADaoImpl userJPADaoImpl = new UserJPADaoImpl(null, userQuerySpec);
+        BooleanBuilder specification = new BooleanBuilder();
+        Pageable pageable = PageRequest.of(0,10);
+        User user = new User();
 
-        User user1 = User.builder().login("user1").build();
-        List<User> userList = List.of(user1);
+        JPAQuery<User> mockQuery = mock(JPAQuery.class);
+        when(mockQuery.leftJoin(eq(QUser.user.roles),any(Path.class))).thenReturn(mockQuery);
+        when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
-        when(query.offset(0L)).thenReturn(query);
-        when(query.limit(2)).thenReturn(query);
-        when(query.fetchCount()).thenReturn(1L);
-        when(query.fetch()).thenReturn(userList);
-        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
-
-        // Mock buildQuery
-        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
+        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(1L);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(List.of(user));
 
         // When
         var result = userJPADaoImpl.findAll(specification, pageable);
 
         // Then
         assertEquals(1, result.getTotalElements());
-        assertTrue(result.getContent().contains(user1));
+        assertTrue(result.getContent().contains(user));
+        verify(userQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test
     void findAll_WithSpecificationAndPageable_Negative() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        UserQuerySpec userQuerySpec = mock(UserQuerySpec.class);
-        JPQLQuery<User> query = mock(JPQLQuery.class);
-        UserJPADaoImpl userJPADaoImpl = new UserJPADaoImpl(null, userQuerySpec);
+        BooleanBuilder specification = new BooleanBuilder();
+        Pageable pageable = PageRequest.of(0,10);
+        JPAQuery<User> mockQuery = mock(JPAQuery.class);
+        when(mockQuery.leftJoin(eq(QUser.user.roles),any(Path.class))).thenReturn(mockQuery);
+        when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
-        when(query.offset(0L)).thenReturn(query);
-        when(query.limit(2)).thenReturn(query);
-        when(query.fetchCount()).thenReturn(0L);
-        when(query.fetch()).thenReturn(Collections.emptyList());
-
-        // Mock buildQuery
-        var pageable = org.springframework.data.domain.PageRequest.of(0, 2);
-        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
+        when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
+        when(mockQuery.fetchCount()).thenReturn(0L);
+        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
+        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
+        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         // When
         var result = userJPADaoImpl.findAll(specification, pageable);
 
         // Then
         assertTrue(result.isEmpty());
+        verify(userQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
     @Test

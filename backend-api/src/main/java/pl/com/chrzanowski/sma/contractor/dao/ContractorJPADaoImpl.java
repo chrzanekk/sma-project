@@ -17,6 +17,7 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.com.chrzanowski.sma.company.model.QCompany.company;
 import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
 import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
@@ -72,22 +73,11 @@ public class ContractorJPADaoImpl implements ContractorDao {
 
         long count = baseQuery.fetchCount();
 
-        JPAQuery<Contractor> jpaQuery = getPaginationQuery(baseQuery);
-
-        List<Contractor> contractors = jpaQuery
+        List<Contractor> contractors = baseQuery
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
         return new PageImpl<>(contractors, pageable, count);
-    }
-
-    private JPAQuery<Contractor> getPaginationQuery(JPQLQuery<Contractor> baseQuery) {
-        JPAQuery<Contractor> jpaQuery = (JPAQuery<Contractor>) baseQuery;
-
-        jpaQuery
-                .leftJoin(contractor.contacts, contact).fetchJoin() // jawne dociąganie kontaktów
-                .leftJoin(contractor.company).fetchJoin();
-        return jpaQuery;
     }
 
     @Override
