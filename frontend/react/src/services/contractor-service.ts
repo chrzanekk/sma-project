@@ -19,7 +19,6 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
         });
         const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
-        console.table(response.data);
         return  {
             contractors: items as FetchableContractorDTO[],
             totalPages

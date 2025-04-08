@@ -50,13 +50,26 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
     const {t} = useTranslation(["common", "contractors"]);
     const themeColors = useThemeColors();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
-    const [expandedRows, setExpandedRows] = useState<{ [key: number]: boolean }>({});
+    const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [contactStates, setContactStates] = useState<{ [key: number]: ContactState }>({});
 
     const toggleExpand = async (contractorId: number) => {
-        setExpandedRows((prev) => ({...prev, [contractorId]: !prev[contractorId]}));
+        // Jeśli aktualnie rozwinięty wiersz to klikany contractor,
+        // to zwijamy go i czyścimy jego kontakty
+        if (expandedRow === contractorId) {
+            setExpandedRow(null);
+            setContactStates((prev) => {
+                const newStates = {...prev};
+                delete newStates[contractorId];
+                return newStates;
+            });
+        } else {
+            // Ustawiamy nowy rozwinięty wiersz
+            setExpandedRow(contractorId);
+            // Resetujemy stan kontaktów, aby nie pozostały dane dla poprzednio rozwiniętych wierszy
+            setContactStates({});
 
-        if (!contactStates[contractorId]) {
+            // Inicjujemy stan dla nowego wiersza
             setContactStates((prev) => ({
                 ...prev,
                 [contractorId]: {
@@ -251,7 +264,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                     </Table.Row>
 
                                     {/* Wiersz rozwijany z tabelą kontaktów */}
-                                    {expandedRows[contractorId] && (
+                                    {expandedRow === contractorId && (
                                         <Table.Row
                                             bg={themeColors.bgColorSecondary}
                                             _hover={{
@@ -261,7 +274,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                             }}
                                         >
                                             <Table.Cell colSpan={12} {...commonCellProps}>
-                                                <Collapsible.Root open={expandedRows[contractorId]}>
+                                                <Collapsible.Root open={expandedRow === contractorId}>
                                                     <Collapsible.Content>
                                                         <Box
                                                             maxH="300px"
@@ -284,7 +297,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                                 sortDirection={contactSortDirection}
                                                                 extended={false}
                                                             />
-                                                            {contactState?.loading && <Spinner size="sm" mt={2} />}
+                                                            {contactState?.loading && <Spinner size="sm" mt={2}/>}
                                                         </Box>
                                                     </Collapsible.Content>
                                                 </Collapsible.Root>
