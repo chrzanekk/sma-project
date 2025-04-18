@@ -6,6 +6,10 @@ import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -43,6 +47,8 @@ public class ConstructionSite extends AuditableEntity {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    //todo make entity for ConstructionSiteContractor for many-to-many relation
-    
+    @OneToMany(mappedBy = "constructionSite",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
+    private Set<ConstructionSiteContractor> siteContractors = new HashSet<>();
 }

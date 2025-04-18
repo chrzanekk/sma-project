@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConstructionSiteContractorId {
+
     @Column(name = "contractor_id")
     private Long contractorId;
 
