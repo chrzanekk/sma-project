@@ -43,5 +43,6 @@ public class ConstructionSite extends AuditableEntity {
     @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
-    //todo make entity for ConstructionsiteContractor for many-to-many relation
+    //todo make entity for ConstructionSiteContractor for many-to-many relation
+    
 }
