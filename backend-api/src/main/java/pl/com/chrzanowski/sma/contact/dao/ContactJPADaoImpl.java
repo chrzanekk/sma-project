@@ -4,7 +4,6 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -29,15 +28,12 @@ public class ContactJPADaoImpl implements ContactDao {
 
     private final ContactRepository contactRepository;
     private final ContactQuerySpec contactQuerySpec;
-    private final EntityManager entityManager;
     private final JPAQueryFactory queryFactory;
 
 
-    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, EntityManager entityManager, JPAQueryFactory queryFactory) {
+    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, JPAQueryFactory queryFactory) {
         this.contactRepository = contactRepository;
         this.contactQuerySpec = contactQuerySpec;
-
-        this.entityManager = entityManager;
         this.queryFactory = queryFactory;
     }
 
@@ -92,7 +88,7 @@ public class ContactJPADaoImpl implements ContactDao {
 
     @Override
     public List<Contact> findAll(BooleanBuilder specification) {
-        log.debug("DAO: Find all contacts by specificaiton: {}", specification);
+        log.debug("DAO: Find all contacts by specification: {}", specification);
         JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification, null);
         return query.fetch();
     }
