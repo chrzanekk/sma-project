@@ -10,7 +10,7 @@ import pl.com.chrzanowski.sma.email.dao.SendEmailJPADaoImpl;
 import pl.com.chrzanowski.sma.email.model.SendEmail;
 import pl.com.chrzanowski.sma.email.repository.SendEmailRepository;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 class SendEmailJPADaoImplTest {

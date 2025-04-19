@@ -3,8 +3,6 @@ package pl.com.chrzanowski.sma.user.dao;
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,6 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
 import static pl.com.chrzanowski.sma.role.model.QRole.role;
 import static pl.com.chrzanowski.sma.user.model.QUser.user;
 
@@ -87,13 +84,6 @@ public class UserJPADaoImpl implements UserDao {
 
         PagedList<User> content = query.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(content, pageable, content.getTotalSize());
-    }
-
-    private JPAQuery<User> getPaginationQuery(JPQLQuery<User> baseQuery) {
-        JPAQuery<User> jpaQuery = (JPAQuery<User>) baseQuery;
-
-        jpaQuery.leftJoin(user.roles, role).fetchJoin();
-        return jpaQuery;
     }
 
     @Override

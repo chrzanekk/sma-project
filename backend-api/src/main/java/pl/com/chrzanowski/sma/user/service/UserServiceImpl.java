@@ -28,7 +28,6 @@ import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.mapper.UserDTOMapper;
-import pl.com.chrzanowski.sma.user.mapper.UserMapper;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
@@ -302,9 +301,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getCurrentUserIdFromSecurityContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl) {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            return userDetails.getId(); // zakładamy, że Twoja klasa UserDetailsImpl posiada metodę getId()
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
+            return userDetails.getId();
         }
         return null;
     }

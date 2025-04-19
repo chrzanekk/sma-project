@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorAuditableDTO;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorAuditMapper;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;

@@ -16,9 +16,6 @@ import pl.com.chrzanowski.sma.company.service.filter.CompanyQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.company.model.QCompany.company;
-import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
-
 @Repository("companyJPA")
 public class CompanyJPADaoImpl implements CompanyDao {
 

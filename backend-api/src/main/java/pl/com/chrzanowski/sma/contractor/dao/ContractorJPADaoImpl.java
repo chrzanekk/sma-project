@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.contractor.dao;
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,8 +16,6 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
-
 @Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
 
@@ -26,12 +23,10 @@ public class ContractorJPADaoImpl implements ContractorDao {
 
     private final ContractorRepository repository;
     private final ContractorQuerySpec querySpec;
-    private final EntityManager em;
 
-    public ContractorJPADaoImpl(ContractorRepository repository, ContractorQuerySpec querySpec, EntityManager em) {
+    public ContractorJPADaoImpl(ContractorRepository repository, ContractorQuerySpec querySpec) {
         this.repository = repository;
         this.querySpec = querySpec;
-        this.em = em;
     }
 
     @Override

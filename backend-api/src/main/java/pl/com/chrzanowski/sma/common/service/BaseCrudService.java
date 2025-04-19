@@ -1,7 +1,5 @@
 package pl.com.chrzanowski.sma.common.service;
 
-import java.util.List;
-
 public interface BaseCrudService<T, ID> {
     T save(T t);
 

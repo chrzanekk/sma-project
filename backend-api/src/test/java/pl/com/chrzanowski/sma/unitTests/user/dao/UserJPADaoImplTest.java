@@ -26,7 +26,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static pl.com.chrzanowski.sma.helper.MockPagedList.mockPagedList;
 
 class UserJPADaoImplTest {
 
@@ -275,7 +274,7 @@ class UserJPADaoImplTest {
         // Then
         assertEquals(1, result.getTotalElements());
         assertEquals(1, result.getContent().size());
-        assertSame(user, result.getContent().get(0));
+        assertSame(user, result.getContent().getFirst());
         verify(userQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 

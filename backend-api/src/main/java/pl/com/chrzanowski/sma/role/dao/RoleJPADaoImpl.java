@@ -17,8 +17,6 @@ import pl.com.chrzanowski.sma.role.service.filter.RoleQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
-
 @Repository("roleJPA")
 public class RoleJPADaoImpl implements RoleDao {
 
