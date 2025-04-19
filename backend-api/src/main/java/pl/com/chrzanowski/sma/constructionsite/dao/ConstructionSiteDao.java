@@ -19,6 +19,4 @@ public interface ConstructionSiteDao {
     List<ConstructionSite> findAll(BooleanBuilder specification);
 
     void deleteById(Long id);
-
-    Page<ConstructionSite> findByContractorId(Long contractorId, Pageable pageable);
 }

@@ -1,26 +1,23 @@
 package pl.com.chrzanowski.sma.contact.service.filter;
 
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.model.QContact;
 
 @Component
 public class ContactQuerySpec {
 
-    private final EntityManager em;
+    private final BlazeJPAQueryFactory queryFactory;
 
-    public ContactQuerySpec(EntityManager em) {
-        this.em = em;
+    public ContactQuerySpec(BlazeJPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
+
 
     public static BooleanBuilder buildPredicate(ContactFilter filter) {
         QContact contact = QContact.contact;
@@ -51,24 +48,7 @@ public class ContactQuerySpec {
         return predicate;
     }
 
-    public JPQLQuery<Contact> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        QContact contact = QContact.contact;
-
-        JPQLQuery<Contact> query = new JPAQuery<>(em).select(contact).distinct().from(contact);
-        if (builder != null) {
-            query.where(builder);
-        }
-
-        if (pageable != null && pageable.getSort().isSorted()) {
-            PathBuilder<Contact> contactPathBuilder = new PathBuilder<>(Contact.class, "contact");
-            for (Sort.Order order : pageable.getSort()) {
-                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
-                        order.isAscending() ? Order.ASC : Order.DESC,
-                        contactPathBuilder.getComparable(order.getProperty(), String.class)
-                );
-                query.orderBy(orderSpecifier);
-            }
-        }
-        return query;
+    public BlazeJPAQuery<Contact> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        return QueryBuilderUtil.buildQuery(queryFactory, Contact.class, "contact", builder, pageable, QContact.contact.id.asc());
     }
 }

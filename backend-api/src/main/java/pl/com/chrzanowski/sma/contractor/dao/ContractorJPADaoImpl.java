@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.contractor.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,9 +17,7 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.company.model.QCompany.company;
 import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
-import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
@@ -69,22 +67,16 @@ public class ContractorJPADaoImpl implements ContractorDao {
     @Override
     public Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contractors with specification for page {}, {}", specification, pageable);
-        JPQLQuery<Contractor> baseQuery = querySpec.buildQuery(specification, pageable);
+        BlazeJPAQuery<Contractor> baseQuery = querySpec.buildQuery(specification, pageable);
 
-        long count = baseQuery.fetchCount();
-
-        List<Contractor> contractors = baseQuery
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        return new PageImpl<>(contractors, pageable, count);
+        PagedList<Contractor> contractors = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
+        return new PageImpl<>(contractors, pageable, contractors.getTotalSize());
     }
 
     @Override
     public List<Contractor> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all contractors with specification {}", specification);
-        JPQLQuery<Contractor> query = querySpec.buildQuery(specification, null);
-        return query.fetch();
+        return querySpec.buildQuery(specification, null).fetch();
     }
 
     @Override

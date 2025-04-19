@@ -1,25 +1,21 @@
 package pl.com.chrzanowski.sma.contractor.service.filter;
 
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.model.QContractor;
 
 @Component
 public class ContractorQuerySpec {
 
-    private final EntityManager em;
+    private final BlazeJPAQueryFactory queryFactory;
 
-    public ContractorQuerySpec(EntityManager em) {
-        this.em = em;
+    public ContractorQuerySpec(BlazeJPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     public static BooleanBuilder buildPredicate(ContractorFilter filter) {
@@ -80,25 +76,7 @@ public class ContractorQuerySpec {
         return builder;
     }
 
-    public JPQLQuery<Contractor> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        QContractor contractor = QContractor.contractor;
-
-        JPQLQuery<Contractor> query = new JPAQuery<>(em).select(contractor).distinct().from(contractor);
-
-        if (builder != null) {
-            query.where(builder);
-        }
-
-        if (pageable != null && pageable.getSort().isSorted()) {
-            PathBuilder<Contractor> contractorPathBuilder = new PathBuilder<>(Contractor.class, "contractor");
-            for (Sort.Order order : pageable.getSort()) {
-                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
-                        order.isAscending() ? Order.ASC : Order.DESC,
-                        contractorPathBuilder.getComparable(order.getProperty(), String.class)
-                );
-                query.orderBy(orderSpecifier);
-            }
-        }
-        return query;
+    public BlazeJPAQuery<Contractor> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        return QueryBuilderUtil.buildQuery(queryFactory, Contractor.class, "contractor", builder, pageable, QContractor.contractor.id.asc());
     }
 }

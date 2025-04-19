@@ -1,24 +1,20 @@
 package pl.com.chrzanowski.sma.role.service.filter;
 
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.role.model.QRole;
 import pl.com.chrzanowski.sma.role.model.Role;
 
 @Component
 public class RoleQuerySpec {
-    private final EntityManager em;
+    private final BlazeJPAQueryFactory queryFactory;
 
-    public RoleQuerySpec(EntityManager em) {
-        this.em = em;
+    public RoleQuerySpec(BlazeJPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     public static BooleanBuilder buildPredicate(RoleFilter filter) {
@@ -35,24 +31,7 @@ public class RoleQuerySpec {
         return predicate;
     }
 
-    public JPQLQuery<Role> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        QRole role = QRole.role;
-
-        JPQLQuery<Role> query = new JPAQuery<Role>(em).select(role).from(role);
-        if (builder != null) {
-            query.where(builder);
-        }
-        if (pageable != null && pageable.getSort().isSorted()) {
-            PathBuilder<Role> companyPathBuilder = new PathBuilder<>(Role.class, "role");
-            for (Sort.Order order : pageable.getSort()) {
-                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
-                        order.isAscending() ? Order.ASC : Order.DESC,
-                        companyPathBuilder.getComparable(order.getProperty(), String.class)
-                );
-                query.orderBy(orderSpecifier);
-            }
-        }
-
-        return query;
+    public BlazeJPAQuery<Role> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        return QueryBuilderUtil.buildQuery(queryFactory, Role.class, "role", builder, pageable, QRole.role.id.asc());
     }
 }

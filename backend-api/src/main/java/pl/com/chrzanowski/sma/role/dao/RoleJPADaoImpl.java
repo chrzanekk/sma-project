@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.role.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.JPQLQuery;
 import org.slf4j.Logger;
@@ -14,6 +16,8 @@ import pl.com.chrzanowski.sma.role.service.filter.RoleQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
+
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
 
 @Repository("roleJPA")
 public class RoleJPADaoImpl implements RoleDao {
@@ -68,10 +72,10 @@ public class RoleJPADaoImpl implements RoleDao {
 
     @Override
     public Page<Role> findAll(BooleanBuilder specification, Pageable pageable) {
-        log.debug("JPA DAO: Fetching all roles by specification {}", specification);
-        JPQLQuery<Role> query = roleQuerySpec.buildQuery(specification, pageable);
-        long totalElements = query.fetchCount();
-        List<Role> content = query.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-        return new PageImpl<>(content, pageable, totalElements);
+        log.debug("JPA DAO: Fetching all roles by specification and page {}", specification);
+        BlazeJPAQuery<Role> baseQuery = roleQuerySpec.buildQuery(specification, pageable);
+
+        PagedList<Role> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
+        return new PageImpl<>(content, pageable, content.getTotalSize());
     }
 }

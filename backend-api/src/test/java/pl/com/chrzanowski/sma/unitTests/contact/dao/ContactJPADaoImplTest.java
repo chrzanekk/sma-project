@@ -1,10 +1,10 @@
 package pl.com.chrzanowski.sma.unitTests.contact.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +20,7 @@ import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contact.repository.ContactRepository;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactQuerySpec;
+import pl.com.chrzanowski.sma.helper.SimplePagedList;
 
 import java.util.Collections;
 import java.util.List;
@@ -122,52 +123,57 @@ class ContactJPADaoImplTest {
 
     @Test
     void findAllWithSpecificationAndPageable_Positive() {
+        // Given
         BooleanBuilder specification = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 10);
         Contact contact = new Contact();
 
         @SuppressWarnings("unchecked")
-        JPAQuery<Contact> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Contact> mockQuery = mock(BlazeJPAQuery.class);
         when(mockQuery.leftJoin(eq(QContact.contact.contractor), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
-
         when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(1L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
 
-        when(mockQuery.fetch()).thenReturn(List.of(contact));
+        PagedList<Contact> pagedList = new SimplePagedList<>(List.of(contact), 1);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
+        // When
         Page<Contact> result = contactJPADaoImpl.findAll(specification, pageable);
 
+        // Then
         assertEquals(1, result.getTotalElements());
-        assertEquals(contact, result.getContent().getFirst());
+        assertEquals(1, result.getContent().size());
+        assertSame(contact, result.getContent().getFirst());
         verify(contactQuerySpec, times(1)).buildQuery(specification, pageable);
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
     void findAllWithSpecificationAndPageable_Negative() {
+        // Given
         BooleanBuilder specification = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 10);
 
         @SuppressWarnings("unchecked")
-        JPAQuery<Contact> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Contact> mockQuery = mock(BlazeJPAQuery.class);
         when(mockQuery.leftJoin(eq(QContact.contact.contractor), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
         when(contactQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(0L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
+        PagedList<Contact> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
+
+        // When
         Page<Contact> result = contactJPADaoImpl.findAll(specification, pageable);
 
+        // Then
         assertTrue(result.isEmpty());
         verify(contactQuerySpec, times(1)).buildQuery(specification, pageable);
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test

@@ -1,9 +1,9 @@
 package pl.com.chrzanowski.sma.contact.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -28,10 +28,10 @@ public class ContactJPADaoImpl implements ContactDao {
 
     private final ContactRepository contactRepository;
     private final ContactQuerySpec contactQuerySpec;
-    private final JPAQueryFactory queryFactory;
+    private final BlazeJPAQueryFactory queryFactory;
 
 
-    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, JPAQueryFactory queryFactory) {
+    public ContactJPADaoImpl(ContactRepository contactRepository, ContactQuerySpec contactQuerySpec, BlazeJPAQueryFactory queryFactory) {
         this.contactRepository = contactRepository;
         this.contactQuerySpec = contactQuerySpec;
         this.queryFactory = queryFactory;
@@ -64,33 +64,20 @@ public class ContactJPADaoImpl implements ContactDao {
     @Override
     public Page<Contact> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contacts by specification with page: {}", specification);
-        JPQLQuery<Contact> baseQuery = contactQuerySpec.buildQuery(specification, pageable);
+        BlazeJPAQuery<Contact> baseQuery = contactQuerySpec.buildQuery(specification, pageable);
 
-        long totalElements = baseQuery.fetchCount();
+        baseQuery.leftJoin(contact.contractor, contractor).fetchJoin()
+                .leftJoin(contact.company).fetchJoin();
 
-        JPAQuery<Contact> jpaQuery = getPaginationQuery(baseQuery);
+        PagedList<Contact> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
-        List<Contact> content = jpaQuery
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        return new PageImpl<>(content, pageable, totalElements);
-    }
-
-    private JPAQuery<Contact> getPaginationQuery(JPQLQuery<Contact> baseQuery) {
-        JPAQuery<Contact> jpaQuery = (JPAQuery<Contact>) baseQuery;
-
-        jpaQuery
-                .leftJoin(contact.contractor, contractor).fetchJoin()
-                .leftJoin(contractor.company).fetchJoin();
-        return jpaQuery;
+        return new PageImpl<>(content, pageable, content.getTotalSize());
     }
 
     @Override
     public List<Contact> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all contacts by specification: {}", specification);
-        JPQLQuery<Contact> query = contactQuerySpec.buildQuery(specification, null);
-        return query.fetch();
+        return contactQuerySpec.buildQuery(specification, null).fetch();
     }
 
 
@@ -103,20 +90,12 @@ public class ContactJPADaoImpl implements ContactDao {
     @Override
     public Page<Contact> findByContractorId(Long contractorId, Pageable pageable) {
         QContact contact = QContact.contact;
-        List<Contact> contacts = queryFactory
+        PagedList<Contact> contacts = queryFactory
                 .selectFrom(contact)
                 .where(contact.contractor.id.eq(contractorId))
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .orderBy(contact.id.asc()) // lub inna kolumna jeśli trzeba
-                .fetch();
+                .orderBy(contact.id.asc())
+                .fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
-        Long total = queryFactory
-                .select(contact.count())
-                .from(contact)
-                .where(contact.contractor.id.eq(contractorId))
-                .fetchOne();
-
-        return new PageImpl<>(contacts, pageable, total != null ? total : 0);
+        return new PageImpl<>(contacts, pageable, contacts.getTotalSize());
     }
 }

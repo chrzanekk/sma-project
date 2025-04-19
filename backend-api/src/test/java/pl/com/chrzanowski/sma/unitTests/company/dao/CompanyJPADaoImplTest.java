@@ -1,8 +1,8 @@
 package pl.com.chrzanowski.sma.unitTests.company.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
@@ -18,6 +18,7 @@ import pl.com.chrzanowski.sma.company.dao.CompanyJPADaoImpl;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.company.service.filter.CompanyQuerySpec;
+import pl.com.chrzanowski.sma.helper.SimplePagedList;
 
 import java.util.Collections;
 import java.util.List;
@@ -178,73 +179,65 @@ public class CompanyJPADaoImplTest {
 
     @Test
     void findAll_withSpecAndPage_Positive() {
-        //Given
+        // Given
         Pageable pageable = PageRequest.of(0, 2);
         Company company = Company.builder().id(1L).name("First Company").build();
+        BooleanBuilder specification = new BooleanBuilder();
 
-        BooleanBuilder specification = mock(BooleanBuilder.class);
         @SuppressWarnings("unchecked")
-        JPAQuery<Company> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Company> mockQuery = mock(BlazeJPAQuery.class);
         @SuppressWarnings("unchecked")
         EntityGraph<Company> mockEntityGraph = mock(EntityGraph.class);
         when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
 
         when(companyQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(1L);
-        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(List.of(company));
 
-        //When
+        PagedList<Company> pagedList = new SimplePagedList<>(List.of(company), 1);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
+
+        // When
         Page<Company> page = companyJPADaoImpl.findAll(specification, pageable);
 
-        //Then
+        // Then
         assertEquals(1, page.getTotalElements());
         assertEquals(1, page.getContent().size());
         assertTrue(page.getContent().contains(company));
         verify(companyQuerySpec, times(1)).buildQuery(specification, pageable);
-        verify(mockQuery, times(1)).offset(pageable.getOffset());
-        verify(mockQuery, times(1)).limit(pageable.getPageSize());
-        verify(mockQuery, times(1)).fetch();
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
     void findAll_withSpecAndPage_Negative() {
-        //Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
+        // Given
+        Pageable pageable = PageRequest.of(0, 2);
+        BooleanBuilder specification = new BooleanBuilder();
 
         @SuppressWarnings("unchecked")
-        JPAQuery<Company> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Company> mockQuery = mock(BlazeJPAQuery.class);
         @SuppressWarnings("unchecked")
         EntityGraph<Company> mockEntityGraph = mock(EntityGraph.class);
         when(em.createEntityGraph(Company.class)).thenReturn(mockEntityGraph);
-        Pageable pageable = PageRequest.of(0, 2);
 
         when(companyQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.setHint("jakarta.persistence.fetchgraph", mockEntityGraph)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(0L);
-        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
-        //When
+        PagedList<Company> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
+
+        // When
         Page<Company> page = companyJPADaoImpl.findAll(specification, pageable);
 
-        //Then
-
+        // Then
         assertTrue(page.isEmpty());
         verify(companyQuerySpec, times(1)).buildQuery(specification, pageable);
-        verify(mockQuery, times(1)).offset(pageable.getOffset());
-        verify(mockQuery, times(1)).limit(pageable.getPageSize());
-        verify(mockQuery, times(1)).fetch();
+
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
     void findAll_withSpec_Positive() {
         //Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Company> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<Company> query = mock(BlazeJPAQuery.class);
         Company company = Company.builder().id(1L).name("First Company").build();
 
         when(companyQuerySpec.buildQuery(specification, null)).thenReturn(query);
@@ -264,7 +257,7 @@ public class CompanyJPADaoImplTest {
     void findAll_withSpec_Negative() {
         //Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Company> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<Company> query = mock(BlazeJPAQuery.class);
 
         when(companyQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(Collections.emptyList());
@@ -275,7 +268,7 @@ public class CompanyJPADaoImplTest {
         //Then
 
         assertTrue(companies.isEmpty());
-        verify(companyQuerySpec, times(1)).buildQuery(specification,null);
+        verify(companyQuerySpec, times(1)).buildQuery(specification, null);
         verify(query, times(1)).fetch();
     }
 
