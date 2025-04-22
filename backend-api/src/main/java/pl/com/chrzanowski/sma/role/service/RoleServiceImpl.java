@@ -1,9 +1,9 @@
 package pl.com.chrzanowski.sma.role.service;
 
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
 import pl.com.chrzanowski.sma.common.exception.RoleException;
 import pl.com.chrzanowski.sma.common.exception.error.RoleErrorCode;
@@ -85,6 +85,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Set<RoleDTO> findAllByListOfNames(List<String> names) {
         log.debug("Fetching all roles with names {}", names);
         return names.stream().map(this::findByName).collect(Collectors.toSet());

@@ -2,13 +2,13 @@ package pl.com.chrzanowski.sma.email.service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.EmailSendFailException;
 import pl.com.chrzanowski.sma.email.dto.SentEmailDTO;
 
@@ -33,6 +33,7 @@ public class EmailSenderServiceImpl implements EmailSenderService {
     }
 
     @Override
+    @Transactional
     public void sendEmail(SentEmailDTO sentEmailDTO) {
         log.debug("Sending email to: {}", sentEmailDTO.getUserEmail());
         MimeMessage mail = javaMailSender.createMimeMessage();

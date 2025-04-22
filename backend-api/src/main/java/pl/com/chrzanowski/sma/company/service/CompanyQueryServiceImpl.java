@@ -1,12 +1,12 @@
 package pl.com.chrzanowski.sma.company.service;
 
 import com.querydsl.core.BooleanBuilder;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.CompanyException;
 import pl.com.chrzanowski.sma.common.exception.error.CompanyErrorCode;
 import pl.com.chrzanowski.sma.company.dao.CompanyDao;
@@ -37,6 +37,7 @@ public class CompanyQueryServiceImpl implements CompanyQueryService {
     }
 
     @Override
+    @Transactional
     public List<CompanyAuditableDTO> findByFilter(CompanyFilter filter) {
         log.debug("Request to filter by filter: {}", filter);
         BooleanBuilder specification = CompanyQuerySpec.buildPredicate(filter);
@@ -44,12 +45,12 @@ public class CompanyQueryServiceImpl implements CompanyQueryService {
     }
 
     @Override
+    @Transactional
     public Page<CompanyAuditableDTO> findByFilter(CompanyFilter filter, Pageable pageable) {
         log.debug("Request to filter by filter and page: {} {}", filter, pageable);
         BooleanBuilder specification = CompanyQuerySpec.buildPredicate(filter);
         return companyDao.findAll(specification, pageable).map(companyAuditMapper::toDto);
     }
-
 
     @Override
     public CompanyDTO findByName(String name) {

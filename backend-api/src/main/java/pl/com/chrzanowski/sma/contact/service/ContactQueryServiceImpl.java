@@ -1,13 +1,14 @@
 package pl.com.chrzanowski.sma.contact.service;
 
 import com.querydsl.core.BooleanBuilder;
-import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactAuditableDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
@@ -21,7 +22,7 @@ import pl.com.chrzanowski.sma.contact.service.filter.ContactQuerySpec;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class ContactQueryServiceImpl implements ContactQueryService {
 
     private final Logger log = LoggerFactory.getLogger(ContactQueryServiceImpl.class);
@@ -63,6 +64,7 @@ public class ContactQueryServiceImpl implements ContactQueryService {
     }
 
     @Override
+    @Transactional
     public Page<ContactDTO> findByContractorId(Long contractorId, Pageable pageable) {
         Page<Contact> page = contactDao.findByContractorId(contractorId, pageable);
         List<ContactDTO> dtos = contactDTOMapper.toDtoList(page.getContent());

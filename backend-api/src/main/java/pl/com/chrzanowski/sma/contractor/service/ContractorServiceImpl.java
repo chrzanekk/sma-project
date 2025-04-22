@@ -1,10 +1,10 @@
 package pl.com.chrzanowski.sma.contractor.service;
 
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
@@ -159,39 +159,31 @@ public class ContractorServiceImpl implements ContractorService {
 
     @Override
     public ContractorDTO updateWithChangedContacts(ContractorUpdateDTO updateDTO) {
-        // wczytaj istniejącego kontrahenta
         Contractor existingContractor = contractorDao.findById(updateDTO.getId())
                 .orElseThrow(() -> new ContractorException(
                         ContractorErrorCode.CONTRACTOR_NOT_FOUND,
                         "Contractor not found with id: " + updateDTO.getId()));
 
-        // zaktualizuj dane kontrahenta (nazwa, adres, itp.) mapperem
         contractorDTOMapper.updateFromUpdateDto(updateDTO, existingContractor);
 
-        // Dodaj nowe kontakty
         if (updateDTO.getAddedContacts() != null) {
             for (ContactBaseDTO added : updateDTO.getAddedContacts()) {
                 if (added.getId() == null) {
-                    // tworzymy NOWY kontakt
                     Contact newContact = contactBaseMapper.toEntity(added);
                     newContact.setContractor(existingContractor);
-                    contactDao.save(newContact); // zapisujemy
+                    contactDao.save(newContact);
                     existingContractor.getContacts().add(newContact);
                 } else {
-                    // załóżmy, że kontakt istnieje - trzeba go wczytać
                     Contact existing = contactDao.findById(added.getId())
                             .orElseThrow(() -> new ContractorException(
                                     ContactErrorCode.CONTACT_NOT_FOUND,
                                     "Contact not found: " + added.getId()));
-
-                    // przypisz go do kontrahenta (o ile nie jest przypisany)
                     existing.setContractor(existingContractor);
                     existingContractor.getContacts().add(existing);
                 }
             }
         }
 
-        // Usuń kontakty
         if (updateDTO.getDeletedContacts() != null) {
             for (ContactBaseDTO deleted : updateDTO.getDeletedContacts()) {
                 if (deleted.getId() != null) {
@@ -206,12 +198,12 @@ public class ContractorServiceImpl implements ContractorService {
             }
         }
 
-        // zapisujemy zaktualizowanego kontrahenta
         Contractor savedContractor = contractorDao.save(existingContractor);
         return contractorDTOMapper.toDto(savedContractor);
     }
 
     @Override
+    @Transactional
     public ContractorDTO findById(Long id) {
         log.debug("Find contractor by id: {}", id);
         Optional<Contractor> optionalContractor = contractorDao.findById(id);
@@ -220,6 +212,7 @@ public class ContractorServiceImpl implements ContractorService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         log.debug("Delete contractor by id: {}", id);
         contractorDao.deleteById(id);

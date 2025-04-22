@@ -1,12 +1,12 @@
 package pl.com.chrzanowski.sma.user.service;
 
 import com.querydsl.core.BooleanBuilder;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.mapper.UserMapper;
@@ -16,7 +16,7 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class UserQueryServiceImpl implements UserQueryService {
 
     private final Logger log = LoggerFactory.getLogger(UserQueryServiceImpl.class);

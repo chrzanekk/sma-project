@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.user.service;
 
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -8,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
@@ -247,6 +247,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDTO getUserByLogin(String login) {
         log.debug("Fetching user by login: {} ", login);
         User user = userDao.findByLogin(login)
@@ -292,6 +293,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Optional<User> getCurrentLoggedUser() {
         log.debug("Get current logged user.");
         String currentLogin = SecurityUtils.getCurrentUserLogin().orElseThrow(() -> new UsernameNotFoundException("User not found"));
@@ -299,6 +301,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Long getCurrentUserIdFromSecurityContext() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.getPrincipal() instanceof UserDetailsImpl userDetails) {
@@ -308,6 +311,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserPasswordByAdmin(AdminEditPasswordChangeRequest adminEditPasswordChangeRequest) {
         log.debug("Update user password by admin for user: {}", adminEditPasswordChangeRequest.userId());
         UserDTO existingUserDTO = findById(adminEditPasswordChangeRequest.userId());
