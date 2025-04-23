@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.constructionsite.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -12,6 +13,7 @@ import pl.com.chrzanowski.sma.common.audit.AuditableDTO;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@Getter
 @ToString(callSuper = true)
 public class ConstructionSiteAuditableDTO extends AuditableDTO {
     @JsonUnwrapped

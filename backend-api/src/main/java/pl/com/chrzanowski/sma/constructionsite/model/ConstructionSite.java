@@ -22,7 +22,7 @@ public class ConstructionSite extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "construction_site_seq")
-    @SequenceGenerator(name = "constr_site_seq", sequenceName = "construction_site_sequence", allocationSize = 1)
+    @SequenceGenerator(name = "construction_site_seq", sequenceName = "construction_site_sequence", allocationSize = 1)
     @Column(nullable = false)
     private Long id;
 
