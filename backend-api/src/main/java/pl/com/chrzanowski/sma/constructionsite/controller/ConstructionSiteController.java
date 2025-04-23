@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteAuditableDTO;
+import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteCreateDTO;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteQueryService;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteService;
@@ -58,6 +59,13 @@ public class ConstructionSiteController {
         log.debug("REST request to add ConstructionSite : {}", constructionSiteDTO);
         ConstructionSiteDTO savedConstructionSiteDTO = constructionSiteService.save(constructionSiteDTO);
         return ResponseEntity.ok().body(savedConstructionSiteDTO);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<ConstructionSiteDTO> createConstructionSite(@RequestBody ConstructionSiteCreateDTO constructionSiteCreateDTO) {
+        log.debug("REST request to create ConstructionSite: {}", constructionSiteCreateDTO);
+        ConstructionSiteDTO createdConstructionSiteDTO = constructionSiteService.create(constructionSiteCreateDTO);
+        return ResponseEntity.ok().body(createdConstructionSiteDTO);
     }
 
     @PutMapping("/update")

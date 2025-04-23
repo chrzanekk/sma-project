@@ -10,9 +10,11 @@ import java.util.List;
 @Repository
 public interface ConstructionSiteContractorRepository extends JpaRepository<ConstructionSiteContractor, ConstructionSiteContractorId> {
 
-    // Przykładowa metoda wyszukiwania po constructionSiteId
     List<ConstructionSiteContractor> findByIdConstructionSiteId(Long constructionSiteId);
 
-    // Przykładowa metoda wyszukiwania po contractorId
     List<ConstructionSiteContractor> findByIdContractorId(Long contractorId);
+
+    void deleteByIdConstructionSiteId(Long constructionSiteId);
+
+    void deleteByIdContractorId(Long constructionSiteId);
 }

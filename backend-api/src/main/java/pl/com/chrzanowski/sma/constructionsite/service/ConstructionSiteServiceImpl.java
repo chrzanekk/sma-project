@@ -7,10 +7,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.ConstructionSiteException;
 import pl.com.chrzanowski.sma.common.exception.error.ConstructionSiteErrorCode;
 import pl.com.chrzanowski.sma.constructionsite.dao.ConstructionSiteDao;
+import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteCreateDTO;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
-import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteBaseMapper;
 import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteDTOMapper;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
+import pl.com.chrzanowski.sma.constructionsitecontractor.service.ConstructionSiteContractorService;
 
 import java.util.Optional;
 
@@ -22,10 +23,12 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
 
     private final ConstructionSiteDao constructionSiteDao;
     private final ConstructionSiteDTOMapper constructionSiteDTOMapper;
+    private final ConstructionSiteContractorService constructionSiteContractorService;
 
-    public ConstructionSiteServiceImpl(ConstructionSiteDao constructionSiteDao,ConstructionSiteDTOMapper constructionSiteDTOMapper) {
+    public ConstructionSiteServiceImpl(ConstructionSiteDao constructionSiteDao, ConstructionSiteDTOMapper constructionSiteDTOMapper, ConstructionSiteContractorService constructionSiteContractorService) {
         this.constructionSiteDao = constructionSiteDao;
         this.constructionSiteDTOMapper = constructionSiteDTOMapper;
+        this.constructionSiteContractorService = constructionSiteContractorService;
     }
 
 
@@ -36,6 +39,17 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
         ConstructionSite constructionSite = constructionSiteDTOMapper.toEntity(constructionSiteDTO);
         constructionSite = constructionSiteDao.save(constructionSite);
         return constructionSiteDTOMapper.toDto(constructionSite);
+    }
+
+    @Override
+    public ConstructionSiteDTO create(ConstructionSiteCreateDTO constructionSiteCreateDTO) {
+        log.debug("Request to create ConstructionSite : {}", constructionSiteCreateDTO.getName());
+        //todo first get list of contractors and check if exists etc. - find in contractor service if this is ok.
+        //todo second update contractor list in constructionSite entity - new must be saved
+        //todo third save new Construction site
+        //todo fourth save contractors of construction site
+
+        return null;
     }
 
     @Override
@@ -62,6 +76,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Transactional
     public void delete(Long id) {
         log.debug("Request to delete ConstructionSite : {}", id);
+        constructionSiteContractorService.deleteByIdConstructionSiteId(id);
         constructionSiteDao.deleteById(id);
     }
 }

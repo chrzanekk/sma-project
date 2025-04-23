@@ -9,10 +9,10 @@ import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.exception.ConstructionSiteException;
 import pl.com.chrzanowski.sma.constructionsite.dao.ConstructionSiteDao;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
-import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteBaseMapper;
 import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteDTOMapper;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteServiceImpl;
+import pl.com.chrzanowski.sma.constructionsitecontractor.service.ConstructionSiteContractorServiceImpl;
 
 import java.util.Optional;
 
@@ -27,6 +27,9 @@ class ConstructionSiteServiceImplTest {
 
     @Mock
     private ConstructionSiteDao dao;
+
+    @Mock
+    private ConstructionSiteContractorServiceImpl constructionSiteContractorService;
 
     @Mock
     private ConstructionSiteDTOMapper dtoMapper;
@@ -121,6 +124,7 @@ class ConstructionSiteServiceImplTest {
     @Test
     void testDelete_Positive() {
         doNothing().when(dao).deleteById(1L);
+        doNothing().when(constructionSiteContractorService).deleteByIdConstructionSiteId(1L);
 
         service.delete(1L);
 
@@ -130,6 +134,7 @@ class ConstructionSiteServiceImplTest {
     @Test
     void testDelete_Failure() {
         doThrow(new RuntimeException("fail")).when(dao).deleteById(2L);
+        doNothing().when(constructionSiteContractorService).deleteByIdConstructionSiteId(2L);
 
         assertThrows(RuntimeException.class, () -> service.delete(2L));
         verify(dao, times(1)).deleteById(2L);

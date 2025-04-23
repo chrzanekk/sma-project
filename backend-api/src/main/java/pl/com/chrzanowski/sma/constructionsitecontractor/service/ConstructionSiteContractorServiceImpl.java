@@ -48,4 +48,16 @@ public class ConstructionSiteContractorServiceImpl implements ConstructionSiteCo
     public void deleteById(ConstructionSiteContractorId id) {
         constructionSiteContractorRepository.deleteById(id);
     }
+
+
+    @Override
+    @Transactional
+    public void deleteByIdConstructionSiteId(Long constructionSiteId) {
+        constructionSiteContractorRepository.deleteByIdConstructionSiteId(constructionSiteId);
+    }
+
+    @Override
+    public void deleteByIdContractorId(Long contractorId) {
+        constructionSiteContractorRepository.deleteByIdContractorId(contractorId);
+    }
 }

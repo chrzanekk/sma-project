@@ -17,4 +17,8 @@ public interface ConstructionSiteContractorService {
     List<ConstructionSiteContractor> findByIdContractorId(Long contractorSiteId);
 
     void deleteById(ConstructionSiteContractorId id);
+
+    void deleteByIdConstructionSiteId(Long constructionSiteId);
+
+    void deleteByIdContractorId(Long constructionSiteId);
 }
