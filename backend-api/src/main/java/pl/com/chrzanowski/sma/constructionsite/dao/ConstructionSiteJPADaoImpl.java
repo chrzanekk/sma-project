@@ -2,7 +2,6 @@ package pl.com.chrzanowski.sma.constructionsite.dao;
 
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
-import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +25,11 @@ public class ConstructionSiteJPADaoImpl implements ConstructionSiteDao {
 
     private final ConstructionSiteRepository constructionSiteRepository;
     private final ConstructionSiteQuerySpec querySpec;
-    private final BlazeJPAQueryFactory queryFactory;
 
-    public ConstructionSiteJPADaoImpl(ConstructionSiteRepository constructionSiteRepository, ConstructionSiteQuerySpec querySpec, BlazeJPAQueryFactory queryFactory) {
+
+    public ConstructionSiteJPADaoImpl(ConstructionSiteRepository constructionSiteRepository, ConstructionSiteQuerySpec querySpec) {
         this.constructionSiteRepository = constructionSiteRepository;
         this.querySpec = querySpec;
-        this.queryFactory = queryFactory;
     }
 
     @Override
@@ -62,7 +60,8 @@ public class ConstructionSiteJPADaoImpl implements ConstructionSiteDao {
     @Override
     public List<ConstructionSite> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all Construction Sites: {}", specification.toString());
-        return querySpec.buildQuery(specification, null).fetch();
+        List<ConstructionSite> result = querySpec.buildQuery(specification, null).fetch();
+        return result;
     }
 
     @Override

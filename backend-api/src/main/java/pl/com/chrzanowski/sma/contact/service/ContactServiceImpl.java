@@ -28,19 +28,17 @@ public class ContactServiceImpl implements ContactService {
     private final Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
 
     private final ContactDao contactDao;
-    private final ContactBaseMapper contactBaseMapper;
     private final ContactDTOMapper contactDTOMapper;
 
-    public ContactServiceImpl(ContactDao contactDao, ContactBaseMapper contactBaseMapper, ContactDTOMapper contactDTOMapper) {
+    public ContactServiceImpl(ContactDao contactDao, ContactDTOMapper contactDTOMapper) {
         this.contactDao = contactDao;
-        this.contactBaseMapper = contactBaseMapper;
         this.contactDTOMapper = contactDTOMapper;
     }
 
     @Override
     @Transactional
     public ContactDTO save(ContactDTO contactBaseDTO) {
-        log.debug("Request to save Contact : {}", contactBaseDTO.getId());
+        log.debug("Request to save Contact : {}", contactBaseDTO.getEmail());
         validateRequiredFields(contactBaseDTO);
         Contact contact = contactDTOMapper.toEntity(contactBaseDTO);
         Contact savedContact = contactDao.save(contact);

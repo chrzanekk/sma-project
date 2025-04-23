@@ -5,7 +5,6 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
-import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,9 +38,6 @@ class ContactJPADaoImplTest {
 
     @Mock
     private ContactQuerySpec contactQuerySpec;
-
-    @Mock
-    private EntityManager em;
 
     private AutoCloseable closeable;
 
