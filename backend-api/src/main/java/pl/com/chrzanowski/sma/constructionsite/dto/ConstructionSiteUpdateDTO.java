@@ -17,5 +17,6 @@ import java.util.List;
 @ToString(callSuper = true)
 public class ConstructionSiteUpdateDTO extends ConstructionSiteBaseDTO {
     CompanyBaseDTO company;
-    List<ContractorDTO> contractors;
+    List<ContractorDTO> addedContractors;
+    List<ContractorDTO> deletedContractors;
 }

@@ -21,4 +21,6 @@ public interface ConstructionSiteContractorService {
     void deleteByIdConstructionSiteId(Long constructionSiteId);
 
     void deleteByIdContractorId(Long constructionSiteId);
+
+    void deleteByConstructionSiteIdAndContractorId(Long constructionSiteId, Long contractorId);
 }

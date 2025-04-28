@@ -17,4 +17,6 @@ public interface ConstructionSiteContractorRepository extends JpaRepository<Cons
     void deleteByIdConstructionSiteId(Long constructionSiteId);
 
     void deleteByIdContractorId(Long constructionSiteId);
+
+    void deleteByConstructionSiteIdAndContractorId(Long constructionSiteId,Long contractorId);
 }

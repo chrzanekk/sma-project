@@ -8,6 +8,7 @@ import org.mapstruct.factory.Mappers;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
+import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteUpdateDTO;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractorId;
@@ -46,7 +47,19 @@ public interface ConstructionSiteDTOMapper extends EntityMapper<ConstructionSite
 
     @Mapping(source = "company", target = "company")
     @Mapping(target = "siteContractors", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
     void updateFromDto(ConstructionSiteDTO constructionSiteDTO, @MappingTarget ConstructionSite constructionSite);
+
+    @Mapping(target = "company", ignore = true)
+    @Mapping(target = "siteContractors", ignore = true)
+    @Mapping(target = "createdDatetime", ignore = true)
+    @Mapping(target = "lastModifiedDatetime", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "modifiedBy", ignore = true)
+    void updateFromUpdateDto(ConstructionSiteUpdateDTO constructionSiteUpdateDTO, @MappingTarget ConstructionSite constructionSite);
 
     @AfterMapping
     default void enrichSiteContractors(
