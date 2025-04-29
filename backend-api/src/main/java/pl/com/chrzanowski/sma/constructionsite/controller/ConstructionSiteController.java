@@ -12,6 +12,7 @@ import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteAuditableDTO;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteCreateDTO;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
+import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteUpdateDTO;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteQueryService;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteService;
 import pl.com.chrzanowski.sma.constructionsite.service.filter.ConstructionSiteFilter;
@@ -19,7 +20,7 @@ import pl.com.chrzanowski.sma.constructionsite.service.filter.ConstructionSiteFi
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/constructionSites")
+@RequestMapping(path = "/api/construction-sites")
 public class ConstructionSiteController {
 
     private final Logger log = LoggerFactory.getLogger(ConstructionSiteController.class);
@@ -73,6 +74,13 @@ public class ConstructionSiteController {
         log.debug("REST request to update ConstructionSite : {}", constructionSiteDTO.getId());
         ConstructionSiteDTO updatedConstructionSiteDTO = constructionSiteService.update(constructionSiteDTO);
         return ResponseEntity.ok().body(updatedConstructionSiteDTO);
+    }
+
+    @PutMapping("/extended-update")
+    public ResponseEntity<ConstructionSiteDTO> extendedUpdateConstructionSite(@RequestBody ConstructionSiteUpdateDTO constructionSiteUpdateDTO) {
+        log.debug("REST request to extended update ConstructionSite: {}", constructionSiteUpdateDTO.getId());
+        ConstructionSiteDTO updateDTO = constructionSiteService.update(constructionSiteUpdateDTO);
+        return ResponseEntity.ok().body(updateDTO);
     }
 
     @DeleteMapping("/delete/{id}")

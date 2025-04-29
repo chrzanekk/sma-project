@@ -80,7 +80,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/companies/**").hasAnyAuthority("ROLE_ADMIN")
 
                         //CONSTRUCTION SITE CONTROLLER
-                        .requestMatchers("/api/constructionSites/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+                        .requestMatchers("/api/construction-sites/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
 
 
                         .anyRequest().authenticated()
