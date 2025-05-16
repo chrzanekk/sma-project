@@ -19,7 +19,7 @@ import pl.com.chrzanowski.sma.constructionsite.service.filter.ConstructionSiteFi
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/constructionSites")
+@RequestMapping(path = "/api/construction-sites")
 public class ConstructionSiteController {
 
     private final Logger log = LoggerFactory.getLogger(ConstructionSiteController.class);
