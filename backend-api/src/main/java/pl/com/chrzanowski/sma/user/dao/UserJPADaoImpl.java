@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
@@ -76,11 +77,10 @@ public class UserJPADaoImpl implements UserDao {
     }
 
     @Override
+    @EntityGraph(attributePaths = "roles")
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
         BlazeJPAQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
-
-        query.leftJoin(user.roles, role).fetchJoin();
 
         PagedList<User> content = query.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(content, pageable, content.getTotalSize());

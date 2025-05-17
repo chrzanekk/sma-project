@@ -1,0 +1,8 @@
+{
+  "list": "Lista budów",
+  "name": "Nazwa budowy",
+  "shortName": "Skrócona nazwa",
+  "code" : "Kod budowy",
+  "country": "Kraj",
+  "contractor": "Konrahent"
+}

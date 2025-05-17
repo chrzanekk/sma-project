@@ -17,6 +17,7 @@ export const getConstructionSiteByFilter = async (filter: Record<string, any>) =
     try {
         const queryParams = serializeQueryParams({
             ...filter,
+            country: filter.country || '',
             companyId: getSelectedCompanyId(),
             size: filter.size || 10,
             page: filter.page || 0,

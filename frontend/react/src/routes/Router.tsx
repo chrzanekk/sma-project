@@ -15,6 +15,7 @@ import UnderConstructionRoute from "@/routes/UnderConstructionRoute.tsx";
 import ContractorManagement from "@/components/contractor/ContractorManagement.tsx";
 import ContactManagement from "@/components/contact/ContactManagement.tsx";
 import CompanyManagement from "@/components/company/CompanyManagement.tsx";
+import ConstructionSiteManagement from "@/components/constructionsite/ConstructionSiteManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -142,10 +143,7 @@ const router = createBrowserRouter([
             path: "constructionSites",
             element: <ProtectedRoute>
                 <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'constructionSites'}
-                        nameSpace={'navbar'}
-                    />
+                    <ConstructionSiteManagement/>
                 </Layout>
             </ProtectedRoute>
         }

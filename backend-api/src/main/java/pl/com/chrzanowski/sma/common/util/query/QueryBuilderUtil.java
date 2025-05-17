@@ -31,11 +31,15 @@ public class QueryBuilderUtil {
                         order.isAscending() ? Order.ASC : Order.DESC,
                         path.getComparable(order.getProperty(), String.class)
                 ));
+                query.orderBy(new OrderSpecifier<>(Order.ASC, path.getNumber("id", Long.class)
+                ));
             }
         }
 
         if (query.getMetadata().getOrderBy().isEmpty()) {
             query.orderBy(defaultSort);
+            query.orderBy(new OrderSpecifier<>(Order.ASC, path.getNumber("id", Long.class)
+            ));
         }
 
         return query;
