@@ -3,10 +3,10 @@ import {deleteConstructionSiteById, getConstructionSiteByFilter} from "@/service
 import ConstructionSiteLayout from "@/components/constructionsite/ConstructionSiteLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import RoleTable from "@/components/role/RoleTable.tsx";
 import AddRoleDrawer from "@/components/role/AddRoleDrawer.tsx";
 import {Flex} from "@chakra-ui/react";
 import ConstructionSiteFilterForm from "@/components/constructionsite/ConstructionSiteFilterForm.tsx";
+import ConstructionSiteTable from "@/components/constructionsite/ConstructionSiteTable.tsx";
 
 
 const ConstructionSiteManagement: React.FC = () => {
@@ -35,16 +35,16 @@ const ConstructionSiteManagement: React.FC = () => {
         <ConstructionSiteLayout
             filters={<ConstructionSiteFilterForm onSubmit={onFilterSubmit}/>}
             addConstructionSiteButton={<Flex justifyContent={"center"}>
-                <AddRoleDrawer fetchRoles={()=>onFilterSubmit({})}/>
+                <AddRoleDrawer fetchRoles={() => onFilterSubmit({})}/>
             </Flex>}
             content={
-            <RoleTable
-                roles={constructionSites}
-                onDelete={onDelete}
-                onSortChange={onSortChange}
-                sortField={sortField}
-                sortDirection={sortDirection}
-            />}
+                <ConstructionSiteTable
+                    constructionSites={constructionSites}
+                    onDelete={onDelete}
+                    onSortChange={onSortChange}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                />}
             pagination={
                 <Pagination
                     currentPage={currentPage}

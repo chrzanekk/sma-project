@@ -1,6 +1,7 @@
 {
   "list": "Lista budów",
   "name": "Nazwa budowy",
+  "address": "Adres",
   "shortName": "Skrócona nazwa",
   "code" : "Kod budowy",
   "country": "Kraj",

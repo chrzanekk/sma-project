@@ -9,6 +9,7 @@ import {
     FetchableConstructionSiteDTO
 } from "@/types/constrution-site-types.ts";
 import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {ContractorDTO} from "@/types/contractor-types.ts";
 
 
 const CONSTRUCTION_SITE_API_BASE = "/api/construction-sites";
@@ -42,6 +43,23 @@ export const getConstructionSiteById = async (id: number) => {
     } catch (err) {
         throw err;
     }
+}
+
+export const getContractorsByConstructionSiteIdPaged = async (
+    constructionSiteId: number,
+    page: number,
+    size: number,
+) => {
+    const response = await api.get(`${CONSTRUCTION_SITE_API_BASE}/constructionSite/${constructionSiteId}/contractors`, {
+        params: {
+            constructionSiteId,
+            page,
+            size,
+            sort: 'id,asc'
+        },
+        ...getAuthConfig(),
+    });
+    return parsePaginationResponse<ContractorDTO>(response);
 }
 
 export const addConstructionSite = async (addConstructionSite: ConstructionSiteDTO) => {

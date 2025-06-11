@@ -39,13 +39,7 @@ export const getNavItems = (): NavItem[] => {
                     href: '#',
                     onClick: (() => navigate('/mainWarehouse')),
                     value: "mainWarehouse"
-                },
-                {
-                    label: t('constructionSites'),
-                    href: '#',
-                    onClick: (() => navigate('/constructionSites')),
-                    value: "constructionSites"
-                },
+                }
             ]
         },
         {
@@ -59,6 +53,12 @@ export const getNavItems = (): NavItem[] => {
             href: '#',
             onClick: (() => navigate('/contacts')),
             value: "contacts"
-        }
+        },
+        {
+            label: t('constructionSites'),
+            href: '#',
+            onClick: (() => navigate('/constructionSites')),
+            value: "constructionSites"
+        },
     ];
 }

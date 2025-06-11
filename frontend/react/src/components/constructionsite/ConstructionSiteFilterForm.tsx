@@ -10,6 +10,7 @@ import {useThemeColorsHex} from "@/theme/theme-colors.ts";
 
 interface FilterValues {
     nameStartsWith?: string;
+    addressStartsWith?: string;
     shortNameStartsWith?: string;
     codeStartsWith?: string;
     country?: string;
@@ -38,6 +39,7 @@ const ConstructionSiteFilterForm: React.FC<Props> = ({onSubmit}) => {
             initialValues={
                 {
                     nameStartsWith: '',
+                    addressStartsWith: '',
                     shortNameStartsWith: '',
                     codeStartsWith: '',
                     country: '',
@@ -59,6 +61,7 @@ const ConstructionSiteFilterForm: React.FC<Props> = ({onSubmit}) => {
                             flexWrap={"wrap"}
                         >
                             <CustomInputFilterField name="nameStartsWith" placeholder={t('constructionSites:name')}/>
+                            <CustomInputFilterField name="addressStartsWith" placeholder={t('constructionSites:address')}/>
                             <CustomInputFilterField name="shortNameStartsWith" placeholder={t('constructionSites:shortName')}/>
                             <CustomInputFilterField name="codeStartsWith" placeholder={t('constructionSites:code')}/>
                             <CustomSelectField

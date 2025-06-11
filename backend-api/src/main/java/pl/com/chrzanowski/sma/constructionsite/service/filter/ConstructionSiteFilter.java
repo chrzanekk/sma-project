@@ -13,6 +13,7 @@ import pl.com.chrzanowski.sma.common.enumeration.Country;
 public class ConstructionSiteFilter {
     private Long id;
     private String nameStartsWith;
+    private String addressStartsWith;
     private String shortNameStartsWith;
     private String codeStartsWith;
     private Country country;

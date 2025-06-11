@@ -1,10 +1,15 @@
 package pl.com.chrzanowski.sma.constructionsitecontractor.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractorId;
 import pl.com.chrzanowski.sma.constructionsitecontractor.repository.ConstructionSiteContractorRepository;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
+import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +19,11 @@ import java.util.Optional;
 public class ConstructionSiteContractorServiceImpl implements ConstructionSiteContractorService {
 
     private final ConstructionSiteContractorRepository constructionSiteContractorRepository;
+    private final ContractorDTOMapper contractorDTOMapper;
 
-    public ConstructionSiteContractorServiceImpl(ConstructionSiteContractorRepository constructionSiteContractorRepository) {
+    public ConstructionSiteContractorServiceImpl(ConstructionSiteContractorRepository constructionSiteContractorRepository, ContractorDTOMapper contractorDTOMapper) {
         this.constructionSiteContractorRepository = constructionSiteContractorRepository;
+        this.contractorDTOMapper = contractorDTOMapper;
     }
 
     @Override
@@ -29,6 +36,13 @@ public class ConstructionSiteContractorServiceImpl implements ConstructionSiteCo
     @Transactional
     public Optional<ConstructionSiteContractor> findById(ConstructionSiteContractorId id) {
         return constructionSiteContractorRepository.findById(id);
+    }
+
+    @Override
+    public Page<ContractorDTO> findAllContractorsByConstructionSiteIdPaged(Long constructionSiteId, Pageable pageable) {
+        Page<Contractor> contractorsPage = constructionSiteContractorRepository
+                .findContractorsByConstructionSiteId(constructionSiteId, pageable);
+        return contractorsPage.map(contractorDTOMapper::toDto);
     }
 
     @Override

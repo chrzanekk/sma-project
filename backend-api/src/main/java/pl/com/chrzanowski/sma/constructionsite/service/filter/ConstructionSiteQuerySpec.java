@@ -28,6 +28,9 @@ public class ConstructionSiteQuerySpec {
         if (filter.getNameStartsWith() != null && !filter.getNameStartsWith().isEmpty()) {
             builder.and(constructionSite.name.containsIgnoreCase(filter.getNameStartsWith()));
         }
+        if (filter.getNameStartsWith() != null && !filter.getNameStartsWith().isEmpty()) {
+            builder.and(constructionSite.address.containsIgnoreCase(filter.getAddressStartsWith()));
+        }
         if (filter.getShortNameStartsWith() != null && !filter.getShortNameStartsWith().isEmpty()) {
             builder.and(constructionSite.shortName.containsIgnoreCase(filter.getShortNameStartsWith()));
         }

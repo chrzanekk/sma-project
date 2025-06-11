@@ -16,6 +16,8 @@ import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteUpdateDTO;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteQueryService;
 import pl.com.chrzanowski.sma.constructionsite.service.ConstructionSiteService;
 import pl.com.chrzanowski.sma.constructionsite.service.filter.ConstructionSiteFilter;
+import pl.com.chrzanowski.sma.constructionsitecontractor.service.ConstructionSiteContractorService;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 
 import java.util.List;
 
@@ -27,10 +29,13 @@ public class ConstructionSiteController {
 
     private final ConstructionSiteService constructionSiteService;
     private final ConstructionSiteQueryService constructionSiteQueryService;
+    private final ConstructionSiteContractorService constructionSiteContractorService;
 
-    public ConstructionSiteController(ConstructionSiteService constructionSiteService, ConstructionSiteQueryService constructionSiteQueryService) {
+    public ConstructionSiteController(ConstructionSiteService constructionSiteService, ConstructionSiteQueryService constructionSiteQueryService, ConstructionSiteContractorService constructionSiteContractorService) {
         this.constructionSiteService = constructionSiteService;
         this.constructionSiteQueryService = constructionSiteQueryService;
+        this.constructionSiteContractorService = constructionSiteContractorService;
+
     }
 
     @GetMapping("/find")
@@ -54,6 +59,15 @@ public class ConstructionSiteController {
         ConstructionSiteDTO constructionSiteDTO = constructionSiteService.findById(id);
         return ResponseEntity.ok().body(constructionSiteDTO);
     }
+
+    @GetMapping("/constructionSite/{constructionSiteId}/contractors")
+    public ResponseEntity<List<ContractorDTO>> getPagedContractorsForConstructionSite(
+            @PathVariable Long constructionSiteId, Pageable pageable) {
+        Page<ContractorDTO> page = constructionSiteContractorService.findAllContractorsByConstructionSiteIdPaged(constructionSiteId, pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
 
     @PostMapping("/add")
     public ResponseEntity<ConstructionSiteDTO> addConstructionSite(@RequestBody ConstructionSiteDTO constructionSiteDTO) {
