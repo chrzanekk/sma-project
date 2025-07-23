@@ -6,7 +6,9 @@ import {useDataManagement} from "@/hooks/useDataManagement.ts";
 import AddRoleDrawer from "@/components/role/AddRoleDrawer.tsx";
 import {Flex} from "@chakra-ui/react";
 import ConstructionSiteFilterForm from "@/components/constructionsite/ConstructionSiteFilterForm.tsx";
-import ConstructionSiteTable from "@/components/constructionsite/ConstructionSiteTable.tsx";
+import ConstructionSiteTableWithContractors
+    from "@/components/constructionsite/ConstructionSiteTableWithContractors.tsx";
+import {useContractorManagement} from "@/hooks/useContractorManagement.tsx";
 
 
 const ConstructionSiteManagement: React.FC = () => {
@@ -31,19 +33,35 @@ const ConstructionSiteManagement: React.FC = () => {
         deleteConstructionSiteById
     );
 
+    const {
+        sortField: contractorSortField,
+        sortDirection: contractorSortDirection,
+        handlers: {
+            onDelete: contractorOnDelete,
+            onSortChange: contractorOnSortChange,
+            onFilterSubmit: contractorOnFilterSubmit,
+        },
+    } = useContractorManagement();
+
     return (
         <ConstructionSiteLayout
             filters={<ConstructionSiteFilterForm onSubmit={onFilterSubmit}/>}
             addConstructionSiteButton={<Flex justifyContent={"center"}>
                 <AddRoleDrawer fetchRoles={() => onFilterSubmit({})}/>
-            </Flex>}
+            </Flex>
+            }
             content={
-                <ConstructionSiteTable
+                <ConstructionSiteTableWithContractors
                     constructionSites={constructionSites}
                     onDelete={onDelete}
                     onSortChange={onSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}
+                    contractorFetchContractors={async () => contractorOnFilterSubmit({})}
+                    contractorOnDelete={contractorOnDelete}
+                    contractorOnSortChange={contractorOnSortChange}
+                    contractorSortField={contractorSortField}
+                    contractorSortDirection={contractorSortDirection}
                 />}
             pagination={
                 <Pagination

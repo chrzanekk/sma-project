@@ -7,7 +7,7 @@ import ContractorFilterForm from "@/components/contractor/ContractorFilterForm.t
 import {Flex} from "@chakra-ui/react";
 import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
 import ContractorTableWithContacts from "@/components/contractor/ContractorTableWithContacts.tsx";
-import useContactManagement from "@/hooks/UseContactManagement.tsx";
+import {useContactManagement} from "@/hooks/UseContactManagement.tsx";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
 
 const ContractorManagement: React.FC = () => {
@@ -39,9 +39,13 @@ const ContractorManagement: React.FC = () => {
     );
 
     const {
-        fetchContacts,
-        handleContactDelete,
-        handleContactSortChange,
+        sortField: contactSortField,
+        sortDirection: contactSortDirection,
+        handlers: {
+            onDelete: contactOnDelete,
+            onSortChange: contactOnSortChange,
+            onFilterSubmit: contactOnFilterSubmit,
+        },
     } = useContactManagement();
 
 
@@ -61,11 +65,11 @@ const ContractorManagement: React.FC = () => {
                     onSortChange={onSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}
-                    contactFetchContacts={fetchContacts}
-                    contactOnDelete={handleContactDelete}
-                    contactOnSortChange={handleContactSortChange}
-                    contactSortField={sortField}
-                    contactSortDirection={sortDirection}
+                    contactFetchContacts={async () => contactOnFilterSubmit({})}
+                    contactOnDelete={contactOnDelete}
+                    contactOnSortChange={contactOnSortChange}
+                    contactSortField={contactSortField}
+                    contactSortDirection={contactSortDirection}
                 />
             }
             pagination={

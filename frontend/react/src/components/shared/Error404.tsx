@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Flex, Heading, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {themeColors} from "@/theme/theme-colors.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 interface Error404Props {
     title?: string;
@@ -15,20 +15,22 @@ const Error404: React.FC<Error404Props> = ({
                                                onNavigateHome,
                                            }) => {
     const {t} = useTranslation();
+    const themeColors = useThemeColors();
+
     return (
         <Flex
             direction="column"
             align="center"
             justify="center"
             height="100vh"
-            bg={themeColors.bgColorPrimary()}
+            bg={themeColors.bgColorPrimary}
             px={4}
             textAlign="center"
         >
             <Heading size="lg" mb={2}>
                 {title}
             </Heading>
-            <Text fontSize="md" color={themeColors.fontColor()} mb={6}>
+            <Text fontSize="md" color={themeColors.fontColor} mb={6}>
                 {description}
             </Text>
             {onNavigateHome && (

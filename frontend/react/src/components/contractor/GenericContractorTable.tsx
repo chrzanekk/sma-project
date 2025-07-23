@@ -1,13 +1,13 @@
 import {useTranslation} from "react-i18next";
 import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
-import React, {useState} from "react";
 import {Field} from "@/components/ui/field.tsx";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog.tsx";
-import {BaseContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
+import {BaseContractorDTO, ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import DateFormatter from "@/utils/date-formatter";
+import {useState} from "react";
 
 function isFetchableContractor(
     contractor: BaseContractorDTO
@@ -160,12 +160,12 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                         <HStack gap={1} justifyContent={"center"}>
                                             <EditContractorDialog
                                                 fetchContractors={fetchContractors}
-                                                contractorId={contractorId}
+                                                contractorId={contractor.id!}
                                             />
                                             <Button
                                                 colorPalette="orange"
                                                 size="2xs"
-                                                onClick={() => onDelete(contractorId)}
+                                                onClick={() => onDelete(contractor.id!)}
                                             >
                                                 {t("delete", {ns: "common"})}
                                             </Button>
@@ -177,12 +177,11 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                     <HStack gap={1} justifyContent="center">
                                         {fetchContractors && <EditContractorDialog fetchContractors={fetchContractors}
                                                                                    contractorId={contractor.id!}/>}
-                                        {onDelete && (
-                                            <Button colorPalette="orange" size="2xs"
-                                                    onClick={() => handleDeleteClick(contractor.id!)}>
-                                                {t("delete", {ns: "common"})}
-                                            </Button>
-                                        )}
+                                        <Button colorPalette="orange" size="2xs"
+                                                onClick={() => handleDeleteClick(contractor.id!)}>
+                                            {t("delete", {ns: "common"})}
+                                        </Button>
+
                                     </HStack>
                                 </Table.Cell>
                                 )

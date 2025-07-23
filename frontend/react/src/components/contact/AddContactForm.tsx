@@ -32,7 +32,6 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
             const mappedContact: ContactDTO = {
                 ...values,
                 company: currentCompany!,
-                companyId: currentCompany!.id
             }
             const response = await addContact(mappedContact);
             successNotification(

@@ -1,7 +1,6 @@
 import React, {useState} from "react";
-import {Box, Button, Collapsible, Spinner, Table, Text, useDisclosure,} from "@chakra-ui/react";
+import {Box, Button, Collapsible, Spinner, Table, Text,} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import {FetchableConstructionSiteDTO} from "@/types/constrution-site-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
@@ -45,21 +44,8 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
     const {t} = useTranslation(["common", "constructionSites", "contractors"]);
     const themeColors = useThemeColors();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
-    const [selectedConstructionSiteId, setSelectedConstructionSiteId] = useState<number | null>(null);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
     const [contractorStates, setContractorStates] = useState<{ [key: number]: ContractorState }>({});
-
-    const handleDeleteClick = (id: number) => {
-        setSelectedConstructionSiteId(id);
-        onOpen();
-    };
-
-    const confirmDelete = () => {
-        if (selectedConstructionSiteId !== null) {
-            onDelete(selectedConstructionSiteId);
-        }
-        onClose();
-    };
 
     const toggleExpand = async (constructionSiteId: number) => {
         if (expandedRow === constructionSiteId) {
@@ -71,25 +57,28 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
             });
         } else {
             setExpandedRow(constructionSiteId);
-            setContractorStates({
+            setContractorStates({});
+            setContractorStates((prev) => ({
+                ...prev,
                 [constructionSiteId]: {
                     contractors: [],
                     page: 0,
                     hasMore: true,
                     loading: true,
                 },
-            });
+            }));
 
             try {
                 const initial = await getContractorsByConstructionSiteIdPaged(constructionSiteId, 0, 10);
-                setContractorStates({
+                setContractorStates((prev) => ({
+                    ...prev,
                     [constructionSiteId]: {
                         contractors: initial.items,
                         page: 1,
                         hasMore: initial.totalPages > 1,
                         loading: false,
                     },
-                });
+                }));
             } catch (err) {
                 console.error("Błąd ładowania kontrahentów:", err);
             }
@@ -129,7 +118,11 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
     };
 
     if (!constructionSites || constructionSites.length === 0) {
-        return <Text fontSize={20}>{t("dataNotFound", {ns: "common"})}</Text>;
+        return (
+            <Box>
+                <Text fontSize={20}>{t("dataNotFound", {ns: "common"})}</Text>
+            </Box>
+        );
     }
 
     return (
@@ -186,7 +179,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                     <Table.Body>
                         {constructionSites.map((cs) => {
                             const constructionSiteId = cs.id!;
-                            const contractorState = contractorStates[cs.id!];
+                            const contractorState = contractorStates[constructionSiteId];
                             return (
                                 <React.Fragment key={cs.id}>
                                     <Table.Row
@@ -231,7 +224,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                         )}
                                         <Table.Cell {...commonCellProps}>
                                             <Button colorPalette="red" size="2xs"
-                                                    onClick={() => handleDeleteClick(cs.id!)}>
+                                                    onClick={() => onDelete(cs.id!)}>
                                                 {t("delete", {ns: "common"})}
                                             </Button>
                                         </Table.Cell>
@@ -239,9 +232,14 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
 
                                     {/* Rozwijany wiersz z kontrahentami */}
                                     {expandedRow === constructionSiteId && (
-                                        <Table.Row bg={themeColors.bgColorSecondary}>
+                                        <Table.Row bg={themeColors.bgColorSecondary}
+                                                   _hover={{
+                                                       textDecoration: 'none',
+                                                       bg: themeColors.highlightBgColor,
+                                                       color: themeColors.fontColorHover
+                                                   }}>
                                             <Table.Cell colSpan={5} {...commonCellProps}>
-                                                <Collapsible.Root open={true}>
+                                                <Collapsible.Root open={expandedRow === constructionSiteId}>
                                                     <Collapsible.Content>
                                                         <Box
                                                             maxH="300px"
@@ -254,7 +252,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                             }}
                                                         >
                                                             <GenericContractorTable
-                                                                contractors={contractorState?.contractors ?? []}
+                                                                contractors={contractorStates[constructionSiteId]?.contractors ?? []}
                                                                 onDelete={contractorOnDelete}
                                                                 fetchContractors={contractorFetchContractors}
                                                                 onSortChange={contractorOnSortChange}
@@ -274,16 +272,6 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                     </Table.Body>
                 </Table.Root>
             </Table.ScrollArea>
-
-            <ConfirmModal
-                isOpen={isOpen}
-                onClose={onClose}
-                onConfirm={confirmDelete}
-                title={t("deleteConfirmation.title", {ns: "common"})}
-                message={t("deleteConfirmation.message", {ns: "common"})}
-                confirmText={t("delete", {ns: "common"})}
-                cancelText={t("cancel", {ns: "common"})}
-            />
         </>
     );
 };
