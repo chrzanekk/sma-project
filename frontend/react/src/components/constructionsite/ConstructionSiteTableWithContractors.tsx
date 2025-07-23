@@ -134,18 +134,18 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("id")}>ID {renderSortIndicator("id")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("name")}>{t("name")} {renderSortIndicator("name")}</Table.ColumnHeader>
+                                                onClick={() => onSortChange("name")}>{t("constructionSites:name")} {renderSortIndicator("name")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("address")}>{t("address")} {renderSortIndicator("address")}</Table.ColumnHeader>
+                                                onClick={() => onSortChange("address")}>{t("constructionSites:address")} {renderSortIndicator("address")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("country")}>{t("country")} {renderSortIndicator("country")}</Table.ColumnHeader>
+                                                onClick={() => onSortChange("country")}>{t("constructionSites:country")} {renderSortIndicator("country")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("shortName")}>
+                                                onClick={() => onSortChange("constructionSites:shortName")}>
                                 {t("shortName")} {renderSortIndicator("shortName")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("code")}>
-                                {t("code")} {renderSortIndicator("code")}
+                                {t("constructionSites:code")} {renderSortIndicator("code")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
@@ -238,7 +238,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                        bg: themeColors.highlightBgColor,
                                                        color: themeColors.fontColorHover
                                                    }}>
-                                            <Table.Cell colSpan={5} {...commonCellProps}>
+                                            <Table.Cell colSpan={11} {...commonCellProps}>
                                                 <Collapsible.Root open={expandedRow === constructionSiteId}>
                                                     <Collapsible.Content>
                                                         <Box

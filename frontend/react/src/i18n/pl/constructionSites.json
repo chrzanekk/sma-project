@@ -5,5 +5,14 @@
   "shortName": "Skrócona nazwa",
   "code" : "Kod budowy",
   "country": "Kraj",
-  "contractor": "Konrahent"
+  "contractor": "Konrahent",
+  "add": "Dopaj budowę",
+  "edit": "Edytuj dane budowy",
+  "details":"Dane budowy",
+  "notifications" : {
+    "addConstructionSiteSuccess" : "Budowa {name} dodana pomyślnie",
+    "addConstructionSiteError" : "Błąd dodawania budowy",
+    "editConstructionSiteSuccess" : "Dane budowy {name} zmieniono pomyślnie",
+    "editConstructionSiteError" : "Błąd edycji budowy {name}"
+  }
 }

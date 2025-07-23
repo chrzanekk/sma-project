@@ -9,6 +9,7 @@ import ConstructionSiteFilterForm from "@/components/constructionsite/Constructi
 import ConstructionSiteTableWithContractors
     from "@/components/constructionsite/ConstructionSiteTableWithContractors.tsx";
 import {useContractorManagement} from "@/hooks/useContractorManagement.tsx";
+import AddConstructionSiteDialog from "@/components/constructionsite/AddConstructionSiteDialog.tsx";
 
 
 const ConstructionSiteManagement: React.FC = () => {
@@ -47,7 +48,7 @@ const ConstructionSiteManagement: React.FC = () => {
         <ConstructionSiteLayout
             filters={<ConstructionSiteFilterForm onSubmit={onFilterSubmit}/>}
             addConstructionSiteButton={<Flex justifyContent={"center"}>
-                <AddRoleDrawer fetchRoles={() => onFilterSubmit({})}/>
+                <AddConstructionSiteDialog fetchConstructionSites={() => onFilterSubmit({})}/>
             </Flex>
             }
             content={
