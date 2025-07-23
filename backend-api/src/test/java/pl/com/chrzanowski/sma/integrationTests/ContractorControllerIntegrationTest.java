@@ -128,7 +128,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 "00-001", "Warsaw", Country.POLAND, firstRegisteredUser);
 
         createContractor("Second Contractor", "0987654321", "Second Street", "20", "2B",
-                "00-002", "Krakow", Country.ENGLAND, secondRegisteredUser);
+                "00-002", "Krakow", Country.UNITED_KINGDOM, secondRegisteredUser);
         companyRepository.deleteAll();
         company = Company.builder().name("TestCompany").additionalInfo("TestInfo").build();
         company = companyRepository.saveAndFlush(company);

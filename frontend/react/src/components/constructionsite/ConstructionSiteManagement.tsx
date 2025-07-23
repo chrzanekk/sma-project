@@ -3,7 +3,6 @@ import {deleteConstructionSiteById, getConstructionSiteByFilter} from "@/service
 import ConstructionSiteLayout from "@/components/constructionsite/ConstructionSiteLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import AddRoleDrawer from "@/components/role/AddRoleDrawer.tsx";
 import {Flex} from "@chakra-ui/react";
 import ConstructionSiteFilterForm from "@/components/constructionsite/ConstructionSiteFilterForm.tsx";
 import ConstructionSiteTableWithContractors
@@ -55,6 +54,7 @@ const ConstructionSiteManagement: React.FC = () => {
                 <ConstructionSiteTableWithContractors
                     constructionSites={constructionSites}
                     onDelete={onDelete}
+                    fetchConstructionSites={() => onFilterSubmit({})}
                     onSortChange={onSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}

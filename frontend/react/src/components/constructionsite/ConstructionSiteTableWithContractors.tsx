@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Box, Button, Collapsible, Spinner, Table, Text,} from "@chakra-ui/react";
+import {Box, Button, Collapsible, HStack, Spinner, Table, Text,} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FetchableConstructionSiteDTO} from "@/types/constrution-site-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
@@ -8,10 +8,12 @@ import DateFormatter from "@/utils/date-formatter.ts";
 import {getContractorsByConstructionSiteIdPaged} from "@/services/construction-site-service.ts";
 import {ContractorDTO} from "@/types/contractor-types.ts";
 import GenericContractorTable from "@/components/contractor/GenericContractorTable.tsx";
+import EditConstructionSiteDialog from "@/components/constructionsite/EditConstructionSiteDialog.tsx";
 
 interface Props {
     constructionSites: FetchableConstructionSiteDTO[];
     onDelete: (id: number) => void;
+    fetchConstructionSites: () => void;
     onSortChange: (field: string) => void;
     sortField: string | null;
     sortDirection: "asc" | "desc";
@@ -32,6 +34,7 @@ type ContractorState = {
 const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                                    constructionSites,
                                                                    onDelete,
+                                                                   fetchConstructionSites,
                                                                    onSortChange,
                                                                    sortField,
                                                                    sortDirection,
@@ -141,7 +144,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                 onClick={() => onSortChange("country")}>{t("constructionSites:country")} {renderSortIndicator("country")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("constructionSites:shortName")}>
-                                {t("shortName")} {renderSortIndicator("shortName")}
+                                {t("constructionSites:shortName")} {renderSortIndicator("shortName")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("code")}>
@@ -222,11 +225,19 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                 </Box>
                                             </Table.Cell>
                                         )}
-                                        <Table.Cell {...commonCellProps}>
-                                            <Button colorPalette="red" size="2xs"
-                                                    onClick={() => onDelete(cs.id!)}>
-                                                {t("delete", {ns: "common"})}
-                                            </Button>
+                                        <Table.Cell {...commonCellProps}
+                                                    onClick={(e) => e.stopPropagation()}>
+                                            <HStack gap={1} justifyContent={"center"}>
+                                                <EditConstructionSiteDialog
+                                                    fetchConstructionSites={fetchConstructionSites}
+                                                    constructionSiteId={constructionSiteId}
+                                                />
+                                                <Button colorPalette="red" size="2xs"
+                                                        onClick={() => onDelete(cs.id!)}>
+                                                    {t("delete", {ns: "common"})}
+                                                </Button>
+                                            </HStack>
+
                                         </Table.Cell>
                                     </Table.Row>
 

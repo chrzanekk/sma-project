@@ -16,7 +16,7 @@ public class ConstructionSiteFilter {
     private String addressStartsWith;
     private String shortNameStartsWith;
     private String codeStartsWith;
-    private Country country;
+    private String countryCode;
     private Long companyId;
     private String contractorNameStartsWith;
 }

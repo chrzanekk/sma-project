@@ -5,6 +5,7 @@ import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
 import pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite;
@@ -28,7 +29,7 @@ public class ConstructionSiteQuerySpec {
         if (filter.getNameStartsWith() != null && !filter.getNameStartsWith().isEmpty()) {
             builder.and(constructionSite.name.containsIgnoreCase(filter.getNameStartsWith()));
         }
-        if (filter.getNameStartsWith() != null && !filter.getNameStartsWith().isEmpty()) {
+        if (filter.getAddressStartsWith() != null && !filter.getAddressStartsWith().isEmpty()) {
             builder.and(constructionSite.address.containsIgnoreCase(filter.getAddressStartsWith()));
         }
         if (filter.getShortNameStartsWith() != null && !filter.getShortNameStartsWith().isEmpty()) {
@@ -37,8 +38,9 @@ public class ConstructionSiteQuerySpec {
         if (filter.getCodeStartsWith() != null && !filter.getCodeStartsWith().isEmpty()) {
             builder.and(constructionSite.code.containsIgnoreCase(filter.getCodeStartsWith()));
         }
-        if (filter.getCountry() != null) {
-            builder.and(constructionSite.country.eq(filter.getCountry()));
+        if (filter.getCountryCode() != null && !filter.getCountryCode().isBlank()) {
+            Country enumCountry = Country.fromCode(filter.getCountryCode());
+                builder.and(constructionSite.country.eq(enumCountry));
         }
         if (filter.getCompanyId() != null) {
             builder.and(constructionSite.company.id.eq(filter.getCompanyId()));

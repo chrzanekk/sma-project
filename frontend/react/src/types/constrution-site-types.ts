@@ -37,7 +37,7 @@ export interface ConstructionSiteFormValues {
     id?: number;
     name: string;
     address: string;
-    country: Country;
+    country: string;
     shortName: string;
     code: string;
     contractors?: Array<BaseContractorDTO>;
