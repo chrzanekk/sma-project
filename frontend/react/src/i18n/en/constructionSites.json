@@ -8,6 +8,7 @@
   "contractor": "Konrahent",
   "add": "Dopaj budowę",
   "edit": "Edytuj dane budowy",
+  "assign": "Przypisz kontrahentów",
   "details":"Dane budowy",
   "notifications" : {
     "addConstructionSiteSuccess" : "Budowa {name} dodana pomyślnie",

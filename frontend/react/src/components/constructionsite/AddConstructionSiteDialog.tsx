@@ -13,8 +13,9 @@ import {
 } from "@/components/ui/dialog.tsx";
 import {FaPlus} from "react-icons/fa";
 import React from "react";
-import AddConstructionSiteForm from "@/components/constructionsite/AddConstructionSiteForm.tsx";
 import {useTranslation} from "react-i18next";
+import ConstructionSiteWithContractorsFormSteps
+    from "@/components/constructionsite/ConstructionSiteWithContractorsFormSteps.tsx";
 
 interface AddConstructionSiteDialogProps {
     fetchConstructionSites: () => void;
@@ -47,7 +48,7 @@ const AddConstructionSiteDialog: React.FC<AddConstructionSiteDialogProps> = ({fe
                                     </Heading>
                                 </DialogHeader>
                                 <DialogBody>
-                                    <AddConstructionSiteForm
+                                    <ConstructionSiteWithContractorsFormSteps
                                         onSuccess={() => {
                                             fetchConstructionSites();
                                             store.setOpen(false);

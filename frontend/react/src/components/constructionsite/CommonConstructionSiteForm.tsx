@@ -14,7 +14,7 @@ interface CommonConstructionSiteFormProps {
     onSubmit: (
         values: ConstructionSiteFormValues,
         formikHelpers: FormikHelpers<ConstructionSiteFormValues>
-    ) => Promise<void>;
+    ) => void | Promise<void>;
     disabled?: boolean;
     hideSubmit?: boolean;
     onValidityChange?: (isValid: boolean) => void;

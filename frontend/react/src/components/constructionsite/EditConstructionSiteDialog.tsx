@@ -3,7 +3,8 @@ import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Box, Button, Dialog, Heading, Portal} from "@chakra-ui/react";
 import {FaTimes} from "react-icons/fa";
-import EditConstructionSiteForm from "@/components/constructionsite/EditConstructionSiteForm.tsx";
+import ConstructionSiteWithContractorsFormSteps
+    from "@/components/constructionsite/ConstructionSiteWithContractorsFormSteps.tsx";
 
 interface EditConstructionSiteDialogProps {
     fetchConstructionSites: () => void;
@@ -43,13 +44,10 @@ const EditConstructionSiteDialog: React.FC<EditConstructionSiteDialogProps> = ({
                                         </Heading>
                                     </Dialog.Header>
                                     <Dialog.Body>
-                                        <EditConstructionSiteForm
-                                            onSuccess={() => {
-                                                fetchConstructionSites();
-                                                store.setOpen(false);
-                                            }}
-                                            constructionSiteId={constructionSiteId}
-                                        />
+                                        <ConstructionSiteWithContractorsFormSteps onSuccess={() => {
+                                            fetchConstructionSites();
+                                            store.setOpen(false);
+                                        }} constructionSiteId={constructionSiteId}/>
                                     </Dialog.Body>
                                     <Dialog.Footer>
                                         <Dialog.ActionTrigger asChild>

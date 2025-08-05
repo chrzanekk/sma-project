@@ -54,7 +54,12 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Override
     public ConstructionSiteDTO create(ConstructionSiteCreateDTO constructionSiteCreateDTO) {
         log.debug("Request to create ConstructionSite : {}", constructionSiteCreateDTO.getName());
-        ContractorDTO savedContractor = contractorService.save(constructionSiteCreateDTO.getContractor());
+        ContractorDTO savedContractor;
+        if(constructionSiteCreateDTO.getContractor().getId() == null) {
+            savedContractor = contractorService.save(constructionSiteCreateDTO.getContractor());
+        } else {
+            savedContractor = constructionSiteCreateDTO.getContractor();
+        }
 
         ConstructionSite entity = constructionSiteDTOMapper.toEntity(ConstructionSiteDTO.builder()
                 .name(constructionSiteCreateDTO.getName())
