@@ -1,27 +1,32 @@
-import {useColorModeValue} from "@/components/ui/color-mode";
+import {useColorModeValue} from "@/components/ui/color-mode.tsx";
 
 export function useThemeColors() {
-    const bgColorPrimary = useColorModeValue('gray.300', 'gray.700');
-    const bgColorSecondary = useColorModeValue('gray.100', 'gray.600');
-    const buttonBgColor = useColorModeValue('gray.300', 'gray.700');
-    const popoverBgColor = useColorModeValue('white', 'gray.200');
-    const highlightBgColor = useColorModeValue('green.300', 'green.700');
-    const borderColor = useColorModeValue('gray.200', 'gray.600');
-    const fontColor = useColorModeValue('gray.600', 'gray.300');
-    const fontColorHover = useColorModeValue('gray.500', "gray.400");
-    const fontColorChildMenu = useColorModeValue('gray.500', 'gray.200');
     return {
-        bgColorPrimary,
-        bgColorSecondary,
-        buttonBgColor,
-        popoverBgColor,
-        highlightBgColor,
-        borderColor,
-        fontColor,
-        fontColorHover,
-        fontColorChildMenu,
+        bgColorPrimary: "bgColorPrimary",
+        bgColorSecondary: "bgColorSecondary",
+        buttonBgColor: "buttonBgColor",
+        popoverBgColor: "popoverBgColor",
+        highlightBgColor: "highlightBgColor",
+        borderColor: "borderColor",
+        fontColor: "fontColor",
+        fontColorHover: "fontColorHover",
+        fontColorChildMenu: "fontColorChildMenu",
     }
 }
+
+const tokenVar = (name: string) => `var(--colors-${name})`;
+
+export const themeVars = {
+    bgColorPrimary: tokenVar("bgColorPrimary"),
+    bgColorSecondary: tokenVar("bgColorSecondary"),
+    buttonBgColor: tokenVar("buttonBgColor"),
+    popoverBgColor: tokenVar("popoverBgColor"),
+    highlightBgColor: tokenVar("highlightBgColor"),
+    borderColor: tokenVar("borderColor"),
+    fontColor: tokenVar("fontColor"),
+    fontColorHover: tokenVar("fontColorHover"),
+    fontColorChildMenu: tokenVar("fontColorChildMenu"),
+};
 
 export function useThemeColorsHex() {
     const bgColorPrimary = useColorModeValue('#fafafa', '#3f3f46');
