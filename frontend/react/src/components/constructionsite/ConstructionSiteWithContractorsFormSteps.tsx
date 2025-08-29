@@ -325,7 +325,13 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                         <Table.Root size="sm">
                             <Table.Body>
                                 {searchResults.map((contractor) => (
-                                    <Table.Row key={contractor.id}>
+                                    <Table.Row key={contractor.id}
+                                               bg={themeColors.bgColorSecondary}
+                                               _hover={{
+                                                   textDecoration: "none",
+                                                   bg: themeColors.highlightBgColor,
+                                                   color: themeColors.fontColorHover,
+                                               }}>
                                         <Table.Cell>{contractor.name}</Table.Cell>
                                         <Table.Cell>
                                             <Button
