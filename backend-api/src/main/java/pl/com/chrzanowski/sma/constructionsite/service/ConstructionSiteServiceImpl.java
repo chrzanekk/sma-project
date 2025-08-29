@@ -62,6 +62,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Override
     public ConstructionSiteDTO create(ConstructionSiteCreateDTO constructionSiteCreateDTO) {
         log.debug("Request to create ConstructionSite : {}", constructionSiteCreateDTO.getName());
+        //todo save more than one contractors when creating construction site
         ContractorDTO savedContractor;
         if (constructionSiteCreateDTO.getContractor().getId() == null) {
             savedContractor = contractorService.save(constructionSiteCreateDTO.getContractor());
@@ -112,8 +113,9 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
         ConstructionSite existing = constructionSiteDao.findById(dto.getId())
                 .orElseThrow(() -> new ConstructionSiteException(ConstructionSiteErrorCode.CONSTRUCTION_SITE_NOT_FOUND, "Construction site with id " + dto.getId() + " not found"));
 
-        // 2) dodaj nowych contractorów (i do kolekcji, i do DB)
+        // 2) dodaj nowych contractorów (i do kolekcji, i do DB) - to do usunięcia, wybieramy istniejącego kontrahenta więc go nie zapisujemy
         List<ContractorDTO> saved = dto.getAddedContractors().stream()
+                .filter(contractor -> contractor.getId() == null)
                 .map(contractorService::save)
                 .toList();
         saved.forEach(cdto -> {
