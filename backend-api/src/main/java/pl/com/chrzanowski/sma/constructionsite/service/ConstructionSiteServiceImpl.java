@@ -46,7 +46,15 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     @Transactional
     public ConstructionSiteDTO save(ConstructionSiteDTO constructionSiteDTO) {
         log.debug("Request to save ConstructionSite : {}", constructionSiteDTO.getName());
-        ConstructionSite constructionSite = constructionSiteDTOMapper.toEntity(constructionSiteDTO);
+        ConstructionSite constructionSite = constructionSiteDTOMapper.toEntity(ConstructionSiteDTO.builder()
+                .id(null)
+                .name(constructionSiteDTO.getName())
+                .address(constructionSiteDTO.getAddress())
+                .country(constructionSiteDTO.getCountry())
+                .code(constructionSiteDTO.getCode())
+                .shortName(constructionSiteDTO.getShortName())
+                .company(constructionSiteDTO.getCompany())
+                .build());
         constructionSite = constructionSiteDao.save(constructionSite);
         return constructionSiteDTOMapper.toDto(constructionSite);
     }
@@ -55,7 +63,7 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     public ConstructionSiteDTO create(ConstructionSiteCreateDTO constructionSiteCreateDTO) {
         log.debug("Request to create ConstructionSite : {}", constructionSiteCreateDTO.getName());
         ContractorDTO savedContractor;
-        if(constructionSiteCreateDTO.getContractor().getId() == null) {
+        if (constructionSiteCreateDTO.getContractor().getId() == null) {
             savedContractor = contractorService.save(constructionSiteCreateDTO.getContractor());
         } else {
             savedContractor = constructionSiteCreateDTO.getContractor();

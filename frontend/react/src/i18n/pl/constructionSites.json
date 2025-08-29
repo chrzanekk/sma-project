@@ -9,6 +9,7 @@
   "add": "Dopaj budowę",
   "edit": "Edytuj dane budowy",
   "assign": "Przypisz kontrahentów",
+  "assigned": "Przypisani kontrahenci",
   "details":"Dane budowy",
   "notifications" : {
     "addConstructionSiteSuccess" : "Budowa {name} dodana pomyślnie",

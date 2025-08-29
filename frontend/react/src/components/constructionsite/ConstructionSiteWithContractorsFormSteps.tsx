@@ -305,12 +305,12 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
             {/* Step 1 */}
             <Steps.Content index={1}>
                 <Heading size="md" mb={2} color={themeColors.fontColor}>
-                    {t("contractors:assign")}
+                    {t("constructionSites:assign")}
                 </Heading>
                 {/* Wyszukiwarka kontrahentów */}
                 <Flex gap={2} mb={2}>
                     <Input
-                        placeholder={t("contractors:searchByName")}
+                        placeholder={t("common:searchByName")}
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -321,7 +321,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                 </Flex>
                 {searchResults.length > 0 && (
                     <Box mb={4}>
-                        <Text mb={1}>{t("contractors:searchResults")}</Text>
+                        <Text mb={1}>{t("common:searchResults")}</Text>
                         <Table.Root size="sm">
                             <Table.Body>
                                 {searchResults.map((contractor) => (
@@ -344,7 +344,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
 
                 {/* Lista przypisanych kontrahentów */}
                 <Heading size="sm" mb={2} color={themeColors.fontColor}>
-                    {t("contractors:assigned")}
+                    {t("constructionSites:assigned")}
                 </Heading>
                 <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"200px"}
                                   onScroll={onScroll} ref={scrollContainerRef}>
