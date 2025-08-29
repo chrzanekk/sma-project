@@ -5,7 +5,7 @@ import {Button, Flex} from "@chakra-ui/react";
 import React from "react";
 import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getCountryOptions} from "@/types/country-type.ts";
-import {useThemeColorsHex} from "@/theme/theme-colors.ts";
+import {themeVars} from "@/theme/theme-colors.ts";
 
 
 interface FilterValues {
@@ -32,7 +32,6 @@ interface Props {
 const ConstructionSiteFilterForm: React.FC<Props> = ({onSubmit}) => {
     const {t} = useTranslation(['common', 'constructionSites']);
     const countryOptions = getCountryOptions(t);
-    const themeColorsHex = useThemeColorsHex();
 
     return (
         <Formik<FilterValues>
@@ -68,7 +67,7 @@ const ConstructionSiteFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 name="country"
                                 placeholder={t('constructionSites:country')}
                                 options={countryOptions}
-                                bgColor={themeColorsHex.bgColorSecondary}
+                                bgColor={themeVars.bgColorSecondary}
                             />
                             <CustomInputFilterField name="contractorNameStartsWith"
                                                     placeholder={t('constructionSites:contractor')}/>

@@ -8,6 +8,7 @@ import router from "@/routes/Router.tsx";
 import {ChakraProvider} from "@chakra-ui/react";
 import {CompanyProvider} from "@/context/CompanyContext.tsx";
 import {system} from "@/theme/theme.ts";
+import {GlobalStyles} from "@/theme/GlobalStyles.tsx";
 
 
 function initColorMode() {
@@ -24,6 +25,7 @@ createRoot(document.getElementById('root')!)
     .render(
         <StrictMode>
             <ChakraProvider value={system}>
+                <GlobalStyles/>
                 <CompanyProvider>
                     <AuthProvider>
                         <RouterProvider router={router}/>
