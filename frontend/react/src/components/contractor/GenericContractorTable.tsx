@@ -104,7 +104,7 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                     <Table.ColumnHeader {...commonColumnHeaderProps}
                                                         onClick={() => onSortChange("modifiedBy")}>
                                         {t('lastModifiedBy')}{renderSortIndicator("modifiedBy")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader>{t("edit")}</Table.ColumnHeader>
+                                    <Table.ColumnHeader {...commonColumnHeaderProps}>{t("edit")}</Table.ColumnHeader>
                                 </>
                             )}
                         </Table.Row>
@@ -120,9 +120,9 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                     {contractor.street} {contractor.buildingNo}
                                     {contractor.apartmentNo ? `/${contractor.apartmentNo}` : ""}, {contractor.postalCode} {contractor.city}, {typeof contractor.country === "object" ? contractor.country.name : contractor.country || ""}
                                 </Table.Cell>
-                                <Table.Cell>{contractor.customer ? t("common:yes") : t("common:no")}</Table.Cell>
-                                <Table.Cell>{contractor.supplier ? t("common:yes") : t("common:no")}</Table.Cell>
-                                <Table.Cell>{contractor.scaffoldingUser ? t("common:yes") : t("common:no")}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contractor.customer ? t("common:yes") : t("common:no")}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contractor.supplier ? t("common:yes") : t("common:no")}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{contractor.scaffoldingUser ? t("common:yes") : t("common:no")}</Table.Cell>
                                 {extended && isFetchableContractor(contractor) && (
                                     <>
                                         {"createdDatetime" in contractor && (
@@ -153,38 +153,35 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                                 </Box>
                                             </Table.Cell>
                                         )}
+                                        <Table.Cell {...commonCellProps}>
+                                            <HStack gap={1} justifyContent={"center"}>
+                                                <EditContractorDialog
+                                                    fetchContractors={fetchContractors}
+                                                    contractorId={contractor.id!}
+                                                />
+                                                <Button
+                                                    colorPalette="orange"
+                                                    size="2xs"
+                                                    onClick={() => onDelete(contractor.id!)}
+                                                >
+                                                    {t("delete", {ns: "common"})}
+                                                </Button>
+                                            </HStack>
+                                        </Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
+                                            <HStack gap={1} justifyContent="center">
+                                                {fetchContractors && <EditContractorDialog fetchContractors={fetchContractors}
+                                                                                           contractorId={contractor.id!}/>}
+                                                <Button colorPalette="orange" size="2xs"
+                                                        onClick={() => handleDeleteClick(contractor.id!)}>
+                                                    {t("delete", {ns: "common"})}
+                                                </Button>
+
+                                            </HStack>
+                                        </Table.Cell>
                                     </>
                                 )}{
-                                extended && (
-                                    <Table.Cell {...commonCellProps}>
-                                        <HStack gap={1} justifyContent={"center"}>
-                                            <EditContractorDialog
-                                                fetchContractors={fetchContractors}
-                                                contractorId={contractor.id!}
-                                            />
-                                            <Button
-                                                colorPalette="orange"
-                                                size="2xs"
-                                                onClick={() => onDelete(contractor.id!)}
-                                            >
-                                                {t("delete", {ns: "common"})}
-                                            </Button>
-                                        </HStack>
-                                    </Table.Cell>
-                                )
                             }
-                                <Table.Cell {...commonCellProps}>
-                                    <HStack gap={1} justifyContent="center">
-                                        {fetchContractors && <EditContractorDialog fetchContractors={fetchContractors}
-                                                                                   contractorId={contractor.id!}/>}
-                                        <Button colorPalette="orange" size="2xs"
-                                                onClick={() => handleDeleteClick(contractor.id!)}>
-                                            {t("delete", {ns: "common"})}
-                                        </Button>
-
-                                    </HStack>
-                                </Table.Cell>
-                                )
                             </Table.Row>
                         ))}
                     </Table.Body>

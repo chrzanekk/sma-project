@@ -14,7 +14,9 @@ import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteDTOMapper;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
 import pl.com.chrzanowski.sma.constructionsitecontractor.service.ConstructionSiteContractorService;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
 
@@ -32,13 +34,15 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     private final ContractorDTOMapper contractorDTOMapper;
     private final ConstructionSiteContractorService constructionSiteContractorService;
     private final ContractorService contractorService;
+    private final ContractorBaseMapper contractorBaseMapper;
 
-    public ConstructionSiteServiceImpl(ConstructionSiteDao constructionSiteDao, ConstructionSiteDTOMapper constructionSiteDTOMapper, ContractorDTOMapper contractorDTOMapper, ConstructionSiteContractorService constructionSiteContractorService, ContractorService contractorService) {
+    public ConstructionSiteServiceImpl(ConstructionSiteDao constructionSiteDao, ConstructionSiteDTOMapper constructionSiteDTOMapper, ContractorDTOMapper contractorDTOMapper, ConstructionSiteContractorService constructionSiteContractorService, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper) {
         this.constructionSiteDao = constructionSiteDao;
         this.constructionSiteDTOMapper = constructionSiteDTOMapper;
         this.contractorDTOMapper = contractorDTOMapper;
         this.constructionSiteContractorService = constructionSiteContractorService;
         this.contractorService = contractorService;
+        this.contractorBaseMapper = contractorBaseMapper;
     }
 
 
@@ -63,28 +67,27 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     public ConstructionSiteDTO create(ConstructionSiteCreateDTO constructionSiteCreateDTO) {
         log.debug("Request to create ConstructionSite : {}", constructionSiteCreateDTO.getName());
         //todo save more than one contractors when creating construction site
-        ContractorDTO savedContractor;
-        if (constructionSiteCreateDTO.getContractor().getId() == null) {
-            savedContractor = contractorService.save(constructionSiteCreateDTO.getContractor());
-        } else {
-            savedContractor = constructionSiteCreateDTO.getContractor();
-        }
+
+        List<ContractorBaseDTO> allContractors = constructionSiteCreateDTO.getContractors();
 
         ConstructionSite entity = constructionSiteDTOMapper.toEntity(ConstructionSiteDTO.builder()
+                .id(null)
                 .name(constructionSiteCreateDTO.getName())
                 .address(constructionSiteCreateDTO.getAddress())
                 .country(constructionSiteCreateDTO.getCountry())
                 .code(constructionSiteCreateDTO.getCode())
                 .shortName(constructionSiteCreateDTO.getShortName())
                 .company(constructionSiteCreateDTO.getCompany())
-                .contractors(List.of(savedContractor))
+                .contractors(allContractors)
                 .build());
 
         ConstructionSite saved = constructionSiteDao.save(entity);
 
-        ConstructionSiteContractor link = new ConstructionSiteContractor(saved,
-                contractorDTOMapper.toEntity(savedContractor));
-        constructionSiteContractorService.save(link);
+        allContractors.forEach(contractor -> {
+            ConstructionSiteContractor link = new ConstructionSiteContractor(saved,
+                    contractorBaseMapper.toEntity(contractor));
+            constructionSiteContractorService.save(link);
+        });
 
         ConstructionSite reloaded = constructionSiteDao.findById(saved.getId())
                 .orElseThrow(() -> new ConstructionSiteException(
@@ -113,7 +116,6 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
         ConstructionSite existing = constructionSiteDao.findById(dto.getId())
                 .orElseThrow(() -> new ConstructionSiteException(ConstructionSiteErrorCode.CONSTRUCTION_SITE_NOT_FOUND, "Construction site with id " + dto.getId() + " not found"));
 
-        // 2) dodaj nowych contractorów (i do kolekcji, i do DB) - to do usunięcia, wybieramy istniejącego kontrahenta więc go nie zapisujemy
         List<ContractorDTO> saved = dto.getAddedContractors().stream()
                 .filter(contractor -> contractor.getId() == null)
                 .map(contractorService::save)
@@ -124,7 +126,6 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
             existing.getSiteContractors().add(csc);
         });
 
-        // 3) usuń zaznaczonych contractorów (z kolekcji i z DB)
         dto.getDeletedContractors().forEach(cdto -> {
             existing.getSiteContractors().removeIf(csc ->
                     csc.getId().getConstructionSiteId().equals(existing.getId()) &&
@@ -134,13 +135,10 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
                     .deleteByConstructionSiteIdAndContractorId(existing.getId(), cdto.getId());
         });
 
-        // 4) wgraj zmiany pól podstawowych
         constructionSiteDTOMapper.updateFromUpdateDto(dto, existing);
 
-        // 5) zapisz całą encję (łącznie z nową/odfiltrowaną kolekcją)
         ConstructionSite savedEntity = constructionSiteDao.save(existing);
 
-        // 6) i zwróć finalne DTO
         return constructionSiteDTOMapper.toDto(savedEntity);
     }
 

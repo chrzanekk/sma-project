@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {FormikProps} from "formik";
-import {Box, Flex, Heading, Input, Spinner, Steps, Table, Text} from "@chakra-ui/react";
+import {Flex, Heading, Input, Spinner, Steps, Table} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {StepsNextTrigger, StepsPrevTrigger} from "@/components/ui/steps";
 import {useThemeColors} from "@/theme/theme-colors.ts";
@@ -28,6 +28,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonConstructionSiteForm from "@/components/constructionsite/CommonConstructionSiteForm.tsx";
 import ConstructionSiteSummary from "@/components/constructionsite/ConstructionSiteSummary.tsx";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 interface Props {
     onSuccess: () => void;
@@ -51,6 +52,8 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
     const themeColors = useThemeColors();
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
+    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
+
 
     const [formData, setFormData] = useState<ConstructionSiteFormValues | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -156,9 +159,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
         setSearchLoading(true);
         try {
             const {contractors} = await getContractorsByFilter({
-                name: searchQuery,
-                size: 5,
-                page: 0
+                nameStartsWith: searchQuery
             });
             setSearchResults(contractors);
         } catch (err) {
@@ -171,11 +172,13 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
     // Dodawanie kontrahenta
     const handleAddContractor = (contractor: ContractorDTO) => {
         if (!constructionSiteId) {
-            // Tryb dodawania → maksymalnie jeden kontrahent
-            setContractorState(prev => ({
-                ...prev,
-                contractors: [contractor]
-            }));
+            const exists = contractorState.contractors.some(c => c.id === contractor.id);
+            if (!exists) {
+                setContractorState(prev => ({
+                    ...prev,
+                    contractors: [...prev.contractors, contractor]
+                }));
+            }
         } else {
             // Tryb edycji → wielu kontrahentów
             const exists = contractorState.contractors.some(c => c.id === contractor.id);
@@ -250,7 +253,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                         ...formData,
                         country: Country.fromCode(formData.country),
                         company: currentCompany!,
-                        contractor: contractorState.contractors[0]
+                        contractors: contractorState.contractors
                     };
                     await createConstructionSite(payload);
                 }
@@ -320,9 +323,13 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                     </Button>
                 </Flex>
                 {searchResults.length > 0 && (
-                    <Box mb={4}>
-                        <Text mb={1}>{t("common:searchResults")}</Text>
-                        <Table.Root size="sm">
+                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"} borderRadius="md" borderColor="grey" >
+                        <Table.Root size={"sm"}
+                                    stickyHeader
+                                    showColumnBorder
+                                    interactive
+                                    color={themeColors.fontColor}
+                        >
                             <Table.Body>
                                 {searchResults.map((contractor) => (
                                     <Table.Row key={contractor.id}
@@ -332,10 +339,10 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                                                    bg: themeColors.highlightBgColor,
                                                    color: themeColors.fontColorHover,
                                                }}>
-                                        <Table.Cell>{contractor.name}</Table.Cell>
-                                        <Table.Cell>
+                                        <Table.Cell {...commonCellProps}>{contractor.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}>
                                             <Button
-                                                size="xs"
+                                                size="2xs"
                                                 onClick={() => handleAddContractor(contractor)}
                                             >
                                                 {t("common:add")}
@@ -345,7 +352,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                                 ))}
                             </Table.Body>
                         </Table.Root>
-                    </Box>
+                    </Table.ScrollArea>
                 )}
 
                 {/* Lista przypisanych kontrahentów */}
@@ -353,14 +360,14 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                     {t("constructionSites:assigned")}
                 </Heading>
                 <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"200px"}
-                                  onScroll={onScroll} ref={scrollContainerRef}>
+                                  onScroll={onScroll} ref={scrollContainerRef} borderRadius="md" borderColor="grey">
                     <Table.Root size="sm" stickyHeader showColumnBorder interactive color={themeColors.fontColor}>
                         <Table.Header>
                             <Table.Row bg={themeColors.bgColorPrimary}>
-                                <Table.ColumnHeader color={themeColors.fontColor} textAlign={"center"}>
+                                <Table.ColumnHeader {...commonColumnHeaderProps}>
                                     {t("contractors:name")}
                                 </Table.ColumnHeader>
-                                <Table.ColumnHeader color={themeColors.fontColor} textAlign={"center"}>
+                                <Table.ColumnHeader {...commonColumnHeaderProps}>
                                     {t("common:actions")}
                                 </Table.ColumnHeader>
                             </Table.Row>
@@ -368,8 +375,8 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                         <Table.Body>
                             {contractorState.contractors.map((c, idx) => (
                                 <Table.Row key={c.id} bg={themeColors.bgColorSecondary}>
-                                    <Table.Cell textAlign="center">{c.name}</Table.Cell>
-                                    <Table.Cell textAlign="center">
+                                    <Table.Cell {...commonCellProps}>{c.name}</Table.Cell>
+                                    <Table.Cell {...commonCellProps}>
                                         <Button variant="ghost" colorScheme="red" size="2xs"
                                                 onClick={() => handleRemoveContractor(idx)}>
                                             {t("common:delete")}
@@ -379,7 +386,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                             ))}
                             {contractorState.loading && (
                                 <Table.Row>
-                                    <Table.Cell colSpan={2} textAlign="center">
+                                    <Table.Cell {...commonCellProps}>
                                         <Spinner size="sm" mt={2}/>
                                     </Table.Cell>
                                 </Table.Row>

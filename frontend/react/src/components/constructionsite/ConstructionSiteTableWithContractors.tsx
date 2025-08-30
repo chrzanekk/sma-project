@@ -269,6 +269,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                                                 onSortChange={contractorOnSortChange}
                                                                 sortField={contractorSortField}
                                                                 sortDirection={contractorSortDirection}
+                                                                extended={false}
                                                             />
                                                             {contractorState?.loading && <Spinner size="sm" mt={2}/>}
                                                         </Box>

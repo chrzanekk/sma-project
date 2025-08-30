@@ -10,7 +10,7 @@ export interface FetchableConstructionSiteDTO extends ConstructionSiteDTO, Audit
 
 export interface ConstructionSiteCreateDTO extends ConstructionSiteBaseDTO {
     company: CompanyBaseDTO;
-    contractor: ContractorDTO;
+    contractors?: Array<BaseContractorDTO>;
 }
 
 export interface ConstructionSiteUpdateDTO extends ConstructionSiteBaseDTO {
