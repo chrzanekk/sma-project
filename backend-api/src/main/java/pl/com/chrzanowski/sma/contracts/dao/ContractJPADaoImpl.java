@@ -18,6 +18,8 @@ import pl.com.chrzanowski.sma.contracts.service.filter.ContractQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.com.chrzanowski.sma.company.model.QCompany.company;
+import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
 import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 import static pl.com.chrzanowski.sma.contracts.model.QContract.contract;
 
@@ -67,8 +69,8 @@ public class ContractJPADaoImpl implements ContractDao {
         BlazeJPAQuery<Contract> baseQuery = contractQuerySpec.buildQuery(specification, pageable);
 
         baseQuery.leftJoin(contract.contractor, contractor).fetchJoin()
-                .leftJoin(contract.company).fetchJoin()
-                .leftJoin(contract.constructionSite).fetchJoin();
+                .leftJoin(contract.company, company).fetchJoin()
+                .leftJoin(contract.constructionSite, constructionSite).fetchJoin();
 
         PagedList<Contract> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
