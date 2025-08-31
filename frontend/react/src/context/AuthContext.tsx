@@ -46,7 +46,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
         localStorage.removeItem('auth');
         localStorage.removeItem('companySelected');
         localStorage.removeItem("selectedCompany");
-        localStorage.removeItem("chakra-ui-color-mode");
         clearUser();
         resetSelectedCompany();
     };
