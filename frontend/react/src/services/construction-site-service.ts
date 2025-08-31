@@ -15,7 +15,6 @@ import {ContractorDTO} from "@/types/contractor-types.ts";
 const CONSTRUCTION_SITE_API_BASE = "/api/construction-sites";
 
 export const getConstructionSiteByFilter = async (filter: Record<string, any>) => {
-    console.log(filter);
     try {
         const queryParams = serializeQueryParams({
             ...filter,

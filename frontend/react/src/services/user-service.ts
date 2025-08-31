@@ -30,7 +30,6 @@ export const getUserById = async (id: number) => {
     try {
         const response = await api.get(`${USERS_API_BASE}/getById/${id}`, getAuthConfig());
         const userDTO: UserDTO = response.data;
-        console.table(userDTO)
         return userDTO;
     } catch (err) {
         throw err;
@@ -44,8 +43,6 @@ export const addUser = async (addUser: UserFormDTO) => {
         );
         const payload: UserDTO = {
             ...addUser,
-            // locked: toBoolean(addUser.locked),
-            // enabled: toBoolean(addUser.enabled),
             roles
         }
         const response = await api.post(`${USERS_API_BASE}/add`, payload, getAuthConfig());

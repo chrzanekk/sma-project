@@ -25,7 +25,6 @@ const CompanyManagement: React.FC = () => {
             onDelete
         }
     } = useDataManagement<FetchableCompanyDTO>(
-        // funkcja pobierająca dane
         async (params) => {
             const response = await getCompaniesByFilter(params);
             return {
@@ -33,8 +32,9 @@ const CompanyManagement: React.FC = () => {
                 totalPages: response.totalPages
             };
         },
-        // funkcja usuwająca
-        deleteCompanyById
+        deleteCompanyById,
+        {}
+        ,false
     );
 
     return (

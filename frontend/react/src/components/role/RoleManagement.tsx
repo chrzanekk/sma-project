@@ -25,16 +25,17 @@ const RoleManagement: React.FC = () => {
             onDelete
         }
     } = useDataManagement<RoleDTO>(
-        // funkcja pobierająca dane
         async (params) => {
             const response = await getRoleByFilterAndPage(params);
+            console.log(response.roles)
             return {
                 data: response.roles,
                 totalPages: response.totalPages
             };
         },
-        // funkcja usuwająca
-        deleteRoleById
+        deleteRoleById,
+        {},
+        false
     );
 
     return (

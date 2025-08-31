@@ -33,8 +33,9 @@ const UserManagement: React.FC = () => {
                 totalPages: response.totalPages
             };
         },
-        // funkcja usuwająca
-        deleteUserById
+        deleteUserById,
+        {},
+        false
     );
 
     return (

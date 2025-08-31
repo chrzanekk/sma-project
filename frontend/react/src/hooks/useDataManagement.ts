@@ -1,6 +1,6 @@
 // hooks/useDataManagement.ts
-import { useState, useCallback, useEffect } from "react";
-import { useCompany } from "@/hooks/useCompany.ts";
+import {useCallback, useEffect, useState} from "react";
+import {useCompany} from "@/hooks/useCompany.ts";
 
 export type FetchParams = {
     page?: number;
@@ -29,13 +29,17 @@ export interface DataManagementResult<T> {
 /**
  * @param fetchFn  async (params: FetchParams) => { data: T[]; totalPages: number }
  * @param deleteFn async (id: number) => void
+ * @param initialFilter
+ * @param useCompanyId
  */
 export function useDataManagement<T>(
     fetchFn: (params: FetchParams) => Promise<{ data: T[]; totalPages: number }>,
     deleteFn: (id: number) => Promise<void>,
-    initialFilter: Record<string, any> = {}
+    initialFilter: Record<string, any> = {},
+    useCompanyId: boolean = true,
 ): DataManagementResult<T> {
-    const { selectedCompany } = useCompany();
+    const {selectedCompany} = useCompany();
+
     const [items, setItems] = useState<T[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -45,19 +49,19 @@ export function useDataManagement<T>(
     const [filter, setFilter] = useState<Record<string, any>>(initialFilter);
 
     const doFetch = useCallback(async (page = currentPage, size = rowsPerPage, filt = filter) => {
-        if (!selectedCompany) return;
+        if (useCompanyId && !selectedCompany) return;
         const sortParam = sortField ? `${sortField},${sortDirection}` : undefined;
         const params: FetchParams = {
             ...filt,
-            companyId: selectedCompany.id,
             page,
             size,
             sort: sortParam,
+            ...(useCompanyId && selectedCompany ? {companyId: selectedCompany.id} : {}),
         };
-        const { data, totalPages } = await fetchFn(params);
+        const {data, totalPages} = await fetchFn(params);
         setItems(data);
         setTotalPages(totalPages);
-    }, [fetchFn, selectedCompany, currentPage, rowsPerPage, sortField, sortDirection, filter]);
+    }, [fetchFn, selectedCompany, currentPage, rowsPerPage, sortField, sortDirection, filter, useCompanyId]);
 
     const onPageChange = (page: number) => {
         setCurrentPage(page);
@@ -91,7 +95,7 @@ export function useDataManagement<T>(
 
     useEffect(() => {
         doFetch(0, rowsPerPage, filter).then();
-    }, [selectedCompany]);
+    }, [selectedCompany, useCompanyId]);
 
     return {
         items,
