@@ -40,7 +40,7 @@ const EditConstructionSiteDialog: React.FC<EditConstructionSiteDialogProps> = ({
                                     <Dialog.CloseTrigger/>
                                     <Dialog.Header>
                                         <Heading size={"xl"} color={themeColors.fontColor}>
-                                            {t("contractors:edit")}
+                                            {t("constructionSites:edit")}
                                         </Heading>
                                     </Dialog.Header>
                                     <Dialog.Body>

@@ -18,10 +18,14 @@ import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
+import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -113,20 +117,31 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
     public ConstructionSiteDTO update(ConstructionSiteUpdateDTO dto) {
         log.debug("Request to update ConstructionSite with contractors: {}", dto.getId());
 
-        ConstructionSite existing = constructionSiteDao.findById(dto.getId())
-                .orElseThrow(() -> new ConstructionSiteException(ConstructionSiteErrorCode.CONSTRUCTION_SITE_NOT_FOUND, "Construction site with id " + dto.getId() + " not found"));
+        ConstructionSiteUpdateDTO updatedDTO = removeContractorConflicts(dto);
 
-        List<ContractorDTO> saved = dto.getAddedContractors().stream()
-                .filter(contractor -> contractor.getId() == null)
-                .map(contractorService::save)
-                .toList();
-        saved.forEach(cdto -> {
-            ConstructionSiteContractor csc = new ConstructionSiteContractor(existing,
-                    contractorDTOMapper.toEntity(cdto));
-            existing.getSiteContractors().add(csc);
+        ConstructionSite existing = constructionSiteDao.findById(dto.getId())
+                .orElseThrow(() -> new ConstructionSiteException(ConstructionSiteErrorCode.CONSTRUCTION_SITE_NOT_FOUND, "Construction site with id " + updatedDTO.getId().toString() + " not found"));
+
+        List<Contractor> allToAdd = updatedDTO.getAddedContractors().stream()
+                .map(contractorDTO -> {
+                    if (contractorDTO.getId() == null) {
+                        ContractorDTO savedDTO = contractorService.save(contractorDTO);
+                        return contractorDTOMapper.toEntity(savedDTO);
+                    } else {
+                        return contractorDTOMapper.toEntity(contractorDTO);
+                    }
+                }).toList();
+
+        allToAdd.forEach(contractor -> {
+            boolean alreadyAssigned = existing.getSiteContractors().stream()
+                    .anyMatch(siteContractor -> siteContractor.getContractor().getId().equals(contractor.getId()));
+            if (!alreadyAssigned) {
+                ConstructionSiteContractor csc = new ConstructionSiteContractor(existing, contractor);
+                existing.getSiteContractors().add(csc);
+            }
         });
 
-        dto.getDeletedContractors().forEach(cdto -> {
+        updatedDTO.getDeletedContractors().forEach(cdto -> {
             existing.getSiteContractors().removeIf(csc ->
                     csc.getId().getConstructionSiteId().equals(existing.getId()) &&
                             csc.getId().getContractorId().equals(cdto.getId())
@@ -135,12 +150,53 @@ public class ConstructionSiteServiceImpl implements ConstructionSiteService {
                     .deleteByConstructionSiteIdAndContractorId(existing.getId(), cdto.getId());
         });
 
-        constructionSiteDTOMapper.updateFromUpdateDto(dto, existing);
+        constructionSiteDTOMapper.updateFromUpdateDto(updatedDTO, existing);
 
         ConstructionSite savedEntity = constructionSiteDao.save(existing);
 
         return constructionSiteDTOMapper.toDto(savedEntity);
     }
+
+    private static ConstructionSiteUpdateDTO removeContractorConflicts(ConstructionSiteUpdateDTO dto) {
+        if (dto.getAddedContractors().isEmpty() || dto.getDeletedContractors().isEmpty()) {
+            return dto;
+        }
+
+        Set<Long> duplicateIds = dto.getAddedContractors().stream()
+                .map(ContractorDTO::getId)
+                .filter(Objects::nonNull)
+                .filter(id -> dto.getDeletedContractors().stream()
+                        .map(ContractorDTO::getId)
+                        .filter(Objects::nonNull)
+                        .anyMatch(deletedId -> deletedId.equals(id)))
+                .collect(Collectors.toSet());
+
+        if (duplicateIds.isEmpty()) {
+            return dto;
+        }
+
+        List<ContractorDTO> filteredAdded = dto.getAddedContractors().stream()
+                .filter(c -> !duplicateIds.contains(c.getId()))
+                .toList();
+
+        List<ContractorDTO> filteredDeleted = dto.getDeletedContractors().stream()
+                .filter(c -> !duplicateIds.contains(c.getId()))
+                .toList();
+
+        // Tworzymy nowy obiekt DTO z przefiltrowanymi listami
+        return ConstructionSiteUpdateDTO.builder()
+                .id(dto.getId())
+                .name(dto.getName())
+                .address(dto.getAddress())
+                .code(dto.getCode())
+                .shortName(dto.getShortName())
+                .country(dto.getCountry())
+                .company(dto.getCompany())
+                .addedContractors(filteredAdded)
+                .deletedContractors(filteredDeleted)
+                .build();
+    }
+
 
     @Override
     @Transactional
