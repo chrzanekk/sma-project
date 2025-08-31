@@ -1,6 +1,5 @@
 import React from "react";
 import {Grid, GridItem, Text} from "@chakra-ui/react";
-import {useThemeColors} from "@/theme/theme-colors.ts";
 
 interface DashboardGridProps {
     topRowContent: string;
@@ -14,8 +13,8 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = useThemeColors().bgColorPrimary,
-                                                         fontColor = useThemeColors().fontColor
+                                                         bgColor = "bgColorPrimary",
+                                                         fontColor = "fontColorPrimary",
                                                      }) => {
     return (
         <Grid

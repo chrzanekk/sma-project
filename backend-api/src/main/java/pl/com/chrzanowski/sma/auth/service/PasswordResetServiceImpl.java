@@ -1,9 +1,10 @@
 package pl.com.chrzanowski.sma.auth.service;
 
-import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -28,6 +29,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
 
     @Override
+    @Transactional
     public MessageResponse saveNewPassword(UserTokenDTO userTokenDTO, NewPasswordPutRequest request) {
         log.debug("Request to save new password.");
         UserDTO userDTO = userService.getUserByEmail(userTokenDTO.getEmail());

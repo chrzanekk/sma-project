@@ -2,7 +2,7 @@ import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
 import {Box, Button, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
-import {useThemeColors, useThemeColorsHex} from "@/theme/theme-colors";
+import {themeVars, useThemeColors} from "@/theme/theme-colors";
 import {getSelectStyles} from "@/components/shared/formOptions.ts";
 import {useTranslation} from "react-i18next";
 // -----------------------------
@@ -16,13 +16,12 @@ export interface CustomInputFilterFieldProps {
 
 export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({name, placeholder}) => {
     const themeColors = useThemeColors();
-    const themeColorsHex = useThemeColorsHex();
     return <Field
         name={name}
         as={Input}
         color={themeColors.fontColor}
         placeholder={placeholder}
-        _placeholder={{color: themeColorsHex.fontColor}}
+        _placeholder={{color: themeVars.fontColor}}
         size="sm"
         bg={themeColors.bgColorSecondary}
         borderRadius="md"
@@ -49,7 +48,6 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                disabled
                                                            }) => {
     const themeColors = useThemeColors();
-    const themeColorsHex = useThemeColorsHex();
     return (
         <Field name={name}>
             {({field, meta}: FieldProps) => (
@@ -62,7 +60,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                     <Input
                         {...field}
                         placeholder={placeholder}
-                        _placeholder={{color: themeColorsHex.fontColor}}
+                        _placeholder={{color: themeVars.fontColor}}
                         type={type}
                         size="sm"
                         color={themeColors.fontColor}
@@ -127,6 +125,10 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 width: width ? width : "auto",
             };
         },
+        input: (provided) => ({
+            ...provided,
+            color: themeColors.fontColor
+        })
     };
 
     return (
@@ -302,7 +304,6 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                                                                      disabled = false
                                                                  }) => {
     const themeColors = useThemeColors();
-    const themeColorsHex = useThemeColorsHex();
     return (
         <Field name={name}>
             {({field, meta}: FieldProps) => (
@@ -315,10 +316,10 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
                     <Textarea
                         {...field}
                         placeholder={placeholder}
-                        _placeholder={{color: themeColorsHex.fontColor}}
+                        _placeholder={{color: themeVars.fontColor}}
                         size="sm"
-                        color={themeColors.fontColor}
-                        bg={themeColors.bgColorPrimary}
+                        color={themeVars.fontColor}
+                        bg={themeVars.bgColorPrimary}
                         borderRadius="md"
                         width={width || "100%"}
                         rows={rows}
@@ -354,7 +355,6 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                                                                        }) => {
     const {t} = useTranslation();
     const themeColors = useThemeColors();
-    const themeColorsHex = useThemeColorsHex();
     return (
         <Box mb={1}>
             {label && (
@@ -365,7 +365,7 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
             <Input
                 name={name}
                 placeholder={placeholder}
-                _placeholder={{color: themeColorsHex.fontColor}}
+                _placeholder={{color: themeVars.fontColor}}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 size={"sm"}

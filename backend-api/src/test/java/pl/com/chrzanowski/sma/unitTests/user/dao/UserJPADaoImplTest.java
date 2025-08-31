@@ -1,9 +1,9 @@
 package pl.com.chrzanowski.sma.unitTests.user.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Path;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import pl.com.chrzanowski.sma.helper.MockPagedList;
+import pl.com.chrzanowski.sma.helper.SimplePagedList;
 import pl.com.chrzanowski.sma.user.dao.UserJPADaoImpl;
 import pl.com.chrzanowski.sma.user.model.QUser;
 import pl.com.chrzanowski.sma.user.model.User;
@@ -256,25 +258,23 @@ class UserJPADaoImplTest {
     void findAll_WithSpecificationAndPageable_Positive() {
         // Given
         BooleanBuilder specification = new BooleanBuilder();
-        Pageable pageable = PageRequest.of(0,10);
+        Pageable pageable = PageRequest.of(0, 10);
         User user = new User();
 
-        JPAQuery<User> mockQuery = mock(JPAQuery.class);
-        when(mockQuery.leftJoin(eq(QUser.user.roles),any(Path.class))).thenReturn(mockQuery);
+        BlazeJPAQuery<User> mockQuery = mock(BlazeJPAQuery.class);
+        when(mockQuery.leftJoin(eq(QUser.user.roles), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
-
         when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(1L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(List.of(user));
+        PagedList<User> mockPagedList = MockPagedList.mockPagedListSpy(List.of(user), 1);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(mockPagedList);
 
         // When
         var result = userJPADaoImpl.findAll(specification, pageable);
 
         // Then
         assertEquals(1, result.getTotalElements());
-        assertTrue(result.getContent().contains(user));
+        assertEquals(1, result.getContent().size());
+        assertSame(user, result.getContent().getFirst());
         verify(userQuerySpec, times(1)).buildQuery(specification, pageable);
     }
 
@@ -282,16 +282,15 @@ class UserJPADaoImplTest {
     void findAll_WithSpecificationAndPageable_Negative() {
         // Given
         BooleanBuilder specification = new BooleanBuilder();
-        Pageable pageable = PageRequest.of(0,10);
-        JPAQuery<User> mockQuery = mock(JPAQuery.class);
-        when(mockQuery.leftJoin(eq(QUser.user.roles),any(Path.class))).thenReturn(mockQuery);
+        Pageable pageable = PageRequest.of(0, 10);
+
+        BlazeJPAQuery<User> mockQuery = mock(BlazeJPAQuery.class);
+        when(mockQuery.leftJoin(eq(QUser.user.roles), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
+        PagedList<User> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
         when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(0L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
 
         // When
         var result = userJPADaoImpl.findAll(specification, pageable);
@@ -310,7 +309,7 @@ class UserJPADaoImplTest {
         UserJPADaoImpl userJPADaoImpl = new UserJPADaoImpl(null, userQuerySpec);
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<User> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<User> query = mock(BlazeJPAQuery.class);
 
         User user1 = User.builder().login("user1").build();
         List<User> userList = List.of(user1);
@@ -335,7 +334,7 @@ class UserJPADaoImplTest {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
         UserQuerySpec userQuerySpec = mock(UserQuerySpec.class);
-        JPQLQuery<User> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<User> query = mock(BlazeJPAQuery.class);
         UserJPADaoImpl userJPADaoImpl = new UserJPADaoImpl(null, userQuerySpec);
 
         when(query.fetch()).thenReturn(Collections.emptyList());

@@ -79,6 +79,9 @@ public class WebSecurityConfig {
                         //COMPANY CONTROLLER
                         .requestMatchers("/api/companies/**").hasAnyAuthority("ROLE_ADMIN")
 
+                        //CONSTRUCTION SITE CONTROLLER
+                        .requestMatchers("/api/construction-sites/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
+
 
                         .anyRequest().authenticated()
                 ).httpBasic(Customizer.withDefaults());

@@ -10,10 +10,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.com.chrzanowski.sma.auth.dto.request.NewPasswordPutRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.service.PasswordResetServiceImpl;
-import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
-import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
 import pl.com.chrzanowski.sma.user.service.UserService;
+import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
+import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
 import java.time.LocalDateTime;
 
@@ -84,9 +84,7 @@ class PasswordResetServiceImplTest {
     void testSaveNewPasswordUserNotFound() {
         when(userService.getUserByEmail(anyString())).thenThrow(new IllegalArgumentException("User not found"));
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            passwordResetService.saveNewPassword(userTokenDTO, request);
-        });
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> passwordResetService.saveNewPassword(userTokenDTO, request));
 
         assertEquals("User not found", exception.getMessage());
 
@@ -102,9 +100,7 @@ class PasswordResetServiceImplTest {
         when(userService.save(any(UserDTO.class))).thenReturn(userDTO.toBuilder().password("encodedNewPassword").build());
         doThrow(new IllegalStateException("Token update failed")).when(userTokenService).updateToken(any(UserTokenDTO.class));
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            passwordResetService.saveNewPassword(userTokenDTO, request);
-        });
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> passwordResetService.saveNewPassword(userTokenDTO, request));
 
         assertEquals("Token update failed", exception.getMessage());
 

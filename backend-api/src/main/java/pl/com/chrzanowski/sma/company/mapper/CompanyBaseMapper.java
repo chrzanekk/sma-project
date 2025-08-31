@@ -6,7 +6,6 @@ import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.model.Company;
-import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
 @Mapper(componentModel = "spring")
 public interface CompanyBaseMapper extends EntityMapper<CompanyBaseDTO, Company> {

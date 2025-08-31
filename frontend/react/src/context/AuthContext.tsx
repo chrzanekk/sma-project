@@ -44,7 +44,6 @@ export const AuthProvider = ({children}: AuthProviderProps) => {
 
     const logOut = () => {
         localStorage.removeItem('auth');
-        localStorage.removeItem('theme');
         localStorage.removeItem('companySelected');
         localStorage.removeItem("selectedCompany");
         clearUser();

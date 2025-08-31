@@ -56,8 +56,7 @@ const EditContactForm: React.FC<EditContactFormProps> = ({onSuccess, contactId})
         try {
             const mappedContact: ContactDTO = {
                 ...values,
-                company: currentCompany!,
-                companyId: currentCompany!.id
+                company: currentCompany!
             }
             await updateContact(mappedContact);
             successNotification(

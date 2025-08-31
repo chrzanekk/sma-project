@@ -1,11 +1,10 @@
 package pl.com.chrzanowski.sma.contact.service;
 
-
 import io.micrometer.common.util.StringUtils;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.ContactException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
@@ -29,19 +28,17 @@ public class ContactServiceImpl implements ContactService {
     private final Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
 
     private final ContactDao contactDao;
-    private final ContactBaseMapper contactBaseMapper;
     private final ContactDTOMapper contactDTOMapper;
 
-    public ContactServiceImpl(ContactDao contactDao, ContactBaseMapper contactBaseMapper, ContactDTOMapper contactDTOMapper) {
+    public ContactServiceImpl(ContactDao contactDao, ContactDTOMapper contactDTOMapper) {
         this.contactDao = contactDao;
-        this.contactBaseMapper = contactBaseMapper;
         this.contactDTOMapper = contactDTOMapper;
     }
 
     @Override
     @Transactional
     public ContactDTO save(ContactDTO contactBaseDTO) {
-        log.debug("Request to save Contact : {}", contactBaseDTO.getId());
+        log.debug("Request to save Contact : {}", contactBaseDTO.getEmail());
         validateRequiredFields(contactBaseDTO);
         Contact contact = contactDTOMapper.toEntity(contactBaseDTO);
         Contact savedContact = contactDao.save(contact);
@@ -78,6 +75,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public ContactDTO findById(Long id) {
         log.debug("Find contact by id: {}", id);
         Optional<Contact> optionalContact = contactDao.findById(id);
@@ -85,6 +83,7 @@ public class ContactServiceImpl implements ContactService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         log.debug("Delete contact: {}", id);
         contactDao.deleteById(id);

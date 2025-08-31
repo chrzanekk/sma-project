@@ -7,7 +7,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
-import pl.com.chrzanowski.sma.common.exception.ObjectNotFoundException;
 import pl.com.chrzanowski.sma.common.exception.TokenException;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -103,9 +102,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testSaveTokenUserNull() {
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userTokenService.saveToken(userTokenDTO.getToken(), null, TokenType.PASSWORD_RESET_TOKEN);
-        });
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> userTokenService.saveToken(userTokenDTO.getToken(), null, TokenType.PASSWORD_RESET_TOKEN));
 
         assertEquals("User must not be null", exception.getMessage());
 
@@ -114,9 +111,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testSaveTokenWithEmptyToken() {
-        TokenException exception = assertThrows(TokenException.class, () -> {
-            userTokenService.saveToken(null, userDTO, TokenType.PASSWORD_RESET_TOKEN);
-        });
+        TokenException exception = assertThrows(TokenException.class, () -> userTokenService.saveToken(null, userDTO, TokenType.PASSWORD_RESET_TOKEN));
 
         assertEquals("Token must not be null or empty", exception.getMessage());
 
@@ -179,9 +174,7 @@ class UserTokenServiceImplTest {
     void testGetTokenDataNotFound() {
         when(userTokenDao.findUserTokenByToken(anyString())).thenReturn(Optional.empty());
 
-        TokenException exception = assertThrows(TokenException.class, () -> {
-            userTokenService.getTokenData("invalidToken");
-        });
+        TokenException exception = assertThrows(TokenException.class, () -> userTokenService.getTokenData("invalidToken"));
 
         assertEquals("Token not found.", exception.getMessage());
 
@@ -190,9 +183,7 @@ class UserTokenServiceImplTest {
 
     @Test
     void testGetTokenDataWithEmptyToken() {
-        TokenException exception = assertThrows(TokenException.class, () -> {
-            userTokenService.getTokenData(null);
-        });
+        TokenException exception = assertThrows(TokenException.class, () -> userTokenService.getTokenData(null));
 
         assertEquals("Token not found.", exception.getMessage());
 
@@ -219,9 +210,7 @@ class UserTokenServiceImplTest {
     void testDeleteTokenByNonExistingUserId() {
         doThrow(new UserNotFoundException("User not found for id: 999", Map.of("id", 999L))).when(userTokenDao).deleteTokensByUserId(999L);
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-            userTokenService.deleteTokenByUserId(999L);
-        });
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> userTokenService.deleteTokenByUserId(999L));
 
         assertEquals("User not found for id: 999", exception.getMessage());
 

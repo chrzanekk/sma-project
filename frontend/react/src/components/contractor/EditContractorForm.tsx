@@ -7,6 +7,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 
 interface EditContractorFormProps {
@@ -16,6 +17,7 @@ interface EditContractorFormProps {
 
 const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId}) => {
     const {t} = useTranslation(['common', 'contractors', 'errors'])
+    const currentCompany = getSelectedCompany();
     const defaultValues: ContractorFormValues = {
         id: 0,
         name: '',
@@ -76,6 +78,7 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
                 ...values,
                 id: contractorId,
                 country: Country.fromCode(values.country),
+                company: currentCompany!
             };
             await updateContractor(mappedContractor);
             successNotification(

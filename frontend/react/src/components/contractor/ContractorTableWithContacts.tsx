@@ -19,7 +19,6 @@ interface ContractorTableWithContactsProps {
     onSortChange: (field: string) => void;
     sortField: string | null;
     sortDirection: "asc" | "desc";
-    // Funkcje zarządzania kontaktami przekazywane z komponentu nadrzędnego
     contactFetchContacts: (customFilter?: Record<string, any>, page?: number, size?: number) => Promise<void>;
     contactOnDelete: (id: number) => void;
     contactOnSortChange: (field: string) => void;

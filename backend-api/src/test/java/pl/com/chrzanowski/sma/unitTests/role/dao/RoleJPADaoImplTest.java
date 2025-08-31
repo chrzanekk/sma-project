@@ -1,7 +1,8 @@
 package pl.com.chrzanowski.sma.unitTests.role.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.helper.SimplePagedList;
 import pl.com.chrzanowski.sma.role.dao.RoleJPADaoImpl;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
@@ -148,7 +150,7 @@ class RoleJPADaoImplTest {
     void findAll_WithSpecification_Positive() {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Role> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<Role> query = mock(BlazeJPAQuery.class);
         Role role = Role.builder().name("ROLE_USER").build();
         when(roleQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(List.of(role));
@@ -167,7 +169,7 @@ class RoleJPADaoImplTest {
     void findAll_WithSpecification_Negative() {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Role> query = mock(JPQLQuery.class);
+        BlazeJPAQuery<Role> query = mock(BlazeJPAQuery.class);
         when(roleQuerySpec.buildQuery(specification, null)).thenReturn(query);
         when(query.fetch()).thenReturn(Collections.emptyList());
 
@@ -183,16 +185,15 @@ class RoleJPADaoImplTest {
     @Test
     void findAll_WithSpecificationAndPageable_Positive() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Role> query = mock(JPQLQuery.class);
+        BooleanBuilder specification = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 2);
         Role role = Role.builder().name("ROLE_ADMIN").build();
 
-        when(roleQuerySpec.buildQuery(specification,pageable)).thenReturn(query);
-        when(query.offset(pageable.getOffset())).thenReturn(query);
-        when(query.limit(pageable.getPageSize())).thenReturn(query);
-        when(query.fetchCount()).thenReturn(1L);
-        when(query.fetch()).thenReturn(List.of(role));
+        BlazeJPAQuery<Role> query = mock(BlazeJPAQuery.class);
+        when(roleQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
+
+        PagedList<Role> pagedList = new SimplePagedList<>(List.of(role), 1);
+        when(query.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
         // When
         Page<Role> rolesPage = roleJPADaoImpl.findAll(specification, pageable);
@@ -200,37 +201,30 @@ class RoleJPADaoImplTest {
         // Then
         assertEquals(1, rolesPage.getTotalElements());
         assertEquals(1, rolesPage.getContent().size());
-        assertTrue(rolesPage.getContent().contains(role));
-        verify(roleQuerySpec, times(1)).buildQuery(specification,pageable);
-        verify(query, times(1)).offset(pageable.getOffset());
-        verify(query, times(1)).limit(pageable.getPageSize());
-        verify(query, times(1)).fetchCount();
-        verify(query, times(1)).fetch();
+        assertSame(role, rolesPage.getContent().get(0));
+        verify(roleQuerySpec, times(1)).buildQuery(specification, pageable);
+        verify(query, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
     void findAll_WithSpecificationAndPageable_Negative() {
         // Given
-        BooleanBuilder specification = mock(BooleanBuilder.class);
-        JPQLQuery<Role> query = mock(JPQLQuery.class);
+        BooleanBuilder specification = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 2);
 
-        when(roleQuerySpec.buildQuery(specification,pageable)).thenReturn(query);
-        when(query.offset(pageable.getOffset())).thenReturn(query);
-        when(query.limit(pageable.getPageSize())).thenReturn(query);
-        when(query.fetchCount()).thenReturn(0L);
-        when(query.fetch()).thenReturn(Collections.emptyList());
+        BlazeJPAQuery<Role> query = mock(BlazeJPAQuery.class);
+        when(roleQuerySpec.buildQuery(specification, pageable)).thenReturn(query);
+
+        PagedList<Role> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
+        when(query.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
         // When
         Page<Role> rolesPage = roleJPADaoImpl.findAll(specification, pageable);
 
         // Then
         assertTrue(rolesPage.isEmpty());
-        verify(roleQuerySpec, times(1)).buildQuery(specification,pageable);
-        verify(query, times(1)).offset(pageable.getOffset());
-        verify(query, times(1)).limit(pageable.getPageSize());
-        verify(query, times(1)).fetchCount();
-        verify(query, times(1)).fetch();
+        verify(roleQuerySpec, times(1)).buildQuery(specification, pageable);
+        verify(query, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test

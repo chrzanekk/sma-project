@@ -4,7 +4,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.common.service.QueryService;
 import pl.com.chrzanowski.sma.contact.dto.ContactAuditableDTO;
-import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
 

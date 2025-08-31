@@ -1,26 +1,21 @@
 package pl.com.chrzanowski.sma.user.service.filter;
 
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.sma.role.model.QRole;
+import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.user.model.QUser;
 import pl.com.chrzanowski.sma.user.model.User;
 
 @Component
 public class UserQuerySpec {
 
-    private final EntityManager em;
+    private final BlazeJPAQueryFactory queryFactory;
 
-    public UserQuerySpec(EntityManager em) {
-        this.em = em;
+    public UserQuerySpec(BlazeJPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     public static BooleanBuilder buildPredicate(UserFilter userFilter) {
@@ -59,26 +54,7 @@ public class UserQuerySpec {
         return predicate;
     }
 
-    public JPQLQuery<User> buildQuery(BooleanBuilder booleanBuilder, Pageable pageable) {
-        QUser user = QUser.user;
-
-        JPQLQuery<User> query = new JPAQuery<>(em).select(user).distinct().from(user);
-
-        if (booleanBuilder != null) {
-            query.where(booleanBuilder);
-        }
-
-        if (pageable != null && pageable.getSort().isSorted()) {
-            PathBuilder<User> contractorPathBuilder = new PathBuilder<>(User.class, "user");
-            for (Sort.Order order : pageable.getSort()) {
-                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
-                        order.isAscending() ? Order.ASC : Order.DESC,
-                        contractorPathBuilder.getComparable(order.getProperty(), String.class)
-                );
-                query.orderBy(orderSpecifier);
-            }
-        }
-
-        return query;
+    public BlazeJPAQuery<User> buildQuery(BooleanBuilder booleanBuilder, Pageable pageable) {
+        return QueryBuilderUtil.buildQuery(queryFactory, User.class, "user", booleanBuilder, pageable, QUser.user.id.asc());
     }
 }

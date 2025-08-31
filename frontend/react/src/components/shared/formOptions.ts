@@ -1,5 +1,5 @@
 import {StylesConfig} from "react-select";
-import {useThemeColorsHex} from "@/theme/theme-colors";
+import {themeVars} from "@/theme/theme-colors";
 
 // -----------------------------
 // Opcje boolean i style dla react-select
@@ -19,12 +19,11 @@ export const getBooleanOptions = (
 ];
 
 export const getSelectStyles = (): StylesConfig<any, boolean> => {
-        const themeColorsHex = useThemeColorsHex();
         return {
             control: (provided) => ({
                 ...provided,
-                backgroundColor: themeColorsHex.bgColorPrimary,
-                color: themeColorsHex.fontColor,
+                backgroundColor: themeVars.bgColorPrimary,
+                color: themeVars.fontColor,
                 borderRadius: "5px",
                 boxShadow: "none",
                 minHeight: "2rem",
@@ -34,11 +33,11 @@ export const getSelectStyles = (): StylesConfig<any, boolean> => {
             }),
             placeholder: (provided) => ({
                 ...provided,
-                color: themeColorsHex.fontColor
+                color: themeVars.fontColor
             }),
             singleValue: (provided) => ({
                 ...provided,
-                color: themeColorsHex.fontColor
+                color: themeVars.fontColor
             }),
             menuList: (provided) => ({
                 ...provided,
@@ -47,15 +46,15 @@ export const getSelectStyles = (): StylesConfig<any, boolean> => {
             option: (provided, state) => ({
                 ...provided,
                 backgroundColor: state.isSelected
-                    ? themeColorsHex.bgColorPrimary
-                    : themeColorsHex.bgColorSecondary,
+                    ? themeVars.bgColorPrimary
+                    : themeVars.bgColorSecondary,
                 color: state.isSelected
-                    ? themeColorsHex.fontColor
-                    : themeColorsHex.fontColor,
+                    ? themeVars.fontColor
+                    : themeVars.fontColor,
                 cursor: "pointer",
                 "&:hover": {
-                    backgroundColor: themeColorsHex.highlightBgColor,
-                    color: themeColorsHex.fontColorHover
+                    backgroundColor: themeVars.highlightBgColor,
+                    color: themeVars.fontColorHover
                 }
             })
         }

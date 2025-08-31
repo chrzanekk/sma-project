@@ -1,10 +1,8 @@
 package pl.com.chrzanowski.sma.company.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
-import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,12 +22,11 @@ public class CompanyJPADaoImpl implements CompanyDao {
     private final Logger log = LoggerFactory.getLogger(CompanyJPADaoImpl.class);
     private final CompanyRepository companyRepository;
     private final CompanyQuerySpec companyQuerySpec;
-    private final EntityManager em;
 
-    public CompanyJPADaoImpl(CompanyRepository companyRepository, CompanyQuerySpec companyQuerySpec, EntityManager em) {
+    public CompanyJPADaoImpl(CompanyRepository companyRepository, CompanyQuerySpec companyQuerySpec) {
         this.companyRepository = companyRepository;
         this.companyQuerySpec = companyQuerySpec;
-        this.em = em;
+
     }
 
 
@@ -66,32 +63,16 @@ public class CompanyJPADaoImpl implements CompanyDao {
     @Override
     public List<Company> findAll(BooleanBuilder specification) {
         log.debug("JPA DAO: Finding all companies by specification: {}", specification);
-        JPQLQuery<Company> query = companyQuerySpec.buildQuery(specification, null);
-        return query.fetch();
+        return companyQuerySpec.buildQuery(specification, null).fetch();
     }
 
     @Override
     public Page<Company> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("JPA DAO: Finding all companies by specification and page: {}, {}", specification, pageable);
-        JPQLQuery<Company> baseQuery = companyQuerySpec.buildQuery(specification, pageable);
+        BlazeJPAQuery<Company> baseQuery = companyQuerySpec.buildQuery(specification, pageable);
 
-        long count = baseQuery.fetchCount();
-        JPAQuery<Company> jpaQuery = getPaginationQuery(baseQuery);
+        PagedList<Company> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
-        List<Company> content = jpaQuery
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-        return new PageImpl<>(content, pageable, count);
-    }
-
-    private JPAQuery<Company> getPaginationQuery(JPQLQuery<Company> baseQuery) {
-        JPAQuery<Company> jpaQuery = (JPAQuery<Company>) baseQuery;
-
-        EntityGraph<Company> entityGraph = em.createEntityGraph(Company.class);
-        entityGraph.addSubgraph("users");
-
-        jpaQuery.setHint("jakarta.persistence.fetchgraph", entityGraph);
-        return jpaQuery;
+        return new PageImpl<>(content, pageable, content.getTotalSize());
     }
 }

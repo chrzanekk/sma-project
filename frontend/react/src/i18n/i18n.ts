@@ -23,6 +23,8 @@ import contactsPl from './pl/contacts.json'
 import contactsEn from './en/contacts.json'
 import companiesPl from './pl/companies.json'
 import companiesEn from './en/companies.json'
+import constructionSitesEn from './en/constructionSites.json'
+import constructionSitesPl from './pl/constructionSites.json'
 
 i18n
     .use(initReactI18next)
@@ -40,7 +42,8 @@ i18n
             contractors: contractorsEn,
             countries: countriesEn,
             contacts: contactsEn,
-            companies: companiesEn
+            companies: companiesEn,
+            constructionSites: constructionSitesEn,
         },
         pl: {
             common: commonPl,
@@ -53,13 +56,14 @@ i18n
             contractors: contractorsPl,
             countries: countriesPl,
             contacts: contactsPl,
-            companies: companiesPl
+            companies: companiesPl,
+            constructionSites: constructionSitesPl,
         },
     },
     lng: 'pl',
     fallbackLng: 'en',
     ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
-        'contractors', 'countries','contacts','companies'],
+        'contractors', 'countries','contacts','companies','constructionSites'],
     defaultNS: 'common',
     interpolation: {
         escapeValue: false,

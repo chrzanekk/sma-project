@@ -1,11 +1,10 @@
 package pl.com.chrzanowski.sma.unitTests.contractor.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Path;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +14,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorJPADaoImpl;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.model.QContractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
 import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
+import pl.com.chrzanowski.sma.helper.SimplePagedList;
 
 import java.util.Collections;
 import java.util.List;
@@ -222,22 +221,20 @@ class ContractorJPADaoImplTest {
     @Test
     void findAllWithSpecificationAndPageable_Positive() {
         // Given
-        BooleanBuilder specification = new BooleanBuilder(); // używamy realnego obiektu
+        BooleanBuilder specification = new BooleanBuilder();
         PageRequest pageable = PageRequest.of(0, 10);
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
 
         @SuppressWarnings("unchecked")
-        JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Contractor> mockQuery = mock(BlazeJPAQuery.class);
         when(mockQuery.leftJoin(eq(QContractor.contractor.contacts), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
-
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(1L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(List.of(contractor));
+
+        PagedList<Contractor> pagedList = new SimplePagedList<>(List.of(contractor), 1);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
         // When
         Page<Contractor> result = contractorJPADaoImpl.findAll(specification, pageable);
@@ -246,6 +243,7 @@ class ContractorJPADaoImplTest {
         assertEquals(1, result.getTotalElements());
         assertEquals(contractor, result.getContent().getFirst());
         verify(querySpec, times(1)).buildQuery(specification, pageable);
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
@@ -255,17 +253,15 @@ class ContractorJPADaoImplTest {
         PageRequest pageable = PageRequest.of(0, 10);
 
         @SuppressWarnings("unchecked")
-        JPAQuery<Contractor> mockQuery = mock(JPAQuery.class);
+        BlazeJPAQuery<Contractor> mockQuery = mock(BlazeJPAQuery.class);
         when(mockQuery.leftJoin(eq(QContractor.contractor.contacts), any(Path.class))).thenReturn(mockQuery);
         when(mockQuery.leftJoin(any(EntityPath.class))).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
-
         when(querySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
-        when(mockQuery.fetchCount()).thenReturn(0L);
-        when(mockQuery.offset(pageable.getOffset())).thenReturn(mockQuery);
-        when(mockQuery.limit(pageable.getPageSize())).thenReturn(mockQuery);
-        when(mockQuery.fetch()).thenReturn(Collections.emptyList());
+
+        PagedList<Contractor> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
+        when(mockQuery.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
         // When
         Page<Contractor> result = contractorJPADaoImpl.findAll(specification, pageable);
@@ -273,6 +269,7 @@ class ContractorJPADaoImplTest {
         // Then
         assertTrue(result.isEmpty());
         verify(querySpec, times(1)).buildQuery(specification, pageable);
+        verify(mockQuery, times(1)).fetchPage((int) pageable.getOffset(), pageable.getPageSize());
     }
 
     @Test
@@ -282,7 +279,7 @@ class ContractorJPADaoImplTest {
         Contractor contractor = Contractor.builder().name("Test Contractor").build();
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+        BlazeJPAQuery<Contractor> mockQuery = mock(BlazeJPAQuery.class);
 
         when(querySpec.buildQuery(specification, null)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(List.of(contractor));
@@ -302,7 +299,7 @@ class ContractorJPADaoImplTest {
         BooleanBuilder specification = new BooleanBuilder();
 
         @SuppressWarnings("unchecked")
-        JPQLQuery<Contractor> mockQuery = mock(JPQLQuery.class);
+        BlazeJPAQuery<Contractor> mockQuery = mock(BlazeJPAQuery.class);
 
         when(querySpec.buildQuery(specification, null)).thenReturn(mockQuery);
         when(mockQuery.fetch()).thenReturn(Collections.emptyList());

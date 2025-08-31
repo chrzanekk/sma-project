@@ -14,7 +14,6 @@ import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Set;
 
 @Component

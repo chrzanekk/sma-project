@@ -1,10 +1,10 @@
 package pl.com.chrzanowski.sma.usertoken.service;
 
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.TokenException;
 import pl.com.chrzanowski.sma.common.exception.UserNotFoundException;
@@ -34,12 +34,14 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
+    @Transactional
     public String generateToken() {
         log.debug("Request to generate password reset token.");
         return UUID.randomUUID().toString();
     }
 
     @Override
+    @Transactional
     public UserTokenDTO saveToken(String token, UserDTO userDTO, TokenType tokenType) {
         log.debug("Request to save token: {}, {}", tokenType.name(), token);
         if (userDTO == null) {
@@ -61,6 +63,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
+    @Transactional
     public UserTokenDTO updateToken(UserTokenDTO userTokenDTO) {
         log.debug("Request to update token: {}", userTokenDTO.getToken());
         UserToken userToken = userTokenDao.updateToken(userTokenMapper.toEntity(userTokenDTO.toBuilder()
@@ -69,6 +72,7 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
+    @Transactional
     public UserTokenDTO getTokenData(String token) {
         log.debug("Request to get token data: {}", token);
         return userTokenDao.findUserTokenByToken(token).map(userTokenMapper::toDto)
@@ -76,12 +80,14 @@ public class UserTokenServiceImpl implements UserTokenService {
     }
 
     @Override
+    @Transactional
     public void deleteToken(Long id) {
         log.debug("Request to delete token: {}", id);
         userTokenDao.deleteTokenById(id);
     }
 
     @Override
+    @Transactional
     public void deleteTokenByUserId(Long userId) {
         log.debug("Request to delete token by userId: {}", userId);
         userTokenDao.deleteTokensByUserId(userId);

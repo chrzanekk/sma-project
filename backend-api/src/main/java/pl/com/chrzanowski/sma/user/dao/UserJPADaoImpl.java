@@ -1,13 +1,14 @@
 package pl.com.chrzanowski.sma.user.dao;
 
+import com.blazebit.persistence.PagedList;
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.repository.UserRepository;
@@ -76,29 +77,19 @@ public class UserJPADaoImpl implements UserDao {
     }
 
     @Override
+    @EntityGraph(attributePaths = "roles")
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
-        JPQLQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
+        BlazeJPAQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
 
-        long total = query.fetchCount();
-
-        JPAQuery<User> jpaQuery = getPaginationQuery(query);
-
-        List<User> content = jpaQuery.offset(pageable.getOffset()).limit(pageable.getPageSize()).fetch();
-        return new PageImpl<>(content, pageable, total);
-    }
-
-    private JPAQuery<User> getPaginationQuery(JPQLQuery<User> baseQuery) {
-        JPAQuery<User> jpaQuery = (JPAQuery<User>) baseQuery;
-        jpaQuery.leftJoin(user.roles, role).fetchJoin();
-        return jpaQuery;
+        PagedList<User> content = query.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
+        return new PageImpl<>(content, pageable, content.getTotalSize());
     }
 
     @Override
     public List<User> findAll(BooleanBuilder specification) {
         log.debug("DAO: Find all users by specification {}", specification);
-        JPQLQuery<User> query = userQuerySpec.buildQuery(specification, null);
-        return query.fetch();
+        return userQuerySpec.buildQuery(specification, null).fetch();
     }
 
     @Override

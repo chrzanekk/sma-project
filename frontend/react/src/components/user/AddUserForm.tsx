@@ -37,7 +37,8 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 position: '',
                 locked: true,
                 enabled: false,
-                roles: [] as string[]
+                roles: [] as string[],
+                companies: []
             }}
             validationSchema={Yup.object({
                 login: Yup.string()

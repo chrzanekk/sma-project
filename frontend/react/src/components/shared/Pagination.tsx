@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Flex, Input, Text} from '@chakra-ui/react';
-import {useThemeColors, useThemeColorsHex} from "@/theme/theme-colors.ts";
+import {themeVars, useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {CustomSimpleSelect} from "@/components/shared/CustomFormFields.tsx";
 
@@ -23,7 +23,6 @@ const Pagination: React.FC<PaginationProps> = ({
     const [gotoPage, setGotoPage] = useState("");
     const {t} = useTranslation('auth')
     const themeColors = useThemeColors();
-    const themeColorsHex = useThemeColorsHex();
 
     const handleGotoPage = () => {
         const page = parseInt(gotoPage, 10) - 1;
@@ -53,7 +52,7 @@ const Pagination: React.FC<PaginationProps> = ({
                     {value: 50, label: "50"},
                     {value: 100, label: "100"},
                 ]}
-                bgColor={themeColorsHex.bgColorSecondary}
+                bgColor={themeVars.bgColorSecondary}
                 width="100px"
                 size="xs"
                 hideArrow={true}
@@ -93,7 +92,7 @@ const Pagination: React.FC<PaginationProps> = ({
                 disabled={currentPage + 1 === totalPages}
                 onChange={(e) => setGotoPage(e.target.value)}
                 placeholder={t('goToPage', {ns: 'common'})}
-                _placeholder={{color: themeColorsHex.fontColor}}
+                _placeholder={{color: themeVars.fontColor}}
             />
             <Button size={"2xs"}
                     onClick={handleGotoPage}

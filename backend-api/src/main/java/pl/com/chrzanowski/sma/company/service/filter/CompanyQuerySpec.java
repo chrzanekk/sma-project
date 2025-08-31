@@ -1,24 +1,21 @@
 package pl.com.chrzanowski.sma.company.service.filter;
 
+import com.blazebit.persistence.querydsl.BlazeJPAQuery;
+import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.dsl.PathBuilder;
-import com.querydsl.jpa.JPQLQuery;
-import com.querydsl.jpa.impl.JPAQuery;
-import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.model.QCompany;
 
 @Component
 public class CompanyQuerySpec {
-    private final EntityManager em;
 
-    public CompanyQuerySpec(EntityManager em) {
-        this.em = em;
+    private final BlazeJPAQueryFactory queryFactory;
+
+    public CompanyQuerySpec(BlazeJPAQueryFactory queryFactory) {
+        this.queryFactory = queryFactory;
     }
 
     public static BooleanBuilder buildPredicate(CompanyFilter filter) {
@@ -35,25 +32,7 @@ public class CompanyQuerySpec {
         return predicate;
     }
 
-    public JPQLQuery<Company> buildQuery(BooleanBuilder booleanBuilder, Pageable pageable) {
-        QCompany company = QCompany.company;
-
-        JPQLQuery<Company> query = new JPAQuery<>(em).select(company).from(company);
-
-        if (booleanBuilder != null) {
-            query.where(booleanBuilder);
-        }
-        if (pageable != null && pageable.getSort().isSorted()) {
-            PathBuilder<Company> companyPathBuilder = new PathBuilder<>(Company.class, "company");
-            for (Sort.Order order : pageable.getSort()) {
-                OrderSpecifier<?> orderSpecifier = new OrderSpecifier<>(
-                        order.isAscending() ? Order.ASC : Order.DESC,
-                        companyPathBuilder.getComparable(order.getProperty(), String.class)
-                );
-                query.orderBy(orderSpecifier);
-            }
-        }
-
-        return query;
+    public BlazeJPAQuery<Company> buildQuery(BooleanBuilder booleanBuilder, Pageable pageable) {
+        return QueryBuilderUtil.buildQuery(queryFactory, Company.class, "company", booleanBuilder, pageable, QCompany.company.id.asc());
     }
 }

@@ -1,10 +1,11 @@
 package pl.com.chrzanowski.sma.email.service;
 
-import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
@@ -56,6 +57,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
+    @Transactional
     public MessageResponse sendAfterRegistration(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user registration: {}", userTokenDTO.getEmail());
         Context context = new Context(locale);
@@ -81,6 +83,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
+    @Transactional
     public MessageResponse sendAfterEmailConfirmation(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm user activation:");
         Context context = new Context(locale);
@@ -103,6 +106,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
+    @Transactional
     public MessageResponse sendPasswordResetMail(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to reset password");
         Context context = new Context(locale);
@@ -127,6 +131,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
+    @Transactional
     public MessageResponse sendAfterPasswordChange(UserTokenDTO userTokenDTO, Locale locale) {
         log.debug("Request to send email to confirm password reset.");
         Context context = new Context(locale);
@@ -161,6 +166,7 @@ public class SendEmailServiceImpl implements SendEmailService {
     }
 
     @Override
+    @Transactional
     public void deleteEmailByUserId(Long userId) {
         log.debug("Request to delete emails by userId {}", userId);
         sendEmailDao.deleteByUserId(userId);

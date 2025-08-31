@@ -46,9 +46,6 @@ const SelectCompanyModal: React.FC<SelectCompanyModalProps> = ({
                 <Dialog.Backdrop/>
                 <Dialog.Positioner>
                     <Dialog.Content backgroundColor={themeColors.bgColorSecondary}>
-                        {/*<Dialog.Header>*/}
-                        {/*    <Dialog.Title color={themeColors.fontColor}>{t('navbar:chooseCompany')}</Dialog.Title>*/}
-                        {/*</Dialog.Header>*/}
                         <Dialog.Body>
                             {companies.length > 0 ? (
                                 <Flex justifyContent={'center'} mt={10}>

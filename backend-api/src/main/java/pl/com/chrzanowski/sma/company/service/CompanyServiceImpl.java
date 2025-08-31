@@ -1,10 +1,10 @@
 package pl.com.chrzanowski.sma.company.service;
 
-import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.CompanyException;
 import pl.com.chrzanowski.sma.common.exception.PropertyMissingException;
 import pl.com.chrzanowski.sma.common.exception.error.CompanyErrorCode;
@@ -34,6 +34,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
+    @Transactional
     public CompanyDTO save(CompanyDTO companyDTO) {
         log.debug("Request to save Company : {}", companyDTO);
         validateRequiredFields(companyDTO);
@@ -43,6 +44,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional
     public CompanyDTO update(CompanyDTO companyBaseDTO) {
         log.debug("Request to update Company : {}", companyBaseDTO);
         validateRequiredFields(companyBaseDTO);
@@ -55,6 +57,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    @Transactional
     public CompanyDTO findById(Long id) {
         log.debug("Request to get company by id : {}", id);
         Optional<Company> company = companyDao.findById(id);
@@ -63,6 +66,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
+    @Transactional
     public void delete(Long id) {
         log.debug("Request to delete Company : {}", id);
         companyDao.deleteById(id);

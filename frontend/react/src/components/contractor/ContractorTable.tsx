@@ -129,13 +129,13 @@ const ContractorTable: React.FC<Props> = ({
                             <Table.Cell>{contractor.scaffoldingUser ? t("common:yes") : t("common:no")}</Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(contractor.createdDatetime!)}</Table.Cell>
                             <Table.Cell>
-                                <div>{contractor.createdByFirstName}</div>
-                                <div>{contractor.createdByLastName}</div>
+                                <div>{contractor.createdBy.firstName}</div>
+                                <div>{contractor.createdBy.lastName}</div>
                             </Table.Cell>
                             <Table.Cell>{DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}</Table.Cell>
                             <Table.Cell>
-                                <div>{contractor.modifiedByFirstName}</div>
-                                <div>{contractor.modifiedByLastName}</div>
+                                <div>{contractor.modifiedBy.firstName}</div>
+                                <div>{contractor.modifiedBy.lastName}</div>
                             </Table.Cell>
                             <Table.Cell>
                                 <HStack gap={1} alignContent={"center"}>

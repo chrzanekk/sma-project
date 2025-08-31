@@ -1,7 +1,7 @@
 import React from "react";
 import {Box} from "@chakra-ui/react";
 import DashboardGrid from "@/layout/DashboardGrid.tsx";
-import {useThemeColors} from "@/theme/theme-colors.ts";
+import { useThemeColors} from "@/theme/theme-colors.ts";
 
 const App: React.FC = () => {
     const themeColors = useThemeColors();

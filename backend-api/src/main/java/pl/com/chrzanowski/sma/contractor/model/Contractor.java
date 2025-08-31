@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
+import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 
