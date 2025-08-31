@@ -125,6 +125,10 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 width: width ? width : "auto",
             };
         },
+        input: (provided) => ({
+            ...provided,
+            color: themeColors.fontColor
+        })
     };
 
     return (
