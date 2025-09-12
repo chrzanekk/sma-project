@@ -18,7 +18,7 @@ const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                      }) => {
     return (
         <Grid
-            templateRows="30% 30% 30%"
+            templateRows="repeat(3,1fr)"
             height={"calc(100vh - 110px)"}
             gap={3}
         >
