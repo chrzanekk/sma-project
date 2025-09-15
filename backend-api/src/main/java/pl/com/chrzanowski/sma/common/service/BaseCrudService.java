@@ -1,11 +1,11 @@
 package pl.com.chrzanowski.sma.common.service;
 
-public interface BaseCrudService<T, ID> {
-    T save(T t);
+public interface BaseCrudService<RD, CD, UD extends HasId<ID>, ID> {
+    RD save(CD createDto);
 
-    T update(T t);
+    RD update(UD updateDto);
 
-    T findById(ID id);
+    RD findById(ID id);
 
     void delete(ID id);
 }

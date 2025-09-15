@@ -27,6 +27,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.repository.ContractorRepository;
@@ -52,6 +53,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Import(ContractorControllerIntegrationTest.TestConfig.class)
 public class ContractorControllerIntegrationTest extends AbstractTestContainers {
 
+    public static final String CONSTRUCTION_SITE_API_PATH = "/api/contractors";
     @Autowired
     private WebTestClient webTestClient;
 
@@ -87,6 +89,8 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     private ContractorDTO firstContractor;
 
     private Company company;
+    @Autowired
+    private ContractorBaseMapper contractorBaseMapper;
 
     @TestConfiguration
     static class TestConfig {
@@ -192,12 +196,12 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         List<Contractor> contractorListBefore = contractorRepository.findAll();
 
         ContractorDTO savedContractor = webTestClient.post()
-                .uri("/api/contractors/add")
+                .uri(CONSTRUCTION_SITE_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(newContractor)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContractorDTO.class)
                 .returnResult().getResponseBody();
 
@@ -214,7 +218,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     void shouldGetContractorByIdSuccessfully() {
         Long id = firstContractor.getId();
         ContractorBaseDTO contractor = webTestClient.get()
-                .uri("/api/contractors/getById/" + id)
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -242,7 +246,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
+                .uri(uriBuilder -> uriBuilder.path(CONSTRUCTION_SITE_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -270,7 +274,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("size", "10");
 
         List<ContractorDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/find")
+                .uri(uriBuilder -> uriBuilder.path(CONSTRUCTION_SITE_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -302,7 +306,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .build();
 
         ContractorDTO updatedContractor = webTestClient.put()
-                .uri("/api/contractors/update")
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + updateContractor.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateContractor)
@@ -324,7 +328,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .build();
 
         webTestClient.put()
-                .uri("/api/contractors/update")
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + updateContractor.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateContractor)
                 .exchange()
@@ -335,10 +339,10 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     void shouldDeleteContractorSuccessfully() {
         Long id = firstContractor.getId();
         webTestClient.delete()
-                .uri("/api/contractors/delete/" + id)
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNoContent();
 
         List<Contractor> contractors = contractorRepository.findAll();
 
@@ -349,7 +353,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     void shouldFailToDeleteContractorWithoutAuthorization() {
 
         webTestClient.delete()
-                .uri("/api/contractors/delete/" + 66L)
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + 66L)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -361,7 +365,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("size", "1");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
+                .uri(uriBuilder -> uriBuilder.path(CONSTRUCTION_SITE_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -380,7 +384,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("size", "10");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
+                .uri(uriBuilder -> uriBuilder.path(CONSTRUCTION_SITE_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -395,7 +399,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     @Test
     void shouldFailPaginationWithoutAuthorization() {
         webTestClient.get()
-                .uri("/api/contractors/page?page=0&pageSize=10")
+                .uri(CONSTRUCTION_SITE_API_PATH + "?page=0&pageSize=10")
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -418,7 +422,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .build();
 
         webTestClient.post()
-                .uri("/api/contractors/add")
+                .uri(CONSTRUCTION_SITE_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidContractor)
@@ -444,7 +448,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
                 .build();
 
         webTestClient.put()
-                .uri("/api/contractors/update")
+                .uri(CONSTRUCTION_SITE_API_PATH + "/" + nonExistentContractor.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(nonExistentContractor)
@@ -455,7 +459,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     @Test
     void shouldFailToGetContractorByNonexistentId() {
         webTestClient.get()
-                .uri("/api/contractors/getById/9999")
+                .uri(CONSTRUCTION_SITE_API_PATH + "/9999")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -469,7 +473,7 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
         queryParams.add("nameStartsWith", "Third");
 
         List<ContractorBaseDTO> contractors = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contractors/page")
+                .uri(uriBuilder -> uriBuilder.path(CONSTRUCTION_SITE_API_PATH )
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)

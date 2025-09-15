@@ -18,7 +18,6 @@ import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteAuditableDTO;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteDTO;
-import pl.com.chrzanowski.sma.constructionsite.repository.ConstructionSiteRepository;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 
 import java.time.Duration;
@@ -32,6 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @AutoConfigureWebTestClient
 class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
 
+    public static final String API_CONSTRUCTION_SITES = "/api/construction-sites";
     @Autowired
     private WebTestClient webTestClient;
 
@@ -92,12 +92,12 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
         ConstructionSiteDTO dto = createSampleSite("AlphaSite");
 
         ConstructionSiteDTO saved = webTestClient.post()
-                .uri("/api/construction-sites/add")
+                .uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ConstructionSiteDTO.class)
                 .returnResult()
                 .getResponseBody();
@@ -113,19 +113,19 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
         // create
         ConstructionSiteDTO dto = createSampleSite("BravoSite");
         ConstructionSiteDTO saved = webTestClient.post()
-                .uri("/api/construction-sites/add")
+                .uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ConstructionSiteDTO.class)
                 .returnResult()
                 .getResponseBody();
 
         // fetch
         ConstructionSiteDTO fetched = webTestClient.get()
-                .uri("/api/construction-sites/getById/" + saved.getId())
+                .uri(API_CONSTRUCTION_SITES + "/" + saved.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -141,7 +141,7 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldGetConstructionSiteByIdNotFound() {
         webTestClient.get()
-                .uri("/api/construction-sites/getById/9999")
+                .uri(API_CONSTRUCTION_SITES + "/9999")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -152,12 +152,12 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
         // create
         ConstructionSiteDTO dto = createSampleSite("CharlieSite");
         ConstructionSiteDTO saved = webTestClient.post()
-                .uri("/api/construction-sites/add")
+                .uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ConstructionSiteDTO.class)
                 .returnResult()
                 .getResponseBody();
@@ -174,7 +174,7 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         ConstructionSiteDTO updated = webTestClient.put()
-                .uri("/api/construction-sites/update")
+                .uri(API_CONSTRUCTION_SITES + "/" + toUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(toUpdate)
@@ -193,12 +193,12 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
     void shouldFailUpdateConstructionSiteWithInvalidId() {
         ConstructionSiteDTO dto = createSampleSite("CharlieSite");
         ConstructionSiteDTO saved = webTestClient.post()
-                .uri("/api/construction-sites/add")
+                .uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ConstructionSiteDTO.class)
                 .returnResult()
                 .getResponseBody();
@@ -214,7 +214,7 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.put()
-                .uri("/api/construction-sites/update")
+                .uri(API_CONSTRUCTION_SITES + "/" + toUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(toUpdate)
@@ -227,26 +227,26 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
         // create
         ConstructionSiteDTO dto = createSampleSite("EchoSite");
         ConstructionSiteDTO saved = webTestClient.post()
-                .uri("/api/construction-sites/add")
+                .uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ConstructionSiteDTO.class)
                 .returnResult()
                 .getResponseBody();
 
         // delete
         webTestClient.delete()
-                .uri("/api/construction-sites/delete/" + saved.getId())
+                .uri(API_CONSTRUCTION_SITES + "/" + saved.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNoContent();
 
         // verify gone
         webTestClient.get()
-                .uri("/api/construction-sites/getById/" + saved.getId())
+                .uri(API_CONSTRUCTION_SITES + "/" + saved.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isBadRequest();
@@ -255,21 +255,21 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldGetConstructionSitesByFilterSuccessfully() {
         // create two sites
-        webTestClient.post().uri("/api/construction-sites/add")
+        webTestClient.post().uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createSampleSite("FilterA"))
-                .exchange().expectStatus().isOk();
+                .exchange().expectStatus().isCreated();
 
-        webTestClient.post().uri("/api/construction-sites/add")
+        webTestClient.post().uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createSampleSite("FilterB"))
-                .exchange().expectStatus().isOk();
+                .exchange().expectStatus().isCreated();
 
         List<ConstructionSiteAuditableDTO> filtered = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/construction-sites/find")
+                        .path(API_CONSTRUCTION_SITES)
                         .queryParam("nameStartsWith", "FilterA")
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -286,21 +286,21 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldGetConstructionSitesByFilterAndPageSuccessfully() {
         // create two sites with same prefix
-        webTestClient.post().uri("/api/construction-sites/add")
+        webTestClient.post().uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createSampleSite("PageX"))
-                .exchange().expectStatus().isOk();
+                .exchange().expectStatus().isCreated();
 
-        webTestClient.post().uri("/api/construction-sites/add")
+        webTestClient.post().uri(API_CONSTRUCTION_SITES)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(createSampleSite("PageY"))
-                .exchange().expectStatus().isOk();
+                .exchange().expectStatus().isCreated();
 
         List<ConstructionSiteAuditableDTO> pageContent = webTestClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/construction-sites/page")
+                        .path(API_CONSTRUCTION_SITES)
                         .queryParam("nameStartsWith", "PageX")
                         .queryParam("country", "")
                         .queryParam("page", "0")

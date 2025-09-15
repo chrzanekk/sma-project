@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ConstructionSiteDTO extends ConstructionSiteBaseDTO{
+public class ConstructionSiteDTO extends ConstructionSiteBaseDTO implements HasId<Long> {
     CompanyBaseDTO company;
     List<ContractorBaseDTO> contractors;
     List<ContractBaseDTO> contracts;

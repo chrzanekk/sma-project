@@ -13,7 +13,7 @@ export const getCompaniesByFilter = async (filter: Record<string, any>) => {
             page: filter.page || 0,
             sort: filter.sort || 'id,asc'
         });
-        const response = await api.get(`${COMPANY_API_BASE}/page?${queryParams}`, getAuthConfig());
+        const response = await api.get(`${COMPANY_API_BASE}?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return {
             companies: items as FetchableCompanyDTO[],
@@ -26,7 +26,7 @@ export const getCompaniesByFilter = async (filter: Record<string, any>) => {
 
 export const getCompanyById = async (id: number) => {
     try {
-        const response = await api.get(`${COMPANY_API_BASE}/getById/${id}`, getAuthConfig());
+        const response = await api.get(`${COMPANY_API_BASE}/${id}`, getAuthConfig());
         const companyDTO: FetchableCompanyDTO = response.data;
         return companyDTO;
     } catch (err) {
@@ -36,7 +36,7 @@ export const getCompanyById = async (id: number) => {
 
 export const addCompany = async (addCompany: CompanyBaseDTO) => {
     try {
-        const response = await api.post(`${COMPANY_API_BASE}/add`, addCompany, getAuthConfig());
+        const response = await api.post(`${COMPANY_API_BASE}`, addCompany, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -44,7 +44,7 @@ export const addCompany = async (addCompany: CompanyBaseDTO) => {
 }
 export const updateCompany = async (updateCompany: CompanyBaseDTO) => {
     try {
-        const response = await api.put(`${COMPANY_API_BASE}/update`, updateCompany, getAuthConfig());
+        const response = await api.put(`${COMPANY_API_BASE}/${updateCompany.id}`, updateCompany, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -52,5 +52,5 @@ export const updateCompany = async (updateCompany: CompanyBaseDTO) => {
 }
 
 export const deleteCompanyById = async (id: number) => {
-    await api.delete(`${COMPANY_API_BASE}/delete/${id}`, getAuthConfig());
+    await api.delete(`${COMPANY_API_BASE}/${id}`, getAuthConfig());
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
+import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
@@ -16,7 +17,7 @@ import java.util.Set;
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class ContractorDTO extends ContractorBaseDTO {
+public class ContractorDTO extends ContractorBaseDTO implements HasId<Long> {
     protected final CompanyBaseDTO company;
     private final Set<ContactBaseDTO> contacts;
     private final Set<ContractBaseDTO> contracts;

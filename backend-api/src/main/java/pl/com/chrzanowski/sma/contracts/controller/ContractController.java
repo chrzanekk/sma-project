@@ -1,25 +1,32 @@
 package pl.com.chrzanowski.sma.contracts.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
+import pl.com.chrzanowski.sma.contracts.dto.ContractAuditableDTO;
+import pl.com.chrzanowski.sma.contracts.dto.ContractDTO;
 import pl.com.chrzanowski.sma.contracts.service.ContractQueryService;
 import pl.com.chrzanowski.sma.contracts.service.ContractService;
+import pl.com.chrzanowski.sma.contracts.service.filter.ContractFilter;
 
 @RestController
 @RequestMapping(path = "/api/contracts")
-public class ContractController {
+public class ContractController extends BaseCrudController<
+        ContractAuditableDTO,
+        ContractDTO,
+        ContractDTO,
+        ContractDTO,
+        Long,
+        ContractFilter
+        > {
 
-    private final Logger logger = LoggerFactory.getLogger(ContractController.class);
-
-    private final ContractService contractService;
-    private final ContractQueryService contractQueryService;
-
-
-    public ContractController(ContractService contractService, ContractQueryService contractQueryService) {
-        this.contractService = contractService;
-        this.contractQueryService = contractQueryService;
+    public ContractController(ContractService contractService,
+                              ContractQueryService contractQueryService) {
+        super(contractService, contractQueryService);
     }
 
+    @Override
+    protected Long extractId(ContractDTO contractDTO) {
+        return contractDTO.getId();
+    }
 }
