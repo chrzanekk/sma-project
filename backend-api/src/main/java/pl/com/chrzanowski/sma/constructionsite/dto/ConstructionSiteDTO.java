@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
+import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ import java.util.List;
 public class ConstructionSiteDTO extends ConstructionSiteBaseDTO{
     CompanyBaseDTO company;
     List<ContractorBaseDTO> contractors;
+    List<ContractBaseDTO> contracts;
 }
