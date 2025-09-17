@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.contracts.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -8,6 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Currency;
 
 @Jacksonized
 @SuperBuilder
@@ -18,7 +20,9 @@ public class ContractBaseDTO {
     protected Long id;
     protected String number;
     protected String description;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     protected BigDecimal value;
+    protected Currency currency;
     protected Instant startDate;
     protected Instant endDate;
     protected Instant signupDate;

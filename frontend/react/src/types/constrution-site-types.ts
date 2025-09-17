@@ -1,5 +1,5 @@
 import {Country} from "@/types/country-type.ts";
-import {BaseContractorDTO, ContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types.ts";
 import {CompanyBaseDTO} from "@/types/company-type.ts";
 import {AuditableType} from "@/types/auditable-type.ts";
 
@@ -10,7 +10,7 @@ export interface FetchableConstructionSiteDTO extends ConstructionSiteDTO, Audit
 
 export interface ConstructionSiteCreateDTO extends ConstructionSiteBaseDTO {
     company: CompanyBaseDTO;
-    contractors?: Array<BaseContractorDTO>;
+    contractors?: Array<ContractorBaseDTO>;
 }
 
 export interface ConstructionSiteUpdateDTO extends ConstructionSiteBaseDTO {
@@ -20,7 +20,7 @@ export interface ConstructionSiteUpdateDTO extends ConstructionSiteBaseDTO {
 }
 
 export interface ConstructionSiteDTO extends ConstructionSiteBaseDTO {
-    contractors?: Array<BaseContractorDTO>;
+    contractors?: Array<ContractorBaseDTO>;
     company: CompanyBaseDTO;
 }
 
@@ -40,5 +40,5 @@ export interface ConstructionSiteFormValues {
     country: string;
     shortName: string;
     code: string;
-    contractors?: Array<BaseContractorDTO>;
+    contractors?: Array<ContractorBaseDTO>;
 }

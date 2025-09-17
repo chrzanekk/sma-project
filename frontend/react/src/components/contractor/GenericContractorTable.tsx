@@ -3,19 +3,19 @@ import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react"
 import {Field} from "@/components/ui/field.tsx";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog.tsx";
-import {BaseContractorDTO, ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO, ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import DateFormatter from "@/utils/date-formatter";
 import {useState} from "react";
 
 function isFetchableContractor(
-    contractor: BaseContractorDTO
+    contractor: ContractorBaseDTO
 ): contractor is FetchableContractorDTO {
     return "createDatetime" in contractor;
 }
 
-interface Props<T extends BaseContractorDTO> {
+interface Props<T extends ContractorBaseDTO> {
     contractors: T[];
     onDelete: (id: number) => void;
     fetchContractors: () => void;

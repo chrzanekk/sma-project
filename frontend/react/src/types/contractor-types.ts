@@ -6,17 +6,17 @@ import {CompanyBaseDTO} from "@/types/company-type.ts";
 export interface FetchableContractorDTO extends ContractorDTO, AuditableType {
 }
 
-export interface ContractorDTO extends BaseContractorDTO {
+export interface ContractorDTO extends ContractorBaseDTO {
     contacts?: Array<BaseContactDTOForContractor>;
 }
 
-export interface ContractorUpdateDTO extends BaseContractorDTO {
+export interface ContractorUpdateDTO extends ContractorBaseDTO {
     addedContacts?: Array<BaseContactDTOForContractor>;
     deletedContacts?: Array<BaseContactDTOForContractor>;
 }
 
 
-export interface BaseContractorDTO {
+export interface ContractorBaseDTO {
     id?: number;
     name: string;
     taxNumber: string;

@@ -18,6 +18,7 @@ public interface ContractDTOMapper extends EntityMapper<ContractDTO, Contract> {
     @Mapping(source = "number", target = "number")
     @Mapping(source = "description", target = "description")
     @Mapping(source = "value", target = "value")
+    @Mapping(source = "currency", target = "currency")
     @Mapping(source = "startDate", target = "startDate")
     @Mapping(source = "endDate", target = "endDate")
     @Mapping(source = "signupDate", target = "signupDate")

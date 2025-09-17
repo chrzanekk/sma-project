@@ -3,12 +3,12 @@ import {Box, Grid, GridItem, Separator, Table, Text} from "@chakra-ui/react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {ConstructionSiteFormValues} from "@/types/constrution-site-types.ts";
-import {BaseContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO} from "@/types/contractor-types.ts";
 
 interface ConstructionSiteSummaryProps {
     siteData?: ConstructionSiteFormValues;
-    addedContractors: BaseContractorDTO[];
-    deletedContractors?: BaseContractorDTO[];
+    addedContractors: ContractorBaseDTO[];
+    deletedContractors?: ContractorBaseDTO[];
 }
 
 const ConstructionSiteSummary: React.FC<ConstructionSiteSummaryProps> = ({

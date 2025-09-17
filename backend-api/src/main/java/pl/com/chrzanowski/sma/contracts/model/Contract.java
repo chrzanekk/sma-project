@@ -12,6 +12,7 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Currency;
 
 @Entity
 @Getter
@@ -38,6 +39,10 @@ public class Contract extends AuditableEntity {
     @Column(name = "value")
     @NotNull
     private BigDecimal value;
+
+    @Column(name = "currency", length = 3)
+    @NotBlank
+    private Currency currency;
 
     @Column(name = "start_date")
     @NotNull

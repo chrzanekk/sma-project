@@ -18,6 +18,7 @@ public interface ContractAuditMapper extends EntityMapper<ContractAuditableDTO, 
     @Mapping(source = "number", target = "base.number")
     @Mapping(source = "description", target = "base.description")
     @Mapping(source = "value", target = "base.value")
+    @Mapping(source = "currency", target = "base.currency")
     @Mapping(source = "startDate", target = "base.startDate")
     @Mapping(source = "endDate", target = "base.endDate")
     @Mapping(source = "signupDate", target = "base.signupDate")
