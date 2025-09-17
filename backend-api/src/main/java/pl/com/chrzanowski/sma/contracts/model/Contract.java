@@ -1,6 +1,8 @@
 package pl.com.chrzanowski.sma.contracts.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
@@ -27,15 +29,18 @@ public class Contract extends AuditableEntity {
     private Long id;
 
     @Column(name = "number", length = 150)
+    @NotBlank
     private String number;
 
     @Column(name = "description", length = 300)
     private String description;
 
     @Column(name = "value")
+    @NotNull
     private BigDecimal value;
 
     @Column(name = "start_date")
+    @NotNull
     private Instant startDate;
 
     @Column(name = "end_date")
