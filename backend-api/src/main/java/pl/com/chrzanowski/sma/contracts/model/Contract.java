@@ -41,7 +41,7 @@ public class Contract extends AuditableEntity {
     private BigDecimal value;
 
     @Column(name = "currency", length = 3)
-    @NotBlank
+    @NotNull
     private Currency currency;
 
     @Column(name = "start_date")

@@ -27,6 +27,7 @@ import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
+import java.util.Currency;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -86,6 +87,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .company(companyDTO)
                 .number("CON2025-001")
                 .value(BigDecimal.valueOf(200000L))
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
                 .description("Sample contract for tests")
@@ -130,6 +132,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .company(savedContract.getCompany())
                 .number("CON2025-002")
                 .value(savedContract.getValue())
+                .currency(Currency.getInstance("PLN"))
                 .startDate(savedContract.getStartDate())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
                 .description("Updated contract description")
@@ -209,6 +212,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .number("CON-A")
                 .description("A contract")
                 .value(BigDecimal.valueOf(1))
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
                 .build();
@@ -217,6 +221,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .number("CON-B")
                 .description("B contract")
                 .value(BigDecimal.valueOf(2))
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
                 .build();
@@ -260,6 +265,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .number("PAG-1")
                 .description("Paged contract 1")
                 .value(BigDecimal.valueOf(1))
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
                 .build();
@@ -268,6 +274,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .number("PAG-1")
                 .description("Paged contract 2")
                 .value(BigDecimal.valueOf(2))
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
                 .build();
@@ -331,7 +338,9 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .id(999L)
                 .company(companyDTO)
                 .number("DOES-NOT-EXIST")
+                .value(BigDecimal.valueOf(1))
                 .description("Should fail")
+                .currency(Currency.getInstance("PLN"))
                 .startDate(Instant.now())
                 .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
                 .build();
@@ -389,6 +398,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .id(savedContract.getId())
                 .company(savedContract.getCompany())
                 .number("") // niepoprawne dane
+                .currency(Currency.getInstance("PLN"))
                 .description(savedContract.getDescription())
                 .startDate(null)
                 .endDate(savedContract.getEndDate())
