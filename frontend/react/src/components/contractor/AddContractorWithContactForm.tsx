@@ -3,7 +3,7 @@ import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
 import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";

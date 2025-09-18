@@ -9,6 +9,7 @@ import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Currency;
 
 @Jacksonized
@@ -23,8 +24,8 @@ public class ContractBaseDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     protected BigDecimal value;
     protected Currency currency;
-    protected Instant startDate;
-    protected Instant endDate;
-    protected Instant signupDate;
-    protected Instant realEndDate;
+    protected LocalDate startDate;
+    protected LocalDate endDate;
+    protected LocalDate signupDate;
+    protected LocalDate realEndDate;
 }

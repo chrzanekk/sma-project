@@ -1,10 +1,10 @@
-import {Country} from "@/types/country-type.ts";
+import {Country} from "@/types/country-types.ts";
 import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
-import {AuditableType} from "@/types/auditable-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
+import {AuditableTypes} from "@/types/auditable-types.ts";
 
 
-export interface FetchableConstructionSiteDTO extends ConstructionSiteDTO, AuditableType {
+export interface FetchableConstructionSiteDTO extends ConstructionSiteDTO, AuditableTypes {
 }
 
 

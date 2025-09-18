@@ -8,7 +8,7 @@ import {
     ConstructionSiteUpdateDTO,
     FetchableConstructionSiteDTO
 } from "@/types/constrution-site-types.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContractorDTO} from "@/types/contractor-types.ts";
 
 

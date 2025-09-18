@@ -1,4 +1,4 @@
-import {CompanyFormValues} from "@/types/company-type.ts";
+import {CompanyFormValues} from "@/types/company-types.ts";
 import {Form, Formik, FormikHelpers, FormikProps} from "formik";
 import React from 'react';
 import {useTranslation} from "react-i18next";

@@ -12,6 +12,7 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Currency;
 
 @Entity
@@ -46,16 +47,16 @@ public class Contract extends AuditableEntity {
 
     @Column(name = "start_date")
     @NotNull
-    private Instant startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Instant endDate;
+    private LocalDate endDate;
 
     @Column(name = "signup_date")
-    private Instant signupDate;
+    private LocalDate signupDate;
 
     @Column(name = "real_end_date")
-    private Instant realEndDate;
+    private LocalDate realEndDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "construction_site_id")

@@ -23,15 +23,12 @@ import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
 import java.util.Currency;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.TEMPORAL;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
@@ -88,8 +85,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .number("CON2025-001")
                 .value(BigDecimal.valueOf(200000L))
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(1))
                 .description("Sample contract for tests")
                 .build();
     }
@@ -134,7 +131,7 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .value(savedContract.getValue())
                 .currency(Currency.getInstance("PLN"))
                 .startDate(savedContract.getStartDate())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
+                .endDate(LocalDate.now().plusMonths(1))
                 .description("Updated contract description")
                 .build();
 
@@ -213,8 +210,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .description("A contract")
                 .value(BigDecimal.valueOf(1))
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(1))
                 .build();
         ContractDTO contractB = ContractDTO.builder()
                 .company(companyDTO)
@@ -222,8 +219,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .description("B contract")
                 .value(BigDecimal.valueOf(2))
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(2))
                 .build();
 
         webTestClient.post()
@@ -266,8 +263,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .description("Paged contract 1")
                 .value(BigDecimal.valueOf(1))
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(1).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(1))
                 .build();
         ContractDTO contract2 = ContractDTO.builder()
                 .company(companyDTO)
@@ -275,8 +272,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .description("Paged contract 2")
                 .value(BigDecimal.valueOf(2))
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(2))
                 .build();
 
         webTestClient.post()
@@ -341,8 +338,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
                 .value(BigDecimal.valueOf(1))
                 .description("Should fail")
                 .currency(Currency.getInstance("PLN"))
-                .startDate(Instant.now())
-                .endDate(Instant.now().atZone(ZoneOffset.UTC).plusMonths(2).toInstant())
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusMonths(2))
                 .build();
 
         webTestClient.put()

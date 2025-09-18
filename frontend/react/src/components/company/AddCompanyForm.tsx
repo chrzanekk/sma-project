@@ -1,4 +1,4 @@
-import {CompanyBaseDTO, CompanyFormValues} from "@/types/company-type.ts";
+import {CompanyBaseDTO, CompanyFormValues} from "@/types/company-types.ts";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import {addCompany} from "@/services/company-service.ts";

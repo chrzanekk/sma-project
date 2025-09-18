@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button.tsx";
 import {StepsNextTrigger, StepsPrevTrigger} from "@/components/ui/steps";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {
     ConstructionSiteCreateDTO,
     ConstructionSiteDTO,
@@ -23,7 +23,7 @@ import {
     getContractorsByConstructionSiteIdPaged
 } from "@/services/construction-site-service.ts";
 import {getContractorsByFilter} from "@/services/contractor-service.ts";
-import {getConstructionSiteValidationSchema} from "@/validation/ConstructionSiteValidationSchema.ts";
+import {getConstructionSiteValidationSchema} from "@/validation/constructionSiteValidationSchema.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonConstructionSiteForm from "@/components/constructionsite/CommonConstructionSiteForm.tsx";

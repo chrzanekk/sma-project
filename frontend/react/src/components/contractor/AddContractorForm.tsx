@@ -4,7 +4,7 @@ import {addContractor} from "@/services/contractor-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import {getSelectedCompany} from "@/utils/company-utils.ts";

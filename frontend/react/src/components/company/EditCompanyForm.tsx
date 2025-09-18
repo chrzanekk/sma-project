@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
-import {CompanyBaseDTO, CompanyFormValues, FetchableCompanyDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO, CompanyFormValues, FetchableCompanyDTO} from "@/types/company-types.ts";
 import {getCompanyById, updateCompany} from "@/services/company-service.ts";
 import {getCompanyValidationSchema} from "@/validation/companyValidationSchema.ts";
 import CommonCompanyForm from "@/components/company/CommonCompanyForm.tsx";

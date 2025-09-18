@@ -6,9 +6,9 @@ import {
     ConstructionSiteFormValues,
     FetchableConstructionSiteDTO
 } from "@/types/constrution-site-types.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getConstructionSiteById, updateConstructionSite} from "@/services/construction-site-service.ts";
-import {getConstructionSiteValidationSchema} from "@/validation/ConstructionSiteValidationSchema.ts";
+import {getConstructionSiteValidationSchema} from "@/validation/constructionSiteValidationSchema.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonConstructionSiteForm from "@/components/constructionsite/CommonConstructionSiteForm.tsx";

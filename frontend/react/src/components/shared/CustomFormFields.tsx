@@ -37,6 +37,8 @@ interface CustomInputFieldProps {
     type?: string;
     width?: string;
     disabled?: boolean;
+    fontSize?: string;
+    inputBGColor?: string;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -45,7 +47,9 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                placeholder,
                                                                type = "text",
                                                                width,
-                                                               disabled
+                                                               disabled,
+                                                               fontSize = "sm",
+                                                               inputBGColor = themeVars.bgColorPrimary,
                                                            }) => {
     const themeColors = useThemeColors();
     return (
@@ -53,7 +57,12 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
             {({field, meta}: FieldProps) => (
                 <Box mb={2}>
                     {label && (
-                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
+                        <Text fontSize={fontSize}
+                              fontWeight="bold"
+                              mb="1"
+                              color={themeColors.fontColor}
+                              textAlign={"center"}
+                        >
                             {label}
                         </Text>
                     )}
@@ -64,7 +73,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         type={type}
                         size="sm"
                         color={themeColors.fontColor}
-                        bg={themeColors.bgColorPrimary}
+                        bg={inputBGColor}
                         borderRadius="md"
                         width={width || "100%"}
                         disabled={disabled}

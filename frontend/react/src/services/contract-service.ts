@@ -2,7 +2,7 @@ import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContractDTO, FetchableContractDTO} from "@/types/contract-types.ts";
 
 

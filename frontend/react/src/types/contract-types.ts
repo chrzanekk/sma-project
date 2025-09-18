@@ -1,10 +1,10 @@
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContractorBaseDTO} from "@/types/contractor-types.ts";
 import {ConstructionSiteBaseDTO} from "@/types/constrution-site-types.ts";
-import {AuditableType} from "@/types/auditable-type.ts";
+import {AuditableTypes} from "@/types/auditable-types.ts";
 
 
-export interface FetchableContractDTO extends ContractDTO, AuditableType {
+export interface FetchableContractDTO extends ContractDTO, AuditableTypes {
 
 }
 
@@ -26,3 +26,4 @@ export interface BaseContractDTO {
     realEndDate: string;
 }
 
+export type BaseContractFormValues = BaseContractDTO

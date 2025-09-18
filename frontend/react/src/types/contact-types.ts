@@ -1,8 +1,8 @@
 import {ContractorBaseDTO} from "@/types/contractor-types.ts";
-import {AuditableType} from "@/types/auditable-type.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {AuditableTypes} from "@/types/auditable-types.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
-export interface FetchableContactDTO extends ContactDTO, AuditableType {
+export interface FetchableContactDTO extends ContactDTO, AuditableTypes {
 }
 
 export interface ContactDTO extends BaseContactDTOForContractor {

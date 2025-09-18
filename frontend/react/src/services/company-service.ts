@@ -1,7 +1,7 @@
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
-import {CompanyBaseDTO, FetchableCompanyDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO, FetchableCompanyDTO} from "@/types/company-types.ts";
 
 const COMPANY_API_BASE = "/api/companies";
 

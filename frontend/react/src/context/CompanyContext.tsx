@@ -1,6 +1,6 @@
 // src/contexts/CompanyContext.tsx
 import React, {createContext, useEffect, useState} from "react";
-import {CompanyBaseDTO} from "@/types/company-type";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
 // Typ kontekstu
 interface CompanyContextType {

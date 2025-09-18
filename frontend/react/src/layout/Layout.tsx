@@ -4,7 +4,7 @@ import Footer from "@/layout/Footer.tsx";
 import {Box} from "@chakra-ui/react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useCompany} from "@/hooks/useCompany";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {useAuth} from "@/context/AuthContext.tsx";
 import SelectCompanyModal from "@/components/shared/SelectCompanyModal.tsx";
 

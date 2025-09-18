@@ -3,7 +3,7 @@ import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
 const CONTACTS_API_BASE = "/api/contacts";
 

@@ -6,7 +6,7 @@ import {ContractorFormValues} from "@/types/contractor-types.ts";
 import * as Yup from 'yup';
 import {useTranslation} from "react-i18next";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
-import {getCountryOptions} from "@/types/country-type.ts";
+import {getCountryOptions} from "@/types/country-types.ts";
 
 interface CommonContractorFormProps {
     initialValues: ContractorFormValues;

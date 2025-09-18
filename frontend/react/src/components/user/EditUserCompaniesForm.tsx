@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {getCompaniesByFilter} from "@/services/company-service.ts"; // Zakładamy, że taka funkcja istnieje
 import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {CustomInputSearchField} from "@/components/shared/CustomFormFields.tsx";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";

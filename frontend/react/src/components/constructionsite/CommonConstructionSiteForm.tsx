@@ -3,7 +3,7 @@ import {Form, Formik, FormikHelpers, FormikProps} from "formik";
 import * as Yup from 'yup';
 import React, {useEffect} from "react";
 import {useTranslation} from "react-i18next";
-import {getCountryOptions} from "@/types/country-type.ts";
+import {getCountryOptions} from "@/types/country-types.ts";
 import {CustomInputField, CustomSelectField, CustomTextAreaField} from "@/components/shared/CustomFormFields";
 import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
 

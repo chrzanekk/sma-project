@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import {CompanyFormValues} from "@/types/company-type.ts";
+import {CompanyFormValues} from "@/types/company-types.ts";
 
 export const getCompanyValidationSchema = (
     t: (key: string, options?: any) => string

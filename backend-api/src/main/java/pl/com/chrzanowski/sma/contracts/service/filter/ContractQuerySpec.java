@@ -52,8 +52,8 @@ public class ContractQuerySpec {
             if (filter.getSignUpDateStartWith() != null) {
                 predicate.and(contract.signupDate.goe(filter.getSignUpDateStartWith()));
             }
-            if (filter.getEndDateEndWith() != null) {
-                predicate.and(contract.signupDate.loe(filter.getEndDateEndWith()));
+            if (filter.getSignUpDateEndWith() != null) {
+                predicate.and(contract.signupDate.loe(filter.getSignUpDateEndWith()));
             }
             if (filter.getContractorId() != null) {
                 predicate.and(contract.contractor.id.eq(filter.getContractorId()));
@@ -63,6 +63,12 @@ public class ContractQuerySpec {
             }
             if (filter.getCompanyId() != null) {
                 predicate.and(contract.company.id.eq(filter.getCompanyId()));
+            }
+            if (filter.getContractorNameStartsWith() != null) {
+                predicate.and(contract.contractor.name.containsIgnoreCase(filter.getContractorNameStartsWith()));
+            }
+            if (filter.getConstructionSiteNameStartsWith() != null) {
+                predicate.and(contract.constructionSite.name.containsIgnoreCase(filter.getConstructionSiteNameStartsWith()));
             }
         }
 

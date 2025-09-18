@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -19,14 +20,16 @@ public class ContractFilter {
     private String descriptionStartsWith;
     private BigDecimal valueStartsWith;
     private BigDecimal valueEndsWith;
-    private Instant startDateStartWith;
-    private Instant startDateEndWith;
-    private Instant endDateStartWith;
-    private Instant endDateEndWith;
-    private Instant signUpDateStartWith;
-    private Instant signUpDateEndWith;
+    private LocalDate startDateStartWith;
+    private LocalDate startDateEndWith;
+    private LocalDate endDateStartWith;
+    private LocalDate endDateEndWith;
+    private LocalDate signUpDateStartWith;
+    private LocalDate signUpDateEndWith;
     private Long companyId;
     private Long constructionSiteId;
     private Long contractorId;
+    private String contractorNameStartsWith;
+    private String constructionSiteNameStartsWith;
 
 }

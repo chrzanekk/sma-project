@@ -1,56 +1,57 @@
-import {CompanyBaseDTO, FetchableCompanyDTO} from "@/types/company-types.ts";
 import {useTranslation} from "react-i18next";
-import {useTableStyles} from "@/components/shared/tableStyles.ts";
-import {useState} from "react";
-import {useThemeColors} from "@/theme/theme-colors.ts";
-import {Field} from "@/components/ui/field.tsx";
 import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
+import {useState} from "react";
+import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import EditCompanyDialog from "@/components/company/EditCompanyDialog.tsx";
+import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
+import {useThemeColors} from "@/theme/theme-colors.ts";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
+import {BaseContractDTO, ContractDTO, FetchableContractDTO} from "@/types/contract-types.ts";
 
-function isFetchableCompany(
-    company: CompanyBaseDTO
-): company is FetchableCompanyDTO {
-    return "createdDatetime" in company;
+function isFetchableContract(
+    contract: BaseContractDTO
+): contract is FetchableContractDTO {
+    return "createdDatetime" in contract;
 }
 
-interface Props<T extends CompanyBaseDTO> {
-    companies: T[];
+
+interface Props<T extends BaseContractDTO> {
+    contracts: T[];
     onDelete: (id: number) => void;
-    fetchCompanies: () => void;
+    fetchContracts: () => void;
     onSortChange: (field: string) => void;
     sortField: string | null;
     sortDirection: "asc" | "desc";
     extended?: boolean;
 }
 
-const GenericCompanyTable = <T extends CompanyBaseDTO>({
-                                                           companies,
-                                                           onDelete,
-                                                           fetchCompanies,
-                                                           onSortChange,
-                                                           sortField,
-                                                           sortDirection,
-                                                           extended = false
-                                                       }: Props<T>) => {
-    const {t} = useTranslation(["common", "companies"]);
+const GenericContractTable = <T extends ContractDTO>({
+                                                         contracts,
+                                                         onDelete,
+                                                         fetchContracts,
+                                                         onSortChange,
+                                                         sortField,
+                                                         sortDirection,
+                                                         extended = false,
+                                                     }: Props<T>) => {
+    const {t} = useTranslation(["common", "contracts"]);
     const {open, onOpen, onClose} = useDisclosure();
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
-    const [selectCompanyId, setSelectedCompanyId] = useState<number | null>(null);
+    const [selectedContractId, setSelectedContractId] = useState<number | null>(null);
     const themeColors = useThemeColors();
 
     const handleDeleteClick = (id: number) => {
-        setSelectedCompanyId(id);
+        setSelectedContractId(id);
         onOpen();
-    }
+    };
 
     const confirmDelete = () => {
-        if (selectCompanyId !== null) {
-            onDelete(selectCompanyId);
+        if (selectedContractId !== null) {
+            onDelete(selectedContractId);
         }
         onClose();
-    }
+    };
 
     const renderSortIndicator = (field: string) => {
 
@@ -60,7 +61,7 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
         return null;
     };
 
-    if (!companies || companies.length === 0) {
+    if (!contracts || contracts.length === 0) {
         return (
             <Field alignContent="center">
                 <Text fontSize={20}>{t("dataNotFound")}</Text>
@@ -86,33 +87,63 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("name")}
+                                onClick={() => onSortChange("number")}
                             >
-                                {t("companies:name")} {renderSortIndicator("name")}
+                                {t("contracts:number")} {renderSortIndicator("number")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("taxNumber")}
+                                onClick={() => onSortChange("description")}
                             >
-                                {t("companies:taxNumber")} {renderSortIndicator("taxNumber")}
+                                {t("contracts:description")} {renderSortIndicator("description")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("phoneNumber")}
+                                onClick={() => onSortChange("value")}
                             >
-                                {t("companies:phoneNumber")} {renderSortIndicator("phoneNumber")}
+                                {t("contracts:value")} {renderSortIndicator("value")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("email")}
+                                onClick={() => onSortChange("currency")}
                             >
-                                {t("companies:email")} {renderSortIndicator("email")}
+                                {t("contracts:currency")} {renderSortIndicator("currency")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("additionalInfo")}
+                                onClick={() => onSortChange("contractor")}
                             >
-                                {t("companies:additionalInfo")} {renderSortIndicator("additionalInfo")}
+                                {t("contracts:contractor")} {renderSortIndicator("contractor")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("constructionSite")}
+                            >
+                                {t("contracts:constructionSite")} {renderSortIndicator("constructionSite")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("startDate")}
+                            >
+                                {t("contracts:startDate")} {renderSortIndicator("startDate")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("endDate")}
+                            >
+                                {t("contracts:endDate")} {renderSortIndicator("endDate")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("signupDate")}
+                            >
+                                {t("contracts:signupDate")} {renderSortIndicator("signupDate")}
+                            </Table.ColumnHeader>
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("realEndDate")}
+                            >
+                                {t("contracts:realEndDate")} {renderSortIndicator("realEndDate")}
                             </Table.ColumnHeader>
                             {extended && (
                                 <>
@@ -148,8 +179,8 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {companies.map((company) => (
-                            <Table.Row key={company.id}
+                        {contracts.map((contract) => (
+                            <Table.Row key={contract.id}
                                        bg={themeColors.bgColorSecondary}
                                        _hover={{
                                            textDecoration: 'none',
@@ -157,39 +188,46 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                                            color: themeColors.fontColorHover
                                        }}
                             >
-                                <Table.Cell {...commonCellProps} width={"2%"}>{company.id}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{company.name}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{""}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{""}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{""}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"30%"}>{company.additionalInfo}</Table.Cell>
-                                {extended && isFetchableCompany(company) && (
+                                <Table.Cell {...commonCellProps} width={"2%"}>{contract.id}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.number}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.description}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.value}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"2%"}>{contract.currency}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.contractor?.name}</Table.Cell>
+                                <Table.Cell {...commonCellProps}
+                                            width={"10%"}>{contract.constructionSite?.name}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.startDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.endDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.signupDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.realEndDate}</Table.Cell>
+                                {extended && isFetchableContract(contract) && (
                                     <>
-                                        {"createdDatetime" in company && (
+                                        {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
+                                        {"createdDatetime" in contract && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 {DateFormatter.formatDateTime(
-                                                    (company as FetchableCompanyDTO).createdDatetime
+                                                    (contract as FetchableContractDTO).createdDatetime
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"createdBy" in company && (
+                                        {"createdBy" in contract && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(company as FetchableCompanyDTO).createdBy.firstName.charAt(0)}. {(company as FetchableCompanyDTO).createdBy.lastName}
+                                                    {(contract as FetchableContractDTO).createdBy.firstName.charAt(0)}. {(contract as FetchableContractDTO).createdBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}
-                                        {"lastModifiedDatetime" in company && (
+                                        {"lastModifiedDatetime" in contract && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 {DateFormatter.formatDateTime(
-                                                    (company as FetchableCompanyDTO).lastModifiedDatetime
+                                                    (contract as FetchableContractDTO).lastModifiedDatetime
                                                 )}
                                             </Table.Cell>
                                         )}
-                                        {"modifiedBy" in company && (
+                                        {"modifiedBy" in contract && (
                                             <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
                                                 <Box>
-                                                    {(company as FetchableCompanyDTO).modifiedBy.firstName.charAt(0)}. {(company as FetchableCompanyDTO).modifiedBy.lastName}
+                                                    {(contract as FetchableContractDTO).modifiedBy.firstName.charAt(0)}. {(contract as FetchableContractDTO).modifiedBy.lastName}
                                                 </Box>
                                             </Table.Cell>
                                         )}
@@ -198,14 +236,14 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                                 {extended && (
                                     <Table.Cell {...commonCellProps}>
                                         <HStack gap={1} justifyContent="center">
-                                            <EditCompanyDialog
-                                                fetchCompanies={fetchCompanies}
-                                                companyId={company.id!}
+                                            <EditContactDialog
+                                                fetchContacts={fetchContracts}
+                                                contactId={contract.id!}
                                             />
                                             <Button
                                                 colorPalette="orange"
                                                 size="2xs"
-                                                onClick={() => handleDeleteClick(company.id!)}
+                                                onClick={() => handleDeleteClick(contract.id!)}
                                             >
                                                 {t("delete", {ns: "common"})}
                                             </Button>
@@ -228,9 +266,7 @@ const GenericCompanyTable = <T extends CompanyBaseDTO>({
                 cancelText={t("cancel", {ns: "common"})}
             />
         </Box>
-    )
+    );
+};
 
-}
-
-export default GenericCompanyTable;
-
+export default GenericContractTable;
