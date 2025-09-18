@@ -1,0 +1,19 @@
+{
+  "add": "Dodaj kontrakt",
+  "addOptional": "Dodaj kontrakt (opcjonalnie)",
+  "edit": "Edytuj dane kontraktu",
+  "details": "Dane kontraktu",
+  "number": "Numer kontraktu",
+  "value" : "Wartość kontraktu",
+  "currency" : "Waluta",
+  "description": "Opis",
+  "contractor": "Kontrahent",
+  "constructionSite": "Budowa",
+  "manage": "Edycja kontraktów",
+  "notifications" : {
+    "addContractSuccess" : "Kontrakt o numerze {number} dodany pomyślnie",
+    "addContractError": "Błąd dodawania kontraktu",
+    "editContractSuccess" : "Dane kontaktu o numerze {number} zmieniono pomyślnie",
+    "editContractError": "Błąd edycji kontraktu o numerze {number}"
+  }
+}

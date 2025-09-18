@@ -107,6 +107,17 @@ const router = createBrowserRouter([
             </ProtectedRoute>
         },
         {
+            path: "contracts",
+            element: <ProtectedRoute>
+                <Layout>
+                    <UnderConstructionRoute
+                        nameKey={"contracts"}
+                        nameSpace={"navbar"}
+                    />
+                </Layout>
+            </ProtectedRoute>
+        },
+        {
             path: "diaryList",
             element: <ProtectedRoute>
                 <Layout>

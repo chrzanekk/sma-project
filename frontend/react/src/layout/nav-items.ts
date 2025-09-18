@@ -60,5 +60,11 @@ export const getNavItems = (): NavItem[] => {
             onClick: (() => navigate('/constructionSites')),
             value: "constructionSites"
         },
+        {
+            label: t('contracts'),
+            href: '#',
+            onClick: (() => navigate('/contracts')),
+            value: "contracts"
+        },
     ];
 }
