@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {FormikProps} from "formik";
-import {Flex, Heading, Input, Spinner, Steps, Table} from "@chakra-ui/react";
+import {Flex, Heading, Spinner, Steps, Table} from "@chakra-ui/react";
 import {Button} from "@/components/ui/button.tsx";
 import {StepsNextTrigger, StepsPrevTrigger} from "@/components/ui/steps";
 import {useThemeColors} from "@/theme/theme-colors.ts";
@@ -29,6 +29,7 @@ import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonConstructionSiteForm from "@/components/constructionsite/CommonConstructionSiteForm.tsx";
 import ConstructionSiteSummary from "@/components/constructionsite/ConstructionSiteSummary.tsx";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
+import ContractorSearch from "@/components/contractor/ContractorSearch.tsx";
 
 interface Props {
     onSuccess: () => void;
@@ -69,9 +70,6 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
         deletedContractors: []
     });
 
-    const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<ContractorDTO[]>([]);
-    const [searchLoading, setSearchLoading] = useState(false);
 
     const formRef = useRef<FormikProps<ConstructionSiteFormValues>>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -150,24 +148,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
         }
     };
 
-    // Wyszukiwanie kontrahentów
-    const handleSearch = useCallback(async () => {
-        if (searchQuery.trim().length < 2) {
-            setSearchResults([]);
-            return;
-        }
-        setSearchLoading(true);
-        try {
-            const {contractors} = await getContractorsByFilter({
-                nameStartsWith: searchQuery
-            });
-            setSearchResults(contractors);
-        } catch (err) {
-            console.error("Error searching contractors:", err);
-        } finally {
-            setSearchLoading(false);
-        }
-    }, [searchQuery]);
+
 
     // Dodawanie kontrahenta
     const handleAddContractor = (contractor: ContractorDTO) => {
@@ -311,49 +292,18 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                     {t("constructionSites:assign")}
                 </Heading>
                 {/* Wyszukiwarka kontrahentów */}
-                <Flex gap={2} mb={2}>
-                    <Input
-                        placeholder={t("common:searchByName")}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                    />
-                    <Button onClick={handleSearch} disabled={searchLoading}>
-                        {searchLoading ? <Spinner size="sm"/> : t("common:search")}
-                    </Button>
-                </Flex>
-                {searchResults.length > 0 && (
-                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"} borderRadius="md" borderColor="grey" >
-                        <Table.Root size={"sm"}
-                                    stickyHeader
-                                    showColumnBorder
-                                    interactive
-                                    color={themeColors.fontColor}
-                        >
-                            <Table.Body>
-                                {searchResults.map((contractor) => (
-                                    <Table.Row key={contractor.id}
-                                               bg={themeColors.bgColorSecondary}
-                                               _hover={{
-                                                   textDecoration: "none",
-                                                   bg: themeColors.highlightBgColor,
-                                                   color: themeColors.fontColorHover,
-                                               }}>
-                                        <Table.Cell {...commonCellProps}>{contractor.name}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            <Button
-                                                size="2xs"
-                                                onClick={() => handleAddContractor(contractor)}
-                                            >
-                                                {t("common:add")}
-                                            </Button>
-                                        </Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table.Root>
-                    </Table.ScrollArea>
-                )}
+                <ContractorSearch
+                    // Adapter do Twojej usługi – zwróć wyłącznie tablicę ContractorDTO
+                    searchFn={async (q: string) => {
+                        const {contractors} = await getContractorsByFilter({nameStartsWith: q});
+                        return contractors;
+                    }}
+                    onSelect={(contractor) => handleAddContractor(contractor)}
+                    minChars={2}
+                    debounceMs={300}
+                    autoSearch={true} // ustaw na true, jeśli chcesz auto wyszukiwanie podczas wpisywania
+                    size="sm"
+                />
 
                 {/* Lista przypisanych kontrahentów */}
                 <Heading size="sm" mb={2} color={themeColors.fontColor}>
@@ -374,7 +324,7 @@ const ConstructionSiteWithContractorsFormSteps: React.FC<Props> = ({
                         </Table.Header>
                         <Table.Body>
                             {contractorState.contractors.map((c, idx) => (
-                                <Table.Row key={c.id} bg={themeColors.bgColorSecondary}>
+                                <Table.Row key={c.id} bg={themeColors.bgColorPrimary}>
                                     <Table.Cell {...commonCellProps}>{c.name}</Table.Cell>
                                     <Table.Cell {...commonCellProps}>
                                         <Button variant="ghost" colorScheme="red" size="2xs"

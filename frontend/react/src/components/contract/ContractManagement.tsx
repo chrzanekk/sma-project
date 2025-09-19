@@ -1,9 +1,8 @@
 import React from "react";
-import {deleteContractorById} from "@/services/contractor-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import {getContractsByFilter} from "@/services/contract-service.ts";
+import {deleteContractById, getContractsByFilter} from "@/services/contract-service.ts";
 import GenericContractTable from "@/components/contract/GenericContractTable.tsx";
 import ContractFilterForm from "@/components/contract/ContractFilterForm.tsx";
 import ContractLayout from "@/components/contract/ContractLayout.tsx";
@@ -32,7 +31,7 @@ const ContractManagement: React.FC = () => {
                 data: res.contracts,
                 totalPages: res.totalPages,
             })),
-        deleteContractorById,
+        deleteContractById,
     );
 
     return (

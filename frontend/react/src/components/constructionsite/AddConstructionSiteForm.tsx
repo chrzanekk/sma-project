@@ -11,9 +11,10 @@ import CommonConstructionSiteForm from "@/components/constructionsite/CommonCons
 
 interface AddConstructionSiteFormProps {
     onSuccess: (data: ConstructionSiteDTO) => void;
+    hideSubmit?: boolean;
 }
 
-const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSuccess}) => {
+const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSuccess, hideSubmit=false}) => {
     const {t} = useTranslation(['common', 'constructionSites']);
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
@@ -61,6 +62,7 @@ const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSucc
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}
         />
     )
 }

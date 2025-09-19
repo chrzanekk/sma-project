@@ -1,6 +1,6 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
-import {Box, Button, Input, Text, Textarea} from "@chakra-ui/react";
+import {Box, Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
 import Select, {StylesConfig} from "react-select";
 import {themeVars, useThemeColors} from "@/theme/theme-colors";
 import {getSelectStyles} from "@/components/shared/formOptions.ts";
@@ -346,12 +346,18 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
 };
 
 export interface CustomInputSearchFieldProps {
-    name?: string;
+    name: string;
     label?: string;
-    placeholder: string;
+    placeholder?: string;
     searchTerm: string;
-    setSearchTerm: (value: string) => void;
+    setSearchTerm: (v: string) => void;
     handleSearch: () => void;
+    handleReset?: () => void;
+    isSearching?: boolean;
+    size?: "xs" | "sm" | "md";
+    minChars?: number;
+    onKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
+    enableEnterSubmit?: boolean; // domyślnie true
 }
 
 const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
@@ -361,36 +367,68 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                                                                            searchTerm,
                                                                            setSearchTerm,
                                                                            handleSearch,
+                                                                           handleReset,
+                                                                           isSearching = false,
+                                                                           size = "sm",
+                                                                           minChars = 2,
+                                                                           onKeyDown,
+                                                                           enableEnterSubmit = true,
                                                                        }) => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const themeColors = useThemeColors();
+    const canSearch = searchTerm.trim().length >= minChars;
+
+    const mergedOnKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
+        onKeyDown?.(e);
+        if (e.defaultPrevented) return;
+        if (enableEnterSubmit && e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+        }
+    };
+
+    const onReset = () => {
+        setSearchTerm("");
+        handleReset?.();
+    };
+
     return (
         <Box mb={1}>
             {label && (
-                <Text fontSize={"sm"} fontWeight={"bold"} mb={"1"} color={themeColors.fontColor}>
+                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
                     {label}
                 </Text>
             )}
             <Input
                 name={name}
                 placeholder={placeholder}
-                _placeholder={{color: themeVars.fontColor}}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                size={"sm"}
+                onKeyDown={mergedOnKeyDown}
+                size={size}
                 color={themeColors.fontColor}
                 bg={themeColors.bgColorPrimary}
-                borderRadius={"md"}
+                borderRadius="md"
             />
-            <Button
-                mt={1}
-                mb={1}
-                onClick={handleSearch}
-                colorPalette={"orange"}
-                size={"xs"}
-            >
-                {t("common:search")}
-            </Button>
+            <Flex gap={2} mt={1} mb={1}>
+                <Button
+                    onClick={handleSearch}
+                    colorPalette="orange"
+                    size={size}
+                    disabled={isSearching || !canSearch}
+                >
+                    {t("common:search")}
+                </Button>
+                <Button
+                    onClick={onReset}
+                    variant="outline"
+                    colorPalette="gray"
+                    size={size}
+                    disabled={isSearching && !searchTerm}
+                >
+                    {t("common:reset")}
+                </Button>
+            </Flex>
         </Box>
     );
 };

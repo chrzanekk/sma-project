@@ -12,9 +12,10 @@ import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 interface AddContractorFormProps {
     onSuccess: (data: ContractorDTO) => void;
+    hideSubmit?: boolean;
 }
 
-const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
+const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess, hideSubmit=false}) => {
     const {t} = useTranslation(['common', 'contractors']);
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
@@ -68,6 +69,7 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}
         />
     );
 };

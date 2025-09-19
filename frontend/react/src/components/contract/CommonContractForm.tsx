@@ -1,7 +1,7 @@
 import React from 'react';
 import {Form, Formik, FormikHelpers, FormikProps} from 'formik';
 import * as Yup from 'yup';
-import {Button, Grid, GridItem, Stack} from '@chakra-ui/react';
+import {Box, Button, Grid, GridItem} from '@chakra-ui/react';
 import {CustomInputField, CustomSelectField} from '@/components/shared/CustomFormFields';
 import {useTranslation} from "react-i18next";
 import {BaseContractFormValues} from "@/types/contract-types.ts";
@@ -37,7 +37,7 @@ const CommonContractForm: React.FC<CommonContractFormProps> = (({
                 >
                     {({isValid, isSubmitting, dirty}) => (
                         <Form>
-                            <Stack gap={4}>
+                            <Box gap={1}>
                                 {/* Wiersz 1: Number 6/6 */}
                                 <Grid templateColumns="repeat(6, 1fr)" gap={4}>
                                     <GridItem colSpan={6}>
@@ -127,19 +127,19 @@ const CommonContractForm: React.FC<CommonContractFormProps> = (({
                                 {/* Wiersz 4: Button wyśrodkowany */}
                                 {!hideSubmit && (
                                     <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                                    <GridItem colSpan={6} textAlign="center">
-                                        <Button
-                                            disabled={!isValid || isSubmitting || !dirty}
-                                            type="submit"
-                                            colorPalette="green"
-                                            width="400px"
-                                        >
-                                            {t('save', {ns: "common"})}
-                                        </Button>
-                                    </GridItem>
-                                </Grid>
+                                        <GridItem colSpan={6} textAlign="center">
+                                            <Button
+                                                disabled={!isValid || isSubmitting || !dirty}
+                                                type="submit"
+                                                colorPalette="green"
+                                                width="400px"
+                                            >
+                                                {t('save', {ns: "common"})}
+                                            </Button>
+                                        </GridItem>
+                                    </Grid>
                                 )}
-                            </Stack>
+                            </Box>
                         </Form>
                     )}
                 </Formik>

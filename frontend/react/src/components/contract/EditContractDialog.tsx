@@ -1,17 +1,24 @@
 import {useTranslation} from "react-i18next";
 import {Box, Button, Dialog, Heading, Portal} from "@chakra-ui/react";
-import {FaPlus} from "react-icons/fa";
 import React from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import AddContractForm from "@/components/contract/AddContractForm.tsx";
+import EditContractForm from "@/components/contract/EditContractForm.tsx";
 
 
-interface AddContractDialogProps {
+interface EditContractDialogProps {
     fetchContracts: () => void;
+    contractId: number;
+    contractorId: number;
+    constructionSiteId: number;
 }
 
-const AddContractDialog: React.FC<AddContractDialogProps> = ({fetchContracts}) => {
-    const {t} = useTranslation('contracts');
+const EditContractDialog: React.FC<EditContractDialogProps> = ({
+                                                                   fetchContracts,
+                                                                   contractId,
+                                                                   contractorId,
+                                                                   constructionSiteId
+                                                               }) => {
+    const {t} = useTranslation(['contracts', 'contractors', 'constructionSites']);
     const themeColors = useThemeColors();
     return (
         <Box>
@@ -21,8 +28,8 @@ const AddContractDialog: React.FC<AddContractDialogProps> = ({fetchContracts}) =
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
-                    ><FaPlus/>
-                        {t('add')}
+                    >
+                        {t('data', {ns: "common"})}
                     </Button>
                 </Dialog.Trigger>
                 <Portal>
@@ -31,32 +38,35 @@ const AddContractDialog: React.FC<AddContractDialogProps> = ({fetchContracts}) =
                         <Dialog.Content bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                             <Dialog.Context>
                                 {(store) => (
-                                    <>
+                                    <Box>
                                         <Dialog.CloseTrigger/>
-                                        <Dialog.Header>
-                                            <Heading size={"xl"} color={themeColors.fontColor}>
-                                                {t("contracts:add")}
-                                            </Heading>
+                                        <Dialog.Header justifyContent={"center"}>
+                                            <div>
+                                                <Heading size={"2xl"} color={themeColors.fontColor}>
+                                                    {t("common:edit")}
+                                                </Heading>
+                                            </div>
                                         </Dialog.Header>
                                         <Dialog.Body>
-                                            <AddContractForm
+                                            <EditContractForm
                                                 onSuccess={() => {
                                                     fetchContracts();
                                                     store.setOpen(false);
                                                 }}
+                                                contractId={contractId}
                                             />
                                         </Dialog.Body>
                                         <Dialog.Footer>
                                             <Dialog.ActionTrigger asChild>
                                                 <Button
                                                     colorPalette="red"
-                                                    onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                                    onClick={() => store.setOpen(false)}
                                                 >
                                                     {t("close", {ns: "common"})}
                                                 </Button>
                                             </Dialog.ActionTrigger>
                                         </Dialog.Footer>
-                                    </>
+                                    </Box>
                                 )}
                             </Dialog.Context>
                         </Dialog.Content>
@@ -66,4 +76,4 @@ const AddContractDialog: React.FC<AddContractDialogProps> = ({fetchContracts}) =
         </Box>
     )
 }
-export default AddContractDialog;
+export default EditContractDialog;

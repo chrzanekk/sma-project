@@ -13,9 +13,10 @@ import {getSelectedCompany} from "@/utils/company-utils.ts";
 interface EditContractorFormProps {
     onSuccess: () => void;
     contractorId: number;
+    hideSubmit?: boolean;
 }
 
-const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId}) => {
+const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId, hideSubmit = false}) => {
     const {t} = useTranslation(['common', 'contractors', 'errors'])
     const currentCompany = getSelectedCompany();
     const defaultValues: ContractorFormValues = {
@@ -102,8 +103,9 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
     return (
         <CommonContractorForm initialValues={initialValues}
                               validationSchema={validationSchema}
-                              onSubmit={handleSubmit}/>
-
+                              onSubmit={handleSubmit}
+                              hideSubmit={hideSubmit}
+        />
     );
 }
 

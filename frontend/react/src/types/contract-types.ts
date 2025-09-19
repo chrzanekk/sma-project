@@ -26,4 +26,8 @@ export interface BaseContractDTO {
     realEndDate: string;
 }
 
-export type BaseContractFormValues = BaseContractDTO
+export interface BaseContractFormValues extends BaseContractDTO {
+    contractor?: ContractorBaseDTO;
+    constructionSite?: ConstructionSiteBaseDTO;
+    company?: CompanyBaseDTO;
+}

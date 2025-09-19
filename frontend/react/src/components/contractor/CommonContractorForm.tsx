@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import {Form, Formik, FormikHelpers, FormikProps} from "formik";
-import {Button, Grid, GridItem, Stack} from "@chakra-ui/react";
+import {Box, Button, Grid, GridItem} from "@chakra-ui/react";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields";
 import {ContractorFormValues} from "@/types/contractor-types.ts";
 import * as Yup from 'yup';
@@ -52,10 +52,10 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> =
                         }, [isValid, onValidityChange]);
                         return (
                             <Form>
-                                <Stack gap={4}>
+                                <Box gap={1}>
                                     {/* Wiersz 1: Name (4/6) i Tax Number (2/6) */}
-                                    <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                                        <GridItem colSpan={4}>
+                                    <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+                                        <GridItem colSpan={8}>
                                             <CustomInputField
                                                 name="name"
                                                 label={t('contractors:name')}
@@ -63,7 +63,7 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> =
                                                 disabled={disabled}
                                             />
                                         </GridItem>
-                                        <GridItem colSpan={2}>
+                                        <GridItem colSpan={4}>
                                             <CustomInputField
                                                 name="taxNumber"
                                                 label={t('contractors:taxNumber')}
@@ -111,7 +111,7 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> =
                                                 disabled={disabled}
                                             />
                                         </GridItem>
-                                        <GridItem colSpan={6}>
+                                        <GridItem colSpan={5}>
                                             <CustomInputField
                                                 name="city"
                                                 label={t('contractors:city')}
@@ -119,7 +119,7 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> =
                                                 disabled={disabled}
                                             />
                                         </GridItem>
-                                        <GridItem colSpan={3}>
+                                        <GridItem colSpan={4}>
                                             <CustomSelectField
                                                 name="country"
                                                 label={t("contractors:country")}
@@ -177,8 +177,7 @@ const CommonContractorForm: React.FC<CommonContractorFormProps> =
                                             </Button>
                                         </GridItem>
                                     </Grid>)}
-                                </Stack>
-
+                                </Box>
                             </Form>
                         )
                     }}

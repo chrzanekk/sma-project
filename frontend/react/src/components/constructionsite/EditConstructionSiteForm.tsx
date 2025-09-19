@@ -16,9 +16,14 @@ import CommonConstructionSiteForm from "@/components/constructionsite/CommonCons
 interface EditConstructionSiteFormProps {
     onSuccess: () => void;
     constructionSiteId: number;
+    hideSubmit?: boolean;
 }
 
-const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({onSuccess, constructionSiteId}) => {
+const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({
+                                                                         onSuccess,
+                                                                         constructionSiteId,
+                                                                         hideSubmit = false
+                                                                     }) => {
     const {t} = useTranslation(['common', 'constructionSites', 'errors'])
     const currentCompany = getSelectedCompany();
     const defaultValues: ConstructionSiteFormValues = {
@@ -93,7 +98,10 @@ const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({onSuccess,
         <CommonConstructionSiteForm
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}/>
+            onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}s
+        />
+
     )
 }
 

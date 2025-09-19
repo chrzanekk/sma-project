@@ -4,10 +4,10 @@ import {useState} from "react";
 import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import {BaseContractDTO, ContractDTO, FetchableContractDTO} from "@/types/contract-types.ts";
+import EditContractDialog from "@/components/contract/EditContractDialog.tsx";
 
 function isFetchableContract(
     contract: BaseContractDTO
@@ -236,9 +236,11 @@ const GenericContractTable = <T extends ContractDTO>({
                                 {extended && (
                                     <Table.Cell {...commonCellProps}>
                                         <HStack gap={1} justifyContent="center">
-                                            <EditContactDialog
-                                                fetchContacts={fetchContracts}
-                                                contactId={contract.id!}
+                                            <EditContractDialog
+                                                fetchContracts={fetchContracts}
+                                                contractId={contract.id!}
+                                                contractorId={1}
+                                                constructionSiteId={1}
                                             />
                                             <Button
                                                 colorPalette="orange"
