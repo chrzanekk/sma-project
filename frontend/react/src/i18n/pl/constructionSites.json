@@ -1,5 +1,8 @@
 {
+  "constructionSite": "Budowa",
   "list": "Lista budów",
+  "choose": "Wybierz budowę",
+  "search": "Wyszukaj budowę",
   "name": "Nazwa budowy",
   "address": "Adres",
   "shortName": "Skrócona nazwa",

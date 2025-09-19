@@ -100,7 +100,7 @@ const AddContractForm: React.FunctionComponent<AddContractFormProps> = ({onSucce
                     <Separator orientation={"vertical"} height={"100%"}>
                         <Box ml={2} mr={2}>
                             <Heading size={"xl"} color={themeColors.fontColor}>
-                                {t("contractors:search")}
+                                {t("contractors:contractor")}
                             </Heading>
                             <ContractorPicker
                                 formikRef={formikRef}
@@ -119,7 +119,7 @@ const AddContractForm: React.FunctionComponent<AddContractFormProps> = ({onSucce
                     <Separator orientation={"vertical"} height={"100%"}>
                         <Box ml={2} mr={2}>
                             <Heading size={"xl"} color={themeColors.fontColor}>
-                                {t("constructionSites:search")}
+                                {t("constructionSites:constructionSite")}
                             </Heading>
                             <ConstructionSitePicker
                                 formikRef={formikRef}
