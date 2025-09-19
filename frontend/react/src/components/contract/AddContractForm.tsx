@@ -44,8 +44,8 @@ const AddContractForm: React.FunctionComponent<AddContractFormProps> = ({onSucce
         endDate: '',
         signupDate: '',
         realEndDate: '',
-        constructionSite: null,
-        contractor: null
+        constructionSite: undefined,
+        contractor: undefined,
     }
 
     const validationSchema = getContractValidationSchema(t, currencyOptions);

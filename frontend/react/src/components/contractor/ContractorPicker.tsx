@@ -1,10 +1,12 @@
 // components/contract/ContractorPicker.tsx
-import React from "react";
-import { Box, Flex, Text, Button } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { FormikProps } from "formik";
+import React, {useMemo} from "react";
+import {Box, Button, VStack} from "@chakra-ui/react";
+import {useTranslation} from "react-i18next";
+import {FormikProps} from "formik";
 import ContractorSearch from "@/components/contractor/ContractorSearch";
-import { ContractorBaseDTO, ContractorDTO } from "@/types/contractor-types";
+import {ContractorBaseDTO, ContractorDTO, ContractorFormValues} from "@/types/contractor-types";
+import {mapContractorBaseToFormValues} from "@/utils/contractor-mappers.ts";
+import ContractorBaseSummary from "@/components/contractor/ContractorBaseSummary.tsx";
 
 interface Props {
     formikRef: React.RefObject<FormikProps<any>>;
@@ -13,8 +15,12 @@ interface Props {
     searchFn: (q: string) => Promise<ContractorDTO[]>; // zwraca pełne ContractorDTO, wybieramy base
 }
 
-const ContractorPicker: React.FC<Props> = ({ formikRef, selected, onSelectChange, searchFn }) => {
-    const { t } = useTranslation(["common", "contractors"]);
+const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, searchFn}) => {
+    const {t} = useTranslation(["common", "contractors"]);
+
+    const selectedAsFormValues = useMemo<ContractorFormValues | undefined>(() => {
+        return selected ? mapContractorBaseToFormValues(selected) : undefined;
+    }, [selected]);
 
     const handleSelect = (c: ContractorDTO) => {
         const base: ContractorBaseDTO = {
@@ -57,14 +63,13 @@ const ContractorPicker: React.FC<Props> = ({ formikRef, selected, onSelectChange
                 size="sm"
             />
             {selected && (
-                <Flex align="center" justify="space-between" mt={2}>
-                    <Text fontSize="sm">
-                        {t("contractors:selected")}: {selected.name}
-                    </Text>
-                    <Button size="2xs" colorPalette="red" onClick={handleReset}>
+                <VStack align="center" justify="center" mt={2}>
+                    //todo create simple table with selected data
+                    <ContractorBaseSummary contractorData={selectedAsFormValues}/>
+                    <Box><Button size="2xs" colorPalette="red" onClick={handleReset}>
                         {t("common:resetSelected")}
-                    </Button>
-                </Flex>
+                    </Button></Box>
+                </VStack>
             )}
         </Box>
     );
