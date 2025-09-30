@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
+import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.math.BigDecimal;
@@ -57,6 +58,10 @@ public class Contract extends AuditableEntity {
 
     @Column(name = "real_end_date")
     private LocalDate realEndDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "contact_person_id")
+    private Contact contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "construction_site_id")

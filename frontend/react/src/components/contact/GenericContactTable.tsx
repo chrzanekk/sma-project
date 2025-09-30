@@ -5,18 +5,18 @@ import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
-import {BaseContactDTOForContractor, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
+import {ContactBaseDTO, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 function isFetchableContact(
-    contact: BaseContactDTOForContractor
+    contact: ContactBaseDTO
 ): contact is FetchableContactDTO {
     return "createdDatetime" in contact;
 }
 
 
-interface Props<T extends BaseContactDTOForContractor> {
+interface Props<T extends ContactBaseDTO> {
     contacts: T[];
     onDelete: (id: number) => void;
     fetchContacts: () => void;

@@ -1,26 +1,22 @@
 // components/contract/ContractorPicker.tsx
-import React, {useMemo} from "react";
-import {Box, Button, VStack} from "@chakra-ui/react";
+import React from "react";
+import {Box, Button, Flex, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FormikProps} from "formik";
-import ContractorSearch from "@/components/contractor/ContractorSearch";
-import {ContractorBaseDTO, ContractorDTO, ContractorFormValues} from "@/types/contractor-types";
-import {mapContractorBaseToFormValues} from "@/utils/contractor-mappers.ts";
-import ContractorBaseSummary from "@/components/contractor/ContractorBaseSummary.tsx";
+import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types";
+import {useThemeColors} from "@/theme/theme-colors.ts";
+import ContractorSearchWithSelect from "@/components/contractor/ContractorSearchWithSelect.tsx";
 
 interface Props {
     formikRef: React.RefObject<FormikProps<any>>;
     selected: ContractorBaseDTO | null;
     onSelectChange: (c: ContractorBaseDTO | null) => void;
-    searchFn: (q: string) => Promise<ContractorDTO[]>; // zwraca pełne ContractorDTO, wybieramy base
+    searchFn: (q: string) => Promise<ContractorDTO[]>;
 }
 
 const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, searchFn}) => {
     const {t} = useTranslation(["common", "contractors"]);
-
-    const selectedAsFormValues = useMemo<ContractorFormValues | undefined>(() => {
-        return selected ? mapContractorBaseToFormValues(selected) : undefined;
-    }, [selected]);
+    const themeColors = useThemeColors();
 
     const handleSelect = (c: ContractorDTO) => {
         const base: ContractorBaseDTO = {
@@ -51,25 +47,72 @@ const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange,
 
     return (
         <Box>
-            <ContractorSearch
+            <ContractorSearchWithSelect
                 searchFn={async (q) => {
-                    const items = await searchFn(q);
-                    return items;
+                    return await searchFn(q);
                 }}
                 onSelect={handleSelect}
                 minChars={2}
                 debounceMs={300}
                 autoSearch={true}
-                size="sm"
+                size="md"
             />
             {selected && (
-                <VStack align="center" justify="center" mt={2}>
-                    //todo create simple table with selected data
-                    <ContractorBaseSummary contractorData={selectedAsFormValues}/>
-                    <Box><Button size="2xs" colorPalette="red" onClick={handleReset}>
+                <Stack mt={2}>
+                    <Box borderWidth="1px" borderRadius="md" overflow="hidden">
+                        <Grid templateColumns="repeat(12, 2fr)" gap={0}>
+                            {/* Wiersz 1: NAME i TAX NUMBER */}
+                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                      borderColor="gray.400"
+                                      p={2}>
+                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                    {t("contractors:name", "NAME")}
+                                </Text>
+                            </GridItem>
+
+                            <GridItem colSpan={9} borderBottomWidth="1px"
+                                      borderColor="gray.400"
+                                      p={2}>
+                                <Text color={themeColors.fontColor}>{selected.name}</Text>
+                            </GridItem>
+                            {/* */}
+                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
+                                      p={2}>
+                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                    {t("contractors:taxNumber", "Tax Number")}
+                                </Text>
+                            </GridItem>
+                            <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
+                                <Text color={themeColors.fontColor}>{selected.taxNumber}</Text>
+                            </GridItem>
+
+
+                            {/* Wiersz 2: Adres */}
+                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
+                                      p={2}>
+                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                    {t("contractors:address", "Address")}
+                                </Text>
+                            </GridItem>
+
+                            <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
+                                <Text color={themeColors.fontColor}>
+                                    {selected.street} {selected.buildingNo}
+                                    {selected.apartmentNo && selected.apartmentNo.trim() !== ""
+                                        ? "/" + selected.apartmentNo
+                                        : ""}
+                                    , {selected.postalCode} {selected.city},{" "}
+                                    {typeof selected!.country === "object"
+                                        ? (selected!.country as { name: string }).name
+                                        : selected!.country}
+                                </Text>
+                            </GridItem>
+                        </Grid>
+                    </Box>
+                    <Flex justify={"center"}><Button size="2xs" colorPalette="red" onClick={handleReset}>
                         {t("common:resetSelected")}
-                    </Button></Box>
-                </VStack>
+                    </Button></Flex>
+                </Stack>
             )}
         </Box>
     );

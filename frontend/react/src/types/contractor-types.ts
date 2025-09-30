@@ -1,4 +1,4 @@
-import {BaseContactDTOForContractor} from "@/types/contact-types.ts";
+import {ContactBaseDTO} from "@/types/contact-types.ts";
 import {Country} from "@/types/country-types.ts";
 import {AuditableTypes} from "@/types/auditable-types.ts";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
@@ -7,12 +7,12 @@ export interface FetchableContractorDTO extends ContractorDTO, AuditableTypes {
 }
 
 export interface ContractorDTO extends ContractorBaseDTO {
-    contacts?: Array<BaseContactDTOForContractor>;
+    contacts?: Array<ContactBaseDTO>;
 }
 
 export interface ContractorUpdateDTO extends ContractorBaseDTO {
-    addedContacts?: Array<BaseContactDTOForContractor>;
-    deletedContacts?: Array<BaseContactDTOForContractor>;
+    addedContacts?: Array<ContactBaseDTO>;
+    deletedContacts?: Array<ContactBaseDTO>;
 }
 
 
@@ -45,5 +45,5 @@ export interface ContractorFormValues {
     customer: boolean | undefined;
     supplier: boolean | undefined;
     scaffoldingUser: boolean | undefined;
-    contacts?: Array<BaseContactDTOForContractor>;
+    contacts?: Array<ContactBaseDTO>;
 }

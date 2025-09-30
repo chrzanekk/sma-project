@@ -26,6 +26,7 @@ public interface ContractAuditMapper extends EntityMapper<ContractAuditableDTO, 
     @Mapping(source = "contractor", target = "base.contractor")
     @Mapping(source = "company", target = "base.company")
     @Mapping(source = "constructionSite", target = "base.constructionSite")
+    @Mapping(source = "contact", target = "base.contact")
     ContractAuditableDTO toDto(Contract contract);
 
 }

@@ -5,10 +5,11 @@ import {ContractorDTO, ContractorUpdateDTO, FetchableContractorDTO} from "@/type
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContactDTO} from "@/types/contact-types.ts";
+import {ContractorFilter} from "@/types/filters/contractor-filter.ts";
 
 const CONTRACTOR_API_BASE = "/api/contractors";
 
-export const getContractorsByFilter = async (filter: Record<string, any>) => {
+export const getContractorsByFilter = async (filter: ContractorFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,

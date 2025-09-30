@@ -3,6 +3,7 @@ import React from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Box, Grid, GridItem, Text} from "@chakra-ui/react";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 interface ContractorBaseSummaryProps {
     contractorData?: ContractorFormValues;
@@ -12,14 +13,17 @@ interface ContractorBaseSummaryProps {
 const ContractorBaseSummary: React.FC<ContractorBaseSummaryProps> = ({contractorData}) => {
     const themeColors = useThemeColors();
     const {t} = useTranslation(["common", "contractors", "errors"]);
+    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     return (
         <Box mt={2}>
             {contractorData && (
                 <Box borderWidth="1px" borderRadius="md" overflow="hidden">
+
                     <Grid templateColumns="repeat(6, 1fr)" gap={0}>
                         {/* Wiersz 1: NAME i TAX NUMBER */}
-                        <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
+                        <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                  borderColor="gray.400"
                                   p={2}>
                             <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
                                 {t("contractors:name", "NAME")}
@@ -35,6 +39,8 @@ const ContractorBaseSummary: React.FC<ContractorBaseSummaryProps> = ({contractor
 
                         {/* Wiersz 2: Adres */}
                         <GridItem colSpan={6} borderBottomWidth="1px" borderColor="gray.400" p={2}>
+
+
                             <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
                                 {t("contractors:address", "Address")}
                             </Text>
@@ -76,6 +82,7 @@ const ContractorBaseSummary: React.FC<ContractorBaseSummaryProps> = ({contractor
                             </Text>
                         </GridItem>
                     </Grid>
+
                 </Box>
             )}
         </Box>

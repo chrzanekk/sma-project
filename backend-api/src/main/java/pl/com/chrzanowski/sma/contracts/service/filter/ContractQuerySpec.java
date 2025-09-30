@@ -70,6 +70,9 @@ public class ContractQuerySpec {
             if (filter.getConstructionSiteNameStartsWith() != null) {
                 predicate.and(contract.constructionSite.name.containsIgnoreCase(filter.getConstructionSiteNameStartsWith()));
             }
+            if (filter.getConstructionSiteNameStartsWith() != null) {
+                predicate.and(contract.contact.lastName.containsIgnoreCase(filter.getContactNameStartsWith()));
+            }
         }
 
         return predicate;

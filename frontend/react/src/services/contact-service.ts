@@ -4,11 +4,12 @@ import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
+import {ContactFilter} from "@/types/filters/contact-filter.ts";
 
 const CONTACTS_API_BASE = "/api/contacts";
 
 
-export const getContactsByFilter = async (filter: Record<string, any>) => {
+export const getContactsByFilter = async (filter: ContactFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
@@ -27,7 +28,7 @@ export const getContactsByFilter = async (filter: Record<string, any>) => {
     }
 }
 
-export const getFreeContactsByFilter = async (filter: Record<string, any>) => {
+export const getFreeContactsByFilter = async (filter: ContactFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,

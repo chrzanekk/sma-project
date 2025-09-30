@@ -3,19 +3,19 @@ import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Flex, Table, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {ContactDTO} from "@/types/contact-types.ts";
 import {CustomInputSearchField} from "@/components/shared/CustomFormFields.tsx";
 
 export interface ContactSearchProps {
-    searchFn: (query: string) => Promise<BaseContactFormValues[]>;
-    onSelect: (contact: BaseContactFormValues) => void;
+    searchFn: (query: string) => Promise<ContactDTO[]>;
+    onSelect: (contact: ContactDTO) => void;
     minChars?: number;
     debounceMs?: number;
     autoSearch?: boolean;
     initialQuery?: string;
     size?: "sm" | "md";
     onInputKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
-    enableEnterSubmit?: boolean; // default true
+    enableEnterSubmit?: boolean;
 }
 
 const ContactSearch: React.FC<ContactSearchProps> = ({
@@ -33,7 +33,7 @@ const ContactSearch: React.FC<ContactSearchProps> = ({
     const themeColors = useThemeColors();
     const [query, setQuery] = useState<string>(initialQuery);
     const [loading, setLoading] = useState<boolean>(false);
-    const [results, setResults] = useState<BaseContactFormValues[]>([]);
+    const [results, setResults] = useState<ContactDTO[]>([]);
     const [error, setError] = useState<string | null>(null);
     const debounceTimer = useRef<number | null>(null);
 
@@ -80,6 +80,12 @@ const ContactSearch: React.FC<ContactSearchProps> = ({
         setError(null);
     };
 
+    const handleSelectAndClear = (contact: ContactDTO) => {
+        onSelect(contact);
+        setResults([]);
+        setQuery("");
+    }
+
     return (
         <Flex direction="column" gap={2}>
             <CustomInputSearchField
@@ -104,7 +110,7 @@ const ContactSearch: React.FC<ContactSearchProps> = ({
             )}
 
             {results.length > 0 && (
-                <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"} borderRadius="md"
+                <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"120px"} borderRadius="md"
                                   borderColor="grey">
                     <Table.Root size={"sm"} stickyHeader showColumnBorder interactive color={themeColors.fontColor}>
                         <Table.Header>
@@ -124,15 +130,14 @@ const ContactSearch: React.FC<ContactSearchProps> = ({
                             {results.map((contact, idx) => (
                                 <Table.Row
                                     key={idx}
-                                    onClick={() => onSelect(contact)}
+                                    onClick={() => handleSelectAndClear(contact)}
                                     style={{cursor: "pointer"}}
                                     bg={themeColors.bgColorSecondary}
                                     _hover={{
                                         textDecoration: "none",
                                         bg: themeColors.highlightBgColor,
                                         color: themeColors.fontColorHover,
-                                    }}
-                                >
+                                    }}>
                                     <Table.Cell>{contact.firstName}</Table.Cell>
                                     <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
                                     <Table.Cell textAlign={"end"}>{contact.phoneNumber}</Table.Cell>

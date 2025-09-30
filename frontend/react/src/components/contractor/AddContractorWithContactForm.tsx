@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
-import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
+import {ContactBaseDTO, BaseContactFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -90,7 +90,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
-        const contactsDTO: BaseContactDTOForContractor[] = contacts.map((contact) => ({
+        const contactsDTO: ContactBaseDTO[] = contacts.map((contact) => ({
             ...contact,
             company: currentCompany!,
             companyId: currentCompany!.id

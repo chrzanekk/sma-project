@@ -26,12 +26,14 @@ public interface ContractDTOMapper extends EntityMapper<ContractDTO, Contract> {
     @Mapping(source = "company", target = "company")
     @Mapping(source = "contractor", target = "contractor")
     @Mapping(source = "constructionSite", target = "constructionSite")
+    @Mapping(source = "contact", target = "contact")
     ContractDTO toDto(Contract contract);
 
 
     @Mapping(source = "company", target = "company")
     @Mapping(source = "contractor", target = "contractor")
     @Mapping(source = "constructionSite", target = "constructionSite")
+    @Mapping(source = "contact", target = "contact")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
@@ -41,6 +43,7 @@ public interface ContractDTOMapper extends EntityMapper<ContractDTO, Contract> {
     @Mapping(source = "company", target = "company")
     @Mapping(source = "contractor", target = "contractor")
     @Mapping(source = "constructionSite", target = "constructionSite")
+    @Mapping(source = "contact", target = "contact")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)

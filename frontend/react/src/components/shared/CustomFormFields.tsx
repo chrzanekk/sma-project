@@ -426,7 +426,7 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                     size={size}
                     disabled={isSearching && !searchTerm}
                 >
-                    {t("common:reset")}
+                    {t("common:resetSelected")}
                 </Button>
             </Flex>
         </Box>

@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Flex, HStack, Table, Text} from "@chakra-ui/react";
-import {Button} from "@/components/ui/button.tsx";
+import {Flex, Table, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {ContractorDTO} from "@/types/contractor-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
@@ -82,6 +81,13 @@ const ContractorSearch: React.FC<ContractorSearchProps> = ({
         setError(null);
     };
 
+    const handleSelectAndClear = (contractor: ContractorDTO) => {
+        onSelect(contractor);          // powiadom rodzica
+        setResults([]);               // schowaj listę wyników
+        // opcjonalnie wyczyść pole:
+        setQuery("");
+    };
+
     return (
         <Flex direction="column" gap={2}>
             <CustomInputSearchField
@@ -111,19 +117,17 @@ const ContractorSearch: React.FC<ContractorSearchProps> = ({
                     <Table.Root size={"sm"} stickyHeader showColumnBorder interactive>
                         <Table.Body>
                             {results.map((contractor) => (
-                                <Table.Row key={contractor.id} bg={themeColors.bgColorPrimary}>
+                                <Table.Row key={contractor.id}
+                                           bg={themeColors.bgColorSecondary}
+                                           onClick={() => handleSelectAndClear(contractor)}
+                                           style={{cursor: "pointer"}}
+                                           _hover={{
+                                               textDecoration: "none",
+                                               bg: themeColors.highlightBgColor,
+                                               color: themeColors.fontColorHover,
+                                           }}
+                                >
                                     <Table.Cell>{contractor.name}</Table.Cell>
-                                    <Table.Cell>
-                                        <HStack gap={1} justifyContent={"center"}>
-                                            <Button
-                                                size="2xs"
-                                                onClick={() => onSelect(contractor)}
-                                                justifyContent={"center"}
-                                            >
-                                                {t("common:add")}
-                                            </Button>
-                                        </HStack>
-                                    </Table.Cell>
                                 </Table.Row>
                             ))}
                         </Table.Body>

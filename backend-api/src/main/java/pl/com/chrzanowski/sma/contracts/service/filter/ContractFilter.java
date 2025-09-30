@@ -31,5 +31,6 @@ public class ContractFilter {
     private Long contractorId;
     private String contractorNameStartsWith;
     private String constructionSiteNameStartsWith;
+    private String contactNameStartsWith;
 
 }

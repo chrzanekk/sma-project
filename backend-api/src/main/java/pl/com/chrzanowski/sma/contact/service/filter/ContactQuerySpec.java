@@ -41,6 +41,9 @@ public class ContactQuerySpec {
             if (filter.getCompanyId() != null && filter.getCompanyId() > 0) {
                 predicate.and(contact.company.id.eq(filter.getCompanyId()));
             }
+            if (filter.getContractorId() != null && filter.getContractorId() > 0) {
+                predicate.and(contact.contractor.id.eq(filter.getContractorId()));
+            }
             if (filter.getContractorNameStartsWith() != null && !filter.getContractorNameStartsWith().isEmpty()) {
                 predicate.and(contact.contractor.name.containsIgnoreCase(filter.getContractorNameStartsWith()));
             }
