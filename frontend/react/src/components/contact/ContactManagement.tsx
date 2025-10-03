@@ -1,8 +1,7 @@
 import React from "react";
-import {deleteContractorById} from "@/services/contractor-service.ts";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
-import {getContactsByFilter} from "@/services/contact-service.ts";
+import {deleteContactById, getContactsByFilter} from "@/services/contact-service.ts";
 import AddContactDialog from "@/components/contact/AddContactDialog.tsx";
 import ContactFilterForm from "@/components/contact/ContactFilterForm.tsx";
 import ContactLayout from "@/components/contact/ContactLayout.tsx";
@@ -32,7 +31,7 @@ const ContactManagement: React.FC = () => {
                 data: res.contacts,
                 totalPages: res.totalPages,
             })),
-        deleteContractorById,
+        deleteContactById,
     );
 
     return (

@@ -4,7 +4,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
@@ -25,20 +28,18 @@ public class ContractorController extends BaseCrudController<
         ContractorAuditableDTO,
         ContractorDTO,
         ContractorDTO,
-        ContractorDTO,
+        ContractorUpdateDTO,
         Long,
         ContractorFilter
         > {
 
     private final ContactQueryService contactQueryService;
-    private final ContractorService contractorService;
 
     public ContractorController(ContractorService contractorService,
                                 ContractorQueryService contractorQueryService,
-                                ContactQueryService contactQueryService, ContractorService contractorService1) {
+                                ContactQueryService contactQueryService) {
         super(contractorService, contractorQueryService);
         this.contactQueryService = contactQueryService;
-        this.contractorService = contractorService1;
     }
 
     @Override
@@ -55,14 +56,5 @@ public class ContractorController extends BaseCrudController<
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
                 ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @PutMapping("/{contractorId}/update")
-    public ResponseEntity<ContractorDTO> updateWithContacts(
-            @PathVariable Long contractorId,
-            @RequestBody ContractorUpdateDTO contractorUpdateDTO
-    ) {
-        ContractorDTO updated = contractorService.updateWithChangedContacts(contractorUpdateDTO);
-        return ResponseEntity.ok().body(updated);
     }
 }
