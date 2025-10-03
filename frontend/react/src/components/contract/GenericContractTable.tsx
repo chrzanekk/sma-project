@@ -1,13 +1,13 @@
 import {useTranslation} from "react-i18next";
-import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
+import {Box, Button, FormatNumber, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import {useState} from "react";
 import {Field} from "@/components/ui/field.tsx";
-import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import {BaseContractDTO, ContractDTO, FetchableContractDTO} from "@/types/contract-types.ts";
 import EditContractDialog from "@/components/contract/EditContractDialog.tsx";
+import AuditCell from "@/components/shared/AuditCell.tsx";
 
 function isFetchableContract(
     contract: BaseContractDTO
@@ -120,7 +120,12 @@ const GenericContractTable = <T extends ContractDTO>({
                                 onClick={() => onSortChange("constructionSite")}
                             >
                                 {t("contracts:constructionSite")} {renderSortIndicator("constructionSite")}
-                            </Table.ColumnHeader>
+                            </Table.ColumnHeader><Table.ColumnHeader
+                            {...commonColumnHeaderProps}
+                            onClick={() => onSortChange("contact")}
+                        >
+                            {t("contracts:contact")} {renderSortIndicator("contact")}
+                        </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
                                 onClick={() => onSortChange("startDate")}
@@ -151,26 +156,15 @@ const GenericContractTable = <T extends ContractDTO>({
                                         {...commonColumnHeaderProps}
                                         onClick={() => onSortChange("createdDatetime")}
                                     >
-                                        {t("createDate")} {renderSortIndicator("createdDatetime")}
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader
-                                        {...commonColumnHeaderProps}
-                                        onClick={() => onSortChange("createdBy")}
-                                    >
-                                        {t("createdBy")} {renderSortIndicator("createdBy")}
+                                        {t("created")} {renderSortIndicator("createdDatetime")}
                                     </Table.ColumnHeader>
                                     <Table.ColumnHeader
                                         {...commonColumnHeaderProps}
                                         onClick={() => onSortChange("lastModifiedDatetime")}
                                     >
-                                        {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
+                                        {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
                                     </Table.ColumnHeader>
-                                    <Table.ColumnHeader
-                                        {...commonColumnHeaderProps}
-                                        onClick={() => onSortChange("modifiedBy")}
-                                    >
-                                        {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
-                                    </Table.ColumnHeader>
+
                                     <Table.ColumnHeader {...commonColumnHeaderProps}
                                     >{t("edit")}
                                     </Table.ColumnHeader>
@@ -189,48 +183,31 @@ const GenericContractTable = <T extends ContractDTO>({
                                        }}
                             >
                                 <Table.Cell {...commonCellProps} width={"2%"}>{contract.id}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.number}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.description}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.value}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"15%"}>{contract.number}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.description}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"5%"}><FormatNumber value={Number(contract.value)} style={"currency"} currency={contract.currency}/></Table.Cell>
                                 <Table.Cell {...commonCellProps} width={"2%"}>{contract.currency}</Table.Cell>
                                 <Table.Cell {...commonCellProps} width={"10%"}>{contract.contractor?.name}</Table.Cell>
                                 <Table.Cell {...commonCellProps}
                                             width={"10%"}>{contract.constructionSite?.name}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.startDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.endDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.signupDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"20%"}>{contract.realEndDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps}
+                                            width={"10%"}>{contract.contact?.firstName} {contract.contact?.lastName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.startDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.endDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.signupDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.realEndDate}</Table.Cell>
                                 {extended && isFetchableContract(contract) && (
                                     <>
-                                        {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
-                                        {"createdDatetime" in contract && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contract as FetchableContractDTO).createdDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"createdBy" in contract && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contract as FetchableContractDTO).createdBy.firstName.charAt(0)}. {(contract as FetchableContractDTO).createdBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
-                                        {"lastModifiedDatetime" in contract && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contract as FetchableContractDTO).lastModifiedDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"modifiedBy" in contract && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contract as FetchableContractDTO).modifiedBy.firstName.charAt(0)}. {(contract as FetchableContractDTO).modifiedBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
+                                        <AuditCell
+                                            value={contract.createdDatetime}
+                                            user={contract.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={contract.lastModifiedDatetime}
+                                            user={contract.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
                                     </>
                                 )}
                                 {extended && (

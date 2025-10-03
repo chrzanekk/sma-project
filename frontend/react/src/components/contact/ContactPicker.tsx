@@ -52,7 +52,7 @@ const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, se
             {selected && (
                 <Stack mt={2}>
                     <Box borderWidth={"1px"} borderRadius={"md"} overflow={"hidden"}>
-                        <Grid templateColumns="repeat(6,1fr" gap={0}>
+                        <Grid templateColumns="repeat(12,1fr)" gap={0}>
                             <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
                                       borderColor="gray.400"
                                       p={2}>

@@ -79,7 +79,7 @@ export const updateContractor = async (updateContractor: ContractorUpdateDTO) =>
             ...updateContractor,
             company
         }
-        const response = await api.put(`${CONTRACTOR_API_BASE}/${updateContractor.id}`, payload, getAuthConfig());
+        const response = await api.put(`${CONTRACTOR_API_BASE}/${updateContractor.id}/update`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;

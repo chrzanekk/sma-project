@@ -75,7 +75,7 @@ const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange,
                                       p={2}>
                                 <Text color={themeColors.fontColor}>{selected.name}</Text>
                             </GridItem>
-                            {/* */}
+                            {/* Wiersz 2 NIP */}
                             <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
                                       p={2}>
                                 <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
@@ -87,7 +87,7 @@ const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange,
                             </GridItem>
 
 
-                            {/* Wiersz 2: Adres */}
+                            {/* Wiersz 3: Adres */}
                             <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
                                       p={2}>
                                 <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>

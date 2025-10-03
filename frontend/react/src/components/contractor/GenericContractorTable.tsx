@@ -6,8 +6,8 @@ import EditContractorDialog from "@/components/contractor/EditContractorDialog.t
 import {ContractorBaseDTO, ContractorDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
-import DateFormatter from "@/utils/date-formatter";
 import {useState} from "react";
+import AuditCell from "@/components/shared/AuditCell.tsx";
 
 function isFetchableContractor(
     contractor: ContractorBaseDTO
@@ -68,7 +68,6 @@ const GenericContractorTable = <T extends ContractorDTO>({
         );
     }
 
-    // @ts-ignore
     return (
         <Box>
             <Table.ScrollArea height={"auto"} borderWidth={"1px"} borderRadius={"md"} borderColor={"grey"}>
@@ -92,19 +91,22 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                                 onClick={() => onSortChange("scaffoldingUser")}>{t('contractors:scaffoldingUser')}{renderSortIndicator("scaffoldingUser")}</Table.ColumnHeader>
                             {extended && (
                                 <>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("createdDatetime")}
+                                    >
+                                        {t("created")} {renderSortIndicator("createdDatetime")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("lastModifiedDatetime")}
+                                    >
+                                        {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
+                                    </Table.ColumnHeader>
+
                                     <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                        onClick={() => onSortChange("createdDatetime")}>
-                                        {t('createDate')}{renderSortIndicator("createdDatetime")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                        onClick={() => onSortChange("createdBy")}>
-                                        {t('createdBy')}{renderSortIndicator("createdBy")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                        onClick={() => onSortChange("lastModifiedDatetime")}>
-                                        {t('lastModifiedDate')}{renderSortIndicator("lastModifiedDatetime")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                        onClick={() => onSortChange("modifiedBy")}>
-                                        {t('lastModifiedBy')}{renderSortIndicator("modifiedBy")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader {...commonColumnHeaderProps}>{t("edit")}</Table.ColumnHeader>
+                                    >{t("edit")}
+                                    </Table.ColumnHeader>
                                 </>
                             )}
                         </Table.Row>
@@ -125,34 +127,16 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                 <Table.Cell {...commonCellProps}>{contractor.scaffoldingUser ? t("common:yes") : t("common:no")}</Table.Cell>
                                 {extended && isFetchableContractor(contractor) && (
                                     <>
-                                        {"createdDatetime" in contractor && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contractor as FetchableContractorDTO).createdDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"createdBy" in contractor && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contractor as FetchableContractorDTO).createdBy.firstName.charAt(0)}. {(contractor as FetchableContractorDTO).createdBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
-                                        {"lastModifiedDatetime" in contractor && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contractor as FetchableContractorDTO).lastModifiedDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"modifiedBy" in contractor && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contractor as FetchableContractorDTO).modifiedBy.firstName.charAt(0)}. {(contractor as FetchableContractorDTO).modifiedBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
+                                        <AuditCell
+                                            value={contractor.createdDatetime}
+                                            user={contractor.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={contractor.lastModifiedDatetime}
+                                            user={contractor.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
                                         <Table.Cell {...commonCellProps}>
                                             <HStack gap={1} justifyContent={"center"}>
                                                 <EditContractorDialog
@@ -170,8 +154,9 @@ const GenericContractorTable = <T extends ContractorDTO>({
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps}>
                                             <HStack gap={1} justifyContent="center">
-                                                {fetchContractors && <EditContractorDialog fetchContractors={fetchContractors}
-                                                                                           contractorId={contractor.id!}/>}
+                                                {fetchContractors &&
+                                                    <EditContractorDialog fetchContractors={fetchContractors}
+                                                                          contractorId={contractor.id!}/>}
                                                 <Button colorPalette="orange" size="2xs"
                                                         onClick={() => handleDeleteClick(contractor.id!)}>
                                                     {t("delete", {ns: "common"})}

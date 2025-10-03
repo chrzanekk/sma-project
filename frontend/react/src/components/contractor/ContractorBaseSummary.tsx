@@ -3,7 +3,6 @@ import React from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTranslation} from "react-i18next";
 import {Box, Grid, GridItem, Text} from "@chakra-ui/react";
-import {useTableStyles} from "@/components/shared/tableStyles.ts";
 
 interface ContractorBaseSummaryProps {
     contractorData?: ContractorFormValues;
@@ -13,7 +12,6 @@ interface ContractorBaseSummaryProps {
 const ContractorBaseSummary: React.FC<ContractorBaseSummaryProps> = ({contractorData}) => {
     const themeColors = useThemeColors();
     const {t} = useTranslation(["common", "contractors", "errors"]);
-    const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     return (
         <Box mt={2}>

@@ -22,6 +22,7 @@
   "realEndDate": "Data rzeczywistego zakończ.",
   "contractor": "Kontrahent",
   "constructionSite": "Budowa",
+  "contact": "Kontakt",
   "manage": "Edycja kontraktów",
   "notifications" : {
     "addContractSuccess" : "Kontrakt o numerze {number} dodany pomyślnie",

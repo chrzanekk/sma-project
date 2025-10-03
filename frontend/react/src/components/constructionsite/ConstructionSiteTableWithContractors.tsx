@@ -4,11 +4,11 @@ import {useTranslation} from "react-i18next";
 import {FetchableConstructionSiteDTO} from "@/types/constrution-site-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
-import DateFormatter from "@/utils/date-formatter.ts";
 import {getContractorsByConstructionSiteIdPaged} from "@/services/construction-site-service.ts";
 import {ContractorDTO} from "@/types/contractor-types.ts";
 import GenericContractorTable from "@/components/contractor/GenericContractorTable.tsx";
 import EditConstructionSiteDialog from "@/components/constructionsite/EditConstructionSiteDialog.tsx";
+import AuditCell from "@/components/shared/AuditCell.tsx";
 
 interface Props {
     constructionSites: FetchableConstructionSiteDTO[];
@@ -154,25 +154,13 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                 {...commonColumnHeaderProps}
                                 onClick={() => onSortChange("createdDatetime")}
                             >
-                                {t("createDate")} {renderSortIndicator("createdDatetime")}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("createdBy")}
-                            >
-                                {t("createdBy")} {renderSortIndicator("createdBy")}
+                                {t("created")} {renderSortIndicator("createdDatetime")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
                                 onClick={() => onSortChange("lastModifiedDatetime")}
                             >
-                                {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
-                                onClick={() => onSortChange("modifiedBy")}
-                            >
-                                {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
+                                {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                             >{t("edit")}
@@ -191,40 +179,22 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                                         _hover={{bg: themeColors.highlightBgColor, color: themeColors.fontColorHover}}
                                         cursor="pointer"
                                     >
-                                        <Table.Cell {...commonCellProps}>{cs.id}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{cs.name}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{cs.address}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{cs.country?.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"2%"}>{cs.id}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"20%"}>{cs.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"25%"}>{cs.address}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"15%"}>{cs.country?.name}</Table.Cell>
                                         <Table.Cell {...commonCellProps}>{cs.shortName}</Table.Cell>
                                         <Table.Cell {...commonCellProps}>{cs.code}</Table.Cell>
-                                        {"createdDatetime" in cs && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (cs as FetchableConstructionSiteDTO).createdDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"createdBy" in cs && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(cs as FetchableConstructionSiteDTO).createdBy.firstName.charAt(0)}. {(cs as FetchableConstructionSiteDTO).createdBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
-                                        {"lastModifiedDatetime" in cs && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (cs as FetchableConstructionSiteDTO).lastModifiedDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"modifiedBy" in cs && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(cs as FetchableConstructionSiteDTO).modifiedBy.firstName.charAt(0)}. {(cs as FetchableConstructionSiteDTO).modifiedBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
+                                        <AuditCell
+                                            value={cs.createdDatetime}
+                                            user={cs.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={cs.lastModifiedDatetime}
+                                            user={cs.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
                                         <Table.Cell {...commonCellProps}
                                                     onClick={(e) => e.stopPropagation()}>
                                             <HStack gap={1} justifyContent={"center"}>
