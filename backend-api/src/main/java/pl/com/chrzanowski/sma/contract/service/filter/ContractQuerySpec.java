@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.service.filter;
+package pl.com.chrzanowski.sma.contract.service.filter;
 
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
@@ -6,8 +6,8 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
-import pl.com.chrzanowski.sma.contracts.model.QContract;
+import pl.com.chrzanowski.sma.contract.model.Contract;
+import pl.com.chrzanowski.sma.contract.model.QContract;
 
 @Component
 public class ContractQuerySpec {

@@ -8,7 +8,7 @@ import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
-import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
+import pl.com.chrzanowski.sma.contract.dto.ContractBaseDTO;
 
 import java.util.Set;
 

@@ -11,7 +11,7 @@ interface Props {
     formikRef: React.RefObject<FormikProps<any>>;
     selected: ConstructionSiteBaseDTO | null;
     onSelectChange: (c: ConstructionSiteBaseDTO | null) => void;
-    searchFn: (q: string) => Promise<ConstructionSiteDTO[]>; // zwraca pełne, wybieramy base
+    searchFn: (q: string) => Promise<ConstructionSiteDTO[]>;
 }
 
 const ConstructionSitePicker: React.FC<Props> = ({formikRef, selected, onSelectChange, searchFn}) => {

@@ -1,9 +1,9 @@
-package pl.com.chrzanowski.sma.contracts.dao;
+package pl.com.chrzanowski.sma.contract.dao;
 
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 import java.util.List;
 import java.util.Optional;

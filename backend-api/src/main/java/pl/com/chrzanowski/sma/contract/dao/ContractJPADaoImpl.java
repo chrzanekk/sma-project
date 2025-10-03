@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.dao;
+package pl.com.chrzanowski.sma.contract.dao;
 
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
@@ -10,10 +10,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
-import pl.com.chrzanowski.sma.contracts.model.QContract;
-import pl.com.chrzanowski.sma.contracts.repository.ContractRepository;
-import pl.com.chrzanowski.sma.contracts.service.filter.ContractQuerySpec;
+import pl.com.chrzanowski.sma.contract.model.Contract;
+import pl.com.chrzanowski.sma.contract.model.QContract;
+import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
+import pl.com.chrzanowski.sma.contract.service.filter.ContractQuerySpec;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import java.util.Optional;
 import static pl.com.chrzanowski.sma.company.model.QCompany.company;
 import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
 import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
-import static pl.com.chrzanowski.sma.contracts.model.QContract.contract;
+import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
 
 @Repository("contractJPA")
 public class ContractJPADaoImpl implements ContractDao {

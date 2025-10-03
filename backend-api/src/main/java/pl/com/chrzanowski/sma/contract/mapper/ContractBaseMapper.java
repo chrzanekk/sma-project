@@ -1,11 +1,11 @@
-package pl.com.chrzanowski.sma.contracts.mapper;
+package pl.com.chrzanowski.sma.contract.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
+import pl.com.chrzanowski.sma.contract.dto.ContractBaseDTO;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 @Mapper(componentModel = "spring")
 public interface ContractBaseMapper extends EntityMapper<ContractBaseDTO, Contract> {

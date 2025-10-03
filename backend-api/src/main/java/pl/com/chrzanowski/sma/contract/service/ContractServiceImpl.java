@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.service;
+package pl.com.chrzanowski.sma.contract.service;
 
 
 import org.slf4j.Logger;
@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.ContractException;
 import pl.com.chrzanowski.sma.common.exception.error.ContractErrorCode;
-import pl.com.chrzanowski.sma.contracts.dao.ContractDao;
-import pl.com.chrzanowski.sma.contracts.dto.ContractDTO;
-import pl.com.chrzanowski.sma.contracts.mapper.ContractDTOMapper;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
+import pl.com.chrzanowski.sma.contract.dao.ContractDao;
+import pl.com.chrzanowski.sma.contract.dto.ContractDTO;
+import pl.com.chrzanowski.sma.contract.mapper.ContractDTOMapper;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 import java.util.Optional;
 

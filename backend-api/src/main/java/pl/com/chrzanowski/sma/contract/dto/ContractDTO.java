@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.dto;
+package pl.com.chrzanowski.sma.contract.dto;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

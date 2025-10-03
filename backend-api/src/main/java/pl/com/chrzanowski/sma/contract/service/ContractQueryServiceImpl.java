@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.service;
+package pl.com.chrzanowski.sma.contract.service;
 
 
 import com.querydsl.core.BooleanBuilder;
@@ -8,11 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.com.chrzanowski.sma.contracts.dao.ContractDao;
-import pl.com.chrzanowski.sma.contracts.dto.ContractAuditableDTO;
-import pl.com.chrzanowski.sma.contracts.mapper.ContractAuditMapper;
-import pl.com.chrzanowski.sma.contracts.service.filter.ContractFilter;
-import pl.com.chrzanowski.sma.contracts.service.filter.ContractQuerySpec;
+import pl.com.chrzanowski.sma.contract.dao.ContractDao;
+import pl.com.chrzanowski.sma.contract.dto.ContractAuditableDTO;
+import pl.com.chrzanowski.sma.contract.mapper.ContractAuditMapper;
+import pl.com.chrzanowski.sma.contract.service.filter.ContractFilter;
+import pl.com.chrzanowski.sma.contract.service.filter.ContractQuerySpec;
 
 import java.util.List;
 

@@ -7,7 +7,7 @@ import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 import java.util.HashSet;
 import java.util.Set;

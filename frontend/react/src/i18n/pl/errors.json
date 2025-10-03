@@ -48,6 +48,8 @@
   "verification": {
     "required": "Pole {field} jest wymagane",
     "minLength": "{field} musi mieć co najmniej {count, plural, one {# znak} few {# znaki} other {# znaków}}.",
-    "maxLength": "{field} nie może mieć więcej niż {count, plural, one {# znak} few {# znaki} other {# znaków}}."
+    "maxLength": "{field} nie może mieć więcej niż {count, plural, one {# znak} few {# znaki} other {# znaków}}.",
+    "realEndDateBeforeStartDate": "Data rzeczywistego zakończenia nie może być przed datą rozpoczęcia",
+    "startDateAfterEndDate": "Data zakończenia nie może być przed datą rozpoczęcia"
   }
 }

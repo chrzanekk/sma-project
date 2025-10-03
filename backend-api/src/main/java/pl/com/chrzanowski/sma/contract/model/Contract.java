@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.model;
+package pl.com.chrzanowski.sma.contract.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,6 @@ import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Currency;
 

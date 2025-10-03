@@ -15,8 +15,7 @@ import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteC
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.contracts.dto.ContractBaseDTO;
-import pl.com.chrzanowski.sma.contracts.mapper.ContractBaseMapper;
+import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 
 import java.util.List;
 import java.util.Set;

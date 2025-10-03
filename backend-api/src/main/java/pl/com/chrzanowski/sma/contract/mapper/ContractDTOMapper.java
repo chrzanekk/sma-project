@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.mapper;
+package pl.com.chrzanowski.sma.contract.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -7,8 +7,8 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.constructionsite.mapper.ConstructionSiteBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
-import pl.com.chrzanowski.sma.contracts.dto.ContractDTO;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
+import pl.com.chrzanowski.sma.contract.dto.ContractDTO;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 @Mapper(componentModel = "spring", uses = {ContractBaseMapper.class, CompanyBaseMapper.class, ConstructionSiteBaseMapper.class, ContractorBaseMapper.class})
 public interface ContractDTOMapper extends EntityMapper<ContractDTO, Contract> {

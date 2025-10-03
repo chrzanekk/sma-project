@@ -50,6 +50,7 @@ const EditContractForm: React.FunctionComponent<EditContractFormProps> = ({onSuc
                     realEndDate: contract.realEndDate,
                     contractor: contract.contractor,
                     constructionSite: contract.constructionSite,
+                    contact: contract.contact,
                 })
             } catch (err) {
                 console.log(err);
@@ -66,6 +67,9 @@ const EditContractForm: React.FunctionComponent<EditContractFormProps> = ({onSuc
         try {
             const mappedContract: ContractDTO = {
                 ...values,
+                contractor: values.contractor!,
+                constructionSite: values.constructionSite!,
+                contact: values.contact!,
                 company: currentCompany!,
             }
             const response = await updateContract(mappedContract);
@@ -78,7 +82,7 @@ const EditContractForm: React.FunctionComponent<EditContractFormProps> = ({onSuc
             const mappedResponse: BaseContractFormValues = {
                 ...response,
             }
-            onSuccess(mappedResponse);
+            onSuccess?.(mappedResponse);
         } catch (error: any) {
             console.error(error);
             errorNotification(

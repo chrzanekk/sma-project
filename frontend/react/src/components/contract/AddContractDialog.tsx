@@ -50,7 +50,7 @@ const AddContractDialog: React.FC<AddContractDialogProps> = ({fetchContracts}) =
                                             <Dialog.ActionTrigger asChild>
                                                 <Button
                                                     colorPalette="red"
-                                                    onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                                    onClick={() => store.setOpen(false)}
                                                 >
                                                     {t("close", {ns: "common"})}
                                                 </Button>

@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.contracts.dto;
+package pl.com.chrzanowski.sma.contract.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Currency;
 

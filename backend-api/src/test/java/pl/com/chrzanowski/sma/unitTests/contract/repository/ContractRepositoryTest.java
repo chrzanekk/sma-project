@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
-import pl.com.chrzanowski.sma.contracts.model.Contract;
-import pl.com.chrzanowski.sma.contracts.repository.ContractRepository;
+import pl.com.chrzanowski.sma.contract.model.Contract;
+import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

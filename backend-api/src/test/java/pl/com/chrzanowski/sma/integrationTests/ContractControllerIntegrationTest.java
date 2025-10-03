@@ -15,16 +15,14 @@ import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
-import pl.com.chrzanowski.sma.contracts.dto.ContractDTO;
-import pl.com.chrzanowski.sma.contracts.mapper.ContractDTOMapper;
-import pl.com.chrzanowski.sma.contracts.repository.ContractRepository;
+import pl.com.chrzanowski.sma.contract.dto.ContractDTO;
+import pl.com.chrzanowski.sma.contract.mapper.ContractDTOMapper;
+import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.util.Currency;
 import java.util.List;
 

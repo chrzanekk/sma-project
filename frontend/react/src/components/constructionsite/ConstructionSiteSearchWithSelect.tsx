@@ -54,7 +54,7 @@ const ConstructionSiteSearchWithSelect: React.FC<ConstructionSiteSearchWithSelec
                 minChars={minChars}
                 debounceMs={debounceMs}
                 size={size}
-                noOptionsMessage={"common:dataNotFound"}
+                noOptionsMessage={t("common:dataNotFound")}
                 clearable={true}
             />
         </Flex>
