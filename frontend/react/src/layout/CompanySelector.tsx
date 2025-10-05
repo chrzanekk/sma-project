@@ -1,7 +1,7 @@
 import React from "react";
 import {Box, HStack, Text, VStack} from "@chakra-ui/react";
 import useUser from "@/hooks/UseUser";
-import {CompanyBaseDTO} from "@/types/company-type";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {FiChevronDown} from "react-icons/fi";

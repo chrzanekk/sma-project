@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {ContractorDTO, ContractorFormValues, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import React, {useEffect, useState} from "react";
 import {getContractorById, updateContractor} from "@/services/contractor-service.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -13,9 +13,10 @@ import {getSelectedCompany} from "@/utils/company-utils.ts";
 interface EditContractorFormProps {
     onSuccess: () => void;
     contractorId: number;
+    hideSubmit?: boolean;
 }
 
-const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId}) => {
+const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contractorId, hideSubmit = false}) => {
     const {t} = useTranslation(['common', 'contractors', 'errors'])
     const currentCompany = getSelectedCompany();
     const defaultValues: ContractorFormValues = {
@@ -102,8 +103,9 @@ const EditContractorForm: React.FC<EditContractorFormProps> = ({onSuccess, contr
     return (
         <CommonContractorForm initialValues={initialValues}
                               validationSchema={validationSchema}
-                              onSubmit={handleSubmit}/>
-
+                              onSubmit={handleSubmit}
+                              hideSubmit={hideSubmit}
+        />
     );
 }
 

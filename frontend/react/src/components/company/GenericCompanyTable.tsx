@@ -1,4 +1,4 @@
-import {CompanyBaseDTO, FetchableCompanyDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO, FetchableCompanyDTO} from "@/types/company-types.ts";
 import {useTranslation} from "react-i18next";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import {useState} from "react";

@@ -6,9 +6,9 @@ import {
     ConstructionSiteFormValues,
     FetchableConstructionSiteDTO
 } from "@/types/constrution-site-types.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getConstructionSiteById, updateConstructionSite} from "@/services/construction-site-service.ts";
-import {getConstructionSiteValidationSchema} from "@/validation/ConstructionSiteValidationSchema.ts";
+import {getConstructionSiteValidationSchema} from "@/validation/constructionSiteValidationSchema.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonConstructionSiteForm from "@/components/constructionsite/CommonConstructionSiteForm.tsx";
@@ -16,9 +16,14 @@ import CommonConstructionSiteForm from "@/components/constructionsite/CommonCons
 interface EditConstructionSiteFormProps {
     onSuccess: () => void;
     constructionSiteId: number;
+    hideSubmit?: boolean;
 }
 
-const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({onSuccess, constructionSiteId}) => {
+const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({
+                                                                         onSuccess,
+                                                                         constructionSiteId,
+                                                                         hideSubmit = false
+                                                                     }) => {
     const {t} = useTranslation(['common', 'constructionSites', 'errors'])
     const currentCompany = getSelectedCompany();
     const defaultValues: ConstructionSiteFormValues = {
@@ -93,7 +98,10 @@ const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({onSuccess,
         <CommonConstructionSiteForm
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={handleSubmit}/>
+            onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}s
+        />
+
     )
 }
 

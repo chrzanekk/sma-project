@@ -42,6 +42,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Import(CompanyControllerIntegrationTest.TestConfig.class)
 public class CompanyControllerIntegrationTest extends AbstractTestContainers {
 
+    public static final String COMPANY_API_PATH = "/api/companies";
     @Autowired
     private WebTestClient webTestClient;
 
@@ -75,7 +76,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         @Bean
         @Primary
         public SendEmailService sendEmailService() {
-            // Jeśli w Company nie wykorzystujemy wysyłki mailowej, można zamockować tę zależność
             return org.mockito.Mockito.mock(SendEmailService.class);
         }
     }
@@ -91,7 +91,6 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
 
         reset(sendEmailService);
 
-        // Jeśli wysyłka maili jest wywoływana przy rejestracji lub innych operacjach
         when(sendEmailService.sendAfterRegistration(any(), any()))
                 .thenReturn(null);
         when(sendEmailService.sendAfterEmailConfirmation(any(), any()))
@@ -135,12 +134,12 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         List<Company> companiesBefore = companyRepository.findAll();
 
         CompanyBaseDTO savedCompany = webTestClient.post()
-                .uri("/api/companies/add")
+                .uri(COMPANY_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(newCompany)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(CompanyBaseDTO.class)
                 .returnResult().getResponseBody();
 
@@ -155,7 +154,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     void shouldGetCompanyByIdSuccessfully() {
         Long id = firstCompany.getId();
         CompanyBaseDTO companyDTO = webTestClient.get()
-                .uri("/api/companies/getById/" + id)
+                .uri(COMPANY_API_PATH + "/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -176,7 +175,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("cityStartsWith", "Warsaw");
 
         List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/companies/find")
+                .uri(uriBuilder -> uriBuilder.path(COMPANY_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -195,7 +194,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("nameStartsWith", "Third");
 
         List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/companies/find")
+                .uri(uriBuilder -> uriBuilder.path(COMPANY_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -215,7 +214,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         CompanyBaseDTO updatedCompany = webTestClient.put()
-                .uri("/api/companies/update")
+                .uri(COMPANY_API_PATH + "/" + updateCompany.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateCompany)
@@ -236,7 +235,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.put()
-                .uri("/api/companies/update")
+                .uri(COMPANY_API_PATH + "/" + updateCompany.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updateCompany)
                 .exchange()
@@ -247,7 +246,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     void shouldDeleteCompanySuccessfully() {
         Long id = firstCompany.getId();
         webTestClient.delete()
-                .uri("/api/companies/delete/" + id)
+                .uri(COMPANY_API_PATH + "/" + id)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isNoContent();
@@ -261,7 +260,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailToDeleteCompanyWithoutAuthorization() {
         webTestClient.delete()
-                .uri("/api/companies/delete/" + 66L)
+                .uri(COMPANY_API_PATH + "/" + 66L)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -273,7 +272,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("size", "1");
 
         List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/companies/page")
+                .uri(uriBuilder -> uriBuilder.path(COMPANY_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -293,7 +292,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("pageSize", "10");
 
         List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/companies/page")
+                .uri(uriBuilder -> uriBuilder.path(COMPANY_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -308,7 +307,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailPaginationWithoutAuthorization() {
         webTestClient.get()
-                .uri("/api/companies/page?page=0&pageSize=10")
+                .uri(COMPANY_API_PATH + "?page=0&pageSize=10")
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -320,7 +319,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.post()
-                .uri("/api/companies/add")
+                .uri(COMPANY_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidCompany)
@@ -336,7 +335,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.put()
-                .uri("/api/companies/update")
+                .uri(COMPANY_API_PATH + nonExistentCompany.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(nonExistentCompany)
@@ -347,7 +346,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailToGetCompanyByNonexistentId() {
         webTestClient.get()
-                .uri("/api/companies/getById/9999")
+                .uri(COMPANY_API_PATH + "/9999")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -361,7 +360,7 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
         queryParams.add("nameStartsWith", "Third");
 
         List<CompanyBaseDTO> companies = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/companies/page")
+                .uri(uriBuilder -> uriBuilder.path(COMPANY_API_PATH)
                         .queryParams(queryParams)
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)

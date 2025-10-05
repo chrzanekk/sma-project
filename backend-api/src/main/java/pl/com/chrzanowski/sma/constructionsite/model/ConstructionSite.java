@@ -7,6 +7,7 @@ import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
+import pl.com.chrzanowski.sma.contract.model.Contract;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,4 +52,7 @@ public class ConstructionSite extends AuditableEntity {
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     private Set<ConstructionSiteContractor> siteContractors = new HashSet<>();
+
+    @OneToMany(mappedBy = "constructionSite", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Contract> contracts = new HashSet<>();
 }

@@ -1,5 +1,5 @@
 // Funkcja pomocnicza do pobierania aktualnie wybranego companyId z localStorage
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
 export const getSelectedCompanyId = (): number | null => {
     const storedCompany = localStorage.getItem("selectedCompany");

@@ -2,11 +2,10 @@ import {BaseContactFormValues} from "@/types/contact-types.ts";
 import React, {useState} from "react";
 import {getFreeContactsByFilter} from "@/services/contact-service.ts";
 import {useTranslation} from "react-i18next";
-import {Box, Button, Table} from "@chakra-ui/react";
+import {Box, Button} from "@chakra-ui/react";
 import CommonContactForm from "@/components/contact/CommonContactForm.tsx";
 import {getContactValidationSchema} from "@/validation/contactValidationSchema.ts";
-import {useThemeColors} from "@/theme/theme-colors.ts";
-import {CustomInputSearchField} from "@/components/shared/CustomFormFields.tsx";
+import ContactSearch from "@/components/contact/ContactSearch.tsx";
 
 interface ContactFormWithSearchProps {
     onSuccess: (values: BaseContactFormValues) => void;
@@ -16,11 +15,8 @@ interface ContactFormWithSearchProps {
 
 const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess, hideSubmit, innerRef}) => {
     const {t} = useTranslation(["common", "contacts", "errors"]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [searchResults, setSearchResults] = useState<BaseContactFormValues[]>([]);
     const [selectedContact, setSelectedContact] = useState<BaseContactFormValues | null>(null);
     const validationSchema = getContactValidationSchema(t);
-    const themeColors = useThemeColors();
 
     const defaultValues: BaseContactFormValues = {
         firstName: "",
@@ -30,79 +26,32 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
         additionalInfo: "",
     };
 
-    const handleSearch = async () => {
-        try {
-            const result = await getFreeContactsByFilter({lastNameStartsWith: searchTerm});
-            setSearchResults(result.contacts);
-        } catch (err) {
-            console.error("Błąd wyszukiwania kontaktu", err);
-        }
-    };
-
     const handleSelectContact = (contact: BaseContactFormValues) => {
         setSelectedContact(contact);
-        setSearchResults([]);
     };
 
     const handleResetContact = () => {
         setSelectedContact(null);
     };
 
-    // Dodanie przycisku "Dodaj kontakt" – uruchamia submit formularza kontaktu
     const handleAddContact = async (values: BaseContactFormValues) => {
-        // Możesz dodatkowo dodać walidację lub inne akcje przed dodaniem
         onSuccess(values);
     };
 
     return (
         <Box>
             <Box mb={2}>
-                <CustomInputSearchField
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    handleSearch={handleSearch}
-                    placeholder={t("contacts:searchPlaceholder", "Wyszukaj kontakt (nazwisko)")}
+                <ContactSearch
+                    searchFn={async (q: string) => {
+                        const res = await getFreeContactsByFilter({lastNameStartsWith: q});
+                        return res.contacts;
+                    }}
+                    onSelect={handleSelectContact}
+                    minChars={2}
+                    debounceMs={300}
+                    autoSearch={true} // ustaw na true, gdy wymagane wyszukiwanie w trakcie wpisywania
+                    size="sm"
                 />
-                {searchResults.length > 0 && (
-                    <Table.ScrollArea borderWidth={"1px"} rounded={"sm"} height={"150px"}>
-                        <Table.Root size={"sm"}
-                                    stickyHeader
-                                    showColumnBorder
-                                    interactive
-                                    color={themeColors.fontColor}
-                        >
-                            <Table.Header>
-                                <Table.Row bg={themeColors.bgColorPrimary}>
-                                    <Table.ColumnHeader
-                                        color={themeColors.fontColor}>{t("contacts:firstName")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader color={themeColors.fontColor}
-                                                        textAlign={"center"}>{t("contacts:lastName")}</Table.ColumnHeader>
-                                    <Table.ColumnHeader color={themeColors.fontColor}
-                                                        textAlign={"end"}>{t("contacts:phoneNumber")}</Table.ColumnHeader>
-                                </Table.Row>
-                            </Table.Header>
-
-                            <Table.Body>
-                                {searchResults.map((contact, idx) => (
-                                    <Table.Row key={idx}
-                                               onClick={() => handleSelectContact(contact)}
-                                               style={{cursor: "pointer"}}
-                                               bg={themeColors.bgColorSecondary}
-                                               _hover={{
-                                                   textDecoration: 'none',
-                                                   bg: themeColors.highlightBgColor,
-                                                   color: themeColors.fontColorHover
-                                               }}
-                                    >
-                                        <Table.Cell>{contact.firstName}</Table.Cell>
-                                        <Table.Cell textAlign={"center"}>{contact.lastName}</Table.Cell>
-                                        <Table.Cell textAlign={"end"}>{contact.phoneNumber}</Table.Cell>
-                                    </Table.Row>
-                                ))}
-                            </Table.Body>
-                        </Table.Root>
-                    </Table.ScrollArea>
-                )}
             </Box>
 
             {selectedContact && (

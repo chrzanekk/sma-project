@@ -9,8 +9,9 @@ import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
+import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 
-@Mapper(componentModel = "spring", uses = {ContractorBaseMapper.class, CompanyBaseMapper.class, ContactBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {ContractorBaseMapper.class, CompanyBaseMapper.class, ContactBaseMapper.class, ContractBaseMapper.class})
 public interface ContractorDTOMapper extends EntityMapper<ContractorDTO, Contractor> {
 
     @Mapping(target = "createdDatetime", ignore = true)
@@ -21,6 +22,7 @@ public interface ContractorDTOMapper extends EntityMapper<ContractorDTO, Contrac
 
     @Mapping(source = "company", target = "company")
     @Mapping(source = "contacts", target = "contacts")
+    @Mapping(source = "contracts", target = "contracts")
     ContractorDTO toDto(Contractor contractor);
 
     @Mapping(target = "createdDatetime", ignore = true)
@@ -34,6 +36,7 @@ public interface ContractorDTOMapper extends EntityMapper<ContractorDTO, Contrac
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "contacts", source = "contacts",ignore = true)
+    @Mapping(target = "contracts", source = "contracts",ignore = true)
     @Mapping(target = "company", source = "company",ignore = true)
     void updateFromUpdateDto(ContractorUpdateDTO contractorUpdateDTO, @MappingTarget Contractor contractor);
 }

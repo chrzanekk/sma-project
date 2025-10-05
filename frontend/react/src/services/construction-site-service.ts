@@ -8,13 +8,14 @@ import {
     ConstructionSiteUpdateDTO,
     FetchableConstructionSiteDTO
 } from "@/types/constrution-site-types.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContractorDTO} from "@/types/contractor-types.ts";
+import {ConstructionSiteFilter} from "@/types/filters/construction-site-filter.ts";
 
 
 const CONSTRUCTION_SITE_API_BASE = "/api/construction-sites";
 
-export const getConstructionSiteByFilter = async (filter: Record<string, any>) => {
+export const getConstructionSiteByFilter = async (filter: ConstructionSiteFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
@@ -24,7 +25,7 @@ export const getConstructionSiteByFilter = async (filter: Record<string, any>) =
             page: filter.page || 0,
             sort: filter.sort || 'id,asc'
         });
-        const response = await api.get(`${CONSTRUCTION_SITE_API_BASE}/page?${queryParams}`, getAuthConfig());
+        const response = await api.get(`${CONSTRUCTION_SITE_API_BASE}?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return {
             constructionSites: items as FetchableConstructionSiteDTO[],
@@ -37,7 +38,7 @@ export const getConstructionSiteByFilter = async (filter: Record<string, any>) =
 
 export const getConstructionSiteById = async (id: number) => {
     try {
-        const response = await api.get(`${CONSTRUCTION_SITE_API_BASE}/getById/${id}`, getAuthConfig());
+        const response = await api.get(`${CONSTRUCTION_SITE_API_BASE}/${id}`, getAuthConfig());
         const constructionSiteDTO: FetchableConstructionSiteDTO = response.data;
         return constructionSiteDTO;
     } catch (err) {
@@ -69,7 +70,7 @@ export const addConstructionSite = async (addConstructionSite: ConstructionSiteD
             ...addConstructionSite,
             company
         }
-        const response = await api.post(`${CONSTRUCTION_SITE_API_BASE}/add`, payload, getAuthConfig());
+        const response = await api.post(`${CONSTRUCTION_SITE_API_BASE}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -97,7 +98,7 @@ export const updateConstructionSite = async (updateConstructionSite: Constructio
             ...updateConstructionSite,
             company
         };
-        const response = await api.put(`${CONSTRUCTION_SITE_API_BASE}/update`, payload, getAuthConfig());
+        const response = await api.put(`${CONSTRUCTION_SITE_API_BASE}/${updateConstructionSite.id}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -119,5 +120,5 @@ export const extendedUpdateConstructionSite = async (updateConstructionSite: Con
 }
 
 export const deleteConstructionSiteById = async (id: number) => {
-    await api.delete(`${CONSTRUCTION_SITE_API_BASE}/delete/${id}`, getAuthConfig());
+    await api.delete(`${CONSTRUCTION_SITE_API_BASE}/${id}`, getAuthConfig());
 }

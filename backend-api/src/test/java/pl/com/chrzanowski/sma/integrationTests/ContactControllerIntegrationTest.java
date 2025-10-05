@@ -28,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureWebTestClient
 public class ContactControllerIntegrationTest extends AbstractTestContainers {
 
+    public static final String CONTACT_API_PATH = "/api/contacts";
     @Autowired
     private WebTestClient webTestClient;
 
@@ -92,12 +93,12 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         ContactDTO contactBaseDTO = createSampleContact();
 
         ContactDTO savedContact = webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBaseDTO)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContactDTO.class)
                 .returnResult().getResponseBody();
 
@@ -113,12 +114,12 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Dodajemy kontakt
         ContactDTO contactBaseDTO = createSampleContact();
         ContactDTO savedContact = webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBaseDTO)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContactDTO.class)
                 .returnResult().getResponseBody();
 
@@ -134,7 +135,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         ContactDTO updatedContact = webTestClient.put()
-                .uri("/api/contacts/update")
+                .uri(CONTACT_API_PATH + "/" + savedContact.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(updatedContactBaseDTO)
@@ -153,18 +154,18 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Dodajemy kontakt
         ContactDTO contactBaseDTO = createSampleContact();
         ContactDTO savedContact = webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBaseDTO)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContactDTO.class)
                 .returnResult().getResponseBody();
 
         // Pobieramy kontakt po ID
         ContactDTO retrievedContact = webTestClient.get()
-                .uri("/api/contacts/getById/" + savedContact.getId())
+                .uri(CONTACT_API_PATH + "/" + savedContact.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().isOk()
@@ -181,25 +182,25 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Dodajemy kontakt
         ContactDTO contactBaseDTO = createSampleContact();
         ContactDTO savedContact = webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBaseDTO)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContactDTO.class)
                 .returnResult().getResponseBody();
 
         // Usuwamy kontakt
         webTestClient.delete()
-                .uri("/api/contacts/delete/" + savedContact.getId())
+                .uri(CONTACT_API_PATH + "/" + savedContact.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isNoContent();
 
         // Opcjonalnie: można sprawdzić, czy pobranie usuniętego kontaktu zwróci błąd (np. 404)
         webTestClient.get()
-                .uri("/api/contacts/getById/" + savedContact.getId())
+                .uri(CONTACT_API_PATH + savedContact.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -224,24 +225,24 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactAlice)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBob)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
 
         // Filtrowanie – zakładamy, że ContactFilter mapuje parametr "firstName"
         List<ContactDTO> filteredContacts = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contacts/find")
+                .uri(uriBuilder -> uriBuilder.path(CONTACT_API_PATH)
                         .queryParam("firstNameStartsWith", "Alice")
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
@@ -274,24 +275,24 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contact1)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contact2)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
 
         // Pobieramy kontakty z filtrem i paginacją – przekazujemy parametr "firstName" oraz parametry stronicowania ("page" i "size")
         List<ContactDTO> pagedContacts = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contacts/page")
+                .uri(uriBuilder -> uriBuilder.path(CONTACT_API_PATH)
                         .queryParam("firstNameStartsWith", "Charlie")
                         .queryParam("page", "0")
                         .queryParam("size", "1")
@@ -311,7 +312,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         ContactDTO contactBaseDTO = createSampleContact();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(contactBaseDTO)
                 .exchange()
@@ -321,7 +322,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
     @Test
     void shouldFailGetAllContactsWithoutAuthentication() {
         webTestClient.get()
-                .uri("/api/contacts/all")
+                .uri(CONTACT_API_PATH)
                 .exchange()
                 .expectStatus().isUnauthorized();
     }
@@ -341,7 +342,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.put()
-                .uri("/api/contacts/update")
+                .uri(CONTACT_API_PATH + "/" + nonExistentContact.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(nonExistentContact)
@@ -353,7 +354,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
     void shouldFailGetContactByIdNonexistent() {
         // Próba pobrania kontaktu o nieistniejącym ID
         webTestClient.get()
-                .uri("/api/contacts/getById/999")
+                .uri(CONTACT_API_PATH + "/999")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .exchange()
                 .expectStatus().is4xxClientError();
@@ -371,7 +372,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidContact)
@@ -384,12 +385,12 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Dodajemy poprawny kontakt, a następnie próbujemy zaktualizować z niepoprawnymi danymi
         ContactDTO validContact = createSampleContact();
         ContactDTO savedContact = webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(validContact)
                 .exchange()
-                .expectStatus().isOk()
+                .expectStatus().isCreated()
                 .expectBody(ContactDTO.class)
                 .returnResult().getResponseBody();
 
@@ -404,7 +405,7 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
                 .build();
 
         webTestClient.put()
-                .uri("/api/contacts/update")
+                .uri(CONTACT_API_PATH + "/" + invalidUpdate.getId())
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(invalidUpdate)
@@ -417,16 +418,16 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
         // Dodanie poprawnego kontaktu (jeśli wymagane)
         ContactDTO validContact = createSampleContact();
         webTestClient.post()
-                .uri("/api/contacts/add")
+                .uri(CONTACT_API_PATH)
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(validContact)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus().isCreated();
 
         // Próba pobrania kontaktów z ujemnymi parametrami stronicowania
         List<ContactDTO> contacts = webTestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/api/contacts/page")
+                .uri(uriBuilder -> uriBuilder.path(CONTACT_API_PATH)
                         .queryParam("firstNameStartsWith", "Johnny")
                         .queryParam("page", "1")
                         .queryParam("size", "1")

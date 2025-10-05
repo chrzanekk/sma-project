@@ -15,12 +15,13 @@ import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteC
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
+import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses = {ConstructionSiteBaseMapper.class, CompanyBaseMapper.class, ContractorBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {ConstructionSiteBaseMapper.class, CompanyBaseMapper.class, ContractorBaseMapper.class, ContractBaseMapper.class})
 public interface ConstructionSiteDTOMapper extends EntityMapper<ConstructionSiteDTO, ConstructionSite> {
 
     ContractorBaseMapper CONTRACTOR_MAPPER =
@@ -28,6 +29,7 @@ public interface ConstructionSiteDTOMapper extends EntityMapper<ConstructionSite
 
     @Mapping(source = "company", target = "company")
     @Mapping(source = "siteContractors", target = "contractors")
+    @Mapping(source = "contracts", target = "contracts")
     ConstructionSiteDTO toDto(ConstructionSite constructionSite);
 
     default List<ContractorBaseDTO>
@@ -42,11 +44,13 @@ public interface ConstructionSiteDTOMapper extends EntityMapper<ConstructionSite
     }
 
     @Mapping(target = "siteContractors", ignore = true)
+    @Mapping(target = "contracts", ignore = true)
     @Mapping(source = "company", target = "company")
     ConstructionSite toEntity(ConstructionSiteDTO constructionSiteDTO);
 
     @Mapping(source = "company", target = "company")
     @Mapping(target = "siteContractors", ignore = true)
+    @Mapping(target = "contracts", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -55,6 +59,7 @@ public interface ConstructionSiteDTOMapper extends EntityMapper<ConstructionSite
 
     @Mapping(target = "company", ignore = true)
     @Mapping(target = "siteContractors", ignore = true)
+    @Mapping(target = "contracts", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

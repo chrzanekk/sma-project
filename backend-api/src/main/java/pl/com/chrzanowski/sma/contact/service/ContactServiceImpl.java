@@ -45,7 +45,6 @@ public class ContactServiceImpl implements ContactService {
         return contactDTOMapper.toDto(savedContact);
     }
 
-    //todo test this method in service and dao
     @Transactional
     @Override
     public List<ContactDTO> saveAllBaseContacts(Collection<ContactDTO> contactDTOS) {

@@ -1,5 +1,5 @@
 import {RoleDTO} from "@/types/role-types.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
 export interface LoginRequest {
     login: string;

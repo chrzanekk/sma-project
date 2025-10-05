@@ -64,9 +64,8 @@ public class ContractorServiceImpl implements ContractorService {
         return contractorDTOMapper.toDto(savedContractor);
     }
 
-    @Override
-    @Transactional
-    public ContractorDTO update(ContractorDTO contractorDTO) {
+
+    private ContractorDTO updateOld(ContractorDTO contractorDTO) {
         log.debug("Update contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
@@ -158,7 +157,8 @@ public class ContractorServiceImpl implements ContractorService {
     }
 
     @Override
-    public ContractorDTO updateWithChangedContacts(ContractorUpdateDTO updateDTO) {
+    @Transactional
+    public ContractorDTO update(ContractorUpdateDTO updateDTO) {
         Contractor existingContractor = contractorDao.findById(updateDTO.getId())
                 .orElseThrow(() -> new ContractorException(
                         ContractorErrorCode.CONTRACTOR_NOT_FOUND,
@@ -171,6 +171,7 @@ public class ContractorServiceImpl implements ContractorService {
                 if (added.getId() == null) {
                     Contact newContact = contactBaseMapper.toEntity(added);
                     newContact.setContractor(existingContractor);
+                    newContact.setCompany(existingContractor.getCompany());
                     contactDao.save(newContact);
                     existingContractor.getContacts().add(newContact);
                 } else {

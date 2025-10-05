@@ -1,4 +1,4 @@
-// country-type.ts
+// country-types.ts
 import { TFunction } from "i18next";
 
 export class Country {
@@ -33,6 +33,7 @@ export class Country {
 
 // Lista krajów ISO 3166-1 alpha-2
 const countryData: { code: string; name: string }[] = [
+    { code: "PL", name: "Poland" },
     { code: "AF", name: "Afghanistan" },
     { code: "AL", name: "Albania" },
     { code: "DZ", name: "Algeria" },
@@ -161,7 +162,6 @@ const countryData: { code: string; name: string }[] = [
     { code: "PY", name: "Paraguay" },
     { code: "PE", name: "Peru" },
     { code: "PH", name: "Philippines" },
-    { code: "PL", name: "Poland" },
     { code: "PT", name: "Portugal" },
     { code: "QA", name: "Qatar" },
     { code: "RO", name: "Romania" },

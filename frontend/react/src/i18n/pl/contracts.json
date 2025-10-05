@@ -1,0 +1,33 @@
+{
+  "contractList": "Lista kontraktów",
+  "add": "Dodaj kontrakt",
+  "addOptional": "Dodaj kontrakt (opcjonalnie)",
+  "edit": "Edytuj dane kontraktu",
+  "details": "Dane kontraktu",
+  "number": "Numer kontraktu",
+  "value" : "Wartość kontraktu",
+  "valueFrom" : "Wartość od...",
+  "valueTo" : "Wartość do...",
+  "currency" : "Waluta",
+  "description": "Opis",
+  "startDate": "Data rozpoczęcia",
+  "startDateFrom": "Data rozpoczęcia od",
+  "startDateTo": "Data rozpoczęcia do",
+  "endDate": "Data zakończenia",
+  "endDateFrom": "Data zakończenia od",
+  "endDateTo": "Data zakończenia do",
+  "signupDate": "Data podpisania",
+  "signupDateFrom": "Data podpisania od",
+  "signupDateTo": "Data podpisania do",
+  "realEndDate": "Data rzeczywistego zakończ.",
+  "contractor": "Kontrahent",
+  "constructionSite": "Budowa",
+  "contact": "Kontakt",
+  "manage": "Edycja kontraktów",
+  "notifications" : {
+    "addContractSuccess" : "Kontrakt o numerze {number} dodany pomyślnie",
+    "addContractError": "Błąd dodawania kontraktu",
+    "editContractSuccess" : "Dane kontaktu o numerze {number} zmieniono pomyślnie",
+    "editContractError": "Błąd edycji kontraktu o numerze {number}"
+  }
+}

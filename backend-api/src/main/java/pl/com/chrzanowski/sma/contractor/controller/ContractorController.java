@@ -1,14 +1,15 @@
 package pl.com.chrzanowski.sma.contractor.controller;
 
-import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
 import pl.com.chrzanowski.sma.contact.service.ContactQueryService;
@@ -23,46 +24,30 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/contractors")
-public class ContractorController {
+public class ContractorController extends BaseCrudController<
+        ContractorAuditableDTO,
+        ContractorDTO,
+        ContractorDTO,
+        ContractorUpdateDTO,
+        Long,
+        ContractorFilter
+        > {
 
-    private final Logger log = LoggerFactory.getLogger(ContractorController.class);
-
-    private final ContractorService contractorService;
     private final ContactQueryService contactQueryService;
-    private final ContractorQueryService contractorQueryService;
 
-    public ContractorController(ContractorService contractorService, ContactQueryService contactQueryService, ContractorQueryService contractorQueryService) {
-        this.contractorService = contractorService;
+    public ContractorController(ContractorService contractorService,
+                                ContractorQueryService contractorQueryService,
+                                ContactQueryService contactQueryService) {
+        super(contractorService, contractorQueryService);
         this.contactQueryService = contactQueryService;
-        this.contractorQueryService = contractorQueryService;
     }
 
-    @GetMapping("/find")
-    public ResponseEntity<List<ContractorAuditableDTO>> getAllContractorsByFilter(ContractorFilter contractorFilter) {
-        log.debug("REST request to get all contractors by filter: {}", contractorFilter);
-        List<ContractorAuditableDTO> contractorDTOS = contractorQueryService.findByFilter(contractorFilter);
-        return ResponseEntity.ok().body(contractorDTOS);
+    @Override
+    protected Long extractId(ContractorDTO contractorDTO) {
+        return contractorDTO.getId();
     }
 
-    @GetMapping("/page")
-    public ResponseEntity<List<ContractorAuditableDTO>> getAllContractorsByFilterAndPage(ContractorFilter contractorFilter,
-                                                                                Pageable pageable) {
-        log.debug("REST request to get all contractors by filter with page: {}", contractorFilter);
-        Page<ContractorAuditableDTO> page = contractorQueryService.findByFilter(contractorFilter, pageable);
-        HttpHeaders headers =
-                PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequestUri(),
-                        page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @GetMapping("/getById/{id}")
-    public ResponseEntity<ContractorDTO> getContractorById(@Valid @PathVariable Long id) {
-        log.debug("REST request to get contractor by id: {}", id);
-        ContractorDTO contractorBaseDTO = contractorService.findById(id);
-        return ResponseEntity.ok().body(contractorBaseDTO);
-    }
-
-    @GetMapping("/contractor/{contractorId}/contacts")
+    @GetMapping("/{contractorId}/contacts")
     public ResponseEntity<List<ContactDTO>> getPagedContactsForContractor(
             @PathVariable Long contractorId,
             Pageable pageable) {
@@ -71,26 +56,5 @@ public class ContractorController {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(
                 ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
-    }
-
-    @PostMapping("/add")
-    public ResponseEntity<ContractorDTO> addContractor(@RequestBody ContractorDTO contractorDTO) {
-        log.debug("REST request to add new contractor: {}", contractorDTO);
-        ContractorDTO newContractorBaseDTO = contractorService.save(contractorDTO);
-        return ResponseEntity.ok().body(newContractorBaseDTO);
-    }
-
-    @PutMapping("/update")
-    public ResponseEntity<ContractorDTO> updateContractor(@RequestBody ContractorUpdateDTO contractorDTO) {
-        log.debug("RST request to update contractor: {}", contractorDTO);
-        ContractorDTO updatedContractorDTO = contractorService.updateWithChangedContacts(contractorDTO);
-        return ResponseEntity.ok().body(updatedContractorDTO);
-    }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteContractor(@PathVariable Long id) {
-        log.debug("REST request to delete contractor of id: {}", id);
-        contractorService.delete(id);
-        return ResponseEntity.ok().build();
     }
 }

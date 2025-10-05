@@ -4,7 +4,7 @@ import {addContractor} from "@/services/contractor-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import React from "react";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
 import CommonContractorForm from "@/components/contractor/CommonContractorForm.tsx";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
@@ -12,9 +12,10 @@ import {getSelectedCompany} from "@/utils/company-utils.ts";
 
 interface AddContractorFormProps {
     onSuccess: (data: ContractorDTO) => void;
+    hideSubmit?: boolean;
 }
 
-const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
+const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess, hideSubmit=false}) => {
     const {t} = useTranslation(['common', 'contractors']);
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
@@ -68,6 +69,7 @@ const AddContractorForm: React.FC<AddContractorFormProps> = ({onSuccess}) => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}
         />
     );
 };

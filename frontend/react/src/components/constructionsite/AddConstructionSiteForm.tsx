@@ -1,9 +1,9 @@
 import {ConstructionSiteDTO, ConstructionSiteFormValues} from "@/types/constrution-site-types.ts";
 import React from "react";
 import {useTranslation} from "react-i18next";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
-import {getConstructionSiteValidationSchema} from "@/validation/ConstructionSiteValidationSchema.ts";
+import {getConstructionSiteValidationSchema} from "@/validation/constructionSiteValidationSchema.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {addConstructionSite} from "@/services/construction-site-service.ts";
@@ -11,9 +11,10 @@ import CommonConstructionSiteForm from "@/components/constructionsite/CommonCons
 
 interface AddConstructionSiteFormProps {
     onSuccess: (data: ConstructionSiteDTO) => void;
+    hideSubmit?: boolean;
 }
 
-const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSuccess}) => {
+const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSuccess, hideSubmit=false}) => {
     const {t} = useTranslation(['common', 'constructionSites']);
     const countryOptions = getCountryOptions(t);
     const currentCompany = getSelectedCompany();
@@ -61,6 +62,7 @@ const AddConstructionSiteForm: React.FC<AddConstructionSiteFormProps> = ({onSucc
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
+            hideSubmit={hideSubmit}
         />
     )
 }

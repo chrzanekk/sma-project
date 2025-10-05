@@ -3,12 +3,13 @@ import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContractorDTO, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContactDTO} from "@/types/contact-types.ts";
+import {ContractorFilter} from "@/types/filters/contractor-filter.ts";
 
 const CONTRACTOR_API_BASE = "/api/contractors";
 
-export const getContractorsByFilter = async (filter: Record<string, any>) => {
+export const getContractorsByFilter = async (filter: ContractorFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
@@ -17,7 +18,7 @@ export const getContractorsByFilter = async (filter: Record<string, any>) => {
             page: filter.page || 0,
             sort: filter.sort || 'id,asc'
         });
-        const response = await api.get(`${CONTRACTOR_API_BASE}/page?${queryParams}`, getAuthConfig());
+        const response = await api.get(`${CONTRACTOR_API_BASE}?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return  {
             contractors: items as FetchableContractorDTO[],
@@ -33,7 +34,7 @@ export const getContactsByContractorIdPaged = async (
     page: number,
     size: number
 ) => {
-    const response = await api.get(`${CONTRACTOR_API_BASE}/contractor/${contractorId}/contacts`, {
+    const response = await api.get(`${CONTRACTOR_API_BASE}/${contractorId}/contacts`, {
         params: {
             contractorId,
             page,
@@ -49,7 +50,7 @@ export const getContactsByContractorIdPaged = async (
 
 export const getContractorById = async (id: number) => {
     try {
-        const response = await api.get(`${CONTRACTOR_API_BASE}/getById/${id}`, getAuthConfig());
+        const response = await api.get(`${CONTRACTOR_API_BASE}/${id}`, getAuthConfig());
         const contractorDTO: FetchableContractorDTO = response.data;
         return contractorDTO;
     } catch (err) {
@@ -64,7 +65,7 @@ export const addContractor = async (addContractor: ContractorDTO) => {
             ...addContractor,
             company
         }
-        const response = await api.post(`${CONTRACTOR_API_BASE}/add`, payload, getAuthConfig());
+        const response = await api.post(`${CONTRACTOR_API_BASE}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -78,7 +79,7 @@ export const updateContractor = async (updateContractor: ContractorUpdateDTO) =>
             ...updateContractor,
             company
         }
-        const response = await api.put(`${CONTRACTOR_API_BASE}/update`, payload, getAuthConfig());
+        const response = await api.put(`${CONTRACTOR_API_BASE}/${updateContractor.id}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -86,5 +87,5 @@ export const updateContractor = async (updateContractor: ContractorUpdateDTO) =>
 }
 
 export const deleteContractorById = async (id: number) => {
-    await api.delete(`${CONTRACTOR_API_BASE}/delete/${id}`, getAuthConfig());
+    await api.delete(`${CONTRACTOR_API_BASE}/${id}`, getAuthConfig());
 }

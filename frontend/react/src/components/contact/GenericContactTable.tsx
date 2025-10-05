@@ -2,21 +2,21 @@ import {useTranslation} from "react-i18next";
 import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import {useState} from "react";
 import {Field} from "@/components/ui/field.tsx";
-import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import EditContactDialog from "@/components/contact/EditContactDialog.tsx";
-import {BaseContactDTOForContractor, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
+import {ContactBaseDTO, ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
+import AuditCell from "@/components/shared/AuditCell.tsx";
 
 function isFetchableContact(
-    contact: BaseContactDTOForContractor
+    contact: ContactBaseDTO
 ): contact is FetchableContactDTO {
     return "createdDatetime" in contact;
 }
 
 
-interface Props<T extends BaseContactDTOForContractor> {
+interface Props<T extends ContactBaseDTO> {
     contacts: T[];
     onDelete: (id: number) => void;
     fetchContacts: () => void;
@@ -127,25 +127,13 @@ const GenericContactTable = <T extends ContactDTO>({
                                         {...commonColumnHeaderProps}
                                         onClick={() => onSortChange("createdDatetime")}
                                     >
-                                        {t("createDate")} {renderSortIndicator("createdDatetime")}
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader
-                                        {...commonColumnHeaderProps}
-                                        onClick={() => onSortChange("createdBy")}
-                                    >
-                                        {t("createdBy")} {renderSortIndicator("createdBy")}
+                                        {t("created")} {renderSortIndicator("createdDatetime")}
                                     </Table.ColumnHeader>
                                     <Table.ColumnHeader
                                         {...commonColumnHeaderProps}
                                         onClick={() => onSortChange("lastModifiedDatetime")}
                                     >
-                                        {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
-                                    </Table.ColumnHeader>
-                                    <Table.ColumnHeader
-                                        {...commonColumnHeaderProps}
-                                        onClick={() => onSortChange("modifiedBy")}
-                                    >
-                                        {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
+                                        {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
                                     </Table.ColumnHeader>
                                     <Table.ColumnHeader {...commonColumnHeaderProps}
                                     >{t("edit")}
@@ -173,35 +161,16 @@ const GenericContactTable = <T extends ContactDTO>({
                                 <Table.Cell {...commonCellProps} width={"20%"}>{contact.contractor?.name}</Table.Cell>
                                 {extended && isFetchableContact(contact) && (
                                     <>
-                                        {/* Poniższe właściwości mogą być undefined dla BaseContactDTOForContractor */}
-                                        {"createdDatetime" in contact && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contact as FetchableContactDTO).createdDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"createdBy" in contact && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contact as FetchableContactDTO).createdBy.firstName.charAt(0)}. {(contact as FetchableContactDTO).createdBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
-                                        {"lastModifiedDatetime" in contact && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                {DateFormatter.formatDateTime(
-                                                    (contact as FetchableContactDTO).lastModifiedDatetime
-                                                )}
-                                            </Table.Cell>
-                                        )}
-                                        {"modifiedBy" in contact && (
-                                            <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                                <Box>
-                                                    {(contact as FetchableContactDTO).modifiedBy.firstName.charAt(0)}. {(contact as FetchableContactDTO).modifiedBy.lastName}
-                                                </Box>
-                                            </Table.Cell>
-                                        )}
+                                        <AuditCell
+                                            value={contact.createdDatetime}
+                                            user={contact.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={contact.lastModifiedDatetime}
+                                            user={contact.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
                                     </>
                                 )}
                                 {extended && (

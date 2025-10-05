@@ -1,9 +1,9 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ContractorFormValues, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
-import {BaseContactDTOForContractor, BaseContactFormValues} from "@/types/contact-types.ts";
+import {ContactBaseDTO, BaseContactFormValues} from "@/types/contact-types.ts";
 import {getContactsByContractorIdPaged, getContractorById, updateContractor} from "@/services/contractor-service.ts";
-import {Country, getCountryOptions} from "@/types/country-type.ts";
+import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -175,12 +175,12 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     const handleFinalSubmit = async () => {
         if (!contractorData) return;
 
-        const addedContacts: BaseContactDTOForContractor[] = contactState.addedContacts.map((contact) => ({
+        const addedContacts: ContactBaseDTO[] = contactState.addedContacts.map((contact) => ({
             ...contact,
             company: currentCompany!,
         }))
 
-        const deletedContacts: BaseContactDTOForContractor[] = contactState.deletedContacts.map((contact) => ({
+        const deletedContacts: ContactBaseDTO[] = contactState.deletedContacts.map((contact) => ({
             ...contact,
             company: currentCompany!,
         }))

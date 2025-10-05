@@ -1,6 +1,9 @@
 {
+  "contractor": "Kontrahent",
   "add": "Dodaj kontrahenta",
   "edit": "Edytuj dane kontrahenta",
+  "choose": "Wybierz kontrahenta",
+  "search": "Wyszukaj kontrahenta",
   "details": "Dane kontrahenta",
   "name": "Nazwa firmy",
   "taxNumber": "NIP",

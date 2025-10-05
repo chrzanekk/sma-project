@@ -17,6 +17,8 @@ import adminPanelMenuPl from './pl/adminPanelMenu.json'
 import adminPanelMenuEn from './en/adminPanelMenu.json'
 import contractorsPl from './pl/contractors.json'
 import contractorsEn from './en/contractors.json'
+import contractsPl from './pl/contracts.json'
+import contractsEn from './en/contracts.json'
 import countriesPl from './pl/countries.json'
 import countriesEn from './en/countries.json'
 import contactsPl from './pl/contacts.json'
@@ -30,44 +32,46 @@ i18n
     .use(initReactI18next)
     .use(ICU)
     .init({
-    resources: {
-        en: {
-            common: commonEn,
-            navbar: navbarEn,
-            userMenu: userMenuEn,
-            auth: authEn,
-            footer: footerEn,
-            errors: errorsEn,
-            adminPanelMenu: adminPanelMenuEn,
-            contractors: contractorsEn,
-            countries: countriesEn,
-            contacts: contactsEn,
-            companies: companiesEn,
-            constructionSites: constructionSitesEn,
+        resources: {
+            en: {
+                common: commonEn,
+                navbar: navbarEn,
+                userMenu: userMenuEn,
+                auth: authEn,
+                footer: footerEn,
+                errors: errorsEn,
+                adminPanelMenu: adminPanelMenuEn,
+                contractors: contractorsEn,
+                countries: countriesEn,
+                contacts: contactsEn,
+                companies: companiesEn,
+                constructionSites: constructionSitesEn,
+                contracts: contractsEn,
+            },
+            pl: {
+                common: commonPl,
+                navbar: navbarPl,
+                userMenu: userMenuPl,
+                auth: authPl,
+                footer: footerPl,
+                errors: errorsPl,
+                adminPanelMenu: adminPanelMenuPl,
+                contractors: contractorsPl,
+                countries: countriesPl,
+                contacts: contactsPl,
+                companies: companiesPl,
+                constructionSites: constructionSitesPl,
+                contracts: contractsPl,
+            },
         },
-        pl: {
-            common: commonPl,
-            navbar: navbarPl,
-            userMenu: userMenuPl,
-            auth: authPl,
-            footer: footerPl,
-            errors: errorsPl,
-            adminPanelMenu: adminPanelMenuPl,
-            contractors: contractorsPl,
-            countries: countriesPl,
-            contacts: contactsPl,
-            companies: companiesPl,
-            constructionSites: constructionSitesPl,
+        lng: 'pl',
+        fallbackLng: 'en',
+        ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
+            'contractors', 'countries', 'contacts', 'companies', 'constructionSites', 'contracts'],
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
         },
-    },
-    lng: 'pl',
-    fallbackLng: 'en',
-    ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
-        'contractors', 'countries','contacts','companies','constructionSites'],
-    defaultNS: 'common',
-    interpolation: {
-        escapeValue: false,
-    },
-});
+    });
 
 export default i18n;

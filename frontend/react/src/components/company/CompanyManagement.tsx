@@ -1,7 +1,7 @@
 import React from "react";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {Flex} from "@chakra-ui/react";
-import {FetchableCompanyDTO} from "@/types/company-type.ts";
+import {FetchableCompanyDTO} from "@/types/company-types.ts";
 import {deleteCompanyById, getCompaniesByFilter} from "@/services/company-service.ts";
 import CompanyFilterForm from "@/components/company/CompanyFilterForm.tsx";
 import AddCompanyDialog from "@/components/company/AddCompanyDialog.tsx";

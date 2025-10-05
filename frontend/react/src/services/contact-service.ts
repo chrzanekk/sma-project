@@ -3,12 +3,13 @@ import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
+import {ContactFilter} from "@/types/filters/contact-filter.ts";
 
 const CONTACTS_API_BASE = "/api/contacts";
 
 
-export const getContactsByFilter = async (filter: Record<string, any>) => {
+export const getContactsByFilter = async (filter: ContactFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
@@ -16,7 +17,7 @@ export const getContactsByFilter = async (filter: Record<string, any>) => {
             size: filter.size || 10,
             page: filter.page || 0
         });
-        const response = await api.get(`${CONTACTS_API_BASE}/page?${queryParams}`, getAuthConfig());
+        const response = await api.get(`${CONTACTS_API_BASE}?${queryParams}`, getAuthConfig());
         const {items, totalPages} = parsePaginationResponse(response);
         return {
             contacts: items as FetchableContactDTO[],
@@ -27,7 +28,7 @@ export const getContactsByFilter = async (filter: Record<string, any>) => {
     }
 }
 
-export const getFreeContactsByFilter = async (filter: Record<string, any>) => {
+export const getFreeContactsByFilter = async (filter: ContactFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
@@ -48,7 +49,7 @@ export const getFreeContactsByFilter = async (filter: Record<string, any>) => {
 
 export const getContactById = async (id: number) => {
     try {
-        const response = await api.get(`${CONTACTS_API_BASE}/getById/${id}`, getAuthConfig());
+        const response = await api.get(`${CONTACTS_API_BASE}/${id}`, getAuthConfig());
         const contactDTO: FetchableContactDTO = response.data;
         return contactDTO;
     } catch (err) {
@@ -63,7 +64,7 @@ export const addContact = async (addContact: ContactDTO) => {
             ...addContact,
             company
         }
-        const response = await api.post(`${CONTACTS_API_BASE}/add`, payload, getAuthConfig());
+        const response = await api.post(`${CONTACTS_API_BASE}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -77,7 +78,7 @@ export const updateContact = async (updateContact: ContactDTO) => {
             ...updateContact,
             company
         }
-        const response = await api.put(`${CONTACTS_API_BASE}/update`, payload, getAuthConfig());
+        const response = await api.put(`${CONTACTS_API_BASE}/${updateContact.id}`, payload, getAuthConfig());
         return response.data;
     } catch (err) {
         throw err;
@@ -85,5 +86,5 @@ export const updateContact = async (updateContact: ContactDTO) => {
 }
 
 export const deleteContactById = async (id: number) => {
-    await api.delete(`${CONTACTS_API_BASE}/delete/${id}`, getAuthConfig());
+    await api.delete(`${CONTACTS_API_BASE}/${id}`, getAuthConfig());
 }

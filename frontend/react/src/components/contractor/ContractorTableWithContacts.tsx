@@ -2,7 +2,6 @@
 import React, {useState} from "react";
 import {Box, Button, Collapsible, HStack, Spinner, Table, Text,} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import DateFormatter from "@/utils/date-formatter";
 import EditContractorDialog from "@/components/contractor/EditContractorDialog";
 import {FetchableContractorDTO} from "@/types/contractor-types";
 import GenericContactTable from "@/components/contact/GenericContactTable.tsx";
@@ -10,6 +9,7 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import {getContactsByContractorIdPaged} from "@/services/contractor-service.ts";
 import {ContactDTO} from "@/types/contact-types.ts";
+import AuditCell from "@/components/shared/AuditCell.tsx";
 
 
 interface ContractorTableWithContactsProps {
@@ -167,19 +167,17 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                 onClick={() => onSortChange("scaffoldingUser")}>
                                 {t("contractors:scaffoldingUser")} {renderSortIndicator("scaffoldingUser")}
                             </Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("createdDatetime")}>
-                                {t("createDate")} {renderSortIndicator("createdDatetime")}
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("createdDatetime")}
+                            >
+                                {t("created")} {renderSortIndicator("createdDatetime")}
                             </Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("createdBy")}>
-                                {t("createdBy")} {renderSortIndicator("createdBy")}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("lastModifiedDatetime")}>
-                                {t("lastModifiedDate")} {renderSortIndicator("lastModifiedDatetime")}
-                            </Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps} onClick={() => onSortChange("modifiedBy")}>
-                                {t("lastModifiedBy")} {renderSortIndicator("modifiedBy")}
+                            <Table.ColumnHeader
+                                {...commonColumnHeaderProps}
+                                onClick={() => onSortChange("lastModifiedDatetime")}
+                            >
+                                {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("edit")}</Table.ColumnHeader>
                         </Table.Row>
@@ -202,7 +200,7 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         onClick={() => toggleExpand(contractorId)} style={{cursor: "pointer"}}
                                     >
                                         <Table.Cell {...commonCellProps} width={"2%"}>{contractorId}</Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"15%"}>{contractor.name}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"25%"}>{contractor.name}</Table.Cell>
                                         <Table.Cell {...commonCellProps}
                                                     width={"15%"}>{contractor.taxNumber}</Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"25%"}>
@@ -225,24 +223,16 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                         <Table.Cell {...commonCellProps} width={"4%"}>
                                             {contractor.scaffoldingUser ? t("common:yes") : t("common:no")}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"5%"}
-                                                    fontSize={"x-small"}>
-                                            {DateFormatter.formatDateTime(contractor.createdDatetime!)}
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                            <Box>
-                                                {contractor.createdBy.firstName.charAt(0)}. {contractor.createdBy.lastName}
-                                            </Box>
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"5%"}
-                                                    fontSize={"x-small"}>
-                                            {DateFormatter.formatDateTime(contractor.lastModifiedDatetime!)}
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"5%"} fontSize={"x-small"}>
-                                            <Box>
-                                                {contractor.modifiedBy.firstName.charAt(0)}. {contractor.modifiedBy.lastName}
-                                            </Box>
-                                        </Table.Cell>
+                                        <AuditCell
+                                            value={contractor.createdDatetime}
+                                            user={contractor.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={contractor.lastModifiedDatetime}
+                                            user={contractor.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
                                         <Table.Cell {...commonCellProps}
                                                     onClick={(e) => e.stopPropagation()}
                                         >

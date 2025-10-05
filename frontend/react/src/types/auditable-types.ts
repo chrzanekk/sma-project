@@ -1,6 +1,6 @@
 import {UserAuditDTO} from "@/types/user-types.ts";
 
-export interface AuditableType {
+export interface AuditableTypes {
     createdDatetime: string;
     lastModifiedDatetime: string;
     createdBy: UserAuditDTO;

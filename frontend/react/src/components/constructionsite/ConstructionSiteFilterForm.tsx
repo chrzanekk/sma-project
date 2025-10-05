@@ -4,7 +4,7 @@ import {Form, Formik, FormikHelpers} from "formik";
 import {Button, Flex} from "@chakra-ui/react";
 import React from "react";
 import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
-import {getCountryOptions} from "@/types/country-type.ts";
+import {getCountryOptions} from "@/types/country-types.ts";
 import {themeVars} from "@/theme/theme-colors.ts";
 
 

@@ -1,22 +1,22 @@
-import {BaseContactDTOForContractor} from "@/types/contact-types.ts";
-import {Country} from "@/types/country-type.ts";
-import {AuditableType} from "@/types/auditable-type.ts";
-import {CompanyBaseDTO} from "@/types/company-type.ts";
+import {ContactBaseDTO} from "@/types/contact-types.ts";
+import {Country} from "@/types/country-types.ts";
+import {AuditableTypes} from "@/types/auditable-types.ts";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 
-export interface FetchableContractorDTO extends ContractorDTO, AuditableType {
+export interface FetchableContractorDTO extends ContractorDTO, AuditableTypes {
 }
 
-export interface ContractorDTO extends BaseContractorDTO {
-    contacts?: Array<BaseContactDTOForContractor>;
+export interface ContractorDTO extends ContractorBaseDTO {
+    contacts?: Array<ContactBaseDTO>;
 }
 
-export interface ContractorUpdateDTO extends BaseContractorDTO {
-    addedContacts?: Array<BaseContactDTOForContractor>;
-    deletedContacts?: Array<BaseContactDTOForContractor>;
+export interface ContractorUpdateDTO extends ContractorBaseDTO {
+    addedContacts?: Array<ContactBaseDTO>;
+    deletedContacts?: Array<ContactBaseDTO>;
 }
 
 
-export interface BaseContractorDTO {
+export interface ContractorBaseDTO {
     id?: number;
     name: string;
     taxNumber: string;
@@ -45,5 +45,5 @@ export interface ContractorFormValues {
     customer: boolean | undefined;
     supplier: boolean | undefined;
     scaffoldingUser: boolean | undefined;
-    contacts?: Array<BaseContactDTOForContractor>;
+    contacts?: Array<ContactBaseDTO>;
 }

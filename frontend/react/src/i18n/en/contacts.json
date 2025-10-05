@@ -2,6 +2,7 @@
   "add": "Dodaj kontakt",
   "addOptional": "Dodaj kontakt (opcjonalnie)",
   "edit": "Edytuj dane kontaktu",
+  "search": "Wyszukaj kontakt",
   "details": "Dane kontaktu",
   "firstName": "Imię",
   "lastName": "Nazwisko",
@@ -15,7 +16,7 @@
   "manage": "Edycja kontaktów",
   "notifications" : {
     "addContactSuccess" : "Kontakt {firstName} {lastName} dodany pomyślnie",
-    "addContactError": "Błąd dodawania kontaku",
+    "addContactError": "Błąd dodawania kontaktu",
     "editContactSuccess" : "Dane kontaktu {firstName} {lastName} zmieniono pomyślnie",
     "editContactError": "Błąd edycji kontaktu {firstName} {lastName}"
   }

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Button, Dialog, Flex, Heading, Portal, Text, VStack} from "@chakra-ui/react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {CompanyBaseDTO} from "@/types/company-type";
+import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {CustomSimpleSelect} from "@/components/shared/CustomFormFields";
 import {useTranslation} from "react-i18next";
 import {useAuth} from "@/context/AuthContext";
