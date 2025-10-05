@@ -2,7 +2,7 @@
 import {useMemo, useRef, useState} from "react";
 import Select, {StylesConfig} from "react-select";
 import {getSelectStyles} from "@/components/shared/formOptions"; // Twoje style bazowe
-import {useThemeColors} from "@/theme/theme-colors";
+import {themeVars} from "@/theme/theme-colors";
 
 export interface AsyncSearchSelectOption<T = any> {
     value: string | number;
@@ -54,7 +54,6 @@ const AsyncSearchSelect = <T, >({
                                     noOptionsMessage = "No results",
                                     size = "sm",
                                 }: AsyncSearchSelectProps<T>) => {
-    const themeColors = useThemeColors();
     const selectStyles = getSelectStyles();
     const [options, setOptions] = useState<AsyncSearchSelectOption<T>[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -84,47 +83,50 @@ const AsyncSearchSelect = <T, >({
         }),
         input: (provided) => ({
             ...provided,
-            color: themeColors.fontColor,
+            color: themeVars.fontColor,
         }),
         menu: (provided) => ({
             ...provided,
             fontSize: dims.fontSize,
             width: "100%",
-            backgroundColor: themeColors.bgColorPrimary,
+            backgroundColor: themeVars.bgColorSecondary,
         }),
         singleValue: (provided) => ({
             ...provided,
-            color: themeColors.fontColor,
+            color: themeVars.fontColor,
         }),
         placeholder: (provided) => ({
             ...provided,
-            color: themeColors.fontColor,
+            color: themeVars.fontColor,
         }),
         menuList: (provided) => ({
             ...provided,
-            backgroundColor: themeColors.bgColorPrimary, // tło listy
+            backgroundColor: themeVars.bgColorSecondary, // tło listy
             paddingTop: 0,
             paddingBottom: 0,
         }),
         option: (provided, state) => ({
             ...provided,
             backgroundColor: state.isSelected
-                ? themeColors.highlightBgColor
-                : state.isFocused
-                    ? themeColors.bgColorSecondary
-                    : themeColors.bgColorPrimary,
-            color: themeColors.fontColor,
+                ? themeVars.bgColorPrimary
+                : themeVars.bgColorSecondary,
+            color: state.isSelected
+                ? themeVars.fontColor
+                : themeVars.fontColor,
             cursor: "pointer",
+            "&:hover": {
+                backgroundColor: themeVars.highlightBgColor,
+                color: themeVars.fontColorHover
+            }
         }),
-        // Komunikat "No options"
         noOptionsMessage: (base) => ({
             ...base,
-            backgroundColor: themeColors.bgColorPrimary,
-            color: themeColors.fontColor,
+            backgroundColor: themeVars.bgColorSecondary,
+            color: themeVars.fontColor,
             paddingTop: 8,
             paddingBottom: 8,
         }),
-    }), [selectStyles, bgColor, width, dims, themeColors.fontColor, themeColors.bgColorSecondary, themeColors.bgColorPrimary, themeColors.highlightBgColor]);
+    }), [selectStyles, bgColor, width, dims, themeVars.fontColor, themeVars.bgColorSecondary, themeVars.bgColorPrimary, themeVars.highlightBgColor]);
 
     const handleInputChange = (inputValue: string) => {
         // react-select wywołuje to przy każdej zmianie

@@ -1,21 +1,32 @@
 import {FormikProps} from "formik";
-import React from "react";
+import React, {useMemo} from "react";
 import {ContactBaseDTO, ContactDTO} from "@/types/contact-types.ts";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Box, Button, Flex, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
 import ContactSearchWithSelect from "@/components/contact/ContactSearchWithSelect.tsx";
+import {makeContactSearchAdapter} from "@/search/contact-search-adapter.ts";
+import {getSelectedCompanyId} from "@/utils/company-utils.ts";
 
 interface Props {
     formikRef: React.RefObject<FormikProps<any>>;
     selected: ContactBaseDTO | null;
     onSelectChange: (c: ContactBaseDTO | null) => void;
-    searchFn: (q: string) => Promise<ContactDTO[]>;
+    contractorId?: number;
 }
 
-const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, searchFn}) => {
+const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, contractorId}) => {
     const {t} = useTranslation(["common", "contacts"]);
     const themeColors = useThemeColors();
+    const companyId = getSelectedCompanyId()!;
+
+    const searchFn = useMemo(() => {
+        console.log('🔍 ContactPicker: Tworzę searchFn z contractorId:', contractorId);
+        return makeContactSearchAdapter({
+            fixed: {companyId, contractorId},
+            defaults: {page: 0, size: 10, sort: "id,asc"},
+        });
+    }, [companyId, contractorId]);
 
     const handleSelect = (c: ContactDTO) => {
         const base: ContactBaseDTO = {
@@ -41,9 +52,7 @@ const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, se
     return (
         <Box>
             <ContactSearchWithSelect
-                searchFn={async (q) => {
-                    return await searchFn(q);
-                }}
+                searchFn={searchFn}
                 onSelect={handleSelect}
                 minChars={2}
                 debounceMs={300}

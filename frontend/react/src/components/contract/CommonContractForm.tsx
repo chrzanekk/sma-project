@@ -13,7 +13,6 @@ import {ConstructionSiteBaseDTO} from "@/types/constrution-site-types.ts";
 import {ContactBaseDTO} from "@/types/contact-types.ts";
 import {makeContractorSearchAdapter} from "@/search/contractor-search-adapter.ts";
 import {makeConstructionSiteSearchAdapter} from "@/search/construction-site-search-adapter.ts";
-import {makeContactSearchAdapter} from "@/search/contact-search-adapter.ts";
 import ConstructionSitePicker from "@/components/constructionsite/ConstructionSitePicker.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {getSelectedCompanyId} from "@/utils/company-utils.ts";
@@ -27,248 +26,242 @@ interface CommonContractFormProps {
     innerRef?: React.Ref<FormikProps<BaseContractFormValues>>;
 }
 
-const FormContent: React.FC<{ disabled: boolean; hideSubmit: boolean }> = (({
-                                                                                disabled,
-                                                                                hideSubmit
-                                                                            }) => {
-        const {t} = useTranslation(['common', 'contracts', 'constructionSites', 'contractors', 'contacts']);
-        const currencyOptions = getCurrencyOptions();
-        const themeColors = useThemeColors();
-        const companyId: number = getSelectedCompanyId()!;
+const FormContent: React.FC<{ disabled: boolean; hideSubmit: boolean }> = ({
+                                                                               disabled,
+                                                                               hideSubmit
+                                                                           }) => {
+    const {t} = useTranslation(['common', 'contracts', 'constructionSites', 'contractors', 'contacts']);
+    const currencyOptions = getCurrencyOptions();
+    const themeColors = useThemeColors();
+    const companyId: number = getSelectedCompanyId()!;
 
-        const {
-            values,
-            setFieldValue,
-            setFieldTouched,
-            isValid,
-            isSubmitting,
-            dirty
-        } = useFormikContext<BaseContractFormValues>();
+    const {
+        values,
+        setFieldValue,
+        setFieldTouched,
+        isValid,
+        isSubmitting,
+        dirty
+    } = useFormikContext<BaseContractFormValues>();
 
-        const formikRef = useRef<FormikProps<BaseContractFormValues>>(null);
+    const formikRef = useRef<FormikProps<BaseContractFormValues>>(null);
 
-        const [selectedContractor, setSelectedContractor] = useState<ContractorBaseDTO | null>(null);
-        const [selectedSite, setSelectedSite] = useState<ConstructionSiteBaseDTO | null>(null);
-        const [selectedContact, setSelectedContact] = useState<ContactBaseDTO | null>(null);
-        
-        useEffect(() => {
-            if (values.contractor?.id && values.contractor.id !== selectedContractor?.id) {
-                setSelectedContractor(values.contractor);
-            }
-            if (values.constructionSite?.id && values.constructionSite.id !== selectedSite?.id) {
-                setSelectedSite(values.constructionSite);
-            }
-            if (values.contact?.id && values.contact.id !== selectedContact?.id) {
-                setSelectedContact(values.contact);
-            }
-        }, [values.contractor?.id, values.constructionSite?.id, values.contact?.id, values.contractor, values.constructionSite, values.contact, selectedContractor?.id, selectedSite?.id, selectedContact?.id]);
+    const [selectedContractor, setSelectedContractor] = useState<ContractorBaseDTO | null>(null);
+    const [selectedSite, setSelectedSite] = useState<ConstructionSiteBaseDTO | null>(null);
+    const [selectedContact, setSelectedContact] = useState<ContactBaseDTO | null>(null);
 
-        const contractorSearchFn = useMemo(
-            () =>
-                makeContractorSearchAdapter({
-                    fixed: {companyId},
-                    defaults: {page: 0, size: 10, sort: "id,asc"},
-                }),
-            [companyId]
-        );
+    // Śledź poprzednie ID kontraktu, żeby wiedzieć kiedy załadowano nowy kontrakt
+    const prevContractIdRef = useRef<number | undefined>(undefined);
 
-        const constructionSiteSearchFn = useMemo(
-            () => makeConstructionSiteSearchAdapter({
+    // POPRAWIONY useEffect: Synchronizuj TYLKO gdy załadowano NOWY kontrakt (zmiana ID)
+    useEffect(() => {
+        const currentContractId = values.id;
+
+        // Jeśli ID kontraktu się zmieniło (załadowano nowy kontrakt do edycji)
+        if (currentContractId !== prevContractIdRef.current) {
+            prevContractIdRef.current = currentContractId;
+
+            // Ustaw pickery na wartości z initialValues
+            setSelectedContractor(values.contractor || null);
+            setSelectedSite(values.constructionSite || null);
+            setSelectedContact(values.contact || null);
+        }
+    }, [values.id, values.contractor, values.constructionSite, values.contact]);
+
+    const contractorSearchFn = useMemo(
+        () =>
+            makeContractorSearchAdapter({
                 fixed: {companyId},
                 defaults: {page: 0, size: 10, sort: "id,asc"},
             }),
-            [companyId]
-        );
+        [companyId]
+    );
 
-        const contactSearchFn = useMemo(
-            () =>
-                makeContactSearchAdapter({
-                    fixed: {companyId, contractorId: selectedContractor?.id},
-                    defaults: {page: 0, size: 10, sort: "id,asc"},
-                }),
-            [companyId, selectedContractor?.id]
-        );
+    const constructionSiteSearchFn = useMemo(
+        () => makeConstructionSiteSearchAdapter({
+            fixed: {companyId},
+            defaults: {page: 0, size: 10, sort: "id,asc"},
+        }),
+        [companyId]
+    );
 
-        const handleContractorChange = (contractor: ContractorBaseDTO | null) => {
-            setSelectedContractor(contractor);
-            setFieldValue('contractor', contractor).catch();
-            setFieldTouched('contractor', true, false).catch();
+    const handleContractorChange = (contractor: ContractorBaseDTO | null) => {
+        console.log('Wybrano kontrahenta:', contractor);
+        setSelectedContractor(contractor);
+        void setFieldValue('contractor', contractor);
+        void setFieldTouched('contractor', true, false);
 
-            // Wyczyść kontakt, gdy zmieniono kontrahenta
-            if (!contractor) {
-                setSelectedContact(null);
-                setFieldValue('contact', null).catch();
-                setFieldTouched('contact', false, false).catch();
-            }
-        };
+        // ZAWSZE wyczyść kontakt przy zmianie kontrahenta
+        setSelectedContact(null);
+        void setFieldValue('contact', null);
+        void setFieldTouched('contact', false, false);
+    };
 
-        const handleContactChange = (contact: ContactBaseDTO | null) => {
-            setSelectedContact(contact);
-            setFieldValue('contact', contact).catch();
-            setFieldTouched('contact', true, false).catch();
-        };
+    const handleContactChange = (contact: ContactBaseDTO | null) => {
+        setSelectedContact(contact);
+        void setFieldValue('contact', contact);
+        void setFieldTouched('contact', true, false);
+    };
 
-        const handleSiteChange = (site: ConstructionSiteBaseDTO | null) => {
-            setSelectedSite(site);
-            setFieldValue('constructionSite', site).catch();
-            setFieldTouched('constructionSite', true, false).catch();
-        };
+    const handleSiteChange = (site: ConstructionSiteBaseDTO | null) => {
+        setSelectedSite(site);
+        void setFieldValue('constructionSite', site);
+        void setFieldTouched('constructionSite', true, false);
+    };
 
-        return (
-            <Form>
-                <SimpleGrid columns={3} gap={2}>
-                    <Box gap={1}>
-                        {/* Wiersz 1: Number 6/6 */}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={6}>
-                                <CustomInputField
-                                    name="number"
-                                    label={t('contracts:number')}
-                                    placeholder={t('contracts:number')}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                        </Grid>
-
-                        {/* Wiersz 2: description 6/6 */}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={6}>
-                                <CustomInputField
-                                    name="description"
-                                    label={t('contracts:description')}
-                                    placeholder={t('contracts:description')}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                        </Grid>
-
-                        {/* Wiersz 3: Value 4/6 Currency 2/6 */}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={4}>
-                                <CustomInputField
-                                    name="value"
-                                    label={t('contracts:value')}
-                                    placeholder={t('contracts:value')}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={2}>
-                                <CustomSelectField
-                                    name="currency"
-                                    label={t('contracts:currency')}
-                                    placeholder={t('contracts:currency')}
-                                    width={"100%"}
-                                    options={currencyOptions}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                        </Grid>
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={3}>
-                                <CustomInputField
-                                    name="startDate"
-                                    label={t('contracts:startDate')}
-                                    placeholder={t('contracts:startDate')}
-                                    disabled={disabled}
-                                    type={"date"}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={3}>
-                                <CustomInputField
-                                    name="endDate"
-                                    label={t('contracts:endDate')}
-                                    placeholder={t('contracts:endDate')}
-                                    disabled={disabled}
-                                    type={"date"}
-                                />
-                            </GridItem>
-                        </Grid>
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={3}>
-                                <CustomInputField
-                                    name="signupDate"
-                                    label={t('contracts:signupDate')}
-                                    placeholder={t('contracts:signupDate')}
-                                    disabled={disabled}
-                                    type={"date"}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={3}>
-                                <CustomInputField
-                                    name="realEndDate"
-                                    label={t('contracts:realEndDate')}
-                                    placeholder={t('contracts:realEndDate')}
-                                    disabled={disabled}
-                                    type={"date"}
-                                />
-                            </GridItem>
-                        </Grid>
-
-                        {/* Wiersz 4: Button wyśrodkowany */}
-
-                    </Box>
-                    <Box>
-                        <Separator orientation={"vertical"} height={"100%"}>
-                            <Box ml={2} mr={2}>
-                                <Heading size={"xl"} color={themeColors.fontColor}>
-                                    {t("contractors:contractor")}
-                                </Heading>
-                                <Box>
-                                    <ContractorPicker
-                                        formikRef={formikRef}
-                                        selected={selectedContractor}
-                                        onSelectChange={handleContractorChange}
-                                        searchFn={contractorSearchFn}
-                                    />
-
-                                    {selectedContractor && (
-                                        <Box mt={4}>
-                                            <ContactPicker
-                                                formikRef={formikRef}
-                                                selected={selectedContact}
-                                                onSelectChange={handleContactChange}
-                                                searchFn={contactSearchFn}
-                                            />
-                                        </Box>
-                                    )}
-                                </Box>
-                            </Box>
-                        </Separator>
-                    </Box>
-                    <Box>
-                        <Separator orientation={"vertical"} height={"100%"}>
-                            <Box ml={2} mr={2}>
-                                <Heading size={"xl"} color={themeColors.fontColor}>
-                                    {t("constructionSites:constructionSite")}
-                                </Heading>
-                                <ConstructionSitePicker
-                                    formikRef={formikRef}
-                                    selected={selectedSite}
-                                    onSelectChange={handleSiteChange}
-                                    searchFn={constructionSiteSearchFn}
-                                />
-                            </Box>
-                        </Separator>
-                    </Box>
-                </SimpleGrid>
-                {!hideSubmit && (
+    return (
+        <Form>
+            <SimpleGrid columns={3} gap={2}>
+                <Box gap={1}>
                     <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                        <GridItem colSpan={6} textAlign="center">
-                            <Button
-                                disabled={!isValid || isSubmitting || !dirty}
-                                type="submit"
-                                colorPalette="green"
-                                width="400px"
-                            >
-                                {t('save', {ns: "common"})}
-                            </Button>
+                        <GridItem colSpan={6}>
+                            <CustomInputField
+                                name="number"
+                                label={t('contracts:number')}
+                                placeholder={t('contracts:number')}
+                                disabled={disabled}
+                            />
                         </GridItem>
                     </Grid>
-                )}
-            </Form>
-        )
-    }
-);
+
+                    <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                        <GridItem colSpan={6}>
+                            <CustomInputField
+                                name="description"
+                                label={t('contracts:description')}
+                                placeholder={t('contracts:description')}
+                                disabled={disabled}
+                            />
+                        </GridItem>
+                    </Grid>
+
+                    <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                        <GridItem colSpan={4}>
+                            <CustomInputField
+                                name="value"
+                                label={t('contracts:value')}
+                                placeholder={t('contracts:value')}
+                                disabled={disabled}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={2}>
+                            <CustomSelectField
+                                name="currency"
+                                label={t('contracts:currency')}
+                                placeholder={t('contracts:currency')}
+                                width={"100%"}
+                                options={currencyOptions}
+                                disabled={disabled}
+                            />
+                        </GridItem>
+                    </Grid>
+
+                    <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                        <GridItem colSpan={3}>
+                            <CustomInputField
+                                name="startDate"
+                                label={t('contracts:startDate')}
+                                placeholder={t('contracts:startDate')}
+                                disabled={disabled}
+                                type={"date"}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={3}>
+                            <CustomInputField
+                                name="endDate"
+                                label={t('contracts:endDate')}
+                                placeholder={t('contracts:endDate')}
+                                disabled={disabled}
+                                type={"date"}
+                            />
+                        </GridItem>
+                    </Grid>
+
+                    <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                        <GridItem colSpan={3}>
+                            <CustomInputField
+                                name="signupDate"
+                                label={t('contracts:signupDate')}
+                                placeholder={t('contracts:signupDate')}
+                                disabled={disabled}
+                                type={"date"}
+                            />
+                        </GridItem>
+                        <GridItem colSpan={3}>
+                            <CustomInputField
+                                name="realEndDate"
+                                label={t('contracts:realEndDate')}
+                                placeholder={t('contracts:realEndDate')}
+                                disabled={disabled}
+                                type={"date"}
+                            />
+                        </GridItem>
+                    </Grid>
+                </Box>
+
+                <Box>
+                    <Separator orientation={"vertical"} height={"100%"}>
+                        <Box ml={2} mr={2}>
+                            <Heading size={"xl"} color={themeColors.fontColor}>
+                                {t("contractors:contractor")}
+                            </Heading>
+                            <Box>
+                                <ContractorPicker
+                                    formikRef={formikRef}
+                                    selected={selectedContractor}
+                                    onSelectChange={handleContractorChange}
+                                    searchFn={contractorSearchFn}
+                                />
+
+                                {selectedContractor && (
+                                    <Box mt={4}>
+                                        <ContactPicker
+                                            formikRef={formikRef}
+                                            selected={selectedContact}
+                                            onSelectChange={handleContactChange}
+                                            contractorId={selectedContractor.id}
+                                        />
+                                    </Box>
+                                )}
+                            </Box>
+                        </Box>
+                    </Separator>
+                </Box>
+
+                <Box>
+                    <Separator orientation={"vertical"} height={"100%"}>
+                        <Box ml={2} mr={2}>
+                            <Heading size={"xl"} color={themeColors.fontColor}>
+                                {t("constructionSites:constructionSite")}
+                            </Heading>
+                            <ConstructionSitePicker
+                                formikRef={formikRef}
+                                selected={selectedSite}
+                                onSelectChange={handleSiteChange}
+                                searchFn={constructionSiteSearchFn}
+                            />
+                        </Box>
+                    </Separator>
+                </Box>
+            </SimpleGrid>
+
+            {!hideSubmit && (
+                <Grid templateColumns="repeat(6, 1fr)" gap={4} mt={4}>
+                    <GridItem colSpan={6} textAlign="center">
+                        <Button
+                            disabled={!isValid || isSubmitting || !dirty}
+                            type="submit"
+                            colorPalette="green"
+                            width="400px"
+                        >
+                            {t('save', {ns: "common"})}
+                        </Button>
+                    </GridItem>
+                </Grid>
+            )}
+        </Form>
+    );
+};
 
 const CommonContractForm: React.FC<CommonContractFormProps> = ({
                                                                    initialValues,
@@ -290,6 +283,5 @@ const CommonContractForm: React.FC<CommonContractFormProps> = ({
         </Formik>
     );
 };
-
 
 export default CommonContractForm;

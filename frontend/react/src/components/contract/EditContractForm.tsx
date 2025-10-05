@@ -28,6 +28,9 @@ const EditContractForm: React.FunctionComponent<EditContractFormProps> = ({onSuc
         endDate: '',
         signupDate: '',
         realEndDate: '',
+        constructionSite: undefined,
+        contractor: undefined,
+        contact: undefined,
     }
 
     const [initialValues, setInitialValues] = useState<BaseContractFormValues>(defaultValues);

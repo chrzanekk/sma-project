@@ -9,6 +9,7 @@ import pl.com.chrzanowski.sma.contract.model.Contract;
 import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
@@ -26,8 +27,8 @@ class ContractRepositoryTest extends AbstractTestContainers {
         // Given
         Contract contract = Contract.builder()
                 .number("C-001")
-                .startDate(Instant.now())
-                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(30))
                 .build();
 
         Contract saved = contractRepository.save(contract);
@@ -54,8 +55,8 @@ class ContractRepositoryTest extends AbstractTestContainers {
         // Given
         Contract contract = Contract.builder()
                 .number("C-DELETE")
-                .startDate(Instant.now())
-                .endDate(Instant.now().plus(30, ChronoUnit.DAYS))
+                .startDate(LocalDate.now())
+                .endDate(LocalDate.now().plusDays(30))
                 .build();
 
         Contract saved = contractRepository.save(contract);

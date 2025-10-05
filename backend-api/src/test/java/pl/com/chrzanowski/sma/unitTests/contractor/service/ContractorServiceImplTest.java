@@ -15,6 +15,7 @@ import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.dao.ContractorDao;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
+import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
@@ -49,6 +50,7 @@ class ContractorServiceImplTest {
     private ContractorServiceImpl contractorService;
 
     private ContractorDTO contractorDTO;
+    private ContractorUpdateDTO contractorUpdateDTO;
     private Contractor contractor;
     private AutoCloseable autoCloseable;
 
@@ -57,6 +59,22 @@ class ContractorServiceImplTest {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
         contractorDTO = ContractorDTO.builder()
+                .id(1L)
+                .name("Contractor 1")
+                .taxNumber("2323526")
+                .street("Street 1")
+                .buildingNo("123")
+                .apartmentNo("12345")
+                .postalCode("2234")
+                .city("City 1")
+                .country(Country.POLAND)
+                .customer(true)
+                .supplier(false)
+                .scaffoldingUser(true)
+                .contacts(Set.of(ContactBaseDTO.builder().id(42L).build()))
+                .build();
+
+        contractorUpdateDTO = ContractorUpdateDTO.builder()
                 .id(1L)
                 .name("Contractor 1")
                 .taxNumber("2323526")
@@ -133,12 +151,12 @@ class ContractorServiceImplTest {
         when(contractorDao.save(any(Contractor.class))).thenReturn(contractor);
         when(contractorMapper.toDto(any(Contractor.class))).thenReturn(contractorDTO);
 
-        ContractorDTO result = contractorService.update(contractorDTO);
+        ContractorDTO result = contractorService.update(contractorUpdateDTO);
 
         assertNotNull(result);
         assertEquals("Contractor 1", result.getName());
 
-        verify(contractorMapper, times(1)).updateFromDto(any(ContractorDTO.class), any(Contractor.class));
+        verify(contractorMapper, times(1)).updateFromUpdateDto(any(ContractorUpdateDTO.class), any(Contractor.class));
         verify(contractorDao, times(1)).save(any(Contractor.class));
         verify(contractorMapper, times(1)).toDto(any(Contractor.class));
     }
