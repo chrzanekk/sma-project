@@ -29,7 +29,7 @@ public class ContractQuerySpec {
                 predicate.and(contract.number.containsIgnoreCase(filter.getNumberStartsWith()));
             }
             if (filter.getDescriptionStartsWith() != null && !filter.getDescriptionStartsWith().isEmpty()) {
-                predicate.and(contract.number.containsIgnoreCase(filter.getDescriptionStartsWith()));
+                predicate.and(contract.description.containsIgnoreCase(filter.getDescriptionStartsWith()));
             }
             if (filter.getValueStartsWith() != null) {
                 predicate.and(contract.value.goe(filter.getValueStartsWith()));
@@ -70,7 +70,7 @@ public class ContractQuerySpec {
             if (filter.getConstructionSiteNameStartsWith() != null) {
                 predicate.and(contract.constructionSite.name.containsIgnoreCase(filter.getConstructionSiteNameStartsWith()));
             }
-            if (filter.getConstructionSiteNameStartsWith() != null) {
+            if (filter.getContactNameStartsWith() != null) {
                 predicate.and(contract.contact.lastName.containsIgnoreCase(filter.getContactNameStartsWith()));
             }
         }
