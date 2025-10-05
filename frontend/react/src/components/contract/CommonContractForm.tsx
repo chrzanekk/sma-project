@@ -149,7 +149,6 @@ const FormContent: React.FC<{ disabled: boolean; hideSubmit: boolean }> = ({
                                 name="currency"
                                 label={t('contracts:currency')}
                                 placeholder={t('contracts:currency')}
-                                width={"100%"}
                                 options={currencyOptions}
                                 disabled={disabled}
                             />

@@ -132,6 +132,7 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 ...baseControl,
                 backgroundColor: bgColor ?? baseControl.backgroundColor,
                 width: width ? width : "auto",
+                minWidth: "auto",
             };
         },
         input: (provided) => ({
@@ -248,7 +249,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                 ...baseControl,
                 backgroundColor: bgColor ?? baseControl.backgroundColor,
                 width: width || "auto", // <- wymusza szerokość całego kontenera
-                minWidth: "unset",      // usuwa ewentualne minimalne szerokości
+                minWidth: "auto",      // usuwa ewentualne minimalne szerokości
                 maxWidth: width,
                 minHeight: sizeStyles.controlHeight,
                 height: sizeStyles.controlHeight,
@@ -268,7 +269,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
         menu: (provided) => ({
             ...provided,
             fontSize: sizeStyles.fontSize,
-            width: "100%",
+            width: "auto",
         }),
     };
 
