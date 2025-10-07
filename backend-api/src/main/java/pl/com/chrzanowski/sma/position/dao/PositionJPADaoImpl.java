@@ -23,12 +23,11 @@ public class PositionJPADaoImpl implements PositionDao {
 
     private final PositionRepository positionRepository;
     private final PositionQuerySpec positionQuerySpec;
-    private final BlazeJPAQuery<Position> baseQuery;
 
-    public PositionJPADaoImpl(PositionRepository positionRepository, PositionQuerySpec positionQuerySpec, BlazeJPAQuery<Position> baseQuery) {
+
+    public PositionJPADaoImpl(PositionRepository positionRepository, PositionQuerySpec positionQuerySpec) {
         this.positionRepository = positionRepository;
         this.positionQuerySpec = positionQuerySpec;
-        this.baseQuery = baseQuery;
     }
 
     @Override
