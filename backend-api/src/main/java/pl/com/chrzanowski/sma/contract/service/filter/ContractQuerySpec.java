@@ -4,10 +4,11 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.contract.model.Contract;
-import pl.com.chrzanowski.sma.contract.model.QContract;
+
+import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
 
 @Component
 public class ContractQuerySpec {
@@ -19,7 +20,6 @@ public class ContractQuerySpec {
     }
 
     public static BooleanBuilder buildPredicate(ContractFilter filter) {
-        QContract contract = QContract.contract;
         BooleanBuilder predicate = new BooleanBuilder();
         if (filter != null) {
             if (filter.getId() != null) {
@@ -79,6 +79,50 @@ public class ContractQuerySpec {
     }
 
     public BlazeJPAQuery<Contract> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        return QueryBuilderUtil.buildQuery(queryFactory, Contract.class, "contract", builder, pageable, QContract.contract.id.asc());
+        BlazeJPAQuery<Contract> query = queryFactory
+                .selectFrom(contract)
+                .where(builder);
+
+        // Aplikuj sortowanie jeśli jest dostępne
+        if (pageable != null && pageable.getSort().isSorted()) {
+            Sort sort = pageable.getSort();
+            sort.forEach(order -> {
+                switch (order.getProperty()) {
+                    case "number":
+                        query.orderBy(order.isAscending() ? contract.number.asc() : contract.number.desc());
+                        break;
+                    case "description":
+                        query.orderBy(order.isAscending() ? contract.description.asc() : contract.description.desc());
+                        break;
+                    case "value":
+                        query.orderBy(order.isAscending() ? contract.value.asc() : contract.value.desc());
+                        break;
+                    case "startDate":
+                        query.orderBy(order.isAscending() ? contract.startDate.asc() : contract.startDate.desc());
+                        break;
+                    case "endDate":
+                        query.orderBy(order.isAscending() ? contract.endDate.asc() : contract.endDate.desc());
+                        break;
+                    case "signupDate":
+                        query.orderBy(order.isAscending() ? contract.signupDate.asc() : contract.signupDate.desc());
+                        break;
+                    case "realEndDate":
+                        query.orderBy(order.isAscending() ? contract.realEndDate.asc() : contract.realEndDate.desc());
+                        break;
+                    case "id":
+                        query.orderBy(order.isAscending() ? contract.id.asc() : contract.id.desc());
+                        break;
+                }
+            });
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(contract.id.asc());
+            }
+        } else {
+            // Domyślne sortowanie
+            query.orderBy(contract.id.asc());
+        }
+
+        return query;
     }
 }
+

@@ -20,6 +20,7 @@ import java.util.Optional;
 
 import static pl.com.chrzanowski.sma.company.model.QCompany.company;
 import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
 import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
 
@@ -70,7 +71,8 @@ public class ContractJPADaoImpl implements ContractDao {
 
         baseQuery.leftJoin(contract.contractor, contractor).fetchJoin()
                 .leftJoin(contract.company, company).fetchJoin()
-                .leftJoin(contract.constructionSite, constructionSite).fetchJoin();
+                .leftJoin(contract.constructionSite, constructionSite).fetchJoin()
+                .leftJoin(contract.contact, contact).fetchJoin();
 
         PagedList<Contract> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
@@ -91,7 +93,7 @@ public class ContractJPADaoImpl implements ContractDao {
 
     @Override
     public Page<Contract> findByContractorId(Long contractorId, Pageable pageable) {
-        QContract contract = QContract.contract;
+
         PagedList<Contract> contracts = queryFactory
                 .selectFrom(contract)
                 .where(contract.contractor.id.eq(contractorId))

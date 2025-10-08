@@ -1,5 +1,5 @@
 
-package pl.com.chrzanowski.sma.unitTests.contracts.dao;
+package pl.com.chrzanowski.sma.unitTests.contract.dao;
 
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
@@ -27,9 +27,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
-import static pl.com.chrzanowski.sma.company.model.QCompany.company;
-import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
-import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 class ContractJPADaoImplTest {
 
@@ -106,6 +103,7 @@ class ContractJPADaoImplTest {
         Contract contract = new Contract();
         List<Contract> contracts = List.of(contract);
 
+        @SuppressWarnings("unchecked")
         BlazeJPAQuery<Contract> query = mock(BlazeJPAQuery.class);
         when(contractQuerySpec.buildQuery(spec, null)).thenReturn(query);
         when(query.fetch()).thenReturn(contracts);
@@ -117,30 +115,27 @@ class ContractJPADaoImplTest {
 
     @Test
     void findAllWithSpecificationAndPageable_Positive() {
+        // Given
         BooleanBuilder spec = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 10);
         Contract contract = new Contract();
 
-        BlazeJPAQuery<Contract> query = mock(BlazeJPAQuery.class);
+        // Mock query z RETURNS_DEEP_STUBS aby obsłużyć fluent API
+        @SuppressWarnings("unchecked")
+        BlazeJPAQuery<Contract> query = mock(BlazeJPAQuery.class, RETURNS_DEEP_STUBS);
 
         when(contractQuerySpec.buildQuery(spec, pageable)).thenReturn(query);
 
-        // Ustawienie łańcucha leftJoin → fetchJoin
-        when(query.leftJoin(eq(QContract.contract.contractor), eq(contractor))).thenReturn(query);
-        when(query.fetchJoin()).thenReturn(query);
-
-        when(query.leftJoin(eq(QContract.contract.company), eq(company))).thenReturn(query);
-        when(query.fetchJoin()).thenReturn(query);
-
-        when(query.leftJoin(eq(QContract.contract.constructionSite), eq(constructionSite))).thenReturn(query);
-        when(query.fetchJoin()).thenReturn(query);
-
+        // Mock fetchPage - to jest ostateczne wywołanie w łańcuchu
         PagedList<Contract> pagedList = new SimplePagedList<>(List.of(contract), 1);
         when(query.fetchPage(anyInt(), anyInt())).thenReturn(pagedList);
 
+        // When
         Page<Contract> result = contractJPADaoImpl.findAll(spec, pageable);
 
+        // Then
         assertEquals(1, result.getTotalElements());
+        assertEquals(1, result.getContent().size());
         assertEquals(contract, result.getContent().get(0));
 
         verify(contractQuerySpec).buildQuery(spec, pageable);
@@ -160,6 +155,7 @@ class ContractJPADaoImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         Contract contract = new Contract();
 
+        @SuppressWarnings("unchecked")
         BlazeJPAQuery<Contract> query = mock(BlazeJPAQuery.class);
         when(queryFactory.selectFrom(QContract.contract)).thenReturn(query);
         when(query.where(QContract.contract.contractor.id.eq(contractorId))).thenReturn(query);

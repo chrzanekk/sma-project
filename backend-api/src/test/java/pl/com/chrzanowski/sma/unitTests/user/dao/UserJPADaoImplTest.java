@@ -3,7 +3,6 @@ package pl.com.chrzanowski.sma.unitTests.user.dao;
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Path;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -261,8 +260,10 @@ class UserJPADaoImplTest {
         Pageable pageable = PageRequest.of(0, 10);
         User user = new User();
 
+        @SuppressWarnings("unchecked")
         BlazeJPAQuery<User> mockQuery = mock(BlazeJPAQuery.class);
-        when(mockQuery.leftJoin(eq(QUser.user.roles), any(Path.class))).thenReturn(mockQuery);
+
+        when(mockQuery.leftJoin(QUser.user.roles)).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
         when(userQuerySpec.buildQuery(specification, pageable)).thenReturn(mockQuery);
         PagedList<User> mockPagedList = MockPagedList.mockPagedListSpy(List.of(user), 1);
@@ -284,8 +285,10 @@ class UserJPADaoImplTest {
         BooleanBuilder specification = new BooleanBuilder();
         Pageable pageable = PageRequest.of(0, 10);
 
+        @SuppressWarnings("unchecked")
         BlazeJPAQuery<User> mockQuery = mock(BlazeJPAQuery.class);
-        when(mockQuery.leftJoin(eq(QUser.user.roles), any(Path.class))).thenReturn(mockQuery);
+
+        when(mockQuery.leftJoin(QUser.user.roles)).thenReturn(mockQuery);
         when(mockQuery.fetchJoin()).thenReturn(mockQuery);
 
         PagedList<User> pagedList = new SimplePagedList<>(Collections.emptyList(), 0);
@@ -334,6 +337,8 @@ class UserJPADaoImplTest {
         // Given
         BooleanBuilder specification = mock(BooleanBuilder.class);
         UserQuerySpec userQuerySpec = mock(UserQuerySpec.class);
+
+        @SuppressWarnings("unchecked")
         BlazeJPAQuery<User> query = mock(BlazeJPAQuery.class);
         UserJPADaoImpl userJPADaoImpl = new UserJPADaoImpl(null, userQuerySpec);
 

@@ -133,19 +133,24 @@ class PositionServiceImplTest {
     @Test
     void testDeletePosition() {
         Long id = 1L;
+        when(positionDao.findById(id)).thenReturn(Optional.of(position));
         doNothing().when(positionDao).deleteById(id);
 
         positionService.delete(id);
 
+        verify(positionDao, times(1)).findById(id);
         verify(positionDao, times(1)).deleteById(id);
     }
 
     @Test
     void testDeletePositionFailure() {
         Long id = 1L;
+        when(positionDao.findById(id)).thenReturn(Optional.of(position));
         doThrow(new RuntimeException("Delete failed")).when(positionDao).deleteById(id);
 
         assertThrows(RuntimeException.class, () -> positionService.delete(id));
+
+        verify(positionDao, times(1)).findById(id);
         verify(positionDao, times(1)).deleteById(id);
     }
 }

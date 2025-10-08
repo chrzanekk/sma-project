@@ -17,7 +17,6 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.role.model.QRole.role;
 import static pl.com.chrzanowski.sma.user.model.QUser.user;
 
 @Repository("userJPA")
@@ -81,6 +80,10 @@ public class UserJPADaoImpl implements UserDao {
     public Page<User> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all users by specification with page: {}", specification);
         BlazeJPAQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
+
+        // Join do roles - może być potrzebny dla filtrowania
+        // Jeśli często filtrujesz po rolach, dodaj:
+         query.leftJoin(user.roles).fetchJoin();
 
         PagedList<User> content = query.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(content, pageable, content.getTotalSize());

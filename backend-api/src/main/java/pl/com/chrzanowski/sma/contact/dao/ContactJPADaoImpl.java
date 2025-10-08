@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
+import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
 import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Repository("contactJPA")

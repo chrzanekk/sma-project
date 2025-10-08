@@ -68,6 +68,7 @@ const ConstructionSiteFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 placeholder={t('constructionSites:country')}
                                 options={countryOptions}
                                 bgColor={themeVars.bgColorSecondary}
+                                width={"150px"}
                             />
                             <CustomInputFilterField name="contractorNameStartsWith"
                                                     placeholder={t('constructionSites:contractor')}/>

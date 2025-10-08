@@ -4,10 +4,11 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.contact.model.Contact;
-import pl.com.chrzanowski.sma.contact.model.QContact;
+
+import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
 
 @Component
 public class ContactQuerySpec {
@@ -20,7 +21,6 @@ public class ContactQuerySpec {
 
 
     public static BooleanBuilder buildPredicate(ContactFilter filter) {
-        QContact contact = QContact.contact;
         BooleanBuilder predicate = new BooleanBuilder();
         if (filter != null) {
             if (filter.getId() != null) {
@@ -52,6 +52,43 @@ public class ContactQuerySpec {
     }
 
     public BlazeJPAQuery<Contact> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        return QueryBuilderUtil.buildQuery(queryFactory, Contact.class, "contact", builder, pageable, QContact.contact.id.asc());
+        BlazeJPAQuery<Contact> query = queryFactory
+                .selectFrom(contact)
+                .where(builder);
+
+        // Aplikuj sortowanie jeśli jest dostępne
+        if (pageable != null && pageable.getSort().isSorted()) {
+            Sort sort = pageable.getSort();
+            sort.forEach(order -> {
+                switch (order.getProperty()) {
+                    case "firstName":
+                        query.orderBy(order.isAscending() ? contact.firstName.asc() : contact.firstName.desc());
+                        break;
+                    case "lastName":
+                        query.orderBy(order.isAscending() ? contact.lastName.asc() : contact.lastName.desc());
+                        break;
+                    case "email":
+                        query.orderBy(order.isAscending() ? contact.email.asc() : contact.email.desc());
+                        break;
+                    case "phoneNumber":
+                        query.orderBy(order.isAscending() ? contact.phoneNumber.asc() : contact.phoneNumber.desc());
+                        break;
+                    case "contractor":
+                        query.orderBy(order.isAscending() ? contact.contractor.name.asc() : contact.contractor.name.desc());
+                        break;
+                    case "id":
+                        query.orderBy(order.isAscending() ? contact.id.asc() : contact.id.desc());
+                        break;
+                }
+            });
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(contact.id.asc());
+            }
+        } else {
+            // Domyślne sortowanie
+            query.orderBy(contact.id.asc());
+        }
+
+        return query;
     }
 }

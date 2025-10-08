@@ -16,6 +16,8 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
+
 @Repository("contractorJPA")
 public class ContractorJPADaoImpl implements ContractorDao {
 
@@ -63,6 +65,8 @@ public class ContractorJPADaoImpl implements ContractorDao {
     public Page<Contractor> findAll(BooleanBuilder specification, Pageable pageable) {
         log.debug("DAO: Find all contractors with specification for page {}, {}", specification, pageable);
         BlazeJPAQuery<Contractor> baseQuery = querySpec.buildQuery(specification, pageable);
+
+        baseQuery.leftJoin(contractor.company).fetchJoin();
 
         PagedList<Contractor> contractors = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(contractors, pageable, contractors.getTotalSize());

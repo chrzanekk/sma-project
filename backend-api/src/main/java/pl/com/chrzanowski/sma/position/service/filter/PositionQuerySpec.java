@@ -48,6 +48,9 @@ public class PositionQuerySpec {
                     query.orderBy(order.isAscending() ? position.id.asc() : position.id.desc());
                 }
             });
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(position.id.asc());
+            }
         } else {
             // Domyślne sortowanie
             query.orderBy(position.id.asc());

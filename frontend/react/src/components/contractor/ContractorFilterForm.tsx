@@ -87,15 +87,18 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomSelectField name={"customer"}
                                                placeholder={t("contractors:customer")}
                                                options={booleanOptions}
-                                               bgColor={themeVars.bgColorSecondary}/>
+                                               bgColor={themeVars.bgColorSecondary}
+                                               width={"150px"}/>
                             <CustomSelectField name={"supplier"}
                                                placeholder={t("contractors:supplier")}
                                                options={booleanOptions}
-                                               bgColor={themeVars.bgColorSecondary}/>
+                                               bgColor={themeVars.bgColorSecondary}
+                                               width={"150px"}/>
                             <CustomSelectField name={"scaffoldingUser"}
                                                placeholder={t("contractors:scaffoldingUser")}
                                                options={booleanOptions}
-                                               bgColor={themeVars.bgColorSecondary}/>
+                                               bgColor={themeVars.bgColorSecondary}
+                                               width={"150px"}/>
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
