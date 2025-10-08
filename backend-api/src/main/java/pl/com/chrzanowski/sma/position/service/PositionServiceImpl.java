@@ -7,8 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.PositionException;
 import pl.com.chrzanowski.sma.common.exception.error.PositionErrorCode;
 import pl.com.chrzanowski.sma.position.dao.PositionDao;
-import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.position.mapper.PositionBaseMapper;
+import pl.com.chrzanowski.sma.position.dto.PositionDTO;
+import pl.com.chrzanowski.sma.position.mapper.PositionDTOMapper;
 import pl.com.chrzanowski.sma.position.model.Position;
 
 import java.util.Optional;
@@ -20,41 +20,47 @@ public class PositionServiceImpl implements PositionService {
     private final Logger log = LoggerFactory.getLogger(PositionServiceImpl.class);
 
     private final PositionDao positionDao;
-    private final PositionBaseMapper positionBaseMapper;
+    private final PositionDTOMapper positionDTOMapper;
 
-    public PositionServiceImpl(PositionDao positionDao, PositionBaseMapper positionBaseMapper) {
+    public PositionServiceImpl(PositionDao positionDao, PositionDTOMapper positionDTOMapper) {
         this.positionDao = positionDao;
-        this.positionBaseMapper = positionBaseMapper;
+        this.positionDTOMapper = positionDTOMapper;
     }
 
     @Override
     @Transactional
-    public PositionBaseDTO save(PositionBaseDTO createDto) {
+    public PositionDTO save(PositionDTO createDto) {
         log.debug("Request to save PositionBase : {}", createDto.getName());
-        Position position = positionBaseMapper.toEntity(createDto);
+        Position position = positionDTOMapper.toEntity(createDto);
         Position savedPosition = positionDao.save(position);
-        return positionBaseMapper.toDto(savedPosition);
+        return positionDTOMapper.toDto(savedPosition);
     }
 
     @Override
-    public PositionBaseDTO update(PositionBaseDTO updateDto) {
+    public PositionDTO update(PositionDTO updateDto) {
         log.debug("Request to update PositionBase : {}", updateDto.getId());
-        Position existingPosition = positionDao.findById(updateDto.getId()).orElseThrow(()-> new PositionException(PositionErrorCode.POSITION_NOT_FOUND, "Position with id " +  updateDto.getId() + " not found"));
-        positionBaseMapper.updateFromBaseDto(updateDto, existingPosition);
+        Position existingPosition = positionDao.findById(updateDto.getId()).orElseThrow(() -> new PositionException(PositionErrorCode.POSITION_NOT_FOUND, "Position with id " + updateDto.getId() + " not found"));
+        positionDTOMapper.updateFromDto(updateDto, existingPosition);
         Position updatedPosition = positionDao.save(existingPosition);
-        return positionBaseMapper.toDto(updatedPosition);
+        return positionDTOMapper.toDto(updatedPosition);
     }
 
     @Override
-    public PositionBaseDTO findById(Long aLong) {
+    public PositionDTO findById(Long aLong) {
         log.debug("Request to get PositionBase : {}", aLong);
         Optional<Position> position = positionDao.findById(aLong);
-        return positionBaseMapper.toDto(position.orElseThrow(()-> new PositionException(PositionErrorCode.POSITION_NOT_FOUND, "Position with id " +  aLong + " not found")));
+        return positionDTOMapper.toDto(position.orElseThrow(() -> new PositionException(PositionErrorCode.POSITION_NOT_FOUND, "Position with id " + aLong + " not found")));
     }
 
     @Override
     public void delete(Long aLong) {
         log.debug("Request to delete Position : {}", aLong);
+        if (!positionDao.findById(aLong).isPresent()) {
+            throw new PositionException(
+                    PositionErrorCode.POSITION_NOT_FOUND,
+                    "Position with id " + aLong + " not found"
+            );
+        }
         positionDao.deleteById(aLong);
     }
 }

@@ -9,7 +9,8 @@ import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.exception.PositionException;
 import pl.com.chrzanowski.sma.position.dao.PositionDao;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.position.mapper.PositionBaseMapper;
+import pl.com.chrzanowski.sma.position.dto.PositionDTO;
+import pl.com.chrzanowski.sma.position.mapper.PositionDTOMapper;
 import pl.com.chrzanowski.sma.position.model.Position;
 import pl.com.chrzanowski.sma.position.service.PositionServiceImpl;
 
@@ -25,12 +26,12 @@ class PositionServiceImplTest {
     private PositionDao positionDao;
 
     @Mock
-    private PositionBaseMapper positionBaseMapper;
+    private PositionDTOMapper positionDTOMapper;
 
     @InjectMocks
     private PositionServiceImpl positionService;
 
-    private PositionBaseDTO positionBaseDTO;
+    private PositionDTO positionDTO;
     private Position position;
     private AutoCloseable autoCloseable;
 
@@ -38,7 +39,7 @@ class PositionServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        positionBaseDTO = PositionBaseDTO.builder()
+        positionDTO = PositionDTO.builder()
                 .id(1L)
                 .name("Manager")
                 .build();
@@ -55,41 +56,41 @@ class PositionServiceImplTest {
 
     @Test
     void testSavePosition() {
-        when(positionBaseMapper.toEntity(any(PositionBaseDTO.class))).thenReturn(position);
+        when(positionDTOMapper.toEntity(any(PositionDTO.class))).thenReturn(position);
         when(positionDao.save(any(Position.class))).thenReturn(position);
-        when(positionBaseMapper.toDto(any(Position.class))).thenReturn(positionBaseDTO);
+        when(positionDTOMapper.toDto(any(Position.class))).thenReturn(positionDTO);
 
-        PositionBaseDTO result = positionService.save(positionBaseDTO);
+        PositionDTO result = positionService.save(positionDTO);
         assertNotNull(result);
         assertEquals("Manager", result.getName());
         assertEquals(1L, result.getId());
 
         verify(positionDao, times(1)).save(any(Position.class));
-        verify(positionBaseMapper, times(1)).toDto(any(Position.class));
-        verify(positionBaseMapper, times(1)).toEntity(any(PositionBaseDTO.class));
+        verify(positionDTOMapper, times(1)).toDto(any(Position.class));
+        verify(positionDTOMapper, times(1)).toEntity(any(PositionDTO.class));
     }
 
     @Test
     void testSavePositionFailure() {
-        when(positionBaseMapper.toEntity(any(PositionBaseDTO.class))).thenReturn(position);
+        when(positionDTOMapper.toEntity(any(PositionDTO.class))).thenReturn(position);
         when(positionDao.save(any(Position.class))).thenThrow(new RuntimeException("Database error"));
 
-        assertThrows(RuntimeException.class, () -> positionService.save(positionBaseDTO));
+        assertThrows(RuntimeException.class, () -> positionService.save(positionDTO));
         verify(positionDao, times(1)).save(any(Position.class));
     }
 
     @Test
     void testFindById() {
         when(positionDao.findById(1L)).thenReturn(Optional.of(position));
-        when(positionBaseMapper.toDto(any(Position.class))).thenReturn(positionBaseDTO);
+        when(positionDTOMapper.toDto(any(Position.class))).thenReturn(positionDTO);
 
-        PositionBaseDTO result = positionService.findById(1L);
+        PositionDTO result = positionService.findById(1L);
         assertNotNull(result);
         assertEquals("Manager", result.getName());
         assertEquals(1L, result.getId());
 
         verify(positionDao, times(1)).findById(1L);
-        verify(positionBaseMapper, times(1)).toDto(any(Position.class));
+        verify(positionDTOMapper, times(1)).toDto(any(Position.class));
     }
 
     @Test
@@ -98,34 +99,34 @@ class PositionServiceImplTest {
 
         assertThrows(PositionException.class, () -> positionService.findById(1L));
         verify(positionDao, times(1)).findById(1L);
-        verify(positionBaseMapper, never()).toDto(any(Position.class));
+        verify(positionDTOMapper, never()).toDto(any(Position.class));
     }
 
     @Test
     void testUpdatePosition() {
         when(positionDao.findById(anyLong())).thenReturn(Optional.of(position));
-        doNothing().when(positionBaseMapper).updateFromBaseDto(any(PositionBaseDTO.class), any(Position.class));
+        doNothing().when(positionDTOMapper).updateFromDto(any(PositionDTO.class), any(Position.class));
         when(positionDao.save(any(Position.class))).thenReturn(position);
-        when(positionBaseMapper.toDto(any(Position.class))).thenReturn(positionBaseDTO);
+        when(positionDTOMapper.toDto(any(Position.class))).thenReturn(positionDTO);
 
-        PositionBaseDTO result = positionService.update(positionBaseDTO);
+        PositionBaseDTO result = positionService.update(positionDTO);
         assertNotNull(result);
         assertEquals("Manager", result.getName());
         assertEquals(1L, result.getId());
 
         verify(positionDao, times(1)).findById(anyLong());
-        verify(positionBaseMapper, times(1)).updateFromBaseDto(any(PositionBaseDTO.class), any(Position.class));
+        verify(positionDTOMapper, times(1)).updateFromDto(any(PositionDTO.class), any(Position.class));
         verify(positionDao, times(1)).save(any(Position.class));
-        verify(positionBaseMapper, times(1)).toDto(any(Position.class));
+        verify(positionDTOMapper, times(1)).toDto(any(Position.class));
     }
 
     @Test
     void testUpdatePositionNotFound() {
         when(positionDao.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(PositionException.class, () -> positionService.update(positionBaseDTO));
+        assertThrows(PositionException.class, () -> positionService.update(positionDTO));
         verify(positionDao, times(1)).findById(anyLong());
-        verify(positionBaseMapper, never()).updateFromBaseDto(any(PositionBaseDTO.class), any(Position.class));
+        verify(positionDTOMapper, never()).updateFromDto(any(PositionDTO.class), any(Position.class));
         verify(positionDao, never()).save(any(Position.class));
     }
 

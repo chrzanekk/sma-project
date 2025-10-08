@@ -6,14 +6,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.service.HasId;
+import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 
 @Jacksonized
 @SuperBuilder
-@EqualsAndHashCode
-@ToString
 @Getter
-public class PositionBaseDTO {
-    protected Long id;
-    protected String name;
-    protected String description;
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class PositionDTO extends PositionBaseDTO implements HasId<Long> {
+    private CompanyBaseDTO company;
 }
