@@ -1,4 +1,4 @@
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {BasePositionFormValues} from "@/types/contact-types.ts";
 import React, {useState} from "react";
 import {getFreeContactsByFilter} from "@/services/contact-service.ts";
 import {useTranslation} from "react-i18next";
@@ -8,17 +8,17 @@ import {getContactValidationSchema} from "@/validation/contactValidationSchema.t
 import ContactSearch from "@/components/contact/ContactSearch.tsx";
 
 interface ContactFormWithSearchProps {
-    onSuccess: (values: BaseContactFormValues) => void;
+    onSuccess: (values: BasePositionFormValues) => void;
     hideSubmit?: boolean;
     innerRef?: React.Ref<any>;
 }
 
 const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess, hideSubmit, innerRef}) => {
     const {t} = useTranslation(["common", "contacts", "errors"]);
-    const [selectedContact, setSelectedContact] = useState<BaseContactFormValues | null>(null);
+    const [selectedContact, setSelectedContact] = useState<BasePositionFormValues | null>(null);
     const validationSchema = getContactValidationSchema(t);
 
-    const defaultValues: BaseContactFormValues = {
+    const defaultValues: BasePositionFormValues = {
         firstName: "",
         lastName: "",
         phoneNumber: "",
@@ -26,7 +26,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
         additionalInfo: "",
     };
 
-    const handleSelectContact = (contact: BaseContactFormValues) => {
+    const handleSelectContact = (contact: BasePositionFormValues) => {
         setSelectedContact(contact);
     };
 
@@ -34,7 +34,7 @@ const ContactFormWithSearch: React.FC<ContactFormWithSearchProps> = ({onSuccess,
         setSelectedContact(null);
     };
 
-    const handleAddContact = async (values: BaseContactFormValues) => {
+    const handleAddContact = async (values: BasePositionFormValues) => {
         onSuccess(values);
     };
 

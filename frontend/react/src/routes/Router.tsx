@@ -17,6 +17,7 @@ import ContactManagement from "@/components/contact/ContactManagement.tsx";
 import CompanyManagement from "@/components/company/CompanyManagement.tsx";
 import ConstructionSiteManagement from "@/components/constructionsite/ConstructionSiteManagement.tsx";
 import ContractManagement from "@/components/contract/ContractManagement.tsx";
+import PositionManagement from "@/components/position/PositionManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -78,6 +79,13 @@ const router = createBrowserRouter([
             element: (
                 <ProtectedRoute>
                     <CompanyManagement/>
+                </ProtectedRoute>
+            )
+        },{
+            path: "positions",
+            element: (
+                <ProtectedRoute>
+                    <PositionManagement/>
                 </ProtectedRoute>
             )
         },

@@ -31,6 +31,9 @@ public class PositionQuerySpec {
             if (filter.getDescriptionContains() != null && !filter.getDescriptionContains().isEmpty()) {
                 predicate.and(position.description.containsIgnoreCase(filter.getDescriptionContains()));
             }
+            if (filter.getCompanyId() != null) {
+                predicate.and(position.company.id.eq(filter.getCompanyId()));
+            }
         }
         return predicate;
     }

@@ -1,7 +1,8 @@
 {
   "adminPanel": "Panel Administratora",
   "selectView": "Wybierz widok",
-    "users": "Użytkownicy",
-    "roles": "Role",
-    "companies": "Firmy"
+  "users": "Użytkownicy",
+  "roles": "Role",
+  "companies": "Firmy",
+  "positions": "Stanowiska"
 }

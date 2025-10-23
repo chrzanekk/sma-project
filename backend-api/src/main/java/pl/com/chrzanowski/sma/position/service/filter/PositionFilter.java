@@ -14,4 +14,5 @@ public class PositionFilter {
     private Long id;
     private String nameContains;
     private String descriptionContains;
+    private Long companyId;
 }

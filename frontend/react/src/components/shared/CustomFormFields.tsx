@@ -319,7 +319,12 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
             {({field, meta}: FieldProps) => (
                 <Box mb={2}>
                     {label && (
-                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
+                        <Text fontSize="sm"
+                              fontWeight="bold"
+                              mb="1"
+                              color={themeColors.fontColor}
+                              textAlign={"center"}
+                        >
                             {label}
                         </Text>
                     )}

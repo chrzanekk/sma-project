@@ -3,5 +3,6 @@
   "selectView": "Choose view",
   "users": "Users",
   "roles": "Roles",
-  "companies": "Companies"
+  "companies": "Companies",
+  "positions": "Positions"
 }

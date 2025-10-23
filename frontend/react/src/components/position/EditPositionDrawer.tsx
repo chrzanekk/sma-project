@@ -1,4 +1,6 @@
 import {useTranslation} from "react-i18next";
+import {useThemeColors} from "@/theme/theme-colors.ts";
+import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {
     DrawerActionTrigger,
     DrawerBackdrop,
@@ -10,62 +12,66 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
-import {FaPlus} from "react-icons/fa";
-import {useThemeColors} from "@/theme/theme-colors.ts";
+import {FaTimes} from "react-icons/fa";
 import React from "react";
-import AddContactForm from "@/components/contact/AddContactForm.tsx";
+import EditPositionForm from "@/components/position/EditPositionForm.tsx";
 
-
-interface AddContactDrawerProps {
-    fetchContacts: () => void;
+interface EditPositionDrawerProps {
+    fetchPositions: () => void;
+    positionId: number;
 }
 
-const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
-    const {t} = useTranslation('contacts');
+const EditPositionDrawer: React.FC<EditPositionDrawerProps> = ({fetchPositions, positionId}) => {
+    const {t} = useTranslation(['common', 'positions']);
     const themeColors = useThemeColors();
+
     return (
         <Box>
-            <DrawerRoot size={"lg"}>
+            <DrawerRoot size={"lg"} placement={"end"}>
                 <DrawerBackdrop/>
                 <DrawerTrigger asChild>
                     <Button
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
-                    ><FaPlus/>
-                        {t('add')}
+                    >
+                        {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
-                <DrawerContent bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
+                <DrawerContent bg={themeColors.bgColorSecondary}
+                               offset={"2"}
+                               borderRadius={"md"}>
                     <DrawerContext>
                         {(store) => (
-                            <>
+                            <Box>
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("contacts:details")}
+                                        {t("positions:edit")}
                                     </Heading>
                                 </DrawerHeader>
                                 <DrawerBody>
-                                    <AddContactForm
+                                    <EditPositionForm
                                         onSuccess={() => {
-                                            fetchContacts();
+                                            fetchPositions();
                                             store.setOpen(false);
                                         }}
+                                        positionId={positionId}
                                     />
                                 </DrawerBody>
                                 <DrawerFooter>
                                     <DrawerActionTrigger asChild>
                                         <Button
                                             colorPalette="red"
-                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                            onClick={() => store.setOpen(false)}
                                         >
+                                            <FaTimes/>
                                             {t("close", {ns: "common"})}
                                         </Button>
                                     </DrawerActionTrigger>
                                 </DrawerFooter>
-                            </>
+                            </Box>
+
                         )}
                     </DrawerContext>
                 </DrawerContent>
@@ -73,4 +79,5 @@ const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
         </Box>
     )
 }
-export default AddContactDrawer;
+
+export default EditPositionDrawer;

@@ -1,4 +1,7 @@
+import React from "react";
 import {useTranslation} from "react-i18next";
+import {useThemeColors} from "@/theme/theme-colors.ts";
+import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {
     DrawerActionTrigger,
     DrawerBackdrop,
@@ -10,19 +13,16 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {Box, Button, DrawerContext, Heading} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
-import {useThemeColors} from "@/theme/theme-colors.ts";
-import React from "react";
-import AddContactForm from "@/components/contact/AddContactForm.tsx";
+import AddPositionForm from "@/components/position/AddPositionForm.tsx";
 
-
-interface AddContactDrawerProps {
-    fetchContacts: () => void;
+interface AddPositionDrawerProps {
+    fetchPositions: () => void;
 }
 
-const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
-    const {t} = useTranslation('contacts');
+
+const AddContactDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) => {
+    const {t} = useTranslation('positions');
     const themeColors = useThemeColors();
     return (
         <Box>
@@ -44,13 +44,13 @@ const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("contacts:details")}
+                                        {t("positions:details")}
                                     </Heading>
                                 </DrawerHeader>
                                 <DrawerBody>
-                                    <AddContactForm
+                                    <AddPositionForm
                                         onSuccess={() => {
-                                            fetchContacts();
+                                            fetchPositions();
                                             store.setOpen(false);
                                         }}
                                     />
@@ -59,7 +59,7 @@ const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
                                     <DrawerActionTrigger asChild>
                                         <Button
                                             colorPalette="red"
-                                            onClick={() => store.setOpen(false)} // Zamknięcie drawera po kliknięciu
+                                            onClick={() => store.setOpen(false)}
                                         >
                                             {t("close", {ns: "common"})}
                                         </Button>

@@ -1,0 +1,16 @@
+{
+  "add": "Dodaj stanowisko",
+  "position": "Stanowisko",
+  "positionList": "Lista stanowisk",
+  "edit": "Edytuj dane stanowiska",
+  "search": "Wyszukaj stanowisko",
+  "details": "Dane stanowiska",
+  "name": "Nazwa stanowiska",
+  "description": "Opis",
+  "notifications" : {
+    "addPositionSuccess" : "Stanowisko {name} dodane pomyślnie",
+    "addPositionError": "Błąd dodawania stanowiska",
+    "editPositionSuccess" : "Dane stanowiska {name} zmieniono pomyślnie",
+    "editPositionError": "Błąd edycji stanowiska {name}"
+  }
+}
