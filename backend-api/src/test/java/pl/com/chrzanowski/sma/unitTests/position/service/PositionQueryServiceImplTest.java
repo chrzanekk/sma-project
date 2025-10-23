@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.position.dao.PositionDao;
 import pl.com.chrzanowski.sma.position.dto.PositionAuditableDTO;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
+import pl.com.chrzanowski.sma.position.dto.PositionDTO;
 import pl.com.chrzanowski.sma.position.mapper.PositionAuditMapper;
 import pl.com.chrzanowski.sma.position.mapper.PositionBaseMapper;
 import pl.com.chrzanowski.sma.position.model.Position;
@@ -43,6 +44,7 @@ class PositionQueryServiceImplTest {
 
     private PositionBaseDTO positionBaseDTO;
     private PositionAuditableDTO positionAuditableDTO;
+    private PositionDTO positionDTO;
     private Position position;
     private AutoCloseable autoCloseable;
 
@@ -55,8 +57,13 @@ class PositionQueryServiceImplTest {
                 .name("Manager")
                 .build();
 
+        positionDTO = PositionDTO.builder()
+                .id(1L)
+                .name("Manager")
+                .build();
+
         positionAuditableDTO = PositionAuditableDTO.builder()
-                .base(positionBaseDTO)
+                .base(positionDTO)
                 .build();
 
         position = new Position();

@@ -18,5 +18,5 @@ import pl.com.chrzanowski.sma.common.audit.AuditableDTO;
 public class PositionAuditableDTO extends AuditableDTO {
 
     @JsonUnwrapped
-    private PositionBaseDTO base;
+    private PositionDTO base;
 }

@@ -7,17 +7,20 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.position.dto.PositionDTO;
 import pl.com.chrzanowski.sma.position.model.Position;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses = {PositionBaseMapper.class, CompanyBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {PositionBaseMapper.class, CompanyBaseMapper.class, PositionDTOMapper.class, UserAuditMapper.class})
 public interface PositionDTOMapper extends EntityMapper<PositionDTO, Position> {
 
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "users", target = "users")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     PositionDTO toDto(Position position);
 
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "users", target = "users")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
@@ -25,6 +28,7 @@ public interface PositionDTOMapper extends EntityMapper<PositionDTO, Position> {
     Position toEntity(PositionDTO dto);
 
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "users", target = "users")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)

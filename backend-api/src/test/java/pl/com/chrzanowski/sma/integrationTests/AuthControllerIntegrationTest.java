@@ -19,6 +19,7 @@ import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
+import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
@@ -67,13 +68,13 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRegisterSuccessfully() {
+
         RegisterRequest registerRequest = RegisterRequest.builder()
                 .login("login")
                 .password("password")
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         MessageResponse response = webTestClient.post().uri("/api/auth/register")
@@ -90,13 +91,13 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRegisterFailWithBadUsername() {
+
         RegisterRequest existingUser = RegisterRequest.builder()
                 .login("login")
                 .password("password")
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -118,7 +119,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login2@test.com")
                 .firstName("secondFirstName")
                 .lastName("secondLastName")
-                .position("position")
                 .build();
 
         webTestClient.post().uri("/api/auth/register")
@@ -138,7 +138,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -160,7 +159,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("secondFirstName")
                 .lastName("secondLastName")
-                .position("position")
                 .build();
 
         webTestClient.post().uri("/api/auth/register")
@@ -180,7 +178,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -208,7 +205,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -236,7 +232,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -281,7 +276,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -321,7 +315,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -361,7 +354,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -414,7 +406,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -463,7 +454,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -498,13 +488,13 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldRequestResetPasswordFailWithWrongEmail() {
+
         RegisterRequest existingUser = RegisterRequest.builder()
                 .login("login")
                 .password("password")
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -542,7 +532,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -588,13 +577,13 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldResetPasswordFailWithInvalidToken() {
+
         RegisterRequest existingUser = RegisterRequest.builder()
                 .login("login")
                 .password("password")
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")
@@ -641,7 +630,6 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         String existingResponse = webTestClient.post().uri("/api/auth/register")

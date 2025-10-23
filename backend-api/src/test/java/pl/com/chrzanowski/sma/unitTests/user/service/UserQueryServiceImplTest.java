@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.common.enumeration.ERole;
+import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
+import pl.com.chrzanowski.sma.position.model.Position;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -49,6 +51,16 @@ class UserQueryServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        PositionBaseDTO positionBaseDTO = PositionBaseDTO.builder()
+                .id(1L)
+                .name("Manager")
+                .build();
+
+        Position position = Position.builder()
+                .id(1L)
+                .name("Manager")
+                .build();
+
         autoCloseable = MockitoAnnotations.openMocks(this);
         userDTO = UserDTO.builder()
                 .login("testUser")
@@ -56,14 +68,14 @@ class UserQueryServiceImplTest {
                 .password("encodedPassword")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
+                .position(positionBaseDTO)
                 .build();
         registerRequest = new RegisterRequest();
         registerRequest.setLogin("testUser");
         registerRequest.setEmail("test@example.com");
         registerRequest.setFirstName("firstName");
         registerRequest.setLastName("lastName");
-        registerRequest.setPosition("position");
+        registerRequest.setPosition(positionBaseDTO);
         registerRequest.setPassword("password");
 
         roleUser = Role.builder().id(1L).name(ERole.ROLE_USER.getName()).build();
@@ -72,7 +84,7 @@ class UserQueryServiceImplTest {
                 .email("test@example.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
+                .position(position)
                 .roles(Set.of(roleUser)).build();
     }
 

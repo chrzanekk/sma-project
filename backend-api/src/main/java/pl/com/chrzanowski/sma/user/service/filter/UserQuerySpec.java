@@ -40,7 +40,7 @@ public class UserQuerySpec {
                 predicate.and(user.lastName.startsWithIgnoreCase(userFilter.getLastNameStartsWith()));
             }
             if (userFilter.getPositionStartsWith() != null && !userFilter.getPositionStartsWith().isEmpty()) {
-                predicate.and(user.position.startsWithIgnoreCase(userFilter.getPositionStartsWith()));
+                predicate.and(user.position.name.startsWithIgnoreCase(userFilter.getPositionStartsWith()));
             }
             if (userFilter.getIsEnabled() != null) {
                 predicate.and(user.enabled.eq(userFilter.getIsEnabled()));
@@ -78,7 +78,7 @@ public class UserQuerySpec {
                         query.orderBy(order.isAscending() ? user.lastName.asc() : user.lastName.desc());
                         break;
                     case "position":
-                        query.orderBy(order.isAscending() ? user.position.asc() : user.position.desc());
+                        query.orderBy(order.isAscending() ? user.position.name.asc() : user.position.name.desc());
                         break;
                     case "enabled":
                         query.orderBy(order.isAscending() ? user.enabled.asc() : user.enabled.desc());

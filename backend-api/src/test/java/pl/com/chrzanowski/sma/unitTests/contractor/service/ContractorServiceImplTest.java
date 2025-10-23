@@ -19,6 +19,7 @@ import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorDTOMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorServiceImpl;
+import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 import pl.com.chrzanowski.sma.user.model.User;
 import pl.com.chrzanowski.sma.user.service.UserService;
 
@@ -52,11 +53,16 @@ class ContractorServiceImplTest {
     private ContractorDTO contractorDTO;
     private ContractorUpdateDTO contractorUpdateDTO;
     private Contractor contractor;
+
+    private PositionBaseDTO positionBaseDTO;
+
     private AutoCloseable autoCloseable;
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
+
+        positionBaseDTO = PositionBaseDTO.builder().id(1L).name("CEO").build();
 
         contractorDTO = ContractorDTO.builder()
                 .id(1L)
@@ -104,7 +110,7 @@ class ContractorServiceImplTest {
         contractor.setSupplier(false);
         contractor.setScaffoldingUser(true);
 
-        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", "position", null, null);
+        UserInfoResponse mockUser = new UserInfoResponse(1L, "login", "email@email.com", "test", "user", positionBaseDTO, null, null);
         when(userService.getUserWithAuthorities()).thenReturn(mockUser);
 
         User user = new User();
