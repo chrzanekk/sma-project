@@ -145,7 +145,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <HStack gap={1} alignContent="center">
-                                        <EditUserDataDrawer fetchUsers={fetchUsers} userId={user.id!}/>
+                                        <EditUserDataDrawer
+                                            fetchUsers={fetchUsers}
+                                            userId={user.id!}
+                                            currentUserId={currentUser?.id}
+                                        />
                                         <EditUserPasswordDrawer
                                             fetchUsers={fetchUsers}
                                             userId={user.id!}
@@ -158,7 +162,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                             currentUserId={currentUser?.id}
                                             login={user.login}
                                         />
-                                        <EditUserCompaniesDrawer fetchUsers={fetchUsers} userId={user.id!}/>
+                                        <EditUserCompaniesDrawer
+                                            fetchUsers={fetchUsers}
+                                            userId={user.id!}
+                                            currentUserId={currentUser?.id}
+                                        />
                                     </HStack>
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>

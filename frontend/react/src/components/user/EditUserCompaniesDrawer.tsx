@@ -19,9 +19,10 @@ import EditUserCompaniesForm from "@/components/user/EditUserCompaniesForm.tsx";
 interface EditUserCompaniesDrawerProps {
     fetchUsers: () => void;
     userId: number;
+    currentUserId?: number;
 }
 
-const EditUserCompaniesDrawer: React.FC<EditUserCompaniesDrawerProps> = ({fetchUsers, userId}) => {
+const EditUserCompaniesDrawer: React.FC<EditUserCompaniesDrawerProps> = ({fetchUsers, currentUserId, userId}) => {
     const {t} = useTranslation('auth');
     const themeColors = useThemeColors();
     return (
@@ -33,6 +34,7 @@ const EditUserCompaniesDrawer: React.FC<EditUserCompaniesDrawerProps> = ({fetchU
                         colorPalette="yellow"
                         size={"2xs"}
                         p={1}
+                        disabled={currentUserId != null && currentUserId === userId}
                     >
                         {t('common:companies')}
                     </Button>

@@ -36,7 +36,7 @@ const EditUserRolesDrawer: React.FC<EditUserRolesDrawerProps> = ({fetchUsers, us
                         colorPalette="blue"
                         size={"2xs"}
                         p={1}
-                        disabled={currentUserId === userId}>
+                        disabled={currentUserId != null && currentUserId === userId}>
 
                         {t('shared.roles')}
                     </Button>
