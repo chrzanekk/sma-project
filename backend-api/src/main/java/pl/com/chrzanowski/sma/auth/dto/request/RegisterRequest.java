@@ -8,7 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.position.dto.PositionDTO;
 
 import java.util.Set;
 

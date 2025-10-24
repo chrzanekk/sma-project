@@ -7,9 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
-import pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite;
 
 import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
 

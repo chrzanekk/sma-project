@@ -8,12 +8,11 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.contract.model.Contract;
 import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

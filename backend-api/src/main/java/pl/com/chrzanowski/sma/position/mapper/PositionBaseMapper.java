@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
-import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 import pl.com.chrzanowski.sma.position.model.Position;
 

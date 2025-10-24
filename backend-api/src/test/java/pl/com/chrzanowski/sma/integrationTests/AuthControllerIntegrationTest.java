@@ -19,7 +19,6 @@ import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
-import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;

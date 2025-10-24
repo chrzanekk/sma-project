@@ -8,7 +8,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 
 import java.util.List;
 

@@ -5,13 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
-import pl.com.chrzanowski.sma.common.exception.PositionException;
-import pl.com.chrzanowski.sma.common.exception.error.PositionErrorCode;
 import pl.com.chrzanowski.sma.company.model.Company;
-import pl.com.chrzanowski.sma.user.model.User;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter

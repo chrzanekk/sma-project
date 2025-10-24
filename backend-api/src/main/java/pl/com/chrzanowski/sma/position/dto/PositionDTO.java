@@ -7,10 +7,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.user.dto.UserAuditDTO;
-import pl.com.chrzanowski.sma.user.dto.UserDTO;
-
-import java.util.Set;
 
 @Jacksonized
 @SuperBuilder

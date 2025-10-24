@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.Value;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.position.dto.PositionDTO;
 
 import java.util.List;
 

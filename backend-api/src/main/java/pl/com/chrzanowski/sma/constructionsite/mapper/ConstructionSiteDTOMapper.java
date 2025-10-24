@@ -12,10 +12,10 @@ import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteUpdateDTO;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractor;
 import pl.com.chrzanowski.sma.constructionsitecontractor.model.ConstructionSiteContractorId;
+import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 
 import java.util.List;
 import java.util.Set;

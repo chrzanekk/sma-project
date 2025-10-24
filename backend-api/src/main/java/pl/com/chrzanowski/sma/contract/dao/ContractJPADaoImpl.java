@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import pl.com.chrzanowski.sma.contract.model.Contract;
-import pl.com.chrzanowski.sma.contract.model.QContract;
 import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 import pl.com.chrzanowski.sma.contract.service.filter.ContractQuerySpec;
 
@@ -21,8 +20,8 @@ import java.util.Optional;
 import static pl.com.chrzanowski.sma.company.model.QCompany.company;
 import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
 import static pl.com.chrzanowski.sma.contact.model.QContact.contact;
-import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Repository("contractJPA")
 public class ContractJPADaoImpl implements ContractDao {

@@ -11,7 +11,6 @@ import pl.com.chrzanowski.sma.common.exception.error.ContactErrorCode;
 import pl.com.chrzanowski.sma.contact.dao.ContactDao;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
-import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactDTOMapper;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 

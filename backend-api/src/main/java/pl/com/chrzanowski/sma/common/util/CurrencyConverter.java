@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.common.util;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+
 import java.util.Currency;
 
 @Converter(autoApply = true)

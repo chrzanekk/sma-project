@@ -21,7 +21,6 @@ import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.position.dto.PositionDTO;
 import pl.com.chrzanowski.sma.position.mapper.PositionBaseMapper;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
