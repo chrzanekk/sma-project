@@ -9,6 +9,7 @@ import {successNotification} from "@/notifications/notifications.ts";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Field} from "@/components/ui/field.tsx";
+import {UserUpdateRequest} from "@/types/user-types.ts";
 
 const UserProfileEdit: React.FC = () => {
     const {user: currentUser, setAuth, logOut} = useAuth();
@@ -25,6 +26,7 @@ const UserProfileEdit: React.FC = () => {
         }
     }, [currentUser, navigate]);
 
+
     const accountSchema = Yup.object({
         firstName: Yup.string()
             .min(2, t("verification.minLength", {field: t("shared.firstName"), count: 2}))
@@ -34,9 +36,7 @@ const UserProfileEdit: React.FC = () => {
             .min(2, t("verification.minLength", {field: t("shared.lastName"), count: 2}))
             .max(30, t("verification.maxLength", {field: t("shared.lastName"), count: 30}))
             .required(t("verification.required", {field: t("shared.lastName")})),
-        position: Yup.string()
-            .min(2, t("verification.minLength", {field: t("shared.position"), count: 2}))
-            .max(30, t("verification.maxLength", {field: t("shared.position"), count: 30})),
+        position: Yup.object().nullable(),
     });
 
     const passwordSchema = Yup.object({
@@ -55,12 +55,19 @@ const UserProfileEdit: React.FC = () => {
 
     const accountForm = useFormik({
         initialValues: {
+            id: currentUser!.id,
+            email: currentUser!.email,
+            login: currentUser!.login,
             firstName: currentUser!.firstName || "",
             lastName: currentUser!.lastName || "",
-            position: currentUser!.position || "",
+            position: currentUser!.position || undefined,
+            locked: currentUser!.locked,
+            enabled: currentUser!.enabled,
+            roles: currentUser?.roles || [],
+            companies: currentUser?.companies || []
         },
         validationSchema: accountSchema,
-        onSubmit: async (values) => {
+        onSubmit: async (values: UserUpdateRequest) => {
             if (!currentUser || !currentUser.email || !currentUser.id) {
                 console.error("Brak wymaganych danych użytkownika!");
                 return;
@@ -180,6 +187,41 @@ const UserProfileEdit: React.FC = () => {
                         <form onSubmit={accountForm.handleSubmit}>
                             <VStack p={4}>
                                 <Field
+                                    label={t('shared.id')}>
+                                    <Input
+                                        name="id"
+                                        value={accountForm.values.id}
+                                        onChange={accountForm.handleChange}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
+                                        disabled={true}
+                                    />
+                                </Field>
+
+                                <Field
+                                    label={t('shared.login')}>
+                                    <Input
+                                        name="login"
+                                        value={accountForm.values.login}
+                                        onChange={accountForm.handleChange}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
+                                        disabled={true}
+                                    />
+                                </Field>
+                                <Field
+                                    label={t('shared.email')}>
+                                    <Input
+                                        name="email"
+                                        value={accountForm.values.email}
+                                        onChange={accountForm.handleChange}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
+                                        disabled={true}
+                                    />
+                                </Field>
+
+                                <Field
                                     label={t('shared.firstName')}
                                     invalid={!!accountForm.errors.firstName && accountForm.touched.firstName}
                                     errorText={accountForm.errors.firstName}
@@ -211,13 +253,15 @@ const UserProfileEdit: React.FC = () => {
                                     label={t('shared.position')}
                                     invalid={!!accountForm.errors.position && accountForm.touched.position}
                                     errorText={accountForm.errors.position}
-                                > <Input
-                                    name="position"
-                                    value={accountForm.values.position}
-                                    onChange={accountForm.handleChange}
-                                    bgColor={themeColors.bgColorSecondary}
-                                    color={themeColors.fontColor}
-                                />
+                                >
+                                    <Input
+                                        name="position"
+                                        value={accountForm.values.position!.name ||t('common:none', 'Brak')}
+                                        onChange={accountForm.handleChange}
+                                        bgColor={themeColors.bgColorSecondary}
+                                        color={themeColors.fontColor}
+                                        disabled={true}
+                                    />
                                 </Field>
 
                                 <Button type="submit" colorPalette="blue">

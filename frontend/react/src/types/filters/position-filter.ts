@@ -19,15 +19,22 @@ export class PositionFilterBuilder {
 
     withNameContains(nameContains: string) {
         this.f.nameContains = nameContains;
+        return this;
     }
 
     withDescriptionContains(descriptionContains: string) {
         this.f.descriptionContains = descriptionContains;
+        return this;
     }
 
     withPaging(page: number, size: number) {
         this.f.page = page;
         this.f.size = size;
+        return this;
+    }
+
+    withSort(sort: string) {
+        this.f.sort = sort;
         return this;
     }
 

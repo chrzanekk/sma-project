@@ -113,7 +113,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                 <Table.Cell {...commonCellProps}>{user.login}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>{user.firstName}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>{user.lastName}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{user.position}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{user.position!.name || t('common:none', 'Brak')}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <HStack gap={1} wrap="wrap">
                                         {user.roles?.map((role, index) => (

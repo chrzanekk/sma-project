@@ -5,13 +5,17 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {addUser} from "@/services/user-service.ts";
 import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
-import React from "react";
+import React, {useMemo} from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import Select from 'react-select';
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
+import {getSelectedCompanyId} from "@/utils/company-utils.ts";
+import {makePositionSearchAdapter} from "@/search/position-search-adapter.ts";
+import {PositionBaseDTO} from "@/types/position-types.ts";
+import PositionSearchWithSelect from "@/components/position/PositionSearchWithSelect.tsx";
 
 interface AddUserFormProps {
     onSuccess: () => void;
@@ -22,6 +26,15 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     const booleanOptions = getBooleanOptions(t);
     const {roles: roleOptions, isLoading, error} = useRoles();
     const themeColors = useThemeColors();
+    const companyId: number = getSelectedCompanyId()!;
+
+    const positionSearchFn = useMemo(
+        () => makePositionSearchAdapter({
+            fixed: {companyId},
+            defaults: {page: 0, size: 10, sort: "name,asc"},
+        }),
+        [companyId]
+    );
 
     if (isLoading) return <div>{t('processing', {ns: "common"})}</div>;
     if (error) return <div>{t('error', {ns: "common"})}: {error}</div>;
@@ -34,7 +47,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 password: '',
                 firstName: '',
                 lastName: '',
-                position: '',
+                position: undefined as PositionBaseDTO | undefined,
                 locked: true,
                 enabled: false,
                 roles: [] as string[],
@@ -60,16 +73,13 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                     .min(2, t('verification.minLength', {field: t('shared.lastName'), count: 2}))
                     .max(30, t('verification.maxLength', {field: t('shared.lastName'), count: 30}))
                     .required(t('verification.required', {field: t('shared.lastName')})),
-                position: Yup.string()
-                    .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))
-                    .max(50, t('verification.maxLength', {field: t('shared.position'), count: 50}))
-                    .required(t('verification.required', {field: t('shared.position')})),
                 roles: Yup.array().of(Yup.string())
                     .min(1, t('updateProfile.roleMissing')),
                 locked: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.locked")})),
                 enabled: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.enabled")})),
+                position: Yup.object().nullable(),
             })}
             onSubmit={async (newUser: UserFormDTO, {setSubmitting}) => {
                 setSubmitting(true);
@@ -91,7 +101,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                 }
             }}
         >
-            {({touched, errors, isValid, isSubmitting, setFieldValue, setFieldTouched, dirty}) => (
+            {({touched, errors, isValid, isSubmitting, setFieldValue, setFieldTouched, dirty, values}) => (
                 <Form>
                     <Stack gap="8px">
                         {/* Login Field */}
@@ -121,11 +131,32 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                             placeholder={t('shared.lastName')}/>
 
                         {/* Position Field */}
-                        <CustomInputField
-                            name={"position"}
-                            label={t('shared.position')}
-                            placeholder={t('shared.position')}
-                        />
+
+                        <div>
+                            <Text fontSize="sm" fontWeight="bold" mb="1">
+                                {t('shared.position')}
+                            </Text>
+                            <PositionSearchWithSelect
+                                value={values.position}
+                                onSelect={(position: PositionBaseDTO | null) => {
+                                    setFieldValue("position", position).catch();
+                                    setFieldTouched("position", true, false).catch();
+                                }}
+                                searchFn={positionSearchFn}
+                                placeholder={t('shared.position')}
+                                size={"md"}
+                            />
+                            {touched.position && errors.position && (
+                                <Text color="red.500" fontSize="xs" mt="1">
+                                    {errors.position as string}
+                                </Text>
+                            )}
+                        </div>
+                        {/*<CustomInputField*/}
+                        {/*    name={"position"}*/}
+                        {/*    label={t('shared.position')}*/}
+                        {/*    placeholder={t('shared.position')}*/}
+                        {/*/>*/}
 
                         {/* Roles Select Field */}
                         <Field name="roles">
