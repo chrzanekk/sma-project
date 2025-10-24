@@ -1,0 +1,11 @@
+{
+  "resourcePermissions": "Uprawnienia do zasobów/obszarów",
+  "resource": "Zasób/obszar",
+  "endpoint": "Endpoint",
+  "allowedRoles": "Uprawnione role",
+  "notifications": {
+    "rolesUpdated": "Uprawnienia zaktualizowane pomyślnie",
+    "errorUpdatingRoles": "Błąd aktualizacji uprawnień",
+    "errorLoadingNotifications": "Błąd wczytywania listy zasobów"
+  }
+}

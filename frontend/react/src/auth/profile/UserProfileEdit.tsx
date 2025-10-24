@@ -60,7 +60,7 @@ const UserProfileEdit: React.FC = () => {
             login: currentUser!.login,
             firstName: currentUser!.firstName || "",
             lastName: currentUser!.lastName || "",
-            position: currentUser!.position || undefined,
+            position: currentUser!.position || null,
             locked: currentUser!.locked,
             enabled: currentUser!.enabled,
             roles: currentUser?.roles || [],
@@ -256,7 +256,7 @@ const UserProfileEdit: React.FC = () => {
                                 >
                                     <Input
                                         name="position"
-                                        value={accountForm.values.position!.name ||t('common:none', 'Brak')}
+                                        value={accountForm.values.position?.name ?? t('common:none', 'Brak')}
                                         onChange={accountForm.handleChange}
                                         bgColor={themeColors.bgColorSecondary}
                                         color={themeColors.fontColor}

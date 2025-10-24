@@ -18,6 +18,9 @@ import CompanyManagement from "@/components/company/CompanyManagement.tsx";
 import ConstructionSiteManagement from "@/components/constructionsite/ConstructionSiteManagement.tsx";
 import ContractManagement from "@/components/contract/ContractManagement.tsx";
 import PositionManagement from "@/components/position/PositionManagement.tsx";
+import ResourcePermissionManagement from "@/components/admin/ResourcePermissionManagement.tsx";
+import Unauthorized from "@/components/shared/Unauthorized.tsx";
+import {Box, Text} from "@chakra-ui/react";
 
 
 const router = createBrowserRouter([
@@ -52,7 +55,7 @@ const router = createBrowserRouter([
         {
             path: "profile",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="ACCOUNT_MANAGEMENT">
                     <Layout>
                         <UserProfileEdit/>
                     </Layout>
@@ -62,7 +65,7 @@ const router = createBrowserRouter([
         {
             path: "users",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="USER_MANAGEMENT">
                     <UserManagement/>
                 </ProtectedRoute>
             )
@@ -70,22 +73,34 @@ const router = createBrowserRouter([
         {
             path: "roles",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="ROLE_MANAGEMENT">
                     <RoleManagement/>
-                </ProtectedRoute>)
+                </ProtectedRoute>
+            )
         },
         {
             path: "companies",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="COMPANY_MANAGEMENT">
                     <CompanyManagement/>
                 </ProtectedRoute>
             )
-        },{
+        },
+        {
             path: "positions",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="POSITION_MANAGEMENT">
                     <PositionManagement/>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "resources",
+            element: (
+                <ProtectedRoute resourceKey="RESOURCE_MANAGEMENT">
+                    <Layout>
+                        <ResourcePermissionManagement/>
+                    </Layout>
                 </ProtectedRoute>
             )
         },
@@ -101,68 +116,96 @@ const router = createBrowserRouter([
         },
         {
             path: "contractors",
-            element: <ProtectedRoute>
-                <Layout>
-                    <ContractorManagement/>
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute resourceKey="CONTRACTOR_MANAGEMENT">
+                    <Layout>
+                        <ContractorManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "contacts",
-            element: <ProtectedRoute>
-                <Layout>
-                    <ContactManagement/>
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute resourceKey="CONTACT_MANAGEMENT">
+                    <Layout>
+                        <ContactManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "contracts",
-            element: <ProtectedRoute>
-                <Layout>
-                    <ContractManagement/>
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute resourceKey="CONTRACT_MANAGEMENT">
+                    <Layout>
+                        <ContractManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "diaryList",
-            element: <ProtectedRoute>
-                <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'diaryList'}
-                        nameSpace={'navbar'}
-                    />
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <UnderConstructionRoute
+                            nameKey={'diaryList'}
+                            nameSpace={'navbar'}
+                        />
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "diaryAddNew",
-            element: <ProtectedRoute>
-                <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'diaryAddNew'}
-                        nameSpace={'navbar'}
-                    />
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <UnderConstructionRoute
+                            nameKey={'diaryAddNew'}
+                            nameSpace={'navbar'}
+                        />
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "mainWarehouse",
-            element: <ProtectedRoute>
-                <Layout>
-                    <UnderConstructionRoute
-                        nameKey={'mainWarehouse'}
-                        nameSpace={'navbar'}
-                    />
-                </Layout>
-            </ProtectedRoute>
+            element: (
+                <ProtectedRoute>
+                    <Layout>
+                        <UnderConstructionRoute
+                            nameKey={'mainWarehouse'}
+                            nameSpace={'navbar'}
+                        />
+                    </Layout>
+                </ProtectedRoute>
+            )
         },
         {
             path: "constructionSites",
-            element: <ProtectedRoute>
+            element: (
+                <ProtectedRoute resourceKey="CONSTRUCTION_SITE_MANAGEMENT">
+                    <Layout>
+                        <ConstructionSiteManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "unauthorized",
+            element: <Unauthorized/>
+        },
+        {
+            path: "*",
+            element: (
                 <Layout>
-                    <ConstructionSiteManagement/>
+                    <Box p={8} textAlign="center">
+                        <Text fontSize="2xl">404 - Page Not Found</Text>
+                    </Box>
                 </Layout>
-            </ProtectedRoute>
+            )
         }
     ],
 );

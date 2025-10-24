@@ -27,10 +27,7 @@ const UserManagement: React.FC = () => {
     } = useDataManagement<UserDTO>(
         // funkcja pobierająca dane
         async (params) => {
-            console.log('🔍 getUsersByFilter called with params:', params);
             const response = await getUsersByFilter(params);
-            console.log('📦 Response:', response);
-            console.log('👥 Users count:', response.users.length);
             return {
                 data: response.users,
                 totalPages: response.totalPages
@@ -40,8 +37,6 @@ const UserManagement: React.FC = () => {
         {},
         false
     );
-
-    console.log('🎯 Current users in state:', users.length);
 
     return (
         <UserLayout

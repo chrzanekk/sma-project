@@ -1,37 +1,98 @@
-import React, {useState} from 'react';
-import {Button, Flex, Grid, GridItem, Heading} from '@chakra-ui/react';
+import React, {useMemo, useState} from 'react';
+import {Box, Button, Flex, Grid, GridItem, Heading, Spinner} from '@chakra-ui/react';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {getAdminPanelMenuItems} from "@/components/admin/admin-panel-menu-items.ts";
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
 import CompanyManagement from "@/components/company/CompanyManagement.tsx";
 import PositionManagement from "@/components/position/PositionManagement.tsx";
+import ResourcePermissionManagement from "@/components/admin/ResourcePermissionManagement.tsx";
+import {useResourcePermissions} from "@/context/ResourcePermissionContext.tsx";
+import {useAdminPanelMenu} from "@/hooks/useAdminPanelMenu.ts";
 
-export type AdminPanelView = 'roles' | 'users' | 'companies' | 'positions';
+export type AdminPanelView = 'roles' | 'users' | 'companies' | 'positions' | 'permissions';
 
 const AdminPanel: React.FC = () => {
     const {t} = useTranslation('adminPanelMenu');
-    const [activeView, setActiveView] = useState<AdminPanelView>('users');
     const themeColors = useThemeColors();
+    const {canAccessResource, loading} = useResourcePermissions();
+
+    // ✅ Determine default view based on permissions
+    const getDefaultView = (): AdminPanelView | null => {
+        if (canAccessResource('USER_MANAGEMENT')) return 'users';
+        if (canAccessResource('ROLE_MANAGEMENT')) return 'roles';
+        if (canAccessResource('COMPANY_MANAGEMENT')) return 'companies';
+        if (canAccessResource('POSITION_MANAGEMENT')) return 'positions';
+        if (canAccessResource('RESOURCE_MANAGEMENT')) return 'permissions';
+        return null;
+    };
+    const defaultView = useMemo(() => getDefaultView(), [canAccessResource]);
+    const [activeView, setActiveView] = useState<AdminPanelView | null>(defaultView);
+
+    // ✅ Use custom hook for menu items
+    const adminMenuItems = useAdminPanelMenu(t, (view) => setActiveView(view));
+
+    // Show loading while fetching permissions
+    if (loading) {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
+                <Spinner size="xl"/>
+            </Box>
+        );
+    }
+
+    // No access to any admin resource
+    if (adminMenuItems.length === 0) {
+        return (
+            <Box p={8} textAlign="center">
+                <Heading size="md" color={themeColors.fontColor}>
+                    {t('noAccess', 'You do not have access to any admin panels')}
+                </Heading>
+            </Box>
+        );
+    }
+
 
     const renderActiveView = () => {
+        if (!activeView) {
+            return (
+                <Heading size="md" textAlign="center" color={themeColors.fontColor}>
+                    {t('selectViewMessage', 'Please select a view from the menu')}
+                </Heading>
+            );
+        }
+
+        // ✅ Check permission before rendering view
         switch (activeView) {
             case 'roles':
-                return <RoleManagement/>;
+                return canAccessResource('ROLE_MANAGEMENT') ? (
+                    <RoleManagement/>
+                ) : null;
             case 'users':
-                return <UserManagement/>;
+                return canAccessResource('USER_MANAGEMENT') ? (
+                    <UserManagement/>
+                ) : null;
             case 'companies':
-                return <CompanyManagement/>;
+                return canAccessResource('COMPANY_MANAGEMENT') ? (
+                    <CompanyManagement/>
+                ) : null;
             case 'positions':
-                return <PositionManagement/>;
+                return canAccessResource('POSITION_MANAGEMENT') ? (
+                    <PositionManagement/>
+                ) : null;
+            case 'permissions':
+                return canAccessResource('RESOURCE_MANAGEMENT') ? (
+                    <ResourcePermissionManagement/>
+                ) : null;
             default:
-                return <Heading size="md" textAlign="center">Invalid view</Heading>;
+                return (
+                    <Heading size="md" textAlign="center" color={themeColors.fontColor}>
+                        {t('invalidView', 'Invalid view')}
+                    </Heading>
+                );
         }
     };
-
-    const adminMenuItems = getAdminPanelMenuItems(t, setActiveView);
 
     return (
         <Grid

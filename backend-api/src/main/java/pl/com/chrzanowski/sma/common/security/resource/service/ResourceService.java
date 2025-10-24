@@ -9,11 +9,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public interface ResourceService {
+    /**
+     * Get all resources - admin only (for resource management panel)
+     */
     List<ResourceDTO> getAllResources();
 
-    @Transactional
+    /**
+     * Get resources filtered by current user's permissions
+     */
+    List<ResourceDTO> getResourcesForCurrentUser();
+
+    /**
+     * Update resource roles - admin only
+     */
     ResourceDTO updateResourceRoles(Long resourceId, List<String> roleNames);
 
+
+    /**
+     * Reload security configuration
+     */
     void reloadSecurityConfiguration();
 
     default ResourceDTO toDTO(Resource resource) {

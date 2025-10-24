@@ -9,6 +9,7 @@ import {ChakraProvider} from "@chakra-ui/react";
 import {CompanyProvider} from "@/context/CompanyContext.tsx";
 import {system} from "@/theme/theme.ts";
 import {GlobalStyles} from "@/theme/GlobalStyles.tsx";
+import {ResourcePermissionProvider} from "@/context/ResourcePermissionContext.tsx";
 
 
 function initColorMode() {
@@ -28,8 +29,10 @@ createRoot(document.getElementById('root')!)
                 <GlobalStyles/>
                 <CompanyProvider>
                     <AuthProvider>
-                        <RouterProvider router={router}/>
-                        <Toaster/>
+                        <ResourcePermissionProvider>
+                            <RouterProvider router={router}/>
+                            <Toaster/>
+                        </ResourcePermissionProvider>
                     </AuthProvider>
                 </CompanyProvider>
             </ChakraProvider>

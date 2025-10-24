@@ -4,5 +4,6 @@
   "users": "Użytkownicy",
   "roles": "Role",
   "companies": "Firmy",
-  "positions": "Stanowiska"
+  "positions": "Stanowiska",
+  "permissions": "Uprawnienia"
 }

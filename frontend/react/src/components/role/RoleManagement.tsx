@@ -27,7 +27,6 @@ const RoleManagement: React.FC = () => {
     } = useDataManagement<RoleDTO>(
         async (params) => {
             const response = await getRoleByFilterAndPage(params);
-            console.log(response.roles)
             return {
                 data: response.roles,
                 totalPages: response.totalPages
@@ -42,7 +41,7 @@ const RoleManagement: React.FC = () => {
         <RoleLayout
             filters={<RoleFilterForm onSubmit={onFilterSubmit}/>}
             addRoleButton={<Flex justifyContent={"center"}>
-                <AddRoleDrawer fetchRoles={()=>onFilterSubmit({})}/>
+                <AddRoleDrawer fetchRoles={() => onFilterSubmit({})}/>
             </Flex>}
             table={<RoleTable
                 roles={roles}
