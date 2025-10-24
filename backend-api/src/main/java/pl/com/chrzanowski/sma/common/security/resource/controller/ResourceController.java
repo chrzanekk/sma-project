@@ -1,0 +1,45 @@
+package pl.com.chrzanowski.sma.common.security.resource.controller;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
+import pl.com.chrzanowski.sma.common.security.resource.dto.ResourceDTO;
+import pl.com.chrzanowski.sma.common.security.resource.dto.ResourceUpdateRequest;
+import pl.com.chrzanowski.sma.common.security.resource.service.ResourceService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping(ApiPath.RESOURCE)
+@Slf4j
+public class ResourceController {
+
+    private final ResourceService resourceService;
+
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ResourceDTO>> getAllResources() {
+        log.info("REST: Get all resources");
+        return ResponseEntity.ok(resourceService.getAllResources());
+    }
+
+    @PutMapping("/{id}/roles")
+    public ResponseEntity<ResourceDTO> updateResourceRoles(
+            @PathVariable Long id,
+            @RequestBody ResourceUpdateRequest request
+    ) {
+        log.info("REST: Update roles for resource id: {}", id);
+        return ResponseEntity.ok(resourceService.updateResourceRoles(id, request.getRoleNames()));
+    }
+
+    @PostMapping("/reload")
+    public ResponseEntity<Void> reloadSecurity() {
+        log.info("REST: Reload security configuration");
+        resourceService.reloadSecurityConfiguration();
+        return ResponseEntity.ok().build();
+    }
+}

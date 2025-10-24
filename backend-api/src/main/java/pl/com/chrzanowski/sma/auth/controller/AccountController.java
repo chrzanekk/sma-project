@@ -9,6 +9,7 @@ import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserEditRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping(ApiPath.ACCOUNT)
 public class AccountController {
 
     private final Logger log = LoggerFactory.getLogger(AccountController.class);

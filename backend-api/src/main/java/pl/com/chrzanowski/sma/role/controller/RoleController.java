@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleQueryService;
@@ -17,7 +18,7 @@ import pl.com.chrzanowski.sma.role.service.filter.RoleFilter;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/roles")
+@RequestMapping(path = ApiPath.ROLE)
 public class RoleController {
 
     private final Logger log = LoggerFactory.getLogger(RoleController.class);
