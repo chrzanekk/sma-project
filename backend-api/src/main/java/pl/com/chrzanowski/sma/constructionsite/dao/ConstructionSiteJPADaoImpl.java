@@ -51,6 +51,10 @@ public class ConstructionSiteJPADaoImpl implements ConstructionSiteDao {
 
         baseQuery.leftJoin(constructionSite.company).fetchJoin();
 
+        // Join do SiteContractors - może być potrzebny dla filtrowania
+        // Możesz to dodać opcjonalnie lub zawsze
+        // baseQuery.leftJoin(constructionSite.siteContractors).fetchJoin();
+
         PagedList<ConstructionSite> paged = baseQuery.fetchPage(
                 (int) pageable.getOffset(), pageable.getPageSize());
 

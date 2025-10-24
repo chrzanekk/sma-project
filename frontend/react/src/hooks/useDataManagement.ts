@@ -1,5 +1,5 @@
 // hooks/useDataManagement.ts
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {useCompany} from "@/hooks/useCompany.ts";
 
 export type FetchParams = {
@@ -48,6 +48,8 @@ export function useDataManagement<T>(
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [filter, setFilter] = useState<Record<string, any>>(initialFilter);
 
+    const isFirstRender = useRef(true);
+
     const doFetch = useCallback(async (page = currentPage, size = rowsPerPage, filt = filter) => {
         if (useCompanyId && !selectedCompany) return;
         const sortParam = sortField ? `${sortField},${sortDirection}` : undefined;
@@ -92,10 +94,30 @@ export function useDataManagement<T>(
         await deleteFn(id);
         doFetch(currentPage, rowsPerPage).then();
     };
+    useEffect(() => {
+        // Pomiń pierwsze renderowanie jeśli nie używamy companyId
+        if (!useCompanyId) {
+            if (isFirstRender.current) {
+                isFirstRender.current = false;
+                doFetch(0, rowsPerPage, filter).then();
+            }
+            return;
+        }
+
+        // Dla useCompanyId - fetchuj gdy zmienia się company
+        if (selectedCompany) {
+            setCurrentPage(0);
+            doFetch(0, rowsPerPage, filter).then();
+        }
+    }, [selectedCompany?.id]);
 
     useEffect(() => {
-        doFetch(0, rowsPerPage, filter).then();
-    }, [selectedCompany, useCompanyId]);
+        if (!useCompanyId && isFirstRender.current) {
+            isFirstRender.current = false;
+            doFetch(0, rowsPerPage, filter).then();
+        }
+    }, []);
+
 
     return {
         items,

@@ -29,9 +29,9 @@ public class UserHelper {
     private UserMapper userMapper;
 
     public LoginRequest registerFirstUser(WebTestClient webTestClient) {
+
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-
 
         RegisterRequest existingUser = RegisterRequest.builder()
                 .login("login")
@@ -39,7 +39,6 @@ public class UserHelper {
                 .email("login@test.com")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("firstPosition")
                 .role(Set.of(adminRole.getName()))
                 .build();
         registerUser(existingUser, webTestClient);
@@ -54,6 +53,7 @@ public class UserHelper {
     }
 
     public LoginRequest registerSecondUser(WebTestClient webTestClient) {
+
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
@@ -63,12 +63,12 @@ public class UserHelper {
                 .email("second@test.com")
                 .firstName("secondFirstName")
                 .lastName("secondLastName")
-                .position("secondPosition")
                 .role(Set.of(userRole.getName()))
                 .build();
         registerUser(secondUser, webTestClient);
 
         activateUser("second");
+
         return LoginRequest.builder()
                 .login("second")
                 .password("password")

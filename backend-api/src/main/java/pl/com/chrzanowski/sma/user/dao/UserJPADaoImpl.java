@@ -17,9 +17,6 @@ import pl.com.chrzanowski.sma.user.service.filter.UserQuerySpec;
 import java.util.List;
 import java.util.Optional;
 
-import static pl.com.chrzanowski.sma.role.model.QRole.role;
-import static pl.com.chrzanowski.sma.user.model.QUser.user;
-
 @Repository("userJPA")
 public class UserJPADaoImpl implements UserDao {
 

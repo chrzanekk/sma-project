@@ -113,7 +113,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                 <Table.Cell {...commonCellProps}>{user.login}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>{user.firstName}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>{user.lastName}</Table.Cell>
-                                <Table.Cell {...commonCellProps}>{user.position}</Table.Cell>
+                                <Table.Cell {...commonCellProps}>{user.position ? user.position.name : t('common:none', 'Brak')}</Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <HStack gap={1} wrap="wrap">
                                         {user.roles?.map((role, index) => (
@@ -126,7 +126,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                                 borderRadius="md"
                                                 textTransform="uppercase"
                                             >
-                                                {role.name.replace("ROLE_", "")}
+                                                {role?.name?.replace("ROLE_", "") || ""}
                                             </Button>
                                         ))}
                                     </HStack>
@@ -145,7 +145,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <HStack gap={1} alignContent="center">
-                                        <EditUserDataDrawer fetchUsers={fetchUsers} userId={user.id!}/>
+                                        <EditUserDataDrawer
+                                            fetchUsers={fetchUsers}
+                                            userId={user.id!}
+                                            currentUserId={currentUser?.id}
+                                        />
                                         <EditUserPasswordDrawer
                                             fetchUsers={fetchUsers}
                                             userId={user.id!}
@@ -158,7 +162,11 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                             currentUserId={currentUser?.id}
                                             login={user.login}
                                         />
-                                        <EditUserCompaniesDrawer fetchUsers={fetchUsers} userId={user.id!}/>
+                                        <EditUserCompaniesDrawer
+                                            fetchUsers={fetchUsers}
+                                            userId={user.id!}
+                                            currentUserId={currentUser?.id}
+                                        />
                                     </HStack>
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>

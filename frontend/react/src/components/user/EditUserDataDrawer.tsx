@@ -19,9 +19,10 @@ import {
 interface EditUserDataDrawerProps {
     fetchUsers: () => void;
     userId: number;
+    currentUserId?: number;
 }
 
-const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, userId}) => {
+const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, currentUserId,userId}) => {
     const {t} = useTranslation('auth');
     const themeColors = useThemeColors();
     return (
@@ -33,6 +34,7 @@ const EditUserDataDrawer: React.FC<EditUserDataDrawerProps> = ({fetchUsers, user
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
+                        disabled={currentUserId != null && currentUserId === userId}
                     >
                         {t('data', {ns: "common"})}
                     </Button>

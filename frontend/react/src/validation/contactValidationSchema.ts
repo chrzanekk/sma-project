@@ -1,9 +1,9 @@
 import * as Yup from "yup";
-import {BaseContactFormValues} from "@/types/contact-types.ts";
+import {BasePositionFormValues} from "@/types/contact-types.ts";
 
 export const getContactValidationSchema = (
     t: (key: string, options?: any) => string
-): Yup.Schema<BaseContactFormValues> => {
+): Yup.Schema<BasePositionFormValues> => {
     return Yup.object({
         firstName: Yup.string()
             .min(2, t("errors:verification.minLength", {field: t("contacts:firstName"), count: 2}))
@@ -25,5 +25,5 @@ export const getContactValidationSchema = (
             .min(5, t("errors:verification.minLength", {field: t("contacts:additionalInfo"), count: 5}))
             .max(200, t("errors:verification.maxLength", {field: t("contacts:additionalInfo"), count: 200}))
             .required(t("errors:verification.required", {field: t("contacts:additionalInfo")})),
-    }) as Yup.Schema<BaseContactFormValues>;
+    }) as Yup.Schema<BasePositionFormValues>;
 };

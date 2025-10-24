@@ -4,11 +4,12 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
-import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.constructionsite.model.ConstructionSite;
-import pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite;
+
+import static pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite.constructionSite;
 
 @Component
 public class ConstructionSiteQuerySpec {
@@ -20,7 +21,6 @@ public class ConstructionSiteQuerySpec {
     }
 
     public static BooleanBuilder buildPredicate(ConstructionSiteFilter filter) {
-        QConstructionSite constructionSite = QConstructionSite.constructionSite;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (filter.getId() != null) {
@@ -52,6 +52,44 @@ public class ConstructionSiteQuerySpec {
     }
 
     public BlazeJPAQuery<ConstructionSite> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        return QueryBuilderUtil.buildQuery(queryFactory, ConstructionSite.class, "constructionSite", builder, pageable, QConstructionSite.constructionSite.id.asc());
+        BlazeJPAQuery<ConstructionSite> query = queryFactory
+                .selectFrom(constructionSite)
+                .where(builder);
+
+        // Aplikuj sortowanie jeśli jest dostępne
+        if (pageable != null && pageable.getSort().isSorted()) {
+            Sort sort = pageable.getSort();
+            sort.forEach(order -> {
+                switch (order.getProperty()) {
+                    case "name":
+                        query.orderBy(order.isAscending() ? constructionSite.name.asc() : constructionSite.name.desc());
+                        break;
+                    case "code":
+                        query.orderBy(order.isAscending() ? constructionSite.code.asc() : constructionSite.code.desc());
+                        break;
+                    case "shortName":
+                        query.orderBy(order.isAscending() ? constructionSite.shortName.asc() : constructionSite.shortName.desc());
+                        break;
+                    case "address":
+                        query.orderBy(order.isAscending() ? constructionSite.address.asc() : constructionSite.address.desc());
+                        break;
+                    case "country":
+                        query.orderBy(order.isAscending() ? constructionSite.country.asc() : constructionSite.country.desc());
+                        break;
+                    case "id":
+                        query.orderBy(order.isAscending() ? constructionSite.id.asc() : constructionSite.id.desc());
+                        break;
+                }
+            });
+
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(constructionSite.id.asc());
+            }
+        } else {
+            // Domyślne sortowanie
+            query.orderBy(constructionSite.id.asc());
+        }
+
+        return query;
     }
 }

@@ -6,10 +6,10 @@ import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
+import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorUpdateDTO;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.contract.mapper.ContractBaseMapper;
 
 @Mapper(componentModel = "spring", uses = {ContractorBaseMapper.class, CompanyBaseMapper.class, ContactBaseMapper.class, ContractBaseMapper.class})
 public interface ContractorDTOMapper extends EntityMapper<ContractorDTO, Contractor> {

@@ -138,13 +138,72 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
         input: (provided) => ({
             ...provided,
             color: themeColors.fontColor
-        })
+        }),
+        multiValue: (provided) => ({
+            ...provided,
+            backgroundColor: themeVars.bgColorPrimary,
+            borderRadius: "4px",
+        }),
+        multiValueLabel: (provided) => ({
+            ...provided,
+            color: themeVars.fontColor, // Kolor tekstu w tagu
+            padding: "2px 6px",
+        }),
+        multiValueRemove: (provided) => ({
+            ...provided,
+            color: themeVars.fontColor,
+            cursor: "pointer",
+            "&:hover": {
+                backgroundColor: themeVars.highlightBgColor,
+                color: themeVars.fontColorHover,
+            },
+        }),
+        // Style dla rozwijalnego menu
+        menu: (provided) => ({
+            ...provided,
+            backgroundColor: themeVars.bgColorSecondary,
+            borderRadius: "4px",
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            backgroundColor: themeVars.bgColorSecondary,
+            padding: 0,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            borderColor: themeVars.bgColorPrimary,
+            backgroundColor: state.isSelected
+                ? themeVars.bgColorPrimary  // Kolor wybranej opcji
+                : state.isFocused
+                    ? themeVars.highlightBgColor  // Kolor przy hover
+                    : themeVars.bgColorPrimary, // Domyślne tło
+            color: themeVars.fontColor,
+            cursor: "pointer",
+            "&:hover": {
+                backgroundColor: themeVars.highlightBgColor,
+                color: themeVars.fontColorHover,
+            },
+        }),
+        // Style dla pojedynczej wartości (gdy isMulti=false)
+        singleValue: (provided) => ({
+            ...provided,
+            color: themeVars.fontColor,
+        }),
+        // Style dla placeholdera
+        placeholder: (provided) => ({
+            ...provided,
+            color: themeVars.fontColor,
+        }),
     };
 
     return (
         <Box mb={2}>
             {label && (
-                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
+                <Text fontSize="sm"
+                      fontWeight="bold"
+                      mb="1" color={themeColors.fontColor}
+                      textAlign={"center"}
+                >
                     {label}
                 </Text>
             )}
@@ -319,7 +378,12 @@ const CustomTextAreaField: React.FC<CustomTextAreaFieldProps> = ({
             {({field, meta}: FieldProps) => (
                 <Box mb={2}>
                     {label && (
-                        <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
+                        <Text fontSize="sm"
+                              fontWeight="bold"
+                              mb="1"
+                              color={themeColors.fontColor}
+                              textAlign={"center"}
+                        >
                             {label}
                         </Text>
                     )}
@@ -375,7 +439,7 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
                                                                            onKeyDown,
                                                                            enableEnterSubmit = true,
                                                                        }) => {
-    const { t } = useTranslation();
+    const {t} = useTranslation();
     const themeColors = useThemeColors();
     const canSearch = searchTerm.trim().length >= minChars;
 
@@ -396,7 +460,11 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
     return (
         <Box mb={1}>
             {label && (
-                <Text fontSize="sm" fontWeight="bold" mb="1" color={themeColors.fontColor}>
+                <Text fontSize="sm"
+                      fontWeight="bold"
+                      mb="1" color={themeColors.fontColor}
+                      textAlign={"center"}
+                >
                     {label}
                 </Text>
             )}

@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 
 import java.util.Set;
 
@@ -28,8 +29,7 @@ public class RegisterRequest {
     @Size(max = 30)
     private String lastName;
 
-    @Size(max = 50)
-    private String position;
+    private PositionBaseDTO position;
 
     @NotBlank
     @Size(max = 50)

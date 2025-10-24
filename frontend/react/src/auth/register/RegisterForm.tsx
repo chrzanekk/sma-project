@@ -22,7 +22,7 @@ const RegisterForm = () => {
                 password: '',
                 firstName: '',
                 lastName: '',
-                position: ''
+                position: null
             }}
             validationSchema={Yup.object({
                 login: Yup.string()

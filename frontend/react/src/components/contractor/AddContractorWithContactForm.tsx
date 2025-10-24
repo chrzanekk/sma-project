@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useRef, useState} from "react";
 import {ContractorDTO, ContractorFormValues} from "@/types/contractor-types.ts";
-import {ContactBaseDTO, BaseContactFormValues} from "@/types/contact-types.ts";
+import {ContactBaseDTO, BasePositionFormValues} from "@/types/contact-types.ts";
 import {addContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {getContractorValidationSchema} from "@/validation/contractorValidationSchema.ts";
@@ -28,7 +28,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
 
     const [currentStep, setCurrentStep] = useState(0);
     const [isContractorValid, setIsContractorValid] = useState(false);
-    const [contacts, setContacts] = useState<BaseContactFormValues[]>([]);
+    const [contacts, setContacts] = useState<BasePositionFormValues[]>([]);
     const themeColors = useThemeColors();
     const currentCompany = getSelectedCompany();
 
@@ -49,7 +49,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
     const contractorValidationSchema = getContractorValidationSchema(t, countryOptions);
 
     const contractorFormRef = useRef<FormikProps<ContractorFormValues>>(null);
-    const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
+    const contactFormRef = useRef<FormikProps<BasePositionFormValues>>(null);
 
     const handleNext = async () => {
         if (currentStep === 0) {
@@ -72,7 +72,7 @@ const AddContractorWithContactForm: React.FC<AddContractorWithContactFormProps> 
         setCurrentStep(1);
     };
 
-    const handleAddContact = (contact: BaseContactFormValues) => {
+    const handleAddContact = (contact: BasePositionFormValues) => {
         const alreadyExists = contacts.some(
             (c) =>
                 c.firstName === contact.firstName &&

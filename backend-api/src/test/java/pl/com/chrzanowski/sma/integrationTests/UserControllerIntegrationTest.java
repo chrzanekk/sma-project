@@ -16,8 +16,12 @@ import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
+import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
+import pl.com.chrzanowski.sma.position.model.Position;
+import pl.com.chrzanowski.sma.position.repository.PositionRepository;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 import pl.com.chrzanowski.sma.user.dao.UserDao;
@@ -28,6 +32,7 @@ import pl.com.chrzanowski.sma.user.repository.UserRepository;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,6 +70,12 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     private String jwtToken;
 
@@ -133,7 +144,6 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
                 .password("newpassword")
                 .firstName("firstName")
                 .lastName("lastName")
-                .position("position")
                 .build();
 
         UserDTO savedUser = webTestClient.post()
@@ -300,6 +310,29 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldGetUsersByPositionFilterSuccessfully() {
+        User existingUser = userRepository.findByLogin("login").get();
+        Company company = new Company();
+        company.setName("company");
+        company.setAdditionalInfo("Additional info");
+        company.setCreatedBy(existingUser);
+        company.setModifiedBy(existingUser);
+        company.setCreatedDatetime(Instant.now());
+        company.setLastModifiedDatetime(Instant.now());
+        company = companyRepository.saveAndFlush(company);
+
+        Position position = Position.builder()
+                .name("firstPosition")
+                .createdBy(existingUser)
+                .modifiedBy(existingUser)
+                .createdDatetime(Instant.now())
+                .createdDatetime(Instant.now())
+                .company(company)
+                .build();
+        positionRepository.saveAndFlush(position);
+
+        existingUser.setPosition(position);
+        userRepository.saveAndFlush(existingUser);
+
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("positionStartsWith", "firstPos");
 

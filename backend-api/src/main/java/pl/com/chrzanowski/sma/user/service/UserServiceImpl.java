@@ -20,6 +20,8 @@ import pl.com.chrzanowski.sma.common.util.EmailUtil;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
+import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
+import pl.com.chrzanowski.sma.position.mapper.PositionBaseMapper;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.mapper.RoleMapper;
 import pl.com.chrzanowski.sma.role.model.Role;
@@ -54,11 +56,12 @@ public class UserServiceImpl implements UserService {
     private final UserTokenService userTokenService;
     private final SendEmailService sentEmailService;
     private final CompanyBaseMapper companyBaseMapper;
+    private final PositionBaseMapper positionBaseMapper;
 
     public UserServiceImpl(UserDao userDao,
                            UserDTOMapper userDTOMapper,
                            RoleService roleService, RoleMapper roleMapper,
-                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyBaseMapper companyBaseMapper) {
+                           PasswordEncoder encoder, UserTokenService userTokenService, SendEmailService sentEmailService, CompanyBaseMapper companyBaseMapper, PositionBaseMapper positionBaseMapper) {
         this.userDao = userDao;
         this.userDTOMapper = userDTOMapper;
         this.roleService = roleService;
@@ -67,6 +70,7 @@ public class UserServiceImpl implements UserService {
         this.encoder = encoder;
         this.sentEmailService = sentEmailService;
         this.companyBaseMapper = companyBaseMapper;
+        this.positionBaseMapper = positionBaseMapper;
     }
 
     @Override
@@ -276,10 +280,14 @@ public class UserServiceImpl implements UserService {
         User currentUser = getCurrentLoggedUser().orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<String> currentRoles = currentUser.getRoles().stream().map(Role::getName).toList();
         List<CompanyBaseDTO> currentCompanies;
+        PositionBaseDTO currentPosition = null;
         if (currentUser.getCompanies() != null && !currentUser.getCompanies().isEmpty()) {
             currentCompanies = currentUser.getCompanies().stream().map(companyBaseMapper::toDto).toList();
         } else {
             currentCompanies = Collections.emptyList();
+        }
+        if (currentUser.getPosition()!= null) {
+            currentPosition = positionBaseMapper.toDto(currentUser.getPosition());
         }
         return new UserInfoResponse(
                 currentUser.getId(),
@@ -287,7 +295,7 @@ public class UserServiceImpl implements UserService {
                 currentUser.getEmail(),
                 currentUser.getFirstName(),
                 currentUser.getLastName(),
-                currentUser.getPosition(),
+                currentPosition,
                 currentRoles,
                 currentCompanies);
     }

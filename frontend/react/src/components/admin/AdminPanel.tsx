@@ -7,8 +7,9 @@ import {getAdminPanelMenuItems} from "@/components/admin/admin-panel-menu-items.
 import {useTranslation} from "react-i18next";
 import {MenuContent, MenuItem, MenuRoot, MenuTrigger,} from "@/components/ui/menu"
 import CompanyManagement from "@/components/company/CompanyManagement.tsx";
+import PositionManagement from "@/components/position/PositionManagement.tsx";
 
-export type AdminPanelView = 'roles' | 'users' | 'companies';
+export type AdminPanelView = 'roles' | 'users' | 'companies' | 'positions';
 
 const AdminPanel: React.FC = () => {
     const {t} = useTranslation('adminPanelMenu');
@@ -22,13 +23,15 @@ const AdminPanel: React.FC = () => {
             case 'users':
                 return <UserManagement/>;
             case 'companies':
-                return <CompanyManagement/>
+                return <CompanyManagement/>;
+            case 'positions':
+                return <PositionManagement/>;
             default:
                 return <Heading size="md" textAlign="center">Invalid view</Heading>;
         }
     };
 
-    const adminMenuItems = getAdminPanelMenuItems(setActiveView);
+    const adminMenuItems = getAdminPanelMenuItems(t, setActiveView);
 
     return (
         <Grid

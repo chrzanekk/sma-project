@@ -10,6 +10,7 @@ import {updateUserRoles} from "@/services/account-service.ts";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {themeVars} from "@/theme/theme-colors.ts";
 
 interface EditUserRolesFormProps {
     onSuccess: () => void;
@@ -83,7 +84,9 @@ const EditUserRolesForm: React.FC<EditUserRolesFormProps> = ({onSuccess, userId,
                     <Form>
                         <Stack gap="8px">
                             <CustomSelectField name={"roles"} options={roleOptions} label={t('shared.chooseRoles')}
-                                               placeholder={t('shared.chooseRoles')} isMulti={true}/>
+                                               placeholder={t('shared.chooseRoles')} isMulti={true}
+                                               bgColor={themeVars.bgColorSecondary}
+                            />
                             <Button disabled={!isValid || isSubmitting} type="submit"
                                     colorPalette="green">
                                 {t('shared.changerRoles')}

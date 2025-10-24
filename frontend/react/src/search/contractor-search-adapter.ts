@@ -1,7 +1,7 @@
 // src/search/contractor-search-adapter.ts
-import { ContractorFilter, ContractorFilterBuilder } from "@/types/filters/contractor-filter";
-import { getContractorsByFilter } from "@/services/contractor-service";
-import { ContractorDTO } from "@/types/contractor-types";
+import {ContractorFilter, ContractorFilterBuilder} from "@/types/filters/contractor-filter";
+import {getContractorsByFilter} from "@/services/contractor-service";
+import {ContractorDTO} from "@/types/contractor-types";
 
 export interface ContractorSearchAdapterOptions {
     fixed?: Partial<ContractorFilter>;    // stałe lub dynamiczne filtry wstrzykiwane zawsze
@@ -16,7 +16,7 @@ export interface ContractorSearchAdapterOptions {
 export function makeContractorSearchAdapter(opts: ContractorSearchAdapterOptions = {}) {
     const {
         fixed = {},
-        defaults = { page: 0, size: 10, sort: "id,asc" },
+        defaults = {page: 0, size: 10, sort: "id,asc"},
         mapResults,
     } = opts;
 
@@ -48,7 +48,7 @@ export function makeContractorSearchAdapter(opts: ContractorSearchAdapterOptions
 
         const filter: ContractorFilter = b.build();
 
-        const { contractors } = await getContractorsByFilter(filter as any);
+        const {contractors} = await getContractorsByFilter(filter as any);
         return mapResults ? mapResults(contractors) : contractors;
     };
 }

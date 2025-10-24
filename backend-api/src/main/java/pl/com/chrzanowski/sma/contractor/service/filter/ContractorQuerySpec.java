@@ -4,10 +4,11 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
-import pl.com.chrzanowski.sma.common.util.query.QueryBuilderUtil;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
-import pl.com.chrzanowski.sma.contractor.model.QContractor;
+
+import static pl.com.chrzanowski.sma.contractor.model.QContractor.contractor;
 
 @Component
 public class ContractorQuerySpec {
@@ -19,7 +20,6 @@ public class ContractorQuerySpec {
     }
 
     public static BooleanBuilder buildPredicate(ContractorFilter filter) {
-        QContractor contractor = QContractor.contractor;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (filter.getId() != null) {
@@ -77,6 +77,61 @@ public class ContractorQuerySpec {
     }
 
     public BlazeJPAQuery<Contractor> buildQuery(BooleanBuilder builder, Pageable pageable) {
-        return QueryBuilderUtil.buildQuery(queryFactory, Contractor.class, "contractor", builder, pageable, QContractor.contractor.id.asc());
+        BlazeJPAQuery<Contractor> query = queryFactory
+                .selectFrom(contractor)
+                .where(builder);
+
+        // Aplikuj sortowanie jeśli jest dostępne
+        if (pageable != null && pageable.getSort().isSorted()) {
+            Sort sort = pageable.getSort();
+            sort.forEach(order -> {
+                switch (order.getProperty()) {
+                    case "name":
+                        query.orderBy(order.isAscending() ? contractor.name.asc() : contractor.name.desc());
+                        break;
+                    case "taxNumber":
+                        query.orderBy(order.isAscending() ? contractor.taxNumber.asc() : contractor.taxNumber.desc());
+                        break;
+                    case "street":
+                        query.orderBy(order.isAscending() ? contractor.street.asc() : contractor.street.desc());
+                        break;
+                    case "city":
+                        query.orderBy(order.isAscending() ? contractor.city.asc() : contractor.city.desc());
+                        break;
+                    case "postalCode":
+                        query.orderBy(order.isAscending() ? contractor.postalCode.asc() : contractor.postalCode.desc());
+                        break;
+                    case "country":
+                        query.orderBy(order.isAscending() ? contractor.country.asc() : contractor.country.desc());
+                        break;
+                    case "customer":
+                        query.orderBy(order.isAscending() ? contractor.customer.asc() : contractor.customer.desc());
+                        break;
+                    case "supplier":
+                        query.orderBy(order.isAscending() ? contractor.supplier.asc() : contractor.supplier.desc());
+                        break;
+                    case "scaffoldingUser":
+                        query.orderBy(order.isAscending() ? contractor.scaffoldingUser.asc() : contractor.scaffoldingUser.desc());
+                        break;
+                    case "createdDatetime":
+                        query.orderBy(order.isAscending() ? contractor.createdDatetime.asc() : contractor.createdDatetime.desc());
+                        break;
+                    case "lastModifiedDatetime":
+                        query.orderBy(order.isAscending() ? contractor.lastModifiedDatetime.asc() : contractor.lastModifiedDatetime.desc());
+                        break;
+                    case "id":
+                        query.orderBy(order.isAscending() ? contractor.id.asc() : contractor.id.desc());
+                        break;
+                }
+            });
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(contractor.id.asc());
+            }
+        } else {
+            // Domyślne sortowanie
+            query.orderBy(contractor.id.asc());
+        }
+
+        return query;
     }
 }

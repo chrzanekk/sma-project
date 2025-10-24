@@ -143,7 +143,7 @@ const ConstructionSiteTableWithContractors: React.FC<Props> = ({
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("country")}>{t("constructionSites:country")} {renderSortIndicator("country")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("constructionSites:shortName")}>
+                                                onClick={() => onSortChange("shortName")}>
                                 {t("constructionSites:shortName")} {renderSortIndicator("shortName")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}

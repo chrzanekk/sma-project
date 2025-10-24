@@ -17,11 +17,11 @@ import React from "react";
 import AddContactForm from "@/components/contact/AddContactForm.tsx";
 
 
-interface AddContractorDrawerProps {
+interface AddContactDrawerProps {
     fetchContacts: () => void;
 }
 
-const AddContactDrawer: React.FC<AddContractorDrawerProps> = ({fetchContacts}) => {
+const AddContactDrawer: React.FC<AddContactDrawerProps> = ({fetchContacts}) => {
     const {t} = useTranslation('contacts');
     const themeColors = useThemeColors();
     return (

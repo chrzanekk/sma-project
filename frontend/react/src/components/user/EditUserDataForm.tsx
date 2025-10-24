@@ -4,12 +4,16 @@ import * as Yup from "yup";
 import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Stack} from "@chakra-ui/react";
-import React, {useEffect, useState} from "react";
+import {Box, Button, Stack, Text} from "@chakra-ui/react";
+import React, {useEffect, useMemo, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
 import {getBooleanOptions} from "@/components/shared/formOptions.ts";
 import useUser from "@/hooks/UseUser.tsx";
+import {makePositionSearchAdapter} from "@/search/position-search-adapter.ts";
+import PositionSearchWithSelect from "@/components/position/PositionSearchWithSelect.tsx";
+import {PositionBaseDTO} from "@/types/position-types.ts";
+import {getSelectedCompanyId} from "@/utils/company-utils.ts";
 
 
 interface EditUserDataFormProps {
@@ -19,7 +23,8 @@ interface EditUserDataFormProps {
 
 const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) => {
     const {t} = useTranslation(['auth', 'common'])
-    const { user: currentUser, updateUser: updateLocalUser } = useUser();
+    const {user: currentUser, updateUser: updateLocalUser} = useUser();
+    const companyId: number = getSelectedCompanyId()!;
     const defaultValues: UserFormDTO = {
         id: 0,
         login: '',
@@ -27,7 +32,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
         password: '',
         firstName: '',
         lastName: '',
-        position: '',
+        position: undefined,
         locked: false,
         enabled: true,
         roles: [],
@@ -35,6 +40,14 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
     };
     const [initialValues, setInitialValues] = useState<UserFormDTO>(defaultValues);
     const [isLoading, setIsLoading] = useState<boolean>(true);
+
+    const positionSearchFn = useMemo(
+        () => makePositionSearchAdapter({
+            fixed: {companyId},
+            defaults: {page: 0, size: 10, sort: "name,asc"},
+        }),
+        [companyId]
+    );
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -77,9 +90,8 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     .min(2, t('verification.minLength', {field: t('shared.lastName'), count: 2}))
                     .max(30, t('verification.maxLength', {field: t('shared.lastName'), count: 30}))
                     .required(t('verification.required', {field: t('shared.lastName')})),
-                position: Yup.string()
-                    .min(2, t('verification.minLength', {field: t('shared.position'), count: 2}))
-                    .max(50, t('verification.maxLength', {field: t('shared.position'), count: 50})),
+                position: Yup.object()
+                    .nullable(),
                 locked: Yup.boolean()
                     .required(t("verification.required", {field: t("shared.locked")})),
                 enabled: Yup.boolean()
@@ -116,7 +128,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                 }
             }}
         >
-            {({isValid, isSubmitting, dirty}) => {
+            {({isValid, isSubmitting, dirty, values, setFieldValue, setFieldTouched, touched, errors}) => {
                 const booleanOptions = getBooleanOptions(t);
                 const width = "450px";
                 return (
@@ -128,9 +140,29 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                             <CustomInputField name={"lastName"} label={t('shared.lastName')}
                                               placeholder={t('shared.lastName')}
                                               width={width}/>
-                            <CustomInputField name={"position"} label={t('shared.position')}
-                                              placeholder={t('shared.position')}
-                                              width={width}/>
+
+                            <Box>
+                                <Text fontSize="sm" fontWeight="bold" mb="1" textAlign={"center"}
+                                >
+                                    {t('shared.position')}
+                                </Text>
+                                <PositionSearchWithSelect
+                                    value={values.position}
+                                    onSelect={(position: PositionBaseDTO | null) => {
+                                        setFieldValue("position", position).catch();
+                                        setFieldTouched("position", true, false).catch();
+                                    }}
+                                    searchFn={positionSearchFn}
+                                    placeholder={t('shared.position')}
+                                    width={width} // "450px"
+                                    size="md"
+                                />
+                                {touched.position && errors.position && (
+                                    <Text color="red.500" fontSize="xs" mt="1">
+                                        {errors.position as string}
+                                    </Text>
+                                )}
+                            </Box>
                             <CustomSelectField name={"locked"} label={t('shared.locked')}
                                                placeholder={t('shared.locked')} options={booleanOptions}
                                                width={width}/>

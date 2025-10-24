@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.com.chrzanowski.sma.common.enumeration.Country;
 
 @Builder(toBuilder = true)
 @AllArgsConstructor

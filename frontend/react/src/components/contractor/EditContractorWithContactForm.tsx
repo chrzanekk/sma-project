@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ContractorFormValues, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
-import {ContactBaseDTO, BaseContactFormValues} from "@/types/contact-types.ts";
+import {ContactBaseDTO, BasePositionFormValues} from "@/types/contact-types.ts";
 import {getContactsByContractorIdPaged, getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
@@ -23,12 +23,12 @@ interface EditContractorWithContactFormStepsProps {
 }
 
 interface ContactState {
-    contacts: BaseContactFormValues[];
+    contacts: BasePositionFormValues[];
     page: number;
     hasMore: boolean;
     loading: boolean;
-    addedContacts: BaseContactFormValues[];
-    deletedContacts: BaseContactFormValues[];
+    addedContacts: BasePositionFormValues[];
+    deletedContacts: BasePositionFormValues[];
 }
 
 const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactFormStepsProps> = ({
@@ -56,7 +56,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
 
     // Refs formularzy
     const contractorFormRef = useRef<FormikProps<ContractorFormValues>>(null);
-    const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
+    const contactFormRef = useRef<FormikProps<BasePositionFormValues>>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const fetchContactsPage = useCallback(async (page: number, replace = false) => {
@@ -120,7 +120,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         }
     };
 
-    const handleAddContact = (contact: BaseContactFormValues) => {
+    const handleAddContact = (contact: BasePositionFormValues) => {
         const exists = contactState.contacts.some(
             (c) =>
                 c.firstName === contact.firstName &&

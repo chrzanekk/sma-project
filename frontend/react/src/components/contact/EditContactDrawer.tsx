@@ -48,7 +48,7 @@ const EditContactDrawer: React.FC<EditContractorDrawerProps> = ({fetchContacts, 
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("contractors:edit")}
+                                        {t("contacts:edit")}
                                     </Heading>
                                 </DrawerHeader>
                                 <DrawerBody>

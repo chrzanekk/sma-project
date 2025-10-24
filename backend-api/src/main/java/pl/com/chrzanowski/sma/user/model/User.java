@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 import pl.com.chrzanowski.sma.company.model.Company;
+import pl.com.chrzanowski.sma.position.model.Position;
 import pl.com.chrzanowski.sma.role.model.Role;
 
 import java.time.Instant;
@@ -56,9 +57,10 @@ public class User {
     @Column(length = 30, name = "last_name")
     private String lastName;
 
-    @Size(max = 50)
-    @Column(length = 50, name = "position")
-    private String position;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "position_id", nullable = false)
+    @ToString.Exclude
+    private Position position;
 
     private Boolean locked;
     private Boolean enabled;

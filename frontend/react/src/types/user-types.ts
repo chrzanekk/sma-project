@@ -1,5 +1,6 @@
 import {RoleDTO} from "@/types/role-types.ts";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
+import {PositionBaseDTO} from "@/types/position-types.ts";
 
 export interface LoginRequest {
     login: string;
@@ -23,7 +24,7 @@ export interface RegisterRequest {
     password: string;
     firstName: string;
     lastName: string;
-    position: string | "";
+    position: PositionBaseDTO | undefined;
     role?: Set<string>;
 }
 
@@ -33,7 +34,7 @@ export interface UserInfo {
     login: string;
     firstName: string;
     lastName: string;
-    position: string;
+    position: PositionBaseDTO | undefined;
     locked: boolean;
     enabled: boolean;
     roles?: string[];
@@ -46,7 +47,7 @@ export interface UserUpdateRequest {
     login: string;
     firstName: string;
     lastName: string;
-    position: string;
+    position: PositionBaseDTO | undefined;
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
@@ -73,7 +74,7 @@ export interface UserDTO {
     password?: string;
     firstName: string;
     lastName: string;
-    position: string;
+    position: PositionBaseDTO | undefined;
     locked: boolean;
     enabled: boolean;
     roles?: Array<RoleDTO>;
@@ -89,7 +90,7 @@ export interface UserFormDTO {
     password?: string;
     firstName: string;
     lastName: string;
-    position: string;
+    position: PositionBaseDTO | undefined;
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
