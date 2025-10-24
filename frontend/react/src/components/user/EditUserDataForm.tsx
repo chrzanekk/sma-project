@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import {UserDTO, UserFormDTO} from "@/types/user-types.ts";
 import {getUserById, updateUser} from "@/services/user-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
-import {Button, Stack, Text} from "@chakra-ui/react";
+import {Box, Button, Stack, Text} from "@chakra-ui/react";
 import React, {useEffect, useMemo, useState} from "react";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
@@ -141,8 +141,9 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                               placeholder={t('shared.lastName')}
                                               width={width}/>
 
-                            <div>
-                                <Text fontSize="sm" fontWeight="bold" mb="1">
+                            <Box>
+                                <Text fontSize="sm" fontWeight="bold" mb="1" textAlign={"center"}
+                                >
                                     {t('shared.position')}
                                 </Text>
                                 <PositionSearchWithSelect
@@ -161,11 +162,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                         {errors.position as string}
                                     </Text>
                                 )}
-                            </div>
-
-                            {/*<CustomInputField name={"position"} label={t('shared.position')}*/}
-                            {/*                  placeholder={t('shared.position')}*/}
-                            {/*                  width={width}/>*/}
+                            </Box>
                             <CustomSelectField name={"locked"} label={t('shared.locked')}
                                                placeholder={t('shared.locked')} options={booleanOptions}
                                                width={width}/>

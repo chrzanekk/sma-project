@@ -1,13 +1,12 @@
-import {Field, Form, Formik} from 'formik';
+import {Form, Formik} from 'formik';
 import * as Yup from 'yup';
-import {Button, Stack, Text} from "@chakra-ui/react";
+import {Box, Button, Stack, Text} from "@chakra-ui/react";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {addUser} from "@/services/user-service.ts";
 import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React, {useMemo} from "react";
-import {useThemeColors} from "@/theme/theme-colors.ts";
-import Select from 'react-select';
+import {themeVars} from "@/theme/theme-colors.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
@@ -25,7 +24,6 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['auth', 'common']);
     const booleanOptions = getBooleanOptions(t);
     const {roles: roleOptions, isLoading, error} = useRoles();
-    const themeColors = useThemeColors();
     const companyId: number = getSelectedCompanyId()!;
 
     const positionSearchFn = useMemo(
@@ -133,7 +131,11 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                         {/* Position Field */}
 
                         <div>
-                            <Text fontSize="sm" fontWeight="bold" mb="1">
+                            <Text fontSize="sm"
+                                  fontWeight="bold"
+                                  mb="1"
+                                  textAlign={"center"}
+                            >
                                 {t('shared.position')}
                             </Text>
                             <PositionSearchWithSelect
@@ -145,6 +147,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                 searchFn={positionSearchFn}
                                 placeholder={t('shared.position')}
                                 size={"md"}
+                                width={"100%"}
                             />
                             {touched.position && errors.position && (
                                 <Text color="red.500" fontSize="xs" mt="1">
@@ -152,48 +155,18 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
                                 </Text>
                             )}
                         </div>
-                        {/*<CustomInputField*/}
-                        {/*    name={"position"}*/}
-                        {/*    label={t('shared.position')}*/}
-                        {/*    placeholder={t('shared.position')}*/}
-                        {/*/>*/}
 
                         {/* Roles Select Field */}
-                        <Field name="roles">
-                            {() => (
-                                <div>
-                                    <Text fontSize="sm" fontWeight="bold" mb="1">
-                                        {t('shared.chooseRoles')}
-                                    </Text>
-                                    <Select
-                                        isMulti
-                                        options={roleOptions}
-                                        placeholder={t("shared.chooseRoles")}
-                                        closeMenuOnSelect={false}
-                                        onChange={(selectedOptions) => {
-                                            const roles = selectedOptions.map((option) => option.value);
-                                            setFieldValue("roles", roles || []).catch();
-                                            setFieldTouched("roles", true, false).catch();
-                                        }}
-                                        styles={{
-                                            control: (provided) => ({
-                                                ...provided,
-                                                backgroundColor: themeColors.bgColorSecondary,
-                                                borderColor: themeColors.borderColor,
-                                                borderRadius: "md",
-                                                boxShadow: "none",
-                                            })
-                                        }}
-                                    />
-                                    {touched.roles && errors.roles && (
-                                        <Text color="red.500" fontSize="xs" mt="1">
-                                            {errors.roles}
-                                        </Text>
-                                    )}
-                                </div>
-                            )}
-                        </Field>
-
+                        <Box>
+                            <Text fontSize="sm" fontWeight="bold" mb="1" textAlign={"center"}>
+                                {t('shared.chooseRoles')}
+                            </Text>
+                            <CustomSelectField name={"roles"}
+                                               isMulti={true}
+                                               placeholder={t("shared.chooseRoles")}
+                                               options={roleOptions}
+                                               bgColor={themeVars.bgColorSecondary}/>
+                        </Box>
                         {/* Locked Field */}
                         <CustomSelectField name={"locked"}
                                            label={t('shared.locked')}

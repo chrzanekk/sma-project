@@ -81,10 +81,6 @@ public class UserJPADaoImpl implements UserDao {
         log.debug("DAO: Find all users by specification with page: {}", specification);
         BlazeJPAQuery<User> query = userQuerySpec.buildQuery(specification, pageable);
 
-        // Join do roles - może być potrzebny dla filtrowania
-        // Jeśli często filtrujesz po rolach, dodaj:
-         query.leftJoin(user.roles).fetchJoin();
-
         PagedList<User> content = query.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(content, pageable, content.getTotalSize());
     }

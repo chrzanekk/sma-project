@@ -40,14 +40,4 @@ public class Position extends AuditableEntity {
     @ToString.Exclude
     private Company company;
 
-    @OneToMany(mappedBy = "position")
-    @ToString.Exclude
-    private Set<User> users = new HashSet<>();
-
-    @PreRemove
-    private void preventDeletionIfInUse() {
-        if (!users.isEmpty()) {
-            throw new PositionException(PositionErrorCode.DELETE_NOT_POSSIBLE, "Nie można usunąć stanowiska przypisanego do użytkowników.");
-        }
-    }
 }

@@ -13,14 +13,12 @@ import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 public interface PositionDTOMapper extends EntityMapper<PositionDTO, Position> {
 
     @Mapping(source = "company", target = "company")
-    @Mapping(source = "users", target = "users")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "description", target = "description")
     PositionDTO toDto(Position position);
 
     @Mapping(source = "company", target = "company")
-    @Mapping(source = "users", target = "users")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
@@ -28,7 +26,6 @@ public interface PositionDTOMapper extends EntityMapper<PositionDTO, Position> {
     Position toEntity(PositionDTO dto);
 
     @Mapping(source = "company", target = "company")
-    @Mapping(source = "users", target = "users")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)

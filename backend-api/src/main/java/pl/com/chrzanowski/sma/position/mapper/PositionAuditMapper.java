@@ -17,7 +17,6 @@ public interface PositionAuditMapper extends EntityMapper<PositionAuditableDTO, 
     @Mapping(source = "id", target = "base.id")
     @Mapping(source = "name", target = "base.name")
     @Mapping(source = "description", target = "base.description")
-    @Mapping(source = "users", target = "base.users")
     PositionAuditableDTO toDto(Position position);
 
 }

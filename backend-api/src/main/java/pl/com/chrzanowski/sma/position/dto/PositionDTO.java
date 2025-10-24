@@ -19,5 +19,4 @@ import java.util.Set;
 @ToString(callSuper = true)
 public class PositionDTO extends PositionBaseDTO implements HasId<Long> {
     private CompanyBaseDTO company;
-    private Set<UserAuditDTO> users;
 }
