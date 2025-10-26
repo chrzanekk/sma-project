@@ -25,6 +25,7 @@ export const ResourcePermissionProvider: React.FC<{children: React.ReactNode}> =
                 setResources(data);
             } catch (error) {
                 console.error('Error fetching resources:', error);
+                setResources([]);
             } finally {
                 setLoading(false);
             }
@@ -42,6 +43,13 @@ export const ResourcePermissionProvider: React.FC<{children: React.ReactNode}> =
 
         const resource = resources.find(r => r.resourceKey === resourceKey);
         if (!resource) return false;
+
+        // ✅ CRITICAL: Basic resources are ALWAYS accessible for authenticated users
+        // These are hardcoded in backend as .authenticated()
+        const basicResources = ['ACCOUNT_MANAGEMENT'];
+        if (basicResources.includes(resourceKey)) {
+            return true;
+        }
 
         // Public resources are accessible by everyone
         if (resource.isPublic) return true;

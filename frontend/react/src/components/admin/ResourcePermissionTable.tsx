@@ -1,5 +1,5 @@
 import {ResourceDTO} from "@/types/resource-types.ts";
-import React from "react";
+import React, {useMemo} from "react";
 import {useTranslation} from "react-i18next";
 import {themeVars, useThemeColors} from "@/theme/theme-colors.ts";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
@@ -7,6 +7,8 @@ import useRoles from "@/hooks/UseRoles.tsx";
 import {Box, Table, Text} from "@chakra-ui/react";
 import {Field} from "@/components/ui/field.tsx";
 import CustomStandaloneSelectField from "@/components/shared/CustomStandaloneSelectField.tsx";
+import {errorNotification} from "@/notifications/notifications.ts";
+import {formatMessage} from "@/notifications/FormatMessage.tsx";
 
 interface ResourcePermissionTableProps {
     resources: ResourceDTO[];
@@ -24,9 +26,70 @@ const ResourcePermissionTable: React.FC<ResourcePermissionTableProps> = ({
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
     const {roles: roleOptions} = useRoles();
 
-    const filteredResources = resources.filter(r => !r.isPublic);
+    const CRITICAL_RESOURCES = [
+        'RESOURCE_MANAGEMENT',
+        'ROLE_MANAGEMENT',
+        'USER_MANAGEMENT'
+    ];
 
-    if (!filteredResources || filteredResources.length === 0) {
+    const sortedResources = useMemo(() => {
+        return [...resources]
+            .filter(r => !r.isPublic)
+            .sort((a, b) => a.resourceKey.localeCompare(b.resourceKey));
+    }, [resources]);
+
+
+    const handleRoleChange = async (resource: ResourceDTO, selectedRoles: string[]) => {
+        try {
+            // ✅ Validation 1: Prevent removing all roles from critical resources
+            if (CRITICAL_RESOURCES.includes(resource.resourceKey) && selectedRoles.length === 0) {
+                errorNotification(
+                    t('resources:validation.criticalResourceTitle'),
+                    formatMessage(
+                        'criticalResourceCannotBeDeleted',
+                        {resourceName: t(`resources:${resource.displayName}`)},
+                        'resources'
+                    )
+                );
+                return; // Cancel operation
+            }
+
+            if (selectedRoles.length === 0) {
+                errorNotification(
+                    t('resources:validation.noRolesTitle'),
+                    formatMessage(
+                        'resourceNeedAtLeastOneRole',
+                        {resourceName: t(`resources:${resource.displayName}`)},
+                        'resources'
+                    )
+                );
+                return;
+            }
+
+            await onRoleChange(resource.id, selectedRoles);
+
+        } catch (error: any) {
+            console.error('Error updating resource roles:', error);
+
+            // Backend should return error in response.data with code and message
+            const errorCode = error.response?.data?.code;
+            const errorDetails = error.response?.data?.details;
+
+            if (errorCode) {
+                errorNotification(
+                    t('common:error'),
+                    formatMessage(errorCode, errorDetails, 'resources')
+                );
+            } else {
+                errorNotification(
+                    t('common:error'),
+                    t('resources:notifications.updateFailed')
+                );
+            }
+        }
+    };
+
+    if (!sortedResources || sortedResources.length === 0) {
         return (
             <Field alignContent="center">
                 <Text fontSize={20}>{t("common:dataNotFound")}</Text>
@@ -46,42 +109,34 @@ const ResourcePermissionTable: React.FC<ResourcePermissionTableProps> = ({
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {resources.filter(r => !r.isPublic).map((resource) => (
-                            <Table.Row key={resource.id} bg={themeColors.bgColorSecondary}>
+                        {sortedResources.map((resource) => (
+                            <Table.Row key={resource.id} bg={themeColors.bgColorSecondary} opacity={resource.allowedRoles.length === 0 ? 0.6 : 1}>
                                 <Table.Cell {...commonCellProps}>
-                                    <Text fontWeight="bold">{resource.displayName}</Text>
-                                    <Text fontSize="sm" color={themeColors.fontColor}>{resource.description}</Text>
+                                    <Text fontWeight="bold">{t(`resources:${resource.displayName}`)}</Text>
+                                    <Text fontSize="sm" color={themeColors.fontColor}>{t(`resources:${resource.description}`)}</Text>
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <Text fontFamily="mono" fontSize="sm" color={themeColors.fontColor}>
                                         {resource.httpMethod && `${resource.httpMethod} `}
                                         {resource.endpointPattern}
                                     </Text>
+                                    {resource.allowedRoles.length === 0 && (
+                                        <Text fontSize="xs" color="orange.500" fontWeight="bold">
+                                            ⚠️ {t('resources:warnings.noRolesAssigned')}
+                                        </Text>)}
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <CustomStandaloneSelectField
                                         options={roleOptions}
                                         value={resource.allowedRoles}  // Array of role names
                                         onChange={(selectedRoles) => {
-                                            onRoleChange(resource.id, selectedRoles).then();
+                                            handleRoleChange(resource, selectedRoles).then();
                                         }}
                                         placeholder={t('resources:selectRoles')}
                                         isMulti={true}
                                         bgColor={themeVars.bgColorSecondary}
                                         disabled={loading}
                                     />
-                                    {/*<Select*/}
-                                    {/*    isMulti*/}
-                                    {/*    options={roleOptions}*/}
-                                    {/*    value={roleOptions.filter(opt =>*/}
-                                    {/*        resource.allowedRoles.includes(opt.value)*/}
-                                    {/*    )}*/}
-                                    {/*    onChange={(selected) => {*/}
-                                    {/*        const roles = selected.map(s => s.value);*/}
-                                    {/*        onRoleChange(resource.id, roles).then();*/}
-                                    {/*    }}*/}
-                                    {/*    isDisabled={loading}*/}
-                                    {/*/>*/}
                                 </Table.Cell>
                             </Table.Row>
                         ))}

@@ -1,5 +1,5 @@
-import React, {useMemo, useState} from 'react';
-import {Box, Button, Flex, Grid, GridItem, Heading, Spinner} from '@chakra-ui/react';
+import React, {useState} from 'react';
+import {Box, Button, Flex, Grid, GridItem, Heading, Spinner, Text} from '@chakra-ui/react';
 import RoleManagement from '@/components/role/RoleManagement';
 import UserManagement from '@/components/user/UserManagement';
 import {useThemeColors} from "@/theme/theme-colors.ts";
@@ -18,17 +18,8 @@ const AdminPanel: React.FC = () => {
     const themeColors = useThemeColors();
     const {canAccessResource, loading} = useResourcePermissions();
 
-    // ✅ Determine default view based on permissions
-    const getDefaultView = (): AdminPanelView | null => {
-        if (canAccessResource('USER_MANAGEMENT')) return 'users';
-        if (canAccessResource('ROLE_MANAGEMENT')) return 'roles';
-        if (canAccessResource('COMPANY_MANAGEMENT')) return 'companies';
-        if (canAccessResource('POSITION_MANAGEMENT')) return 'positions';
-        if (canAccessResource('RESOURCE_MANAGEMENT')) return 'permissions';
-        return null;
-    };
-    const defaultView = useMemo(() => getDefaultView(), [canAccessResource]);
-    const [activeView, setActiveView] = useState<AdminPanelView | null>(defaultView);
+    // ✅ Don't set default view - let user choose
+    const [activeView, setActiveView] = useState<AdminPanelView | null>(null);
 
     // ✅ Use custom hook for menu items
     const adminMenuItems = useAdminPanelMenu(t, (view) => setActiveView(view));
@@ -57,9 +48,27 @@ const AdminPanel: React.FC = () => {
     const renderActiveView = () => {
         if (!activeView) {
             return (
-                <Heading size="md" textAlign="center" color={themeColors.fontColor}>
-                    {t('selectViewMessage', 'Please select a view from the menu')}
-                </Heading>
+                <Box
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="center"
+                    alignItems="center"
+                    minH="200px"
+                    p={8}
+                >
+                    <Heading
+                        size="lg"
+                        mb={4}
+                        color={themeColors.fontColor}
+                        textAlign="center"
+                    >
+                        {t('selectViewMessage', 'Wybierz widok z menu')}
+                    </Heading>
+                    <Text color={themeColors.fontColor}
+                    >
+                        {t('selectViewHint', 'Użyj przycisku "Wybierz widok" aby wybrać panel administracyjny')}
+                    </Text>
+                </Box>
             );
         }
 
@@ -175,7 +184,6 @@ const AdminPanel: React.FC = () => {
                 bg={themeColors.bgColorPrimary}
                 borderRadius="lg"
                 overflowY={"auto"}
-                mt={-1}
             >
                 {renderActiveView()}
             </GridItem>

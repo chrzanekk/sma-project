@@ -30,6 +30,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = ({
             templateRows="auto auto auto auto 1fr"
             bgColor={themeColors.bgColorSecondary}
             height="auto"
+            mt={-1}
             gap={1}
         >
             <GridItem w="100%" p={1} mt={1} bg={layoutBgColor} borderRadius="lg">

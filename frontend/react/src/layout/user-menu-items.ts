@@ -12,15 +12,12 @@ export const getUserMenuItems = (): MenuItem[] => {
 
     const menuItems: MenuItem[] = [];
 
-// ✅ Profile - check ACCOUNT_MANAGEMENT permission
-    if (canAccessResource('ACCOUNT_MANAGEMENT')) {
-        menuItems.push({
-            label: t('profile'),
-            href: "#",
-            onClick: () => navigate("/profile"),
-            value: "profile"
-        });
-    }
+    menuItems.push({
+        label: t('profile'),
+        href: "#",
+        onClick: () => navigate("/profile"),
+        value: "profile"
+    });
 
     // ✅ Admin Panel - check if user has access to ANY admin resource
     const hasAdminAccess =

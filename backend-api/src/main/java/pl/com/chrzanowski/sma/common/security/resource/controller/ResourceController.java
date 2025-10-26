@@ -1,6 +1,5 @@
 package pl.com.chrzanowski.sma.common.security.resource.controller;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,7 @@ public class ResourceController {
     @GetMapping
     public ResponseEntity<List<ResourceDTO>> getAllResources(Authentication authentication) {
         log.info("REST: Get resources for user: {}", authentication.getName());
-        return ResponseEntity.ok(resourceService.getResourcesForCurrentUser());
+        return ResponseEntity.ok(resourceService.getAllResources());
     }
 
     /**
@@ -61,13 +60,5 @@ public class ResourceController {
         log.info("REST: Reload security configuration");
         resourceService.reloadSecurityConfiguration();
         return ResponseEntity.ok().build();
-    }
-
-    /**
-     * Request DTO for role names
-     */
-    @Data
-    public static class RoleNamesRequest {
-        private List<String> roleNames;
     }
 }

@@ -55,7 +55,7 @@ const router = createBrowserRouter([
         {
             path: "profile",
             element: (
-                <ProtectedRoute resourceKey="ACCOUNT_MANAGEMENT">
+                <ProtectedRoute>
                     <Layout>
                         <UserProfileEdit/>
                     </Layout>

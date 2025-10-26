@@ -28,12 +28,19 @@ const ResourcePermissionManagement: React.FC = () => {
     const handleRoleChange = async (resourceId: number, selectedRoles: string[]) => {
         setLoading(true);
         try {
+            const hasAdmin = selectedRoles.includes('ROLE_ADMIN');
+
             const resourceUpdate: ResourceUpdateRequest = {
                 resourceId: resourceId,
                 roleNames: selectedRoles
             }
             await updateResourceRoles(resourceUpdate);
-            successNotification(t('common:success'), t('resources:notifications.rolesUpdated'));
+
+            if (!hasAdmin) {
+                successNotification(t('common:success'), t('resources:notifications.rolesUpdatedWithAdmin'));
+            } else {
+                successNotification(t('common:success'), t('resources:notifications.rolesUpdated'));
+            }
             await fetchResources();
         } catch (error) {
             errorNotification(t('common:error'), t('resources:notifications.errorUpdatingRoles'));

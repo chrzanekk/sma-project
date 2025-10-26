@@ -1,20 +1,21 @@
 package pl.com.chrzanowski.sma.common.security.resource.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.chrzanowski.sma.common.exception.ResourceException;
+import pl.com.chrzanowski.sma.common.exception.RoleException;
+import pl.com.chrzanowski.sma.common.exception.error.ResourceErrorCode;
 import pl.com.chrzanowski.sma.common.security.resource.dto.ResourceDTO;
 import pl.com.chrzanowski.sma.common.security.resource.model.Resource;
 import pl.com.chrzanowski.sma.common.security.resource.repository.ResourceRepository;
 import pl.com.chrzanowski.sma.role.model.Role;
 import pl.com.chrzanowski.sma.role.repository.RoleRepository;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,12 +23,18 @@ import java.util.stream.Collectors;
 public class ResourceServiceImpl implements ResourceService {
     private final ResourceRepository resourceRepository;
     private final RoleRepository roleRepository;
-    private final ApplicationContext applicationContext;
 
-    public ResourceServiceImpl(ResourceRepository resourceRepository, RoleRepository roleRepository, ApplicationContext applicationContext) {
+
+    // Critical resources that must always have at least one role
+    private static final List<String> CRITICAL_RESOURCES = Arrays.asList(
+            "RESOURCE_MANAGEMENT",
+            "ROLE_MANAGEMENT",
+            "USER_MANAGEMENT"
+    );
+
+    public ResourceServiceImpl(ResourceRepository resourceRepository, RoleRepository roleRepository) {
         this.resourceRepository = resourceRepository;
         this.roleRepository = roleRepository;
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -90,21 +97,52 @@ public class ResourceServiceImpl implements ResourceService {
     @Transactional
     @Override
     public ResourceDTO updateResourceRoles(Long resourceId, List<String> roleNames) {
+
         Resource resource = resourceRepository.findById(resourceId)
                 .orElseThrow(() -> new RuntimeException("Resource not found: " + resourceId));
 
-        Set<Role> roles = roleNames.stream()
+        if (CRITICAL_RESOURCES.contains(resource.getResourceKey().name()) &&
+                (roleNames == null || roleNames.isEmpty())) {
+            throw new ResourceException(ResourceErrorCode.CRITICAL_RESOURCE_CANNOT_BE_DELETED, "Cannot remove all roles from critical resource: " + resource.getResourceKey().name() +
+                    ". This resource must always have at least ROLE_ADMIN assigned.");
+        }
+
+        // ✅ Validation: Stop if removing all roles from any resource
+        if (roleNames == null || roleNames.isEmpty()) {
+            throw new ResourceException(ResourceErrorCode.ONE_ROLE_NEEDED, "Cannot remove all roles from resource: " + resource.getResourceKey().name() +
+                    ". This resource must always have at least one role assigned.");
+        }
+
+        // ✅ CRITICAL: Always ensure ROLE_ADMIN is included to prevent admin lockout
+        Set<String> finalRoleNames = new HashSet<>(roleNames);
+        if (!finalRoleNames.contains("ROLE_ADMIN")) {
+            log.warn("⚠️ ROLE_ADMIN not in role list for resource {}. Auto-adding to prevent lockout.",
+                    resource.getResourceKey().name());
+            finalRoleNames.add("ROLE_ADMIN");
+        }
+
+        // Find roles by names
+        Set<Role> roles = finalRoleNames.stream()
                 .map(roleName -> roleRepository.findByName(roleName)
-                        .orElseThrow(() -> new RuntimeException("Role not found: " + roleName)))
+                        .orElseThrow(() -> new RoleException(
+                                "Role not found: " + roleName,
+                                Map.of("roleName", roleName)
+                        )))
                 .collect(Collectors.toSet());
+
+        // Verify ROLE_ADMIN was actually found in database
+        boolean hasAdminRole = roles.stream()
+                .anyMatch(role -> "ROLE_ADMIN".equals(role.getName()));
+
+        if (!hasAdminRole) {
+            log.error("❌ CRITICAL: ROLE_ADMIN not found in database!");
+            throw new RoleException("Role not found: ROLE_ADMIN", Map.of("roleName", "ROLE_ADMIN"));
+        }
 
         resource.setAllowedRoles(roles);
         Resource saved = resourceRepository.save(resource);
 
-        log.info("Updated roles for resource {}: {}", resourceId, roleNames);
-
-        // Trigger security reload if needed
-//        reloadSecurityConfiguration();
+        log.info("Successfully updated roles for resource {}: {}", resourceId, roleNames);
 
         return toDTO(saved);
     }

@@ -1,11 +1,44 @@
 {
-  "resourcePermissions": "Uprawnienia do zasobów/obszarów",
-  "resource": "Zasób/obszar",
+  "resourcePermissions": "Resource/Area Permissions",
+  "resource": "Resource/Area",
   "endpoint": "Endpoint",
-  "allowedRoles": "Uprawnione role",
+  "allowedRoles": "Allowed Roles",
+  "selectRoles": "Select roles",
   "notifications": {
-    "rolesUpdated": "Uprawnienia zaktualizowane pomyślnie",
-    "errorUpdatingRoles": "Błąd aktualizacji uprawnień",
-    "errorLoadingNotifications": "Błąd wczytywania listy zasobów"
-  }
+    "rolesUpdated": "Permissions updated successfully",
+    "errorUpdatingRoles": "Error updating permissions",
+    "errorLoadingNotifications": "Error loading resource list",
+    "updateFailed": "Failed to update resource roles"
+  },
+  "criticalResourceCannotBeDeleted": "Cannot remove all roles from resource {resourceName}. This is a critical resource that must have at least ROLE_ADMIN assigned.",
+  "resourceNeedAtLeastOneRole": "Cannot remove all roles from resource {resourceName}. The resource must have at least one role assigned.",
+  "validation": {
+    "criticalResourceTitle": "Critical Resource",
+    "noRolesTitle": "No Roles"
+  },
+  "warnings": {
+    "noRolesAssigned": "No roles assigned - resource is inaccessible"
+  },
+
+  "authentication": "Authentication",
+  "authenticationManagement": "Authentication Management",
+  "account": "Profile",
+  "accountManagement": "User Profile Management",
+  "user": "Users",
+  "userManagement": "User Management",
+  "role": "Roles",
+  "roleManagement": "Role Management",
+  "company": "Companies",
+  "companyManagement": "Company Management",
+  "contractor": "Contractors",
+  "contractorManagement": "Contractor Management",
+  "contact": "Contacts",
+  "contactManagement": "Contact Management",
+  "contract": "Contracts/Agreements/Orders",
+  "contractManagement": "Contract/Agreement/Order Management",
+  "constructionSite": "Construction Sites",
+  "constructionSiteManagement": "Construction Site Management",
+  "position": "Positions",
+  "positionManagement": "Position Management",
+  "resourceManagement": "Resource Access Management"
 }

@@ -5,5 +5,8 @@
   "roles": "Role",
   "companies": "Firmy",
   "positions": "Stanowiska",
-  "permissions": "Uprawnienia"
+  "permissions": "Uprawnienia",
+  "noAccess": "Nie masz dostępu do tych zasobów",
+  "selectViewMessage": "Wybierz widok z menu po prawej",
+  "selectViewHint": "Użyj przycisku \"Wybierz widok\" aby wybrać widok"
 }
