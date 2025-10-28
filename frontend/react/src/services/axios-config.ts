@@ -26,6 +26,21 @@ const getAuthConfig = () => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        if (error.response?.status === 401) {
+            // Przekieruj na stronę główną
+            window.location.href = '/';
+            // Pokaż komunikat o wygasłej sesji
+
+            // Wyczyść token z localStorage
+            localStorage.removeItem("auth");
+
+            // WAŻNE: Zatrzymaj dalsze wykonywanie
+            return Promise.reject({
+                code: "sessionExpired",
+                message: i18n.t('errors:sessionExpiredMessage'),
+                status: 401,
+            });
+        }
         if (error.response) {
             const {code, details} = error.response.data || {};
             const formatedMessage = formatMessage(code, details, 'errors');
