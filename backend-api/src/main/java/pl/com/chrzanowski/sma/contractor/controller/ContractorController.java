@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contact.dto.ContactDTO;
@@ -23,7 +24,7 @@ import pl.com.chrzanowski.sma.contractor.service.filter.ContractorFilter;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/contractors")
+@RequestMapping(path = ApiPath.CONTRACTOR)
 public class ContractorController extends BaseCrudController<
         ContractorAuditableDTO,
         ContractorDTO,

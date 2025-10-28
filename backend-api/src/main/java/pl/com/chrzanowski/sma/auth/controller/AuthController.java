@@ -22,6 +22,7 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.service.PasswordResetService;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.*;
 import pl.com.chrzanowski.sma.common.security.jwt.AuthTokenFilter;
@@ -38,7 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @RestController
-@RequestMapping(path = "/api/auth")
+@RequestMapping(path = ApiPath.AUTH)
 public class AuthController {
 
     @Value("${jwt.tokenValidityTimeInMinutes}")

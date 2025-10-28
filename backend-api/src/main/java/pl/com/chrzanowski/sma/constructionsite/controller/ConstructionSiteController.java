@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.constructionsite.dto.ConstructionSiteAuditableDTO;
@@ -21,7 +22,7 @@ import pl.com.chrzanowski.sma.contractor.dto.ContractorDTO;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/construction-sites")
+@RequestMapping(path = ApiPath.CONSTRUCTION_SITE)
 public class ConstructionSiteController extends BaseCrudController<
         ConstructionSiteAuditableDTO,
         ConstructionSiteDTO,

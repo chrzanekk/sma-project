@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.controller.BaseCrudController;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.contact.dto.ContactAuditableDTO;
@@ -17,7 +18,7 @@ import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contact.service.filter.ContactFilter;
 
 @RestController
-@RequestMapping(path = "/api/contacts")
+@RequestMapping(path = ApiPath.CONTACT)
 public class ContactController extends BaseCrudController<
         ContactAuditableDTO,
         ContactDTO,

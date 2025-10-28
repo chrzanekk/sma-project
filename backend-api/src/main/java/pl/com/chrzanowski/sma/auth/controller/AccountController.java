@@ -4,11 +4,13 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.com.chrzanowski.sma.auth.dto.request.UserEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserEditRoleUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.UserUpdateRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.UserInfoResponse;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
 import pl.com.chrzanowski.sma.role.service.RoleService;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -19,7 +21,7 @@ import java.util.Set;
 
 
 @RestController
-@RequestMapping("/api/account")
+@RequestMapping(ApiPath.ACCOUNT)
 public class AccountController {
 
     private final Logger log = LoggerFactory.getLogger(AccountController.class);
@@ -64,6 +66,7 @@ public class AccountController {
     }
 
     @PutMapping("/update-roles")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<?> updateRoles(@RequestBody UserEditRoleUpdateRequest userEditRoleUpdateRequest) {
         log.debug("REST: Update roles for user id:{}", userEditRoleUpdateRequest.userId());
         userService.updateUserRoles(userEditRoleUpdateRequest.userId(), new HashSet<>(userEditRoleUpdateRequest.roles()));

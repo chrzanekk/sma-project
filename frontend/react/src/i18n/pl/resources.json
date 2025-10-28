@@ -1,0 +1,42 @@
+{
+  "resourcePermissions": "Uprawnienia do zasobów/obszarów",
+  "resource": "Zasób/obszar",
+  "endpoint": "Endpoint",
+  "allowedRoles": "Uprawnione role",
+  "selectRoles": "Wybierz role",
+  "notifications": {
+    "rolesUpdated": "Uprawnienia zaktualizowane pomyślnie",
+    "rolesUpdatedWithAdmin": "Uprawnienia zaktualizowano pomyślnie z dodaniem roli ADMIN",
+    "errorUpdatingRoles": "Błąd aktualizacji uprawnień",
+    "errorLoadingNotifications": "Błąd wczytywania listy zasobów",
+    "updateFailed": "Nie udało się zaktualizować ról zasobu"
+  },
+  "criticalResourceCannotBeDeleted": "Nie można usunąć wszystkich ról z zasobu {resourceName}. To jest krytyczny zasób, który musi mieć przypisaną co najmniej rolę ROLE_ADMIN.",
+  "resourceNeedAtLeastOneRole": "Nie można usunąć wszystkich ról z zasobu {resourceName}. Zasób musi mieć przypisaną co najmniej jedną rolę.",
+  "validation": {
+    "criticalResourceTitle": "Krytyczny zasób",
+    "noRolesTitle": "Brak ról"
+  },
+
+  "authentication" :"Autoryzacja",
+  "authenticationManagement": "Zarządzanie autoryzacją",
+ "account": "Profil",
+  "accountManagement":"Zarządzanie profilem użytkownika",
+  "user": "Użytkownicy",
+  "userManagement": "Zarządzanie użytkownikami",
+  "role": "Role",
+  "roleManagement":"Zarządzanie rolami ",
+  "company": "Firmy",
+  "companyManagement": "Zarządzanie firmami",
+  "contractor": "Kontrachenci",
+  "contractorManagement": "Zarządzanie kontrahentami",
+  "contact": "Kontakty",
+  "contactManagement": "Zarządzanie kontatkami",
+  "contract": "Kontrakty/Umowy/Zlecenia",
+  "contractManagement": "Zarządzanie kontraktami/umowami/zleceniami",
+  "constructionSite": "Budowy",
+  "constructionSiteManagement": "Zarządzanie budowami",
+  "position": "Stanowiska",
+  "positionManagement": "Zarządzanie stanowiskami",
+  "resourceManagement": "Zarządzanie dostępem do zasobów"
+}

@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,17 +19,18 @@ import pl.com.chrzanowski.sma.common.security.service.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
     UserDetailsServiceImpl userDetailsService;
-
     private final SecurityProblemSupport securityProblemSupport;
-
+    private final DynamicSecurityConfigurer dynamicSecurityConfigurer;
 
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService,
-                             SecurityProblemSupport securityProblemSupport) {
+                             SecurityProblemSupport securityProblemSupport, DynamicSecurityConfigurer dynamicSecurityConfigurer) {
         this.userDetailsService = userDetailsService;
         this.securityProblemSupport = securityProblemSupport;
+        this.dynamicSecurityConfigurer = dynamicSecurityConfigurer;
     }
 
     @Bean
@@ -49,6 +51,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // ✅ Dynamiczna konfiguracja z bazy danych
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -57,34 +60,8 @@ public class WebSecurityConfig {
                     config.accessDeniedHandler(securityProblemSupport);
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/confirm",
-                                "/api/auth/request-password-reset", "/api/auth/reset-password").permitAll()
-
-                        //ACCOUNT CONTROLLER
-                        .requestMatchers("/api/account/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
-
-                        //USER CONTROLLER
-                        .requestMatchers("/api/user/**").hasAnyAuthority("ROLE_ADMIN")
-
-                        //ROLE CONTROLLER
-                        .requestMatchers("/api/role/**").hasAnyAuthority("ROLE_ADMIN")
-
-                        //CONTRACTOR CONTROLLER
-                        .requestMatchers("/api/contractors/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-
-                        //CONTACT CONTROLLER
-                        .requestMatchers("/api/contacts/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-
-                        //COMPANY CONTROLLER
-                        .requestMatchers("/api/companies/**").hasAnyAuthority("ROLE_ADMIN")
-
-                        //CONSTRUCTION SITE CONTROLLER
-                        .requestMatchers("/api/construction-sites/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-
-
-                        .anyRequest().authenticated()
-                ).httpBasic(Customizer.withDefaults());
+                .authorizeHttpRequests(dynamicSecurityConfigurer::configureAuthorization)
+                .httpBasic(Customizer.withDefaults());
         http.addFilterBefore(authenticationTJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

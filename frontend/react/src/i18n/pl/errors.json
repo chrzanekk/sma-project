@@ -2,6 +2,8 @@
   "error" : "Błąd",
   "networkError": "Błąd sieci",
   "unauthorized": "Brak autoryzacji - sprawdź swoje dane logowania",
+  "sessionExpired": "Sesja wygasła",
+  "sessionExpiredMessage":"Sesja wygasła, zaloguj się ponownie",
   "accessDenied": "Brak dostępu",
   "cannotConnectToServer": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
   "genericError": "Wystąpił błąd",

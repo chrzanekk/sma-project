@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.util.controller.PaginationUtil;
 import pl.com.chrzanowski.sma.user.dto.AdminEditPasswordChangeRequest;
 import pl.com.chrzanowski.sma.user.dto.UserDTO;
@@ -18,7 +19,7 @@ import pl.com.chrzanowski.sma.user.service.filter.UserFilter;
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/api/users")
+@RequestMapping(path = ApiPath.USER)
 public class UserController {
     private final Logger log = LoggerFactory.getLogger(UserController.class);
 

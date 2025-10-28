@@ -24,7 +24,7 @@ export interface RegisterRequest {
     password: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | undefined;
+    position: PositionBaseDTO | null;
     role?: Set<string>;
 }
 
@@ -34,7 +34,7 @@ export interface UserInfo {
     login: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | undefined;
+    position: PositionBaseDTO | null;
     locked: boolean;
     enabled: boolean;
     roles?: string[];
@@ -47,7 +47,7 @@ export interface UserUpdateRequest {
     login: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | undefined;
+    position: PositionBaseDTO | null;
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
@@ -74,7 +74,7 @@ export interface UserDTO {
     password?: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | undefined;
+    position: PositionBaseDTO | null;
     locked: boolean;
     enabled: boolean;
     roles?: Array<RoleDTO>;
@@ -90,7 +90,7 @@ export interface UserFormDTO {
     password?: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | undefined;
+    position: PositionBaseDTO | null;
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];
