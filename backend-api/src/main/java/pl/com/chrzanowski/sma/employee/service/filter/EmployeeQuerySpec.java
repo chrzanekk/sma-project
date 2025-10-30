@@ -74,13 +74,16 @@ public class EmployeeQuerySpec {
                     case "hourRate":
                         query.orderBy(order.isAscending() ? employee.hourRate.asc() : employee.hourRate.desc());
                         break;
+                    case "position":
+                        query.orderBy(order.isAscending() ? employee.position.name.asc() : employee.position.name.desc());
+                        break;
                 }
             });
             if (sort.stream().noneMatch(order -> "id".equalsIgnoreCase(order.getProperty()))) {
                 query.orderBy(employee.id.asc());
-            } else {
-                query.orderBy(employee.id.asc());
             }
+        } else {
+            query.orderBy(employee.id.asc());
         }
         return query;
     }

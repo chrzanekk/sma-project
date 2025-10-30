@@ -41,7 +41,7 @@ public class ContractJPADaoImpl implements ContractDao {
 
     @Override
     public Contract save(Contract contract) {
-        log.debug("DAO: Save contract : {}", contract);
+        log.debug("DAO: Save contract : {}", contract.getId());
         return contractRepository.save(contract);
     }
 
