@@ -4,6 +4,7 @@ import com.blazebit.persistence.querydsl.BlazeJPAQuery;
 import com.blazebit.persistence.querydsl.BlazeJPAQueryFactory;
 import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.employee.model.Employee;
 
@@ -52,4 +53,35 @@ public class EmployeeQuerySpec {
         return predicate;
     }
 
+    public BlazeJPAQuery<Employee> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        BlazeJPAQuery<Employee> query = queryFactory
+                .selectFrom(employee)
+                .where(builder);
+
+        if (pageable != null && pageable.getSort().isSorted()) {
+            Sort sort = pageable.getSort();
+            sort.forEach(order -> {
+                switch (order.getProperty()) {
+                    case "id":
+                        query.orderBy(order.isAscending() ? employee.id.asc() : employee.id.desc());
+                        break;
+                    case "firstName":
+                        query.orderBy(order.isAscending() ? employee.firstName.asc() : employee.firstName.desc());
+                        break;
+                    case "lastName":
+                        query.orderBy(order.isAscending() ? employee.lastName.asc() : employee.lastName.desc());
+                        break;
+                    case "hourRate":
+                        query.orderBy(order.isAscending() ? employee.hourRate.asc() : employee.hourRate.desc());
+                        break;
+                }
+            });
+            if (sort.stream().noneMatch(order -> "id".equalsIgnoreCase(order.getProperty()))) {
+                query.orderBy(employee.id.asc());
+            } else {
+                query.orderBy(employee.id.asc());
+            }
+        }
+        return query;
+    }
 }
