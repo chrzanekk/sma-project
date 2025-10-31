@@ -41,6 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
+    @Transactional
     public EmployeeDTO save(EmployeeDTO createDto) {
         log.debug("Request to save Employee : {}", createDto);
         Employee employee = employeeDTOMapper.toEntity(createDto);
@@ -49,12 +50,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO update(EmployeeDTO updateDto) {
         log.debug("Request to update Employee : {}", updateDto);
 
         Employee existingEmployee = employeeDao.findById(updateDto.getId()).orElseThrow(
                 () -> new EmployeeException(EmployeeErrorCode.EMPLOYEE_NOT_FOUND, "Employee with id " + updateDto.getId() + " not found")
         );
+
         employeeDTOMapper.updateFromDto(updateDto, existingEmployee);
 
         if (updateDto.getCompany() != null && updateDto.getCompany().getId() != null) {
@@ -68,6 +71,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (updateDto.getPosition() != null && updateDto.getPosition().getId() != null) {
             Position position = positionDao.findById(updateDto.getPosition().getId())
                     .orElseThrow(() -> new PositionException(PositionErrorCode.POSITION_NOT_FOUND, "Position with id " + updateDto.getPosition().getId() + " not found"));
+            existingEmployee.setPosition(position);
         }
 
         Employee updatedEmployee = employeeDao.save(existingEmployee);
@@ -75,6 +79,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public EmployeeDTO findById(Long aLong) {
         log.debug("Request to get Employee : {}", aLong);
         Optional<Employee> employee = employeeDao.findById(aLong);
@@ -82,8 +87,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public void delete(Long aLong) {
         log.debug("Request to delete Employee : {}", aLong);
+        if (employeeDao.findById(aLong).isEmpty()) {
+            throw new EmployeeException(
+                    EmployeeErrorCode.EMPLOYEE_NOT_FOUND,
+                    "Employee with id " + aLong + " not found"
+            );
+        }
         employeeDao.deleteById(aLong);
     }
 }

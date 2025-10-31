@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.employee.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -15,6 +16,8 @@ import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class EmployeeDTO extends EmployeeBaseDTO implements HasId<Long> {
+    @NotNull
     private CompanyBaseDTO company;
+    @NotNull
     private PositionBaseDTO position;
 }

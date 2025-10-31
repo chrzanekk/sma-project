@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static pl.com.chrzanowski.sma.company.model.QCompany.company;
+import static pl.com.chrzanowski.sma.position.model.QPosition.position;
 import static pl.com.chrzanowski.sma.employee.model.QEmployee.employee;
 
 @Repository("employeeJPA")
@@ -62,7 +63,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         log.debug("DAO: Finding all employees by specification with page: {}", specification);
         BlazeJPAQuery<Employee> baseQuery = employeeQuerySpec.buildQuery(specification, pageable);
         baseQuery
-                .leftJoin(employee.position, employee.position).fetchJoin()
+                .leftJoin(employee.position, position).fetchJoin()
                 .leftJoin(employee.company, company).fetchJoin();
 
         PagedList<Employee> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());

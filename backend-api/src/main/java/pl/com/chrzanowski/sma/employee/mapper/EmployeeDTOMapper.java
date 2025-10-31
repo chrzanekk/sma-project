@@ -28,8 +28,9 @@ public interface EmployeeDTOMapper extends EntityMapper<EmployeeDTO, Employee> {
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     Employee toEntity(EmployeeDTO employeeDTO);
 
-    @Mapping(source = "company", target = "company")
-    @Mapping(source = "position", target = "position")
+    @Mapping(target = "company", ignore = true)
+    @Mapping(target = "position", ignore = true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)

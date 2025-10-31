@@ -14,7 +14,8 @@ public enum ResourceCode implements ICode {
     CONTRACT("contract","contractManagement"),
     CONSTRUCTION_SITE("constructionSite","constructionSiteManagement"),
     POSITION("position","positionManagement"),
-    RESOURCE("resource","resourceManagement");
+    RESOURCE("resource","resourceManagement"),
+    EMPLOYEE("employee","employeeManagement");
 
 
     private final String displayName;

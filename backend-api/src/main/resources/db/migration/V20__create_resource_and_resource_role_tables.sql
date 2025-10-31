@@ -59,68 +59,68 @@ COMMENT ON COLUMN resources.http_method IS 'HTTP method restriction (NULL = all 
 COMMENT ON COLUMN resources.is_active IS 'Flag to temporarily disable resource without deleting';
 
 COMMENT ON TABLE resource_role IS 'Maps which roles have access to which resources';
-
--- =============================================================================
--- SEED DATA
--- =============================================================================
-INSERT INTO resources (resource_key, endpoint_pattern, description, http_method, is_active)
-VALUES
-    ('AUTH_PUBLIC', '/api/auth/**', 'Public authentication endpoints', NULL, TRUE),
-    ('ACCOUNT_MANAGEMENT', '/api/account/**', 'User account management', NULL, TRUE),
-    ('USER_MANAGEMENT', '/api/users/**', 'User administration', NULL, TRUE),
-    ('ROLE_MANAGEMENT', '/api/roles/**', 'Role administration', NULL, TRUE),
-    ('COMPANY_MANAGEMENT', '/api/companies/**', 'Company management', NULL, TRUE),
-    ('CONTRACTOR_MANAGEMENT', '/api/contractors/**', 'Contractor management', NULL, TRUE),
-    ('CONTACT_MANAGEMENT', '/api/contacts/**', 'Contact management', NULL, TRUE),
-    ('CONSTRUCTION_SITE_MANAGEMENT', '/api/construction-sites/**', 'Construction site management', NULL, TRUE),
-    ('POSITION_MANAGEMENT', '/api/positions/**', 'Position management', NULL, TRUE),
-    ('CONTRACT_MANAGEMENT', '/api/contracts/**', 'Contract management', NULL, TRUE),
-    ('RESOURCE_MANAGEMENT', '/api/resources/**', 'Resource permission management', NULL, TRUE);
-
--- =============================================================================
--- DEFAULT ROLE ASSIGNMENTS - ✅ POPRAWIONA WERSJA
--- =============================================================================
-DO $$
-DECLARE
-v_role_admin_id BIGINT;
-    v_role_user_id BIGINT;
-    v_resource_rec RECORD;
-BEGIN
-    -- Find ROLE_ADMIN and ROLE_USER IDs
-SELECT id INTO v_role_admin_id FROM roles WHERE name = 'ROLE_ADMIN';
-SELECT id INTO v_role_user_id FROM roles WHERE name = 'ROLE_USER';
-
--- If roles don't exist, skip
-IF v_role_admin_id IS NULL OR v_role_user_id IS NULL THEN
-        RAISE NOTICE 'Roles not found - skipping default permissions';
-        RETURN;
-END IF;
-
-    -- ADMIN has access to everything except public auth
-FOR v_resource_rec IN
-SELECT id FROM resources WHERE resource_key != 'AUTH_PUBLIC'
-    LOOP
-INSERT INTO resource_role (resource_id, role_id)
-VALUES (v_resource_rec.id, v_role_admin_id)  -- ✅ Użyj v_resource_rec.id
-ON CONFLICT (resource_id, role_id) DO NOTHING;
-END LOOP;
-
-    -- USER has access to specific resources
-FOR v_resource_rec IN
-SELECT id FROM resources
-WHERE resource_key IN (
-                       'ACCOUNT_MANAGEMENT',
-                       'CONTRACTOR_MANAGEMENT',
-                       'CONTACT_MANAGEMENT',
-                       'CONSTRUCTION_SITE_MANAGEMENT',
-                       'POSITION_MANAGEMENT',
-                       'CONTRACT_MANAGEMENT'
-    )
-    LOOP
-INSERT INTO resource_role (resource_id, role_id)
-VALUES (v_resource_rec.id, v_role_user_id)  -- ✅ Użyj v_resource_rec.id
-ON CONFLICT (resource_id, role_id) DO NOTHING;
-END LOOP;
-
-    RAISE NOTICE 'Default permissions assigned successfully';
-END $$;
+--
+-- -- =============================================================================
+-- -- SEED DATA
+-- -- =============================================================================
+-- INSERT INTO resources (resource_key, endpoint_pattern, description, http_method, is_active)
+-- VALUES
+--     ('AUTH_PUBLIC', '/api/auth/**', 'Public authentication endpoints', NULL, TRUE),
+--     ('ACCOUNT_MANAGEMENT', '/api/account/**', 'User account management', NULL, TRUE),
+--     ('USER_MANAGEMENT', '/api/users/**', 'User administration', NULL, TRUE),
+--     ('ROLE_MANAGEMENT', '/api/roles/**', 'Role administration', NULL, TRUE),
+--     ('COMPANY_MANAGEMENT', '/api/companies/**', 'Company management', NULL, TRUE),
+--     ('CONTRACTOR_MANAGEMENT', '/api/contractors/**', 'Contractor management', NULL, TRUE),
+--     ('CONTACT_MANAGEMENT', '/api/contacts/**', 'Contact management', NULL, TRUE),
+--     ('CONSTRUCTION_SITE_MANAGEMENT', '/api/construction-sites/**', 'Construction site management', NULL, TRUE),
+--     ('POSITION_MANAGEMENT', '/api/positions/**', 'Position management', NULL, TRUE),
+--     ('CONTRACT_MANAGEMENT', '/api/contracts/**', 'Contract management', NULL, TRUE),
+--     ('RESOURCE_MANAGEMENT', '/api/resources/**', 'Resource permission management', NULL, TRUE);
+--
+-- -- =============================================================================
+-- -- DEFAULT ROLE ASSIGNMENTS - ✅ POPRAWIONA WERSJA
+-- -- =============================================================================
+-- DO $$
+-- DECLARE
+-- v_role_admin_id BIGINT;
+--     v_role_user_id BIGINT;
+--     v_resource_rec RECORD;
+-- BEGIN
+--     -- Find ROLE_ADMIN and ROLE_USER IDs
+-- SELECT id INTO v_role_admin_id FROM roles WHERE name = 'ROLE_ADMIN';
+-- SELECT id INTO v_role_user_id FROM roles WHERE name = 'ROLE_USER';
+--
+-- -- If roles don't exist, skip
+-- IF v_role_admin_id IS NULL OR v_role_user_id IS NULL THEN
+--         RAISE NOTICE 'Roles not found - skipping default permissions';
+--         RETURN;
+-- END IF;
+--
+--     -- ADMIN has access to everything except public auth
+-- FOR v_resource_rec IN
+-- SELECT id FROM resources WHERE resource_key != 'AUTH_PUBLIC'
+--     LOOP
+-- INSERT INTO resource_role (resource_id, role_id)
+-- VALUES (v_resource_rec.id, v_role_admin_id)  -- ✅ Użyj v_resource_rec.id
+-- ON CONFLICT (resource_id, role_id) DO NOTHING;
+-- END LOOP;
+--
+--     -- USER has access to specific resources
+-- FOR v_resource_rec IN
+-- SELECT id FROM resources
+-- WHERE resource_key IN (
+--                        'ACCOUNT_MANAGEMENT',
+--                        'CONTRACTOR_MANAGEMENT',
+--                        'CONTACT_MANAGEMENT',
+--                        'CONSTRUCTION_SITE_MANAGEMENT',
+--                        'POSITION_MANAGEMENT',
+--                        'CONTRACT_MANAGEMENT'
+--     )
+--     LOOP
+-- INSERT INTO resource_role (resource_id, role_id)
+-- VALUES (v_resource_rec.id, v_role_user_id)  -- ✅ Użyj v_resource_rec.id
+-- ON CONFLICT (resource_id, role_id) DO NOTHING;
+-- END LOOP;
+--
+--     RAISE NOTICE 'Default permissions assigned successfully';
+-- END $$;

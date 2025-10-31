@@ -1,6 +1,9 @@
 package pl.com.chrzanowski.sma.employee.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
@@ -19,18 +22,22 @@ import java.math.BigDecimal;
 public class Employee extends AuditableEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="employee_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
     @SequenceGenerator(name = "employee_seq", sequenceName = "employees_sequence", allocationSize = 1)
     @Column(nullable = false)
     private Long id;
 
     @Column(name = "first_name", length = 100)
+    @NotBlank
     private String firstName;
 
     @Column(name = "last_name", length = 100)
+    @NotBlank
     private String lastName;
 
     @Column(name = "hour_rate", length = 10, scale = 2)
+    @NotNull
+    @DecimalMin(value = "0.0")
     private BigDecimal hourRate;
 
     @ManyToOne(fetch = FetchType.LAZY)

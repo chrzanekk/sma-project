@@ -90,6 +90,13 @@ public enum ResourceKey {
             null,
             ResourceCode.RESOURCE.getDescription(),
             false,
+            Set.of()),
+    // Employee Management (meta - zarządzanie pracownikami)
+    EMPLOYEE_MANAGEMENT(ResourceCode.EMPLOYEE.getDisplayName(),
+            ApiPath.EMPLOYEE + Constants.ALL,
+            null,
+            ResourceCode.EMPLOYEE.getDescription(),
+            false,
             Set.of());
 
     @Getter
