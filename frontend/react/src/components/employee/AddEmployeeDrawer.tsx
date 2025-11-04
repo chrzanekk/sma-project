@@ -14,15 +14,15 @@ import {
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
 import {FaPlus} from "react-icons/fa";
-import AddPositionForm from "@/components/position/AddPositionForm.tsx";
+import AddEmployeeForm from "@/components/employee/AddEmployeeForm.tsx";
 
-interface AddPositionDrawerProps {
-    fetchPositions: () => void;
+interface AddEmployeeDrawerProps {
+    fetchEmployees: () => void;
 }
 
 
-const AddPositionDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) => {
-    const {t} = useTranslation('positions');
+const AddEmployeeDrawer: React.FC<AddEmployeeDrawerProps> = ({fetchEmployees}) => {
+    const {t} = useTranslation('employees');
     const themeColors = useThemeColors();
     return (
         <Box>
@@ -44,16 +44,15 @@ const AddPositionDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) =
                                 <DrawerCloseTrigger/>
                                 <DrawerHeader>
                                     <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("positions:details")}
+                                        {t("employees:details")}
                                     </Heading>
                                 </DrawerHeader>
                                 <DrawerBody>
-                                    <AddPositionForm
-                                        onSuccess={() => {
-                                            fetchPositions();
-                                            store.setOpen(false);
-                                        }}
-                                    />
+                                    <AddEmployeeForm onSuccess={() => {
+                                        fetchEmployees();
+                                        store.setOpen(false);
+                                    }}/>
+
                                 </DrawerBody>
                                 <DrawerFooter>
                                     <DrawerActionTrigger asChild>
@@ -73,4 +72,4 @@ const AddPositionDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) =
         </Box>
     )
 }
-export default AddPositionDrawer;
+export default AddEmployeeDrawer;

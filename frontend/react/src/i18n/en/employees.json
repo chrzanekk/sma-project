@@ -1,7 +1,7 @@
 {
   "employee": "Pracownik",
   "add": "Dodaj pracownika",
-  "employeeList": "Lista pracowników",
+  "employeesList": "Lista pracowników",
   "edit": "Edytuj dane pracownika",
   "search": "Wyszukaj pracownika",
   "details": "Dane pracownika",

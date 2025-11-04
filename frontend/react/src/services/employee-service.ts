@@ -66,6 +66,6 @@ export const updateEmployee = async (updateEmployee: EmployeeDTO) => {
     }
 }
 
-export const deletePositonById = async (id: number) => {
+export const deleteEmployeeById = async (id: number) => {
     await api.delete(`${EMPLOYEE_API_BASE}/${id}`, getAuthConfig())
 }
