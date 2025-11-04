@@ -11,13 +11,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.contract.dto.ContractDTO;
-import pl.com.chrzanowski.sma.contract.mapper.ContractDTOMapper;
-import pl.com.chrzanowski.sma.contract.repository.ContractRepository;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 
 import java.math.BigDecimal;
@@ -45,13 +44,10 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
     private String jwtToken;
 
     @Autowired
-    private ContractRepository contractRepository;
-
-    @Autowired
-    private ContractDTOMapper contractDTOMapper;
-
-    @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private ResourceInitializer resourceInitializer;
 
     @Autowired
     private CompanyDTOMapper companyDTOMapper;
@@ -67,6 +63,8 @@ public class ContractControllerIntegrationTest extends AbstractTestContainers {
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         LoginRequest firstUserLogin = userHelper.registerFirstUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUserLogin, webTestClient);

@@ -20,6 +20,7 @@ import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
@@ -86,11 +87,12 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
     @Autowired
     private CompanyBaseMapper companyBaseMapper;
 
+    @Autowired
+    private ResourceInitializer resourceInitializer;
+
     private ContractorDTO firstContractor;
 
     private Company company;
-    @Autowired
-    private ContractorBaseMapper contractorBaseMapper;
 
     @TestConfiguration
     static class TestConfig {
@@ -109,6 +111,8 @@ public class ContractorControllerIntegrationTest extends AbstractTestContainers 
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         reset(sendEmailService);
 

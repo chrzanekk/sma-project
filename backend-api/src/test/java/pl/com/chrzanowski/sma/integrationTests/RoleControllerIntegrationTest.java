@@ -15,6 +15,7 @@ import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import pl.com.chrzanowski.sma.role.dto.RoleDTO;
@@ -48,6 +49,9 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private UserHelper userHelper;
 
+    @Autowired
+    private ResourceInitializer resourceInitializer;
+
     private String jwtToken;
 
     @BeforeEach
@@ -57,6 +61,8 @@ public class RoleControllerIntegrationTest extends AbstractTestContainers {
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         reset(sendEmailService);
 

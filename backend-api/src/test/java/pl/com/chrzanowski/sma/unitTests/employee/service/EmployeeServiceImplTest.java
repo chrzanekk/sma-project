@@ -205,18 +205,24 @@ class EmployeeServiceImplTest {
 
     @Test
     void testDeleteEmployee() {
-        doNothing().when(employeeDao).deleteById(1L);
+        Long id = 1L;
+        when(employeeDao.findById(id)).thenReturn(Optional.of(employee));
+        doNothing().when(employeeDao).deleteById(id);
 
         employeeService.delete(1L);
 
-        verify(employeeDao, times(1)).deleteById(1L);
+        verify(employeeDao, times(1)).findById(id);
+        verify(employeeDao, times(1)).deleteById(id);
     }
 
     @Test
     void testDeleteEmployeeFailure() {
+        Long id = 1L;
+        when(employeeDao.findById(id)).thenReturn(Optional.of(employee));
         doThrow(new RuntimeException("Database error")).when(employeeDao).deleteById(1L);
 
         assertThrows(RuntimeException.class, () -> employeeService.delete(1L));
-        verify(employeeDao, times(1)).deleteById(1L);
+        verify(employeeDao, times(1)).findById(id);
+        verify(employeeDao, times(1)).deleteById(id);
     }
 }

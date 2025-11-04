@@ -12,6 +12,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.common.enumeration.Country;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
@@ -47,6 +48,9 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private CompanyDTOMapper companyDTOMapper;
 
+    @Autowired
+    private ResourceInitializer resourceInitializer;
+
     private String jwtToken;
     private Company company;
     private CompanyDTO companyDTO;
@@ -58,15 +62,14 @@ class ConstructionSiteControllerIntegrationTest extends AbstractTestContainers {
                 .responseTimeout(Duration.ofSeconds(60))
                 .build();
 
-        // reset DB
         flyway.clean();
         flyway.migrate();
 
-        // register & authenticate
+        resourceInitializer.initializeResources();
+
         LoginRequest login = userHelper.registerFirstUser(webTestClient);
         jwtToken = userHelper.authenticateUser(login, webTestClient);
 
-        // prepare a company
         companyRepository.deleteAll();
         company = Company.builder()
                 .name("TestCompany")
