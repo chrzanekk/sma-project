@@ -31,6 +31,8 @@ import positionsPl from './pl/positions.json'
 import positionsEn from './en/positions.json'
 import resourcesPl from './pl/resources.json'
 import resourcesEn from './en/resources.json'
+import employeePl from './pl/employee.json'
+import employeeEn from './en/employee.json'
 
 i18n
     .use(initReactI18next)
@@ -52,7 +54,8 @@ i18n
                 constructionSites: constructionSitesEn,
                 contracts: contractsEn,
                 positions: positionsEn,
-                resources: resourcesEn
+                resources: resourcesEn,
+                employee: employeeEn
             },
             pl: {
                 common: commonPl,
@@ -69,14 +72,15 @@ i18n
                 constructionSites: constructionSitesPl,
                 contracts: contractsPl,
                 positions: positionsPl,
-                resources: resourcesPl
+                resources: resourcesPl,
+                employee: employeePl
             },
         },
         lng: 'pl',
         fallbackLng: 'en',
         ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
             'contractors', 'countries', 'contacts', 'companies', 'constructionSites',
-            'contracts', 'positions', 'resources'],
+            'contracts', 'positions', 'resources','employee'],
         defaultNS: 'common',
         interpolation: {
             escapeValue: false,
