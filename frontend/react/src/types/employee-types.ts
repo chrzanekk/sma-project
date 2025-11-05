@@ -21,5 +21,11 @@ export interface EmployeeBaseDTO {
 
 }
 
-export interface BaseEmployeeFormValues extends EmployeeDTO{
+export interface BaseEmployeeFormValues{
+    id?: number;
+    firstName: string;
+    lastName: string;
+    hourRate: string;
+    company: CompanyBaseDTO | undefined;
+    position: PositionBaseDTO | undefined;
 }

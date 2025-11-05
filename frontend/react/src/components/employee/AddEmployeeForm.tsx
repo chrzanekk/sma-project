@@ -1,13 +1,13 @@
-import {BaseEmployeeFormValues} from "@/types/employee-types.ts";
+import {BaseEmployeeFormValues, EmployeeDTO} from "@/types/employee-types.ts";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
-import {PositionBaseDTO} from "@/types/position-types.ts";
 import {getEmployeeValidationSchema} from "@/validation/employeeValidationSchema.ts";
 import {addEmployee} from "@/services/employee-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonEmployeeForm from "@/components/employee/CommonEmployeeForm.tsx";
+import {PositionBaseDTO} from "@/types/position-types.ts";
 
 
 interface AddEmployeeFormProps {
@@ -16,13 +16,13 @@ interface AddEmployeeFormProps {
 
 const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({onSuccess}) => {
     const {t} = useTranslation(['common', 'errors', 'employees', 'positions']);
-    const currentCompany = getSelectedCompany();
+    const currentCompany = getSelectedCompany() || undefined;
 
     const initialValues: BaseEmployeeFormValues = {
         firstName: '',
         lastName: '',
         hourRate: '',
-        position: undefined as PositionBaseDTO | undefined,
+        position: undefined as PositionBaseDTO |undefined,
         company: currentCompany
     }
 
@@ -32,9 +32,10 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({onSuccess}) => {
         try {
             const mappedEmployee: EmployeeDTO = {
                 ...values,
-                company: currentCompany,
+                company: currentCompany!,
                 position: values.position!
             }
+            console.log("mappedEmployee", mappedEmployee);
             const response = await addEmployee(mappedEmployee);
             successNotification(
                 t('success', {ns: "common"}),

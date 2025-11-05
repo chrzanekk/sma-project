@@ -6,7 +6,7 @@ import {addUser} from "@/services/user-service.ts";
 import {UserFormDTO} from "@/types/user-types.ts";
 import {useTranslation} from "react-i18next";
 import React, {useMemo} from "react";
-import {themeVars} from "@/theme/theme-colors.ts";
+import {themeVars, useThemeColors} from "@/theme/theme-colors.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import useRoles from "@/hooks/UseRoles.tsx";
 import {CustomInputField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
@@ -25,6 +25,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
     const booleanOptions = getBooleanOptions(t);
     const {roles: roleOptions, isLoading, error} = useRoles();
     const companyId: number = getSelectedCompanyId()!;
+    const themeColors = useThemeColors();
 
     const positionSearchFn = useMemo(
         () => makePositionSearchAdapter({
@@ -132,6 +133,7 @@ const AddUserForm: React.FC<AddUserFormProps> = ({onSuccess}) => {
 
                         <div>
                             <Text fontSize="sm"
+                                  color={themeColors.fontColor}
                                   fontWeight="bold"
                                   mb="1"
                                   textAlign={"center"}
