@@ -14,4 +14,5 @@ public final class ApiPath {
     public static final String CONTRACT = "/api/contracts";
     public static final String RESOURCE = "/api/resources";
     public static final String EMPLOYEE = "/api/employees";
+    public static final String WORK_TYPE = "/api/work-types";
 }
