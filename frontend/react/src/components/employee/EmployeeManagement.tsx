@@ -4,9 +4,10 @@ import {deleteEmployeeById, getEmployeeByFilter} from "@/services/employee-servi
 import EmployeeLayout from "@/components/employee/EmployeeLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import EmployeeFilterForm from "@/components/employee/EmployeeFilterForm.tsx";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import React from "react";
 import AddEmployeeDrawer from "@/components/employee/AddEmployeeDrawer.tsx";
+import GenericEmployeeTable from "@/components/employee/GenericEmployeeTable.tsx";
 
 const EmployeeManagement: React.FC = () => {
     const {
@@ -38,22 +39,33 @@ const EmployeeManagement: React.FC = () => {
     );
 
     return (
-        <EmployeeLayout
-            filters={<EmployeeFilterForm onSubmit={onFilterSubmit}/>}
-            addEmployeeButton={<Flex justify={"center"} gap={2}>
-                <AddEmployeeDrawer fetchEmployees={() => onPageChange(currentPage)}/>
-            </Flex>}
+        <Box mt={1}>
+            <EmployeeLayout
+                filters={<EmployeeFilterForm onSubmit={onFilterSubmit}/>}
+                addEmployeeButton={<Flex justify={"center"} gap={2}>
+                    <AddEmployeeDrawer fetchEmployees={() => onPageChange(currentPage)}/>
+                </Flex>}
 
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}/>
-            }
+                table={<GenericEmployeeTable
+                    employees={employees}
+                    onDelete={onDelete}
+                    onSortChange={onSortChange}
+                    fetchEmployees={() => onPageChange(currentPage)}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    extended={true}/>
+                }
 
-        />
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}/>
+                }
+            />
+        </Box>
     )
 };
 export default EmployeeManagement;

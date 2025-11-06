@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "@/components/shared/Pagination.tsx";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import {deleteContactById, getContactsByFilter} from "@/services/contact-service.ts";
 import AddContactDialog from "@/components/contact/AddContactDialog.tsx";
 import ContactFilterForm from "@/components/contact/ContactFilterForm.tsx";
@@ -35,33 +35,35 @@ const ContactManagement: React.FC = () => {
     );
 
     return (
-        <ContactLayout
-            filters={<ContactFilterForm onSubmit={onFilterSubmit}/>}
-            addContactButton={
-                <Flex justifyContent={"center"} gap={2}>
-                    <AddContactDialog fetchContacts={() => onPageChange(0)}/>
-                </Flex>
-            }
-            table={
-                <GenericContactTable
-                    contacts={contacts}
-                    onDelete={onDelete}
-                    fetchContacts={() => onPageChange(0)}
-                    onSortChange={onSortChange}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                    extended={true}
-                />}
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
-                />
-            }
-        />
+        <Box mt={1}>
+            <ContactLayout
+                filters={<ContactFilterForm onSubmit={onFilterSubmit}/>}
+                addContactButton={
+                    <Flex justifyContent={"center"} gap={2}>
+                        <AddContactDialog fetchContacts={() => onPageChange(0)}/>
+                    </Flex>
+                }
+                table={
+                    <GenericContactTable
+                        contacts={contacts}
+                        onDelete={onDelete}
+                        fetchContacts={() => onPageChange(0)}
+                        onSortChange={onSortChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        extended={true}
+                    />}
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />
+                }
+            />
+        </Box>
     );
 };
 

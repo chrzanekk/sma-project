@@ -1,15 +1,18 @@
 import {EmployeeBaseDTO, EmployeeDTO, FetchableEmployeeDTO} from "@/types/employee-types.ts";
 import {useTranslation} from "react-i18next";
-import {Box, Text, Table, useDisclosure} from "@chakra-ui/react";
+import {Box, Button, HStack, Table, Text, useDisclosure} from "@chakra-ui/react";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import {useState} from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Field} from "@/components/ui/field.tsx";
+import AuditCell from "@/components/shared/AuditCell.tsx";
+import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
+import EditEmployeeDrawer from "@/components/employee/EditEmployeeDrawer.tsx";
 
 function isFetchableEmployee(
     employee: EmployeeBaseDTO
 ): employee is FetchableEmployeeDTO {
-    return "createDatetime" in employee;
+    return "createdDatetime" in employee;
 }
 
 interface Props<T extends EmployeeBaseDTO> {
@@ -106,16 +109,85 @@ const GenericEmployeeTable = <T extends EmployeeDTO>({
                                 {t("positions:position")} {renderSortIndicator("position")}
                             </Table.ColumnHeader>
                             {extended && (
-
+                                <>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("createdDatetime")}
+                                    >
+                                        {t("created")} {renderSortIndicator("createdDatetime")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader
+                                        {...commonColumnHeaderProps}
+                                        onClick={() => onSortChange("lastModifiedDatetime")}
+                                    >
+                                        {t("lastModified")} {renderSortIndicator("lastModifiedDatetime")}
+                                    </Table.ColumnHeader>
+                                    <Table.ColumnHeader {...commonColumnHeaderProps}
+                                    >{t("edit")}
+                                    </Table.ColumnHeader>
+                                </>
                             )}
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-
+                        {employees.map((employee) => (
+                            <Table.Row key={employee.id}
+                                       bg={themeColors.bgColorSecondary}
+                                       _hover={{
+                                           textDecoration: 'none',
+                                           bg: themeColors.highlightBgColor,
+                                           color: themeColors.fontColorHover
+                                       }}>
+                                <Table.Cell {...commonCellProps} width={"3%"}>{employee.id}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"25%"}>{employee.firstName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"25%"}>{employee.lastName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"10%"}>{employee.hourRate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} width={"15%"}>{employee.position.name}</Table.Cell>
+                                {extended && isFetchableEmployee(employee) && (
+                                    <>
+                                        <AuditCell
+                                            value={employee.createdDatetime}
+                                            user={employee.createdBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                        <AuditCell
+                                            value={employee.lastModifiedDatetime}
+                                            user={employee.modifiedBy}
+                                            cellProps={commonCellProps}
+                                        />
+                                    </>
+                                )}
+                                {extended && (
+                                    <Table.Cell {...commonCellProps}>
+                                        <HStack gap={1} justifyContent="center">
+                                            <EditEmployeeDrawer fetchEmployees={fetchEmployees}
+                                                                employeeId={employee.id!}/>
+                                            <Button
+                                                colorPalette="orange"
+                                                size="2xs"
+                                                onClick={() => handleDeleteClick(employee.id!)}
+                                            >
+                                                {t("delete", {ns: "common"})}
+                                            </Button>
+                                        </HStack>
+                                    </Table.Cell>
+                                )}
+                            </Table.Row>
+                        ))}
                     </Table.Body>
                 </Table.Root>
             </Table.ScrollArea>
+            <ConfirmModal
+                isOpen={open}
+                onClose={onClose}
+                onConfirm={confirmDelete}
+                title={t("deleteConfirmation.title", {ns: "common"})}
+                message={t("deleteConfirmation.message", {ns: "common"})}
+                confirmText={t("delete", {ns: "common"})}
+                cancelText={t("cancel", {ns: "common"})}
+            />
         </Box>
-)
+    );
+};
 
-}
+export default GenericEmployeeTable;

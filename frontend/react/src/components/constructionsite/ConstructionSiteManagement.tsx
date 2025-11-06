@@ -3,7 +3,7 @@ import {deleteConstructionSiteById, getConstructionSiteByFilter} from "@/service
 import ConstructionSiteLayout from "@/components/constructionsite/ConstructionSiteLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import ConstructionSiteFilterForm from "@/components/constructionsite/ConstructionSiteFilterForm.tsx";
 import ConstructionSiteTableWithContractors
     from "@/components/constructionsite/ConstructionSiteTableWithContractors.tsx";
@@ -44,36 +44,38 @@ const ConstructionSiteManagement: React.FC = () => {
     } = useContractorManagement();
 
     return (
-        <ConstructionSiteLayout
-            filters={<ConstructionSiteFilterForm onSubmit={onFilterSubmit}/>}
-            addConstructionSiteButton={<Flex justifyContent={"center"}>
-                <AddConstructionSiteDialog fetchConstructionSites={() => onFilterSubmit({})}/>
-            </Flex>
-            }
-            content={
-                <ConstructionSiteTableWithContractors
-                    constructionSites={constructionSites}
-                    onDelete={onDelete}
-                    fetchConstructionSites={() => onFilterSubmit({})}
-                    onSortChange={onSortChange}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                    contractorFetchContractors={async () => contractorOnFilterSubmit({})}
-                    contractorOnDelete={contractorOnDelete}
-                    contractorOnSortChange={contractorOnSortChange}
-                    contractorSortField={contractorSortField}
-                    contractorSortDirection={contractorSortDirection}
-                />}
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
-                />
-            }
-        />
+        <Box mt={1}>
+            <ConstructionSiteLayout
+                filters={<ConstructionSiteFilterForm onSubmit={onFilterSubmit}/>}
+                addConstructionSiteButton={<Flex justifyContent={"center"}>
+                    <AddConstructionSiteDialog fetchConstructionSites={() => onFilterSubmit({})}/>
+                </Flex>
+                }
+                content={
+                    <ConstructionSiteTableWithContractors
+                        constructionSites={constructionSites}
+                        onDelete={onDelete}
+                        fetchConstructionSites={() => onFilterSubmit({})}
+                        onSortChange={onSortChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        contractorFetchContractors={async () => contractorOnFilterSubmit({})}
+                        contractorOnDelete={contractorOnDelete}
+                        contractorOnSortChange={contractorOnSortChange}
+                        contractorSortField={contractorSortField}
+                        contractorSortDirection={contractorSortDirection}
+                    />}
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />
+                }
+            />
+        </Box>
     );
 };
 
