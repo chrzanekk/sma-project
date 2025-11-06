@@ -13,7 +13,6 @@ import {
     DrawerRoot,
     DrawerTrigger
 } from "@/components/ui/drawer.tsx";
-import {FaPlus} from "react-icons/fa";
 import EditEmployeeForm from "@/components/employee/EditEmployeeForm.tsx";
 
 interface EditEmployeeDrawerProps {
@@ -35,7 +34,7 @@ const EditEmployeeDrawer: React.FC<EditEmployeeDrawerProps> = ({fetchEmployees, 
                         colorPalette="green"
                         size={"2xs"}
                         p={1}
-                    ><FaPlus/>
+                    >
                         {t('data', {ns: "common"})}
                     </Button>
                 </DrawerTrigger>
