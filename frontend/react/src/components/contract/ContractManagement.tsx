@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "@/components/shared/Pagination.tsx";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
 import {deleteContractById, getContractsByFilter} from "@/services/contract-service.ts";
 import GenericContractTable from "@/components/contract/GenericContractTable.tsx";
@@ -35,33 +35,35 @@ const ContractManagement: React.FC = () => {
     );
 
     return (
-        <ContractLayout
-            filters={<ContractFilterForm onSubmit={onFilterSubmit}/>}
-            addContractButton={
-                <Flex justifyContent={"center"} gap={2}>
-                    <AddContractDialog fetchContracts={() => onPageChange(0)}/>
-                </Flex>
-            }
-            table={
-                <GenericContractTable
-                    contracts={contracts}
-                    onDelete={onDelete}
-                    fetchContracts={() => onPageChange(0)}
-                    onSortChange={onSortChange}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                    extended={true}
-                />}
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
-                />
-            }
-        />
+        <Box mt={1}>
+            <ContractLayout
+                filters={<ContractFilterForm onSubmit={onFilterSubmit}/>}
+                addContractButton={
+                    <Flex justifyContent={"center"} gap={2}>
+                        <AddContractDialog fetchContracts={() => onPageChange(0)}/>
+                    </Flex>
+                }
+                table={
+                    <GenericContractTable
+                        contracts={contracts}
+                        onDelete={onDelete}
+                        fetchContracts={() => onPageChange(0)}
+                        onSortChange={onSortChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        extended={true}
+                    />}
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />
+                }
+            />
+        </Box>
     );
 };
 

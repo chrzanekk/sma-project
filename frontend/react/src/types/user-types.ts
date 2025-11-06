@@ -90,7 +90,7 @@ export interface UserFormDTO {
     password?: string;
     firstName: string;
     lastName: string;
-    position: PositionBaseDTO | null;
+    position: PositionBaseDTO | undefined;
     locked: boolean;
     enabled: boolean;
     roles: string[] | [];

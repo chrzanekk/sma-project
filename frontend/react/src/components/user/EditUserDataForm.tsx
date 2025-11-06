@@ -14,6 +14,7 @@ import {makePositionSearchAdapter} from "@/search/position-search-adapter.ts";
 import PositionSearchWithSelect from "@/components/position/PositionSearchWithSelect.tsx";
 import {PositionBaseDTO} from "@/types/position-types.ts";
 import {getSelectedCompanyId} from "@/utils/company-utils.ts";
+import {useThemeColors} from "@/theme/theme-colors.ts";
 
 
 interface EditUserDataFormProps {
@@ -25,6 +26,8 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
     const {t} = useTranslation(['auth', 'common'])
     const {user: currentUser, updateUser: updateLocalUser} = useUser();
     const companyId: number = getSelectedCompanyId()!;
+    const themeColors = useThemeColors();
+
     const defaultValues: UserFormDTO = {
         id: 0,
         login: '',
@@ -61,7 +64,7 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                     password: '', // Password is not pre-filled for security reasons
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    position: user.position,
+                    position: user.position || undefined,
                     locked: user.locked,
                     enabled: user.enabled,
                     roles: user.roles ? Array.from(user.roles).map(role => role.name) : [],
@@ -142,7 +145,12 @@ const EditUserDataForm: React.FC<EditUserDataFormProps> = ({onSuccess, userId}) 
                                               width={width}/>
 
                             <Box>
-                                <Text fontSize="sm" fontWeight="bold" mb="1" textAlign={"center"}
+                                <Text fontSize="sm"
+                                      fontWeight="bold"
+                                      mb="1"
+                                      textAlign={"center"}
+                                      color={themeColors.fontColor}
+
                                 >
                                     {t('shared.position')}
                                 </Text>

@@ -4,7 +4,7 @@ import {deleteContractorById, getContractorsByFilter} from "@/services/contracto
 import ContractorLayout from "@/components/contractor/ContractorLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import ContractorFilterForm from "@/components/contractor/ContractorFilterForm.tsx";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import AddContractorWithContactDialog from "@/components/contractor/AddContractorWithContactDialog.tsx";
 import ContractorTableWithContacts from "@/components/contractor/ContractorTableWithContacts.tsx";
 import {useContactManagement} from "@/hooks/UseContactManagement.tsx";
@@ -50,38 +50,40 @@ const ContractorManagement: React.FC = () => {
 
 
     return (
-        <ContractorLayout
-            filters={<ContractorFilterForm onSubmit={onFilterSubmit}/>}
-            addContractorButton={
-                <Flex justifyContent={"center"}>
-                    <AddContractorWithContactDialog fetchContractors={() => onFilterSubmit({})}/>
-                </Flex>
-            }
-            table={
-                <ContractorTableWithContacts
-                    contractors={contractors}
-                    onDelete={onDelete}
-                    fetchContractors={() => onFilterSubmit({})}
-                    onSortChange={onSortChange}
-                    sortField={sortField}
-                    sortDirection={sortDirection}
-                    contactFetchContacts={async () => contactOnFilterSubmit({})}
-                    contactOnDelete={contactOnDelete}
-                    contactOnSortChange={contactOnSortChange}
-                    contactSortField={contactSortField}
-                    contactSortDirection={contactSortDirection}
-                />
-            }
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
-                />
-            }
-        />
+        <Box mt={1}>
+            <ContractorLayout
+                filters={<ContractorFilterForm onSubmit={onFilterSubmit}/>}
+                addContractorButton={
+                    <Flex justifyContent={"center"}>
+                        <AddContractorWithContactDialog fetchContractors={() => onFilterSubmit({})}/>
+                    </Flex>
+                }
+                table={
+                    <ContractorTableWithContacts
+                        contractors={contractors}
+                        onDelete={onDelete}
+                        fetchContractors={() => onFilterSubmit({})}
+                        onSortChange={onSortChange}
+                        sortField={sortField}
+                        sortDirection={sortDirection}
+                        contactFetchContacts={async () => contactOnFilterSubmit({})}
+                        contactOnDelete={contactOnDelete}
+                        contactOnSortChange={contactOnSortChange}
+                        contactSortField={contactSortField}
+                        contactSortDirection={contactSortDirection}
+                    />
+                }
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />
+                }
+            />
+        </Box>
     );
 };
 

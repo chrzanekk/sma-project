@@ -17,6 +17,7 @@ import pl.com.chrzanowski.sma.auth.dto.request.PasswordResetRequest;
 import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
 import pl.com.chrzanowski.sma.integrationTests.helper.UserHelper;
 import reactor.core.publisher.Mono;
@@ -44,6 +45,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private UserHelper userHelper;
 
+    @Autowired
+    private ResourceInitializer resourceInitializer;
 
     @BeforeEach
     void setUp() {
@@ -52,6 +55,8 @@ public class AuthControllerIntegrationTest extends AbstractTestContainers {
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         reset(sendEmailService);
 

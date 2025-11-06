@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
@@ -41,29 +42,28 @@ public class ContactControllerIntegrationTest extends AbstractTestContainers {
     private String jwtToken;
 
     @Autowired
-    private ContactRepository contactRepository;
-
-    @Autowired
     private CompanyRepository companyRepository;
 
     @Autowired
     private CompanyDTOMapper companyDTOMapper;
+
+    @Autowired
+    private ResourceInitializer resourceInitializer;
 
     private CompanyDTO companyDTO;
     private Company company;
 
     @BeforeEach
     void setUp() {
-        // Ustawienie timeoutu dla WebTestClient
         this.webTestClient = this.webTestClient.mutate()
                 .responseTimeout(Duration.ofSeconds(60))
                 .build();
 
-        // Czyszczenie i migracja bazy danych przed każdym testem
         flyway.clean();
         flyway.migrate();
 
-        // Rejestracja i autoryzacja pierwszego użytkownika
+        resourceInitializer.initializeResources();
+
         LoginRequest firstUserLogin = userHelper.registerFirstUser(webTestClient);
         this.jwtToken = userHelper.authenticateUser(firstUserLogin, webTestClient);
 

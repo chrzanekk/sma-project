@@ -1,0 +1,19 @@
+{
+  "employee": "Pracownik",
+  "add": "Dodaj pracownika",
+  "employeesList": "Lista pracowników",
+  "edit": "Edytuj dane pracownika",
+  "search": "Wyszukaj pracownika",
+  "details": "Dane pracownika",
+  "firstName": "Imię",
+  "lastName": "Nazwisko",
+  "hourRate": "Stawka godzinowa",
+  "hourRateStartsWith": "Stawka godz. od",
+  "hourRateEndsWith": "Stawka godz. do",
+  "notifications" : {
+    "addEmployeeSuccess" : "Pracownik {firstName} {lastName} dodany pomyślnie",
+    "addEmployeeError": "Błąd dodawania pracownika",
+    "editEmployeeSuccess" : "Dane pracownika {firstName} {lastName} zmieniono pomyślnie",
+    "editEmployeeError": "Błąd edycji pracownika {firstName} {lastName}"
+  }
+}

@@ -17,6 +17,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.company.model.Company;
@@ -65,6 +66,9 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
     private UserMapper userMapper;
 
     @Autowired
+    private ResourceInitializer resourceInitializer;
+
+    @Autowired
     private UserService userService;
 
     private String jwtToken;
@@ -88,6 +92,8 @@ public class CompanyControllerIntegrationTest extends AbstractTestContainers {
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         reset(sendEmailService);
 

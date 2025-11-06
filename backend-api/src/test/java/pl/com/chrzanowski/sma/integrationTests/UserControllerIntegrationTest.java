@@ -16,6 +16,7 @@ import org.springframework.util.MultiValueMap;
 import pl.com.chrzanowski.sma.AbstractTestContainers;
 import pl.com.chrzanowski.sma.auth.dto.request.LoginRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
+import pl.com.chrzanowski.sma.common.security.config.ResourceInitializer;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.company.repository.CompanyRepository;
 import pl.com.chrzanowski.sma.email.service.SendEmailService;
@@ -77,6 +78,9 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
     @Autowired
     private CompanyRepository companyRepository;
 
+    @Autowired
+    private ResourceInitializer resourceInitializer;
+
     private String jwtToken;
 
     private User firstUser;
@@ -88,6 +92,8 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         flyway.clean();
         flyway.migrate();
+
+        resourceInitializer.initializeResources();
 
         reset(sendEmailService);
 
@@ -419,7 +425,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
         assertThat(users).isNotEmpty();
         assertThat(users.size()).isEqualTo(1);
-        assertEquals(users.get(0).getLogin(), "login");
+        assertEquals("login", users.getFirst().getLogin());
     }
 
     @Test
@@ -484,7 +490,7 @@ public class UserControllerIntegrationTest extends AbstractTestContainers {
 
     @Test
     void shouldChangePasswordSuccessfully() {
-        firstUser = userRepository.findAll().get(0);
+        firstUser = userRepository.findAll().getFirst();
         AdminEditPasswordChangeRequest passwordChangeRequest = new AdminEditPasswordChangeRequest(firstUser.getId(), "newPassword");
 
         webTestClient.put()

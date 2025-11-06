@@ -21,7 +21,7 @@ interface AddPositionDrawerProps {
 }
 
 
-const AddContactDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) => {
+const AddPositionDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) => {
     const {t} = useTranslation('positions');
     const themeColors = useThemeColors();
     return (
@@ -73,4 +73,4 @@ const AddContactDrawer: React.FC<AddPositionDrawerProps> = ({fetchPositions}) =>
         </Box>
     )
 }
-export default AddContactDrawer;
+export default AddPositionDrawer;

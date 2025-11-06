@@ -57,6 +57,18 @@ export const getNavItems = (): NavItem[] => {
             }
         ]
     });
+    navItems.push({
+        label: t('humanResources'),
+        value: "humanResources",
+        children: [
+            {
+                label: t('employees'),
+                href: '#',
+                onClick: () => navigate('/employees'),
+                value: "employees"
+            }
+        ]
+    });
 
     // ✅ Contractors - dynamic permission check
     if (canAccessResource('CONTRACTOR_MANAGEMENT')) {
