@@ -57,7 +57,6 @@ const EmployeeFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomInputFilterField name="firstNameContains" placeholder={t('employees:firstName')}/>
                             <CustomInputFilterField name="lastNameContains" placeholder={t('employees:lastName')}/>
                             <CustomInputFilterField name="positionContains" placeholder={t('positions:position')}/>
-                            <CustomInputFilterField name="companyContains" placeholder={t('companies:company')}/>
                             <CustomInputFilterField name="hourRateStartsWith" placeholder={t('employees:hourRateStartsWith')}/>
                             <CustomInputFilterField name="hourRateEndsWith" placeholder={t('employees:hourRateEndsWith')}/>
 
