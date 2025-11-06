@@ -2,10 +2,48 @@
 -- Description: Create tables for scaffolding log management system
 
 -- =============================================================================
+-- SEQUENCES
+-- =============================================================================
+CREATE SEQUENCE work_type_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE scaffolding_log_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE scaffolding_log_position_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE scaffolding_log_position_working_time_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+CREATE SEQUENCE scaffolding_log_position_dimensions_sequence
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+-- =============================================================================
 -- WORK_TYPE TABLE
 -- =============================================================================
 CREATE TABLE work_type (
-                           id BIGSERIAL PRIMARY KEY,
+                           id BIGINT PRIMARY KEY DEFAULT nextval('work_type_sequence'),
                            name VARCHAR(255) NOT NULL,
                            description VARCHAR(500),
                            created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -18,7 +56,7 @@ CREATE INDEX idx_work_type_name ON work_type(name);
 -- SCAFFOLDING_LOG TABLE
 -- =============================================================================
 CREATE TABLE scaffolding_log (
-                                 id BIGSERIAL PRIMARY KEY,
+                                 id BIGINT PRIMARY KEY DEFAULT nextval('scaffolding_log_sequence'),
                                  construction_site_id BIGINT NOT NULL,
                                  contractor_id BIGINT NOT NULL,
                                  name VARCHAR(255) NOT NULL,
@@ -47,7 +85,7 @@ CREATE INDEX idx_scaffolding_log_name ON scaffolding_log(name);
 -- SCAFFOLDING_LOG_POSITION TABLE
 -- =============================================================================
 CREATE TABLE scaffolding_log_position (
-                                          id BIGSERIAL PRIMARY KEY,
+                                          id BIGINT PRIMARY KEY DEFAULT nextval('scaffolding_log_position_sequence'),
                                           scaffolding_log_id BIGINT NOT NULL,
                                           scaffolding_parent_id BIGINT,
                                           scaffolding_number VARCHAR(50) NOT NULL,
@@ -96,9 +134,6 @@ CREATE TABLE scaffolding_log_position (
                                               FOREIGN KEY (scaffolding_user_contact_id)
                                                   REFERENCES contacts(id)
                                                   ON DELETE RESTRICT,
-
-                                          CONSTRAINT chk_scaffolding_dimension_positive
-                                              CHECK (scaffolding_full_dimension IS NULL OR scaffolding_full_dimension >= 0)
 );
 
 CREATE INDEX idx_scaffolding_position_log ON scaffolding_log_position(scaffolding_log_id);
@@ -112,7 +147,7 @@ CREATE INDEX idx_scaffolding_position_dismantling_date ON scaffolding_log_positi
 -- SCAFFOLDING_LOG_POSITION_WORKING_TIME TABLE
 -- =============================================================================
 CREATE TABLE scaffolding_log_position_working_time (
-                                                       id BIGSERIAL PRIMARY KEY,
+                                                       id BIGINT PRIMARY KEY DEFAULT nextval('scaffolding_log_position_working_time_sequence'),
                                                        scaffolding_position_id BIGINT NOT NULL,
                                                        number_of_workers NUMERIC(10,2),
                                                        number_of_hours NUMERIC(10,2),
@@ -131,12 +166,6 @@ CREATE TABLE scaffolding_log_position_working_time (
                                                            FOREIGN KEY (work_type_id)
                                                                REFERENCES work_type(id)
                                                                ON DELETE SET NULL,
-
-                                                       CONSTRAINT chk_number_of_workers_positive
-                                                           CHECK (number_of_workers IS NULL OR number_of_workers >= 0),
-
-                                                       CONSTRAINT chk_number_of_hours_positive
-                                                           CHECK (number_of_hours IS NULL OR number_of_hours >= 0)
 );
 
 CREATE INDEX idx_working_time_position ON scaffolding_log_position_working_time(scaffolding_position_id);
@@ -146,12 +175,12 @@ CREATE INDEX idx_working_time_work_type ON scaffolding_log_position_working_time
 -- SCAFFOLDING_LOG_POSITION_DIMENSIONS TABLE
 -- =============================================================================
 CREATE TABLE scaffolding_log_position_dimensions (
-                                                     id BIGSERIAL PRIMARY KEY,
+                                                     id BIGINT PRIMARY KEY DEFAULT nextval('scaffolding_log_position_dimensions_sequence'),
                                                      scaffolding_position_id BIGINT NOT NULL,
                                                      height NUMERIC(10,2),
                                                      width NUMERIC(10,2),
                                                      length NUMERIC(10,2),
-                                                     dimension_type VARCHAR(50) NOT NULL DEFAULT 'konstrukcja podstawowa',
+                                                     dimension_type VARCHAR(50) NOT NULL,
                                                      work_type_id BIGINT NOT NULL,
                                                      dismantling_date TIMESTAMP,
                                                      created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -168,18 +197,6 @@ CREATE TABLE scaffolding_log_position_dimensions (
                                                          FOREIGN KEY (work_type_id)
                                                              REFERENCES work_type(id)
                                                              ON DELETE RESTRICT,
-
-                                                     CONSTRAINT chk_height_positive
-                                                         CHECK (height IS NULL OR height >= 0),
-
-                                                     CONSTRAINT chk_width_positive
-                                                         CHECK (width IS NULL OR width >= 0),
-
-                                                     CONSTRAINT chk_length_positive
-                                                         CHECK (length IS NULL OR length >= 0),
-
-                                                     CONSTRAINT chk_dimension_type_valid
-                                                         CHECK (dimension_type IN ('balkon/konsola', 'podwieszenie', 'dźwigary', 'konstrukcja podstawowa'))
 );
 
 CREATE INDEX idx_dimensions_position ON scaffolding_log_position_dimensions(scaffolding_position_id);
