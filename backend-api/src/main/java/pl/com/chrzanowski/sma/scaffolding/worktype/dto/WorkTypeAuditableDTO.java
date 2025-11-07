@@ -2,6 +2,7 @@ package pl.com.chrzanowski.sma.scaffolding.worktype.dto;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
@@ -13,6 +14,7 @@ import pl.com.chrzanowski.sma.common.audit.AuditableDTO;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ToString(callSuper = true)
+@Getter
 public class WorkTypeAuditableDTO extends AuditableDTO {
     @JsonUnwrapped
     private WorkTypeDTO base;
