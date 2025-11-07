@@ -1,0 +1,26 @@
+package pl.com.chrzanowski.sma.scaffolding.log.mapper;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
+import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogAuditableDTO;
+import pl.com.chrzanowski.sma.scaffolding.log.model.ScaffoldingLog;
+import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
+
+@Mapper(componentModel = "spring", uses={UserAuditMapper.class, ScaffoldingLogDTOMapper.class})
+public interface ScaffoldingLogAuditMapper extends EntityMapper<ScaffoldingLogAuditableDTO, ScaffoldingLog> {
+
+
+    @Mapping(source = "createdBy", target = "createdBy")
+    @Mapping(source = "modifiedBy", target = "modifiedBy")
+    @Mapping(source = "createdDatetime", target = "createdDatetime")
+    @Mapping(source = "lastModifiedDatetime", target = "lastModifiedDatetime")
+    @Mapping(source = "id", target = "base.id")
+    @Mapping(source = "name", target = "base.name")
+    @Mapping(source = "additionalInfo", target = "base.additionalInfo")
+    @Mapping(source = "company", target = "base.company")
+    @Mapping(source = "constructionSite", target = "base.constructionSite")
+    @Mapping(source = "contractor", target = "base.contractor")
+    @Mapping(source = "positions", target = "base.positions")
+    ScaffoldingLogAuditableDTO toDto(ScaffoldingLog scaffoldingLog);
+}

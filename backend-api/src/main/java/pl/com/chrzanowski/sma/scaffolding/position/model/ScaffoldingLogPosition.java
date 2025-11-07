@@ -7,6 +7,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingType;
+import pl.com.chrzanowski.sma.common.enumeration.TechnicalProtocolStatus;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contractor.model.Contractor;
@@ -51,14 +53,16 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     private LocalDateTime dismantlingNotificationDate;
 
     @Column(name = "scaffolding_type", length = 50)
-    private String scaffoldingType;
+    @Enumerated(EnumType.STRING)
+    private ScaffoldingType scaffoldingType;
 
     @Column(name = "scaffolding_full_dimension", precision = 15, scale = 2)
     @DecimalMin(value = "0.0")
     private BigDecimal scaffoldingFullDimension;
 
     @Column(name = "technical_protocol_status", length = 50)
-    private String technicalProtocolStatus;
+    @Enumerated(EnumType.STRING)
+    private TechnicalProtocolStatus technicalProtocolStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scaffolding_log_id", nullable = false)

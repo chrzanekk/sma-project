@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
+import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.worktype.model.WorkType;
@@ -44,7 +45,8 @@ public class ScaffoldingLogPositionDimension extends AuditableEntity {
 
     @Column(name = "dimension_type", length = 50, nullable = false)
     @NotNull
-    private String dimensionType;
+    @Enumerated(EnumType.STRING)
+    private DimensionType dimensionType;
 
     @Column(name = "dismantling_date")
     private LocalDateTime dismantlingDate;
