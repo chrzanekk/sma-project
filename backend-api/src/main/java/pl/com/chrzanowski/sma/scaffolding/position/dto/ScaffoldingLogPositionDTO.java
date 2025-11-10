@@ -24,8 +24,7 @@ import java.util.Set;
 public class ScaffoldingLogPositionDTO extends ScaffoldingLogPositionBaseDTO implements HasId<Long> {
     @NotNull
     private CompanyBaseDTO company;
-    @NotNull
-    private ScaffoldingLogBaseDTO scaffoldingLog;
+
     @NotNull
     private ContractorBaseDTO contractor;
     @NotNull

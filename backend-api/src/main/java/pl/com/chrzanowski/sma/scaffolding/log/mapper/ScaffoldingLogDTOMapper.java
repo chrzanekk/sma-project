@@ -11,7 +11,7 @@ import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogDTO;
 import pl.com.chrzanowski.sma.scaffolding.log.model.ScaffoldingLog;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 
-@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class, CompanyBaseMapper.class, ContractorBaseMapper.class, ScaffoldingLogBaseMapper.class, ConstructionSiteBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class, CompanyBaseMapper.class, ContractorBaseMapper.class, ConstructionSiteBaseMapper.class})
 public interface ScaffoldingLogDTOMapper extends EntityMapper<ScaffoldingLogDTO, ScaffoldingLog> {
 
     @Mapping(source = "company", target = "company")

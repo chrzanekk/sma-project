@@ -13,8 +13,8 @@ import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBas
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
-@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class, CompanyBaseMapper.class, ContractorBaseMapper.class, ContactBaseMapper.class, ScaffoldingLogBaseMapper.class})
-public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<ScaffoldingLogPositionBaseDTO, ScaffoldingLogPosition> {
+@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class, ContractorBaseMapper.class, ContactBaseMapper.class})
+public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<ScaffoldingLogPositionDTO, ScaffoldingLogPosition> {
 
     @Mapping(target = "id", source = "id")
     @Mapping(target = "scaffoldingNumber", source = "scaffoldingNumber")
@@ -28,7 +28,6 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "parentPosition", source = "parentPosition")
     @Mapping(target = "childPositions", source = "childPositions")
     @Mapping(target = "company", source = "company")
-    @Mapping(target = "scaffoldingLog", source = "scaffoldingLog")
     @Mapping(target = "contractor", source = "contractor")
     @Mapping(target = "contractorContact", source = "contractorContact")
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
@@ -36,16 +35,17 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     ScaffoldingLogPositionDTO toDto(ScaffoldingLogPosition entity);
 
     @Mapping(target = "company", source = "company")
-    @Mapping(target = "scaffoldingLog", source = "scaffoldingLog")
     @Mapping(target = "contractor", source = "contractor")
     @Mapping(target = "contractorContact", source = "contractorContact")
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
+    @Mapping(target = "parentPosition", source = "parentPosition")
+    @Mapping(target = "childPositions", source = "childPositions")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
-    ScaffoldingLogPosition toEntity(PositionBaseDTO dto);
+    ScaffoldingLogPosition toEntity(ScaffoldingLogPositionDTO dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "company", ignore = true)
@@ -54,6 +54,8 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "contractorContact", ignore = true)
     @Mapping(target = "scaffoldingUser", ignore = true)
     @Mapping(target = "scaffoldingUserContact", ignore = true)
+    @Mapping(target = "parentPosition", ignore = true)
+    @Mapping(target = "childPositions", ignore = true)
     @Mapping(target = "dimensions", ignore = true)
     @Mapping(target = "workingTimes", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)

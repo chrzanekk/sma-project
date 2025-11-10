@@ -23,5 +23,5 @@ public class ScaffoldingLogPositionDimensionBaseDTO {
     protected BigDecimal length;
     protected DimensionType dimensionType;
     protected LocalDateTime dismantlingDate;
-    protected ScaffoldingLogPositionBaseDTO scaffoldingLogPosition;
+    protected ScaffoldingLogPositionBaseDTO scaffoldingPosition;
 }

@@ -6,8 +6,9 @@ import org.mapstruct.MappingTarget;
 import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
+import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class})
 public interface ScaffoldingLogPositionDimensionBaseMapper extends EntityMapper<ScaffoldingLogPositionDimensionBaseDTO, ScaffoldingLogPositionDimension> {
 
 

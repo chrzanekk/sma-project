@@ -7,8 +7,8 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPosition
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses={UserAuditMapper.class,ScaffoldingLogWorkingTimeDTOMapper.class})
-public interface ScaffoldingLogWorkingTimeAuditMapper extends EntityMapper<ScaffoldingLogPositionWorkingTimeAuditableDTO, ScaffoldingLogPositionWorkingTime> {
+@Mapper(componentModel = "spring", uses={UserAuditMapper.class, ScaffoldingLogPositionWorkingTimeDTOMapper.class})
+public interface ScaffoldingLogPositionWorkingTimeAuditMapper extends EntityMapper<ScaffoldingLogPositionWorkingTimeAuditableDTO, ScaffoldingLogPositionWorkingTime> {
 
     @Mapping(source = "createdBy", target = "createdBy")
     @Mapping(source = "modifiedBy", target = "modifiedBy")
@@ -17,7 +17,7 @@ public interface ScaffoldingLogWorkingTimeAuditMapper extends EntityMapper<Scaff
     @Mapping(source = "id", target = "base.id")
     @Mapping(source = "numberOfWorkers", target = "base.numberOfWorkers")
     @Mapping(source = "numberOfHours", target = "base.numberOfHours")
-    @Mapping(source = "scaffoldingPositions", target = "base.scaffoldingPositions")
+    @Mapping(source = "scaffoldingPosition", target = "base.scaffoldingPosition")
     @Mapping(source = "company", target = "base.company")
     @Mapping(source = "workType", target = "base.workType")
     ScaffoldingLogPositionWorkingTimeAuditableDTO toDto(ScaffoldingLogPositionWorkingTime entity);

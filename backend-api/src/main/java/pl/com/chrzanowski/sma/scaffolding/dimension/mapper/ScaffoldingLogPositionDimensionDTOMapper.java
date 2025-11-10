@@ -15,12 +15,17 @@ public interface ScaffoldingLogPositionDimensionDTOMapper extends EntityMapper<S
     @Mapping(source = "company", target = "company")
     @Mapping(source = "workType", target = "workType")
     @Mapping(source = "id", target = "id")
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "description", target = "description")
+    @Mapping(source = "height", target = "height")
+    @Mapping(source = "width", target = "width")
+    @Mapping(source = "length", target = "length")
+    @Mapping(source = "dimensionType", target = "dimensionType")
+    @Mapping(source = "dismantlingDate", target = "dismantlingDate")
+    @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
     ScaffoldingLogPositionDimensionDTO toDto(ScaffoldingLogPositionDimension entity);
 
     @Mapping(source = "company", target = "company")
     @Mapping(source = "workType", target = "workType")
+    @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
@@ -29,6 +34,7 @@ public interface ScaffoldingLogPositionDimensionDTOMapper extends EntityMapper<S
 
     @Mapping(target = "company", ignore = true)
     @Mapping(target = "workType", ignore = true)
+    @Mapping(target = "scaffoldingPosition", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)

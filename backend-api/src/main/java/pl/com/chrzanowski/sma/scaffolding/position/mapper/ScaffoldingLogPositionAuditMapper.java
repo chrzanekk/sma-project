@@ -7,7 +7,7 @@ import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionAud
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses = {UserAuditMapper.class, ScaffoldingLogPositionDTOMapper.class})
+@Mapper(componentModel = "spring", uses = {UserAuditMapper.class})
 public interface ScaffoldingLogPositionAuditMapper extends EntityMapper<ScaffoldingLogPositionAuditableDTO, ScaffoldingLogPosition> {
 
     @Mapping(source = "createdBy", target = "createdBy")

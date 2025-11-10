@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.unitTests.scaffoldingWorkType.dao;
+package pl.com.chrzanowski.sma.unitTests.scaffolding.worktype.dao;
 
 import com.blazebit.persistence.PagedList;
 import com.blazebit.persistence.querydsl.BlazeJPAQuery;

@@ -1,4 +1,4 @@
-package pl.com.chrzanowski.sma.unitTests.scaffoldingWorkType.service;
+package pl.com.chrzanowski.sma.unitTests.scaffolding.worktype.service;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
