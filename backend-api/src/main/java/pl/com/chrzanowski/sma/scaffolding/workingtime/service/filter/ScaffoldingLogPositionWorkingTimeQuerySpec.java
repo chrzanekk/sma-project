@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 
-import static pl.com.chrzanowski.sma.position.model.QPosition.position;
 import static pl.com.chrzanowski.sma.scaffolding.workingtime.model.QScaffoldingLogPositionWorkingTime.scaffoldingLogPositionWorkingTime;
 
 @Component
@@ -55,10 +54,10 @@ public class ScaffoldingLogPositionWorkingTimeQuerySpec {
                 }
             });
             if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
-                query.orderBy(position.id.asc());
+                query.orderBy(scaffoldingLogPositionWorkingTime.id.asc());
             }
         } else {
-            query.orderBy(position.id.asc());
+            query.orderBy(scaffoldingLogPositionWorkingTime.id.asc());
         }
         return query;
     }

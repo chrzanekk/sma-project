@@ -12,7 +12,7 @@ import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.worktype.model.WorkType;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -49,7 +49,7 @@ public class ScaffoldingLogPositionDimension extends AuditableEntity {
     private DimensionType dimensionType;
 
     @Column(name = "dismantling_date")
-    private LocalDateTime dismantlingDate;
+    private LocalDate dismantlingDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scaffolding_position_id", nullable = false)

@@ -9,7 +9,7 @@ import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Jacksonized
 @SuperBuilder
@@ -22,6 +22,6 @@ public class ScaffoldingLogPositionDimensionBaseDTO {
     protected BigDecimal width;
     protected BigDecimal length;
     protected DimensionType dimensionType;
-    protected LocalDateTime dismantlingDate;
+    protected LocalDate dismantlingDate;
     protected ScaffoldingLogPositionBaseDTO scaffoldingPosition;
 }

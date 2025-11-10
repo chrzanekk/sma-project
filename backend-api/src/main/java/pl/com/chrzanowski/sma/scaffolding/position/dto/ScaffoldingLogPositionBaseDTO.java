@@ -11,6 +11,7 @@ import pl.com.chrzanowski.sma.common.enumeration.TechnicalProtocolStatus;
 import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogBaseDTO;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -23,9 +24,9 @@ public class ScaffoldingLogPositionBaseDTO {
     protected Long id;
     protected String scaffoldingNumber;
     protected String assemblyLocation;
-    protected LocalDateTime assemblyDate;
-    protected LocalDateTime dismantlingDate;
-    protected LocalDateTime dismantlingNotificationDate;
+    protected LocalDate assemblyDate;
+    protected LocalDate dismantlingDate;
+    protected LocalDate dismantlingNotificationDate;
     protected ScaffoldingType scaffoldingType;
     protected BigDecimal scaffoldingFullDimension;
     protected TechnicalProtocolStatus technicalProtocolStatus;

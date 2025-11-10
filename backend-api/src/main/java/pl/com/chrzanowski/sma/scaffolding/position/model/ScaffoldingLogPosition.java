@@ -17,6 +17,7 @@ import pl.com.chrzanowski.sma.scaffolding.log.model.ScaffoldingLog;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,13 +45,13 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     private String assemblyLocation;
 
     @Column(name = "assembly_date")
-    private LocalDateTime assemblyDate;
+    private LocalDate assemblyDate;
 
     @Column(name = "dismantling_date")
-    private LocalDateTime dismantlingDate;
+    private LocalDate dismantlingDate;
 
     @Column(name = "dismantling_notification_date")
-    private LocalDateTime dismantlingNotificationDate;
+    private LocalDate dismantlingNotificationDate;
 
     @Column(name = "scaffolding_type", length = 50)
     @Enumerated(EnumType.STRING)

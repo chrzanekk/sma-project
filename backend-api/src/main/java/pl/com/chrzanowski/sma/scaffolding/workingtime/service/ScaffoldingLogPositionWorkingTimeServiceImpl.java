@@ -29,7 +29,7 @@ public class ScaffoldingLogPositionWorkingTimeServiceImpl implements Scaffolding
 
     @Override
     public ScaffoldingLogPositionWorkingTimeDTO save(ScaffoldingLogPositionWorkingTimeDTO createDto) {
-        log.debug("Request to save ScaffoldingLogPositionWorkingTime : {}", createDto.getId());
+        log.debug("Request to save ScaffoldingLogPositionWorkingTime : {}", createDto.toString());
         ScaffoldingLogPositionWorkingTime entity = dtoMapper.toEntity(createDto);
         ScaffoldingLogPositionWorkingTime result = dao.save(entity);
         return dtoMapper.toDto(result);
