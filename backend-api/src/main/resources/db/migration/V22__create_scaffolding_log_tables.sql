@@ -79,7 +79,7 @@ CREATE TABLE scaffolding_log (
 
                                  CONSTRAINT fk_scaffolding_log_construction_site
                                      FOREIGN KEY (construction_site_id)
-                                         REFERENCES construction_sites(id)
+                                         REFERENCES construction_site(id)
                                          ON DELETE RESTRICT,
 
                                  CONSTRAINT fk_scaffolding_log_contractor
@@ -156,7 +156,7 @@ CREATE TABLE scaffolding_log_position (
                                           CONSTRAINT fk_scaffolding_position_company
                                               FOREIGN KEY (company_id)
                                                   REFERENCES company(id)
-                                                  ON DELETE RESTRICT,
+                                                  ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_scaffolding_position_log ON scaffolding_log_position(scaffolding_log_id);
@@ -197,7 +197,7 @@ CREATE TABLE scaffolding_log_position_working_time (
                                                        CONSTRAINT fk_working_time_company
                                                            FOREIGN KEY (company_id)
                                                                REFERENCES company(id)
-                                                               ON DELETE RESTRICT,
+                                                               ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_working_time_position ON scaffolding_log_position_working_time(scaffolding_position_id);
@@ -236,7 +236,7 @@ CREATE TABLE scaffolding_log_position_dimensions (
                                                      CONSTRAINT fk_dimensions_company
                                                          FOREIGN KEY (company_id)
                                                              REFERENCES company(id)
-                                                             ON DELETE RESTRICT,
+                                                             ON DELETE RESTRICT
 );
 
 CREATE INDEX idx_dimensions_position ON scaffolding_log_position_dimensions(scaffolding_position_id);
@@ -295,15 +295,3 @@ COMMENT ON COLUMN scaffolding_log_position_dimensions.work_type_id IS 'Foreign k
 COMMENT ON COLUMN scaffolding_log_position_dimensions.dismantling_date IS 'Date of partial dismantling for this dimension - last dimension dismantled triggers full position dismantling';
 COMMENT ON COLUMN scaffolding_log_position_dimensions.company_id IS 'Foreign key to company table - ensures data separation';
 
--- =============================================================================
--- SEED DATA - Common Work Types
--- =============================================================================
-INSERT INTO work_type (name, description)
-VALUES
-    ('Montaż', 'Montaż rusztowania'),
-    ('Demontaż', 'Demontaż rusztowania'),
-    ('Przebudowa', 'Przebudowa rusztowania'),
-    ('Dobudowa', 'Dobudowa do istniejącego rusztowania'),
-    ('Częściowy demontaż', 'Częściowy demontaż istniejącego rusztowania'),
-    ('Transport', 'Transport elementów'),
-    ('Inne', 'Inne prace związane z rusztowaniem');
