@@ -20,7 +20,7 @@ import java.util.Optional;
 @Repository("scaffoldingLogJPA")
 public class ScaffoldingLogDaoImpl implements ScaffoldingLogDao {
 
-    private final Logger log = LoggerFactory.getLogger(ScaffoldingLogDaoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ScaffoldingLogDaoImpl.class);
 
     private final ScaffoldingLogRepository scaffoldingLogRepository;
     private final ScaffoldingLogQuerySpec scaffoldingLogQuerySpec;

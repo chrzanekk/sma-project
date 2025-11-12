@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository("scaffoldingLogPositionWorkingTimeJPA")
 public class ScaffoldingLogPositionWorkingTimeJPADaoImpl implements ScaffoldingLogPositionWorkingTimeDao {
 
-    private final Logger log = LoggerFactory.getLogger(ScaffoldingLogPositionWorkingTimeJPADaoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ScaffoldingLogPositionWorkingTimeJPADaoImpl.class);
 
     private final ScaffoldingLogPositionWorkingTimeRepository repository;
     private final ScaffoldingLogPositionWorkingTimeQuerySpec querySpec;

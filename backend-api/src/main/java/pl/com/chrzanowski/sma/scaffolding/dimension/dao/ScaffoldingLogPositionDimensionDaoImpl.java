@@ -19,7 +19,7 @@ import java.util.Optional;
 @Repository("scaffoldingLogPositionDimensionJPA")
 public class ScaffoldingLogPositionDimensionDaoImpl implements ScaffoldingLogPositionDimensionDao {
 
-    private final Logger log = LoggerFactory.getLogger(ScaffoldingLogPositionDimensionDaoImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ScaffoldingLogPositionDimensionDaoImpl.class);
 
     private final ScaffoldingLogPositionDimensionRepository repository;
     private final ScaffoldingLogPositionDimensionQuerySpec querySpec;
