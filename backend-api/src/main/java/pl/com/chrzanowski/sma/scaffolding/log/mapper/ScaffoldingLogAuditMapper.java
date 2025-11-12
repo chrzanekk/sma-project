@@ -13,7 +13,7 @@ import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring", uses={UserAuditMapper.class, ScaffoldingLogDTOMapper.class})
+@Mapper(componentModel = "spring", uses = {UserAuditMapper.class, ScaffoldingLogDTOMapper.class})
 public interface ScaffoldingLogAuditMapper extends EntityMapper<ScaffoldingLogAuditableDTO, ScaffoldingLog> {
 
 
@@ -27,7 +27,7 @@ public interface ScaffoldingLogAuditMapper extends EntityMapper<ScaffoldingLogAu
     @Mapping(source = "company", target = "base.company")
     @Mapping(source = "constructionSite", target = "base.constructionSite")
     @Mapping(source = "contractor", target = "base.contractor")
-    @Mapping(source = "positions", target = "base.positions",qualifiedByName = "positionsMapping")
+    @Mapping(source = "positions", target = "base.positions", qualifiedByName = "positionsMapping")
     ScaffoldingLogAuditableDTO toDto(ScaffoldingLog scaffoldingLog);
 
     @Named("positionsMapping")

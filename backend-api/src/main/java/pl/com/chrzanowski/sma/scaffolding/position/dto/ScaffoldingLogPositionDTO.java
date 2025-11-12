@@ -25,15 +25,4 @@ public class ScaffoldingLogPositionDTO extends ScaffoldingLogPositionBaseDTO imp
     @NotNull
     private CompanyBaseDTO company;
 
-    @NotNull
-    private ContractorBaseDTO contractor;
-    @NotNull
-    private ContactBaseDTO contractorContact;
-    @NotNull
-    private ContractorBaseDTO scaffoldingUser;
-    @NotNull
-    private ContactBaseDTO scaffoldingUserContact;
-    private Set<ScaffoldingLogPositionDimensionBaseDTO> dimensions;
-    private Set<ScaffoldingLogPositionWorkingTimeBaseDTO> workingTimes;
-
 }

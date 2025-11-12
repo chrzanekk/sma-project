@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
+import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
 
 @Jacksonized
@@ -20,4 +21,5 @@ public class ScaffoldingLogPositionWorkingTimeDTO extends ScaffoldingLogPosition
     private WorkTypeBaseDTO workType;
     @NotNull
     private CompanyBaseDTO company;
+    private ScaffoldingLogPositionBaseDTO scaffoldingPosition;
 }

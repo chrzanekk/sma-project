@@ -42,5 +42,5 @@ public interface ScaffoldingLogDTOMapper extends EntityMapper<ScaffoldingLogDTO,
     @Mapping(target = "contractor", ignore = true)
     @Mapping(target = "positions", ignore = true)
     @Mapping(target = "constructionSite", ignore = true)
-    void updateFromBaseDto(ScaffoldingLogDTO dto, @MappingTarget ScaffoldingLog scaffoldingLog);
+    void updateFromDto(ScaffoldingLogDTO dto, @MappingTarget ScaffoldingLog scaffoldingLog);
 }

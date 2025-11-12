@@ -18,5 +18,5 @@ public class ScaffoldingLogPositionWorkingTimeBaseDTO {
     protected Long id;
     protected BigDecimal numberOfWorkers;
     protected BigDecimal numberOfHours;
-    protected ScaffoldingLogPositionBaseDTO scaffoldingPosition;
+
 }
