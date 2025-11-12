@@ -15,4 +15,6 @@ public final class ApiPath {
     public static final String RESOURCE = "/api/resources";
     public static final String EMPLOYEE = "/api/employees";
     public static final String WORK_TYPE = "/api/work-types";
+    public static final String SCAFFOLDING_LOG = "/api/scaffolding-logs";
+    public static final String SCAFFOLDING_LOG_POSITION = "/api/scaffolding-log-positions";
 }

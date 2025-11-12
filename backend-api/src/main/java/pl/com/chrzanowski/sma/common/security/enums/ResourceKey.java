@@ -82,7 +82,7 @@ public enum ResourceKey {
             null,
             ResourceCode.CONTRACT.getDescription(),
             false,
-            Set.of("CONTRACTOR_MANAGEMENT","CONTACT_MANAGEMENT")),
+            Set.of("CONTRACTOR_MANAGEMENT", "CONTACT_MANAGEMENT")),
 
     // Resource Management (meta - zarządzanie samymi uprawnieniami)
     RESOURCE_MANAGEMENT(ResourceCode.RESOURCE.getDisplayName(),
@@ -97,7 +97,19 @@ public enum ResourceKey {
             null,
             ResourceCode.EMPLOYEE.getDescription(),
             false,
-            Set.of());
+            Set.of()),
+    SCAFFOLDING_LOG_MANAGEMENT(ResourceCode.SCAFFOLDING_LOG.getDisplayName(),
+            ApiPath.SCAFFOLDING_LOG + Constants.ALL,
+            null,
+            ResourceCode.SCAFFOLDING_LOG.getDescription(),
+            false,
+            Set.of("CONTRACTOR_MANAGEMENT", "CONTACT_MANAGEMENT", "CONSTRUCTION_SITE_MANAGEMENT", "SCAFFOLDING_LOG_POSITIONS")),
+    SCAFFOLDING_LOG_POSITION_MANAGEMENT(ResourceCode.SCAFFOLDING_LOG_POSITIONS.getDisplayName(),
+            ApiPath.SCAFFOLDING_LOG_POSITION + Constants.ALL,
+            null,
+            ResourceCode.SCAFFOLDING_LOG_POSITIONS.getDescription(),
+            false,
+            Set.of("SCAFFOLDING_LOG_MANAGEMENT"));
 
     @Getter
     private final String displayName;
@@ -124,4 +136,4 @@ public enum ResourceKey {
     private static class Constants {
         public static final String ALL = "/**";
     }
-}
+    }
