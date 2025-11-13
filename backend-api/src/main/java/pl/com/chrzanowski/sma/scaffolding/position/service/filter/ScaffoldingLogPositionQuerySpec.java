@@ -111,10 +111,37 @@ public class ScaffoldingLogPositionQuerySpec {
                     case "dismantlingNotificationDate":
                         query.orderBy(order.isAscending() ? scaffoldingLogPosition.dismantlingNotificationDate.asc() : scaffoldingLogPosition.dismantlingNotificationDate.desc());
                         break;
+                    case "scaffoldingType":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.scaffoldingType.asc() : scaffoldingLogPosition.scaffoldingType.desc());
+                        break;
+                    case "scaffoldingFullDimension":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.scaffoldingFullDimension.asc() : scaffoldingLogPosition.scaffoldingFullDimension.desc());
+                        break;
+                    case "technicalProtocolStatus":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.technicalProtocolStatus.asc() : scaffoldingLogPosition.technicalProtocolStatus.desc());
+                        break;
+                    case "scaffoldingLogName":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.scaffoldingLog.name.asc() : scaffoldingLogPosition.scaffoldingLog.name.desc());
+                        break;
+                    case "contractorName":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.contractor.name.asc() : scaffoldingLogPosition.contractor.name.desc());
+                        break;
+                    case "contractorContactName":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.contractorContact.lastName.asc() : scaffoldingLogPosition.contractorContact.lastName.desc());
+                        break;
+                    case "scaffoldingUserName":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.scaffoldingUser.name.asc() : scaffoldingLogPosition.scaffoldingUser.name.desc());
+                        break;
+                    case "scaffoldingUserContactName":
+                        query.orderBy(order.isAscending() ? scaffoldingLogPosition.scaffoldingUserContact.lastName.asc() : scaffoldingLogPosition.scaffoldingUserContact.lastName.desc());
+                        break;
                 }
             });
-            //todo finish sorting
-
+            if (sort.stream().noneMatch(order -> "id".equals(order.getProperty()))) {
+                query.orderBy(scaffoldingLogPosition.id.asc());
+            }
+        } else {
+            query.orderBy(scaffoldingLogPosition.id.asc());
         }
         return query;
     }
