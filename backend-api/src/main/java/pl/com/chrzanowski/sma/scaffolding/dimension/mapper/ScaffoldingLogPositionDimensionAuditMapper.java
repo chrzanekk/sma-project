@@ -23,6 +23,7 @@ public interface ScaffoldingLogPositionDimensionAuditMapper extends EntityMapper
     @Mapping(source = "length", target = "base.length")
     @Mapping(source = "dimensionType", target = "base.dimensionType")
     @Mapping(source = "dismantlingDate", target = "base.dismantlingDate")
+    @Mapping(source = "assemblyDate", target = "base.assemblyDate")
     @Mapping(source = "scaffoldingPosition", target = "base.scaffoldingPosition")
     @Mapping(source = "workType", target = "base.workType")
     @Mapping(source = "company", target = "base.company")

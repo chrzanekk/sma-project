@@ -17,6 +17,7 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPosition
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Jacksonized
@@ -40,7 +41,7 @@ public class ScaffoldingLogPositionBaseDTO {
     @NotNull
     protected TechnicalProtocolStatus technicalProtocolStatus;
     protected ScaffoldingLogPositionBaseDTO parentPosition;
-    protected Set<ScaffoldingLogPositionBaseDTO> childPositions;
+    protected List<ScaffoldingLogPositionBaseDTO> childPositions;
     @NotNull
     protected ScaffoldingLogBaseDTO scaffoldingLog;
     @NotNull
@@ -51,6 +52,6 @@ public class ScaffoldingLogPositionBaseDTO {
     private ContractorBaseDTO scaffoldingUser;
     @NotNull
     private ContactBaseDTO scaffoldingUserContact;
-    private Set<ScaffoldingLogPositionDimensionBaseDTO> dimensions;
-    private Set<ScaffoldingLogPositionWorkingTimeBaseDTO> workingTimes;
+    private List<ScaffoldingLogPositionDimensionBaseDTO> dimensions;
+    private List<ScaffoldingLogPositionWorkingTimeBaseDTO> workingTimes;
 }

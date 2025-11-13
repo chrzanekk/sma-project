@@ -217,6 +217,7 @@ CREATE TABLE scaffolding_log_position_dimensions (
                                                      dimension_type VARCHAR(50) NOT NULL DEFAULT 'konstrukcja podstawowa',
                                                      work_type_id BIGINT NOT NULL,
                                                      dismantling_date TIMESTAMP,
+                                                     assembly_date TIMESTAMP,
                                                      company_id BIGINT NOT NULL,
                                                      created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                                      created_by VARCHAR(255),

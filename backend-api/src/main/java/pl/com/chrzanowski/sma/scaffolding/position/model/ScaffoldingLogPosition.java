@@ -18,9 +18,8 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositi
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -78,7 +77,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
 
     @OneToMany(mappedBy = "parentPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<ScaffoldingLogPosition> childPositions = new HashSet<>();
+    private List<ScaffoldingLogPosition> childPositions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contractor_id", nullable = false)
@@ -112,11 +111,11 @@ public class ScaffoldingLogPosition extends AuditableEntity {
 
     @OneToMany(mappedBy = "scaffoldingPosition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ScaffoldingLogPositionDimension> dimensions = new HashSet<>();
+    private List<ScaffoldingLogPositionDimension> dimensions = new ArrayList<>();
 
     @OneToMany(mappedBy = "scaffoldingPosition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private Set<ScaffoldingLogPositionWorkingTime> workingTimes = new HashSet<>();
+    private List<ScaffoldingLogPositionWorkingTime> workingTimes = new ArrayList<>();
 
     public void addDimension(ScaffoldingLogPositionDimension dimension) {
         dimensions.add(dimension);

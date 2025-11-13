@@ -51,6 +51,9 @@ public class ScaffoldingLogPositionDimension extends AuditableEntity {
     @Column(name = "dismantling_date")
     private LocalDate dismantlingDate;
 
+    @Column(name = "assembly_date")
+    private LocalDate assemblyDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scaffolding_position_id", nullable = false)
     @NotNull

@@ -20,6 +20,7 @@ public interface ScaffoldingLogPositionDimensionDTOMapper extends EntityMapper<S
     @Mapping(source = "length", target = "length")
     @Mapping(source = "dimensionType", target = "dimensionType")
     @Mapping(source = "dismantlingDate", target = "dismantlingDate")
+    @Mapping(source = "assemblyDate", target = "assemblyDate")
     @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
     ScaffoldingLogPositionDimensionDTO toDto(ScaffoldingLogPositionDimension entity);
 

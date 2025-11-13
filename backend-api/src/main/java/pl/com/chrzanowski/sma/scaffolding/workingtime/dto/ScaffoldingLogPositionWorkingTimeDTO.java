@@ -18,8 +18,6 @@ import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
 @ToString(callSuper = true)
 public class ScaffoldingLogPositionWorkingTimeDTO extends ScaffoldingLogPositionWorkingTimeBaseDTO implements HasId<Long> {
     @NotNull
-    private WorkTypeBaseDTO workType;
-    @NotNull
     private CompanyBaseDTO company;
     private ScaffoldingLogPositionBaseDTO scaffoldingPosition;
 }
