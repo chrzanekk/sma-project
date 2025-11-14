@@ -6,10 +6,9 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionAuditableDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
-import pl.com.chrzanowski.sma.scaffolding.worktype.mapper.WorkTypeDTOMapper;
 import pl.com.chrzanowski.sma.user.mapper.UserAuditMapper;
 
-@Mapper(componentModel = "spring", uses = {UserAuditMapper.class, WorkTypeDTOMapper.class, CompanyDTOMapper.class})
+@Mapper(componentModel = "spring", uses = {UserAuditMapper.class, CompanyDTOMapper.class})
 public interface ScaffoldingLogPositionDimensionAuditMapper extends EntityMapper<ScaffoldingLogPositionDimensionAuditableDTO, ScaffoldingLogPositionDimension> {
 
 
@@ -24,8 +23,7 @@ public interface ScaffoldingLogPositionDimensionAuditMapper extends EntityMapper
     @Mapping(source = "dimensionType", target = "base.dimensionType")
     @Mapping(source = "dismantlingDate", target = "base.dismantlingDate")
     @Mapping(source = "assemblyDate", target = "base.assemblyDate")
-    @Mapping(source = "scaffoldingPosition", target = "base.scaffoldingPosition")
-    @Mapping(source = "workType", target = "base.workType")
+    @Mapping(source = "operationType", target = "base.operationType")
     @Mapping(source = "company", target = "base.company")
     ScaffoldingLogPositionDimensionAuditableDTO toDto(ScaffoldingLogPositionDimension scaffoldingLogPositionDimension);
 

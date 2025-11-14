@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.service.ScaffoldingLogPositionDimensionService;
@@ -16,6 +17,9 @@ import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPositionWorkingTimeDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeService;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 
 @Service
@@ -52,8 +56,9 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     public ScaffoldingLogPositionDTO save(ScaffoldingLogPositionDTO createDto) {
         log.debug("Request to save ScaffoldingLogPosition : {}", createDto.toString());
         //todo update parent position if exists and calculate full dimension of position.
-        if(createDto.getParentPosition() != null) {
+        if (createDto.getParentPosition() != null) {
             //calculate full dimension - check workType for subtraction/addition particular dimensions
+            List<ScaffoldingLogPositionDimensionBaseDTO> current = createDto.getParentPosition().getDimensions();
         }
         //todo save base position when we updated parent position if exists
         ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
@@ -63,13 +68,12 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         //todo save dimensions (new positionId must be present)
         createDto.getDimensions().forEach(positionDimensionBaseDTO -> {
             ScaffoldingLogPositionDimensionDTO toSave = ScaffoldingLogPositionDimensionDTO.builder()
-                    .scaffoldingPosition(savedDTO)
                     .company(savedDTO.getCompany())
                     .dimensionType(positionDimensionBaseDTO.getDimensionType())
                     .height(positionDimensionBaseDTO.getHeight())
                     .width(positionDimensionBaseDTO.getWidth())
                     .length(positionDimensionBaseDTO.getLength())
-                    .workType(positionDimensionBaseDTO.getWorkType())
+                    .operationType(positionDimensionBaseDTO.getOperationType())
                     .dismantlingDate(positionDimensionBaseDTO.getDismantlingDate())
                     .assemblyDate(positionDimensionBaseDTO.getAssemblyDate())
                     .build();
@@ -79,14 +83,12 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         //todo save working times (new positionId must be present)
         createDto.getWorkingTimes().forEach(positionWorkingTimeDTO -> {
             ScaffoldingLogPositionWorkingTimeDTO toSave = ScaffoldingLogPositionWorkingTimeDTO.builder()
-                    .scaffoldingPosition(savedDTO)
                     .company(savedDTO.getCompany())
-                    .workType(positionWorkingTimeDTO.getWorkType())
+                    .operationType(positionWorkingTimeDTO.getOperationType())
                     .numberOfHours(positionWorkingTimeDTO.getNumberOfHours())
                     .numberOfWorkers(positionWorkingTimeDTO.getNumberOfWorkers()).build();
             ScaffoldingLogPositionWorkingTimeDTO savedWorkingTime = scaffoldingLogPositionWorkingTimeService.save(toSave);
         });
-
 
 
         return null;
@@ -105,5 +107,9 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     @Override
     public void delete(Long aLong) {
 
+    }
+
+    private BigDecimal calculateScaffoldingDimensions(List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList) {
+        return BigDecimal.ZERO;
     }
 }

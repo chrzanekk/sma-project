@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingType;
 import pl.com.chrzanowski.sma.common.enumeration.TechnicalProtocolStatus;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
@@ -23,7 +24,6 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPosit
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeQueryServiceImpl;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.filter.ScaffoldingLogPositionWorkingTimeFilter;
-import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -74,14 +74,8 @@ class ScaffoldingLogPositionWorkingTimeQueryServiceImplTest {
                 .scaffoldingFullDimension(new BigDecimal("100.50"))
                 .technicalProtocolStatus(TechnicalProtocolStatus.CREATED)
                 .parentPosition(null)
-                .childPositions(Collections.emptySet())
+                .childPositions(Collections.emptyList())
                 .scaffoldingLog(scaffoldingLogBaseDTO)
-                .build();
-
-        // Tworzenie WorkTypeBaseDTO
-        WorkTypeBaseDTO workType = WorkTypeBaseDTO.builder()
-                .id(1L)
-                .name("Assembly Work")
                 .build();
 
         // Tworzenie CompanyBaseDTO
@@ -96,7 +90,7 @@ class ScaffoldingLogPositionWorkingTimeQueryServiceImplTest {
                 .numberOfWorkers(new BigDecimal("5"))
                 .numberOfHours(new BigDecimal("8.0"))
                 .scaffoldingPosition(scaffoldingPosition)
-                .workType(workType)
+                .operationType(ScaffoldingOperationType.ASSEMBLY)
                 .company(company)
                 .build();
 
@@ -126,7 +120,7 @@ class ScaffoldingLogPositionWorkingTimeQueryServiceImplTest {
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(0, new BigDecimal("8.0").compareTo(result.getFirst().getBase().getNumberOfHours()));
-        assertEquals("Assembly Work", result.getFirst().getBase().getWorkType().getName());
+        assertEquals(ScaffoldingOperationType.ASSEMBLY, result.getFirst().getBase().getOperationType());
         assertEquals("Test Company", result.getFirst().getBase().getCompany().getName());
 
         verify(dao, times(1)).findAll(any(BooleanBuilder.class));

@@ -116,34 +116,4 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @OneToMany(mappedBy = "scaffoldingPosition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ScaffoldingLogPositionWorkingTime> workingTimes = new ArrayList<>();
-
-    public void addDimension(ScaffoldingLogPositionDimension dimension) {
-        dimensions.add(dimension);
-        dimension.setScaffoldingPosition(this);
-    }
-
-    public void removeDimension(ScaffoldingLogPositionDimension dimension) {
-        dimensions.remove(dimension);
-        dimension.setScaffoldingPosition(null);
-    }
-
-    public void addWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
-        workingTimes.add(workingTime);
-        workingTime.setScaffoldingPosition(this);
-    }
-
-    public void removeWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
-        workingTimes.remove(workingTime);
-        workingTime.setScaffoldingPosition(null);
-    }
-
-    public void addChildPosition(ScaffoldingLogPosition childPosition) {
-        childPositions.add(childPosition);
-        childPosition.setParentPosition(this);
-    }
-
-    public void removeChildPosition(ScaffoldingLogPosition childPosition) {
-        childPositions.remove(childPosition);
-        childPosition.setParentPosition(null);
-    }
 }

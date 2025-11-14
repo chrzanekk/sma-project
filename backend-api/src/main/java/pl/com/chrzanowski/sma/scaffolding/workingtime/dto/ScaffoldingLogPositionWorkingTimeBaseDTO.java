@@ -1,13 +1,11 @@
 package pl.com.chrzanowski.sma.scaffolding.workingtime.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
-import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 
 import java.math.BigDecimal;
 
@@ -20,7 +18,6 @@ public class ScaffoldingLogPositionWorkingTimeBaseDTO {
     protected Long id;
     protected BigDecimal numberOfWorkers;
     protected BigDecimal numberOfHours;
-    @NotNull
-    protected WorkTypeBaseDTO workType;
+    protected ScaffoldingOperationType operationType;
 
 }

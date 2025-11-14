@@ -7,6 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionDimensionException;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dao.ScaffoldingLogPositionDimensionDao;
@@ -14,7 +15,6 @@ import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDi
 import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
 import pl.com.chrzanowski.sma.scaffolding.dimension.service.ScaffoldingLogPositionDimensionServiceImpl;
-import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -44,12 +44,6 @@ class ScaffoldingLogPositionDimensionServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        WorkTypeBaseDTO workTypeDTO = WorkTypeBaseDTO.builder()
-                .id(1L)
-                .name("Assembly")
-                .description("Scaffolding assembly work")
-                .build();
-
         CompanyBaseDTO companyDTO = CompanyBaseDTO.builder()
                 .id(1L)
                 .name("Test Company")
@@ -63,7 +57,7 @@ class ScaffoldingLogPositionDimensionServiceImplTest {
                 .length(new BigDecimal("18.0"))
                 .dimensionType(DimensionType.CONSOLE)
                 .dismantlingDate(LocalDate.of(2025, 7, 15))
-                .workType(workTypeDTO)
+                .operationType(ScaffoldingOperationType.ASSEMBLY)
                 .company(companyDTO)
                 .build();
 
@@ -95,7 +89,7 @@ class ScaffoldingLogPositionDimensionServiceImplTest {
         assertEquals(new BigDecimal("6.0"), result.getWidth());
         assertEquals(new BigDecimal("18.0"), result.getLength());
         assertEquals(DimensionType.CONSOLE, result.getDimensionType());
-        assertEquals(1L, result.getWorkType().getId());
+        assertEquals(ScaffoldingOperationType.ASSEMBLY, result.getOperationType());
         assertEquals(1L, result.getCompany().getId());
 
         verify(dao, times(1)).save(any(ScaffoldingLogPositionDimension.class));

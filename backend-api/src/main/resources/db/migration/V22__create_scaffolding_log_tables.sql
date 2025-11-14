@@ -4,13 +4,6 @@
 -- =============================================================================
 -- SEQUENCES
 -- =============================================================================
-CREATE SEQUENCE work_type_sequence
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
 CREATE SEQUENCE scaffolding_log_sequence
     START WITH 1
     INCREMENT BY 1
@@ -39,28 +32,6 @@ CREATE SEQUENCE scaffolding_log_position_dimensions_sequence
     NO MAXVALUE
     CACHE 1;
 
--- =============================================================================
--- WORK_TYPE TABLE
--- =============================================================================
-CREATE TABLE work_type (
-                           id BIGINT PRIMARY KEY DEFAULT nextval('work_type_sequence'),
-                           name VARCHAR(255) NOT NULL,
-                           description VARCHAR(500),
-                           company_id BIGINT NOT NULL,
-                           created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                           created_by VARCHAR(255),
-                           modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                           modified_by VARCHAR(255),
-
-                           CONSTRAINT fk_work_type_company
-                               FOREIGN KEY (company_id)
-                                   REFERENCES company(id)
-                                   ON DELETE RESTRICT
-);
-
-CREATE INDEX idx_work_type_name ON work_type(name);
-CREATE INDEX idx_work_type_company ON work_type(company_id);
-CREATE INDEX idx_work_type_company_name ON work_type(company_id, name);
 
 -- =============================================================================
 -- SCAFFOLDING_LOG TABLE
@@ -177,7 +148,7 @@ CREATE TABLE scaffolding_log_position_working_time (
                                                        scaffolding_position_id BIGINT NOT NULL,
                                                        number_of_workers NUMERIC(10,2),
                                                        number_of_hours NUMERIC(10,2),
-                                                       work_type_id BIGINT,
+                                                       operation_type VARCHAR(50) NOT NULL,
                                                        company_id BIGINT NOT NULL,
                                                        created_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                                        created_by VARCHAR(255),
@@ -189,11 +160,6 @@ CREATE TABLE scaffolding_log_position_working_time (
                                                                REFERENCES scaffolding_log_position(id)
                                                                ON DELETE CASCADE,
 
-                                                       CONSTRAINT fk_working_time_work_type
-                                                           FOREIGN KEY (work_type_id)
-                                                               REFERENCES work_type(id)
-                                                               ON DELETE SET NULL,
-
                                                        CONSTRAINT fk_working_time_company
                                                            FOREIGN KEY (company_id)
                                                                REFERENCES company(id)
@@ -201,7 +167,6 @@ CREATE TABLE scaffolding_log_position_working_time (
 );
 
 CREATE INDEX idx_working_time_position ON scaffolding_log_position_working_time(scaffolding_position_id);
-CREATE INDEX idx_working_time_work_type ON scaffolding_log_position_working_time(work_type_id);
 CREATE INDEX idx_working_time_company ON scaffolding_log_position_working_time(company_id);
 CREATE INDEX idx_working_time_company_position ON scaffolding_log_position_working_time(company_id, scaffolding_position_id);
 
@@ -214,8 +179,8 @@ CREATE TABLE scaffolding_log_position_dimensions (
                                                      height NUMERIC(10,2),
                                                      width NUMERIC(10,2),
                                                      length NUMERIC(10,2),
-                                                     dimension_type VARCHAR(50) NOT NULL DEFAULT 'konstrukcja podstawowa',
-                                                     work_type_id BIGINT NOT NULL,
+                                                     dimension_type VARCHAR(50) NOT NULL,
+                                                     operation_type VARCHAR(50) NOT NULL,
                                                      dismantling_date TIMESTAMP,
                                                      assembly_date TIMESTAMP,
                                                      company_id BIGINT NOT NULL,
@@ -229,11 +194,6 @@ CREATE TABLE scaffolding_log_position_dimensions (
                                                              REFERENCES scaffolding_log_position(id)
                                                              ON DELETE CASCADE,
 
-                                                     CONSTRAINT fk_dimensions_work_type
-                                                         FOREIGN KEY (work_type_id)
-                                                             REFERENCES work_type(id)
-                                                             ON DELETE RESTRICT,
-
                                                      CONSTRAINT fk_dimensions_company
                                                          FOREIGN KEY (company_id)
                                                              REFERENCES company(id)
@@ -241,7 +201,6 @@ CREATE TABLE scaffolding_log_position_dimensions (
 );
 
 CREATE INDEX idx_dimensions_position ON scaffolding_log_position_dimensions(scaffolding_position_id);
-CREATE INDEX idx_dimensions_work_type ON scaffolding_log_position_dimensions(work_type_id);
 CREATE INDEX idx_dimensions_type ON scaffolding_log_position_dimensions(dimension_type);
 CREATE INDEX idx_dimensions_dismantling_date ON scaffolding_log_position_dimensions(dismantling_date);
 CREATE INDEX idx_dimensions_company ON scaffolding_log_position_dimensions(company_id);
@@ -250,10 +209,6 @@ CREATE INDEX idx_dimensions_company_position ON scaffolding_log_position_dimensi
 -- =============================================================================
 -- COMMENTS
 -- =============================================================================
-COMMENT ON TABLE work_type IS 'Stores work type definitions for scaffolding operations - company separated';
-COMMENT ON COLUMN work_type.name IS 'Work type name';
-COMMENT ON COLUMN work_type.description IS 'Optional work type description';
-COMMENT ON COLUMN work_type.company_id IS 'Foreign key to company table - ensures data separation';
 
 COMMENT ON TABLE scaffolding_log IS 'Main scaffolding log table linked to construction sites - company separated';
 COMMENT ON COLUMN scaffolding_log.construction_site_id IS 'Foreign key to construction_sites table';
@@ -283,7 +238,7 @@ COMMENT ON TABLE scaffolding_log_position_working_time IS 'Working time records 
 COMMENT ON COLUMN scaffolding_log_position_working_time.scaffolding_position_id IS 'Foreign key to scaffolding_log_position table';
 COMMENT ON COLUMN scaffolding_log_position_working_time.number_of_workers IS 'Number of workers';
 COMMENT ON COLUMN scaffolding_log_position_working_time.number_of_hours IS 'Number of hours worked';
-COMMENT ON COLUMN scaffolding_log_position_working_time.work_type_id IS 'Optional work type - can be general time for multiple activities';
+COMMENT ON COLUMN scaffolding_log_position_working_time.operation_type IS 'Assembly or dismantling operation on scaffolding';
 COMMENT ON COLUMN scaffolding_log_position_working_time.company_id IS 'Foreign key to company table - ensures data separation';
 
 COMMENT ON TABLE scaffolding_log_position_dimensions IS 'Dimension records for scaffolding positions - multiple dimensions per position - company separated';
@@ -292,7 +247,7 @@ COMMENT ON COLUMN scaffolding_log_position_dimensions.height IS 'Height in meter
 COMMENT ON COLUMN scaffolding_log_position_dimensions.width IS 'Width in meters (e.g., 6.14)';
 COMMENT ON COLUMN scaffolding_log_position_dimensions.length IS 'Length in meters (e.g., 6.14)';
 COMMENT ON COLUMN scaffolding_log_position_dimensions.dimension_type IS 'Dimension type: balkon/konsola, podwieszenie, dźwigary, konstrukcja podstawowa (default)';
-COMMENT ON COLUMN scaffolding_log_position_dimensions.work_type_id IS 'Foreign key to work_type table';
+COMMENT ON COLUMN scaffolding_log_position_dimensions.operation_type IS 'Assembly or dismantling operation on scaffolding';
 COMMENT ON COLUMN scaffolding_log_position_dimensions.dismantling_date IS 'Date of partial dismantling for this dimension - last dimension dismantled triggers full position dismantling';
 COMMENT ON COLUMN scaffolding_log_position_dimensions.company_id IS 'Foreign key to company table - ensures data separation';
 

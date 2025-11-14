@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingType;
 import pl.com.chrzanowski.sma.common.enumeration.TechnicalProtocolStatus;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
@@ -24,7 +25,6 @@ import pl.com.chrzanowski.sma.scaffolding.dimension.service.ScaffoldingLogPositi
 import pl.com.chrzanowski.sma.scaffolding.dimension.service.filter.ScaffoldingLogPositionDimensionFilter;
 import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -75,15 +75,8 @@ class ScaffoldingLogPositionDimensionQueryServiceImplTest {
                 .scaffoldingFullDimension(new BigDecimal("100.50"))
                 .technicalProtocolStatus(TechnicalProtocolStatus.CREATED)
                 .parentPosition(null)
-                .childPositions(Collections.emptySet())
+                .childPositions(Collections.emptyList())
                 .scaffoldingLog(scaffoldingLogBaseDTO)
-                .build();
-
-        // Tworzenie WorkTypeBaseDTO
-        WorkTypeBaseDTO workType = WorkTypeBaseDTO.builder()
-                .id(1L)
-                .name("Assembly Work")
-                .description("Scaffolding assembly")
                 .build();
 
         // Tworzenie CompanyBaseDTO
@@ -102,7 +95,7 @@ class ScaffoldingLogPositionDimensionQueryServiceImplTest {
                 .dimensionType(DimensionType.BASIC_STRUCTURE)
                 .dismantlingDate(LocalDate.of(2025, 6, 30))
                 .scaffoldingPosition(scaffoldingPosition)
-                .workType(workType)
+                .operationType(ScaffoldingOperationType.ASSEMBLY)
                 .company(company)
                 .build();
 

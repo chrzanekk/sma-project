@@ -6,9 +6,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import pl.com.chrzanowski.sma.common.audit.AuditableEntity;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
-import pl.com.chrzanowski.sma.scaffolding.worktype.model.WorkType;
 
 import java.math.BigDecimal;
 
@@ -37,16 +37,16 @@ public class ScaffoldingLogPositionWorkingTime extends AuditableEntity {
     @DecimalMin(value = "0.0")
     private BigDecimal numberOfHours;
 
+    @Column(name = "operation_type", length = 50, nullable = false)
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ScaffoldingOperationType operationType;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scaffolding_position_id", nullable = false)
     @NotNull
     @ToString.Exclude
     private ScaffoldingLogPosition scaffoldingPosition;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "work_type_id")
-    @ToString.Exclude
-    private WorkType workType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)

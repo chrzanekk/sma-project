@@ -17,9 +17,8 @@ public interface ScaffoldingLogPositionWorkingTimeAuditMapper extends EntityMapp
     @Mapping(source = "id", target = "base.id")
     @Mapping(source = "numberOfWorkers", target = "base.numberOfWorkers")
     @Mapping(source = "numberOfHours", target = "base.numberOfHours")
-    @Mapping(source = "scaffoldingPosition", target = "base.scaffoldingPosition")
     @Mapping(source = "company", target = "base.company")
-    @Mapping(source = "workType", target = "base.workType")
+    @Mapping(source = "operationType", target = "base.operationType")
     ScaffoldingLogPositionWorkingTimeAuditableDTO toDto(ScaffoldingLogPositionWorkingTime entity);
 
 }

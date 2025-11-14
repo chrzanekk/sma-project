@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionWorkingTimeException;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.dao.ScaffoldingLogPositionWorkingTimeDao;
@@ -13,7 +14,7 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPosition
 import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPositionWorkingTimeDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeServiceImpl;
-import pl.com.chrzanowski.sma.scaffolding.worktype.dto.WorkTypeBaseDTO;
+
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -42,12 +43,6 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
 
-        WorkTypeBaseDTO workTypeDTO = WorkTypeBaseDTO.builder()
-                .id(1L)
-                .name("Installation")
-                .description("Scaffolding installation work")
-                .build();
-
         CompanyBaseDTO companyDTO = CompanyBaseDTO.builder()
                 .id(1L)
                 .name("Test Company")
@@ -58,7 +53,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
                 .id(1L)
                 .numberOfWorkers(new BigDecimal("5"))
                 .numberOfHours(new BigDecimal("8.5"))
-                .workType(workTypeDTO)
+                .operationType(ScaffoldingOperationType.ASSEMBLY)
                 .company(companyDTO)
                 .build();
 
@@ -85,7 +80,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
         assertEquals(1L, result.getId());
         assertEquals(new BigDecimal("5"), result.getNumberOfWorkers());
         assertEquals(new BigDecimal("8.5"), result.getNumberOfHours());
-        assertEquals(1L, result.getWorkType().getId());
+        assertEquals(ScaffoldingOperationType.ASSEMBLY, result.getOperationType());
         assertEquals(1L, result.getCompany().getId());
 
         verify(dao, times(1)).save(any(ScaffoldingLogPositionWorkingTime.class));
