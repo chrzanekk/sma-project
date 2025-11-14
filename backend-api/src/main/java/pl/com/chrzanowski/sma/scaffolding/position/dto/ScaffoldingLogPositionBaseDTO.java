@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @Jacksonized
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode
 @ToString
 @Getter

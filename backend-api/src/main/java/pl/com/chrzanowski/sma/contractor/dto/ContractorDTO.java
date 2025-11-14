@@ -13,7 +13,7 @@ import pl.com.chrzanowski.sma.contract.dto.ContractBaseDTO;
 import java.util.Set;
 
 @Jacksonized
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

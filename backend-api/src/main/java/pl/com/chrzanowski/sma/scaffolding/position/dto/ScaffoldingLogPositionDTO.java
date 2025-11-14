@@ -17,7 +17,7 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPosition
 import java.util.Set;
 
 @Jacksonized
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

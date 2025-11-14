@@ -12,7 +12,7 @@ import pl.com.chrzanowski.sma.common.json.CountryDeserializer;
 import pl.com.chrzanowski.sma.common.json.CountrySerializer;
 
 @Jacksonized
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode
 @ToString(callSuper = true)
 @Getter

@@ -10,7 +10,7 @@ import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 
 @Jacksonized
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Getter
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

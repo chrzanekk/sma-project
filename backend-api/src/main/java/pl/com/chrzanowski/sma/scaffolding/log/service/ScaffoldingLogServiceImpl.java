@@ -39,7 +39,7 @@ public class ScaffoldingLogServiceImpl implements ScaffoldingLogService {
     public ScaffoldingLogDTO update(ScaffoldingLogDTO updateDto) {
         log.debug("Request to update ScaffoldingLog : {}", updateDto.getId());
         ScaffoldingLog existing = scaffoldingLogDao.findById(updateDto.getId())
-                .orElseThrow(() -> new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + updateDto.getId() + "not found."));
+                .orElseThrow(() -> new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + updateDto.getId() + " not found."));
         scaffoldingLogDTOMapper.updateFromDto(updateDto, existing);
         ScaffoldingLog updated = scaffoldingLogDao.save(existing);
         return scaffoldingLogDTOMapper.toDto(updated);
@@ -50,7 +50,7 @@ public class ScaffoldingLogServiceImpl implements ScaffoldingLogService {
         log.debug("Request to get ScaffoldingLog by id: {}", aLong);
         Optional<ScaffoldingLog> result = scaffoldingLogDao.findById(aLong);
         return scaffoldingLogDTOMapper.toDto(result.orElseThrow(
-                () -> new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + aLong + "not found.")
+                () -> new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + aLong + " not found.")
         ));
     }
 
@@ -58,7 +58,7 @@ public class ScaffoldingLogServiceImpl implements ScaffoldingLogService {
     public void delete(Long aLong) {
         log.debug("Request to delete ScaffoldingLog by id: {}", aLong);
         if (scaffoldingLogDao.findById(aLong).isEmpty()) {
-            throw new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + aLong + "not found.");
+            throw new ScaffoldingLogException(ScaffoldingLogErrorCode.SCAFFOLDING_LOG_NOT_FOUND, "Scaffolding Log " + aLong + " not found.");
         }
         scaffoldingLogDao.deleteById(aLong);
     }
