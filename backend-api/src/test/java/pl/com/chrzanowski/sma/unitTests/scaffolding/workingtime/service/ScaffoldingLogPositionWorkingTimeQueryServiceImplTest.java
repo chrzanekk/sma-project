@@ -87,7 +87,7 @@ class ScaffoldingLogPositionWorkingTimeQueryServiceImplTest {
         // Tworzenie ScaffoldingLogPositionWorkingTimeDTO
         workingTimeDTO = ScaffoldingLogPositionWorkingTimeDTO.builder()
                 .id(1L)
-                .numberOfWorkers(new BigDecimal("5"))
+                .numberOfWorkers(5)
                 .numberOfHours(new BigDecimal("8.0"))
                 .scaffoldingPosition(scaffoldingPosition)
                 .operationType(ScaffoldingOperationType.ASSEMBLY)

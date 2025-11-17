@@ -51,7 +51,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
 
         workingTimeDTO = ScaffoldingLogPositionWorkingTimeDTO.builder()
                 .id(1L)
-                .numberOfWorkers(new BigDecimal("5"))
+                .numberOfWorkers(5)
                 .numberOfHours(new BigDecimal("8.5"))
                 .operationType(ScaffoldingOperationType.ASSEMBLY)
                 .company(companyDTO)
@@ -59,7 +59,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
 
         workingTime = new ScaffoldingLogPositionWorkingTime();
         workingTime.setId(1L);
-        workingTime.setNumberOfWorkers(new BigDecimal("5"));
+        workingTime.setNumberOfWorkers(5);
         workingTime.setNumberOfHours(new BigDecimal("8.5"));
     }
 
@@ -78,7 +78,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        assertEquals(new BigDecimal("5"), result.getNumberOfWorkers());
+        assertEquals(5, result.getNumberOfWorkers());
         assertEquals(new BigDecimal("8.5"), result.getNumberOfHours());
         assertEquals(ScaffoldingOperationType.ASSEMBLY, result.getOperationType());
         assertEquals(1L, result.getCompany().getId());
@@ -105,7 +105,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        assertEquals(new BigDecimal("5"), result.getNumberOfWorkers());
+        assertEquals(5, result.getNumberOfWorkers());
         assertEquals(new BigDecimal("8.5"), result.getNumberOfHours());
 
         verify(dao, times(1)).findById(1L);
@@ -130,7 +130,7 @@ class ScaffoldingLogPositionWorkingTimeServiceImplTest {
 
         assertNotNull(result);
         assertEquals(1L, result.getId());
-        assertEquals(new BigDecimal("5"), result.getNumberOfWorkers());
+        assertEquals(5, result.getNumberOfWorkers());
         assertEquals(new BigDecimal("8.5"), result.getNumberOfHours());
 
         verify(dao, times(1)).findById(anyLong());
