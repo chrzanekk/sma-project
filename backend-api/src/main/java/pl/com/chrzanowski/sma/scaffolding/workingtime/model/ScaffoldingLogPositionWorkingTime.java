@@ -29,9 +29,9 @@ public class ScaffoldingLogPositionWorkingTime extends AuditableEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Column(name = "number_of_workers", precision = 10, scale = 2)
+    @Column(name = "number_of_workers")
     @DecimalMin(value = "0.0")
-    private BigDecimal numberOfWorkers;
+    private Integer numberOfWorkers;
 
     @Column(name = "number_of_hours", precision = 10, scale = 2)
     @DecimalMin(value = "0.0")

@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.scaffolding.position.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -26,7 +27,7 @@ import java.util.Set;
 @ToString
 @Getter
 public class ScaffoldingLogPositionBaseDTO {
-    @NotNull
+
     protected Long id;
     @NotNull
     protected String scaffoldingNumber;
@@ -37,6 +38,7 @@ public class ScaffoldingLogPositionBaseDTO {
     protected LocalDate dismantlingNotificationDate;
     @NotNull
     protected ScaffoldingType scaffoldingType;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     protected BigDecimal scaffoldingFullDimension;
     @NotNull
     protected TechnicalProtocolStatus technicalProtocolStatus;

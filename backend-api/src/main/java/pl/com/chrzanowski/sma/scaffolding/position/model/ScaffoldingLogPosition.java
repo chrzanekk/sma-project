@@ -56,7 +56,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     private ScaffoldingType scaffoldingType;
 
-    @Column(name = "scaffolding_full_dimension", precision = 15, scale = 2)
+    @Column(name = "scaffolding_full_dimension", precision = 19, scale = 4)
     @DecimalMin(value = "0.0")
     private BigDecimal scaffoldingFullDimension;
 

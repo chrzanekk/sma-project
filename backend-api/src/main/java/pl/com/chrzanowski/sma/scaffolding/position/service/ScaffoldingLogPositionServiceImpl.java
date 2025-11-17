@@ -51,7 +51,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     @Override
     public ScaffoldingLogPositionDTO save(ScaffoldingLogPositionDTO createDto) {
         log.debug("Request to save ScaffoldingLogPosition : {}", createDto.toString());
-        //todo update parent position if exists and calculate full dimension of position.
         if (createDto.getParentPosition() != null) {
             List<ScaffoldingLogPositionDimensionBaseDTO> current = createDto.getParentPosition().getDimensions();
             BigDecimal parentPositionDimension = createDto.getParentPosition().getScaffoldingFullDimension();
@@ -66,40 +65,51 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             createDto = createDto.toBuilder().scaffoldingFullDimension(dimension).build();
         }
 
-        //todo save base position when we updated parent position if exists
-        ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
+        ScaffoldingLogPositionDTO toSave = createDto.toBuilder()
+                .dimensions(null)
+                .workingTimes(null)
+                .build();
+        ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(toSave);
         ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
         ScaffoldingLogPositionDTO savedDTO = scaffoldingLogPositionDTOMapper.toDto(savedEntity);
 
-        //todo save dimensions (new positionId must be present? and after test if returned saved position dont have dimensions we can add it)
-        List<ScaffoldingLogPositionDimensionDTO> savedDimensions = createDto.getDimensions().stream().map(positionDimensionBaseDTO -> {
-            ScaffoldingLogPositionDimensionDTO toSave = ScaffoldingLogPositionDimensionDTO.builder()
-                    .company(savedDTO.getCompany())
-                    .dimensionType(positionDimensionBaseDTO.getDimensionType())
-                    .height(positionDimensionBaseDTO.getHeight())
-                    .width(positionDimensionBaseDTO.getWidth())
-                    .length(positionDimensionBaseDTO.getLength())
-                    .operationType(positionDimensionBaseDTO.getOperationType())
-                    .dismantlingDate(positionDimensionBaseDTO.getDismantlingDate())
-                    .assemblyDate(positionDimensionBaseDTO.getAssemblyDate())
-                    .scaffoldingPosition(savedDTO)
-                    .build();
-            return scaffoldingLogPositionDimensionService.save(toSave);
-        }).toList();
+        //todo find way to avoid flushing when saving new position in same transaction
+        scaffoldingLogPositionDao.flush();
+
+        if (createDto.getDimensions() != null && !createDto.getDimensions().isEmpty()) {
+            List<ScaffoldingLogPositionDimensionDTO> savedDimensions = createDto.getDimensions().stream().map(positionDimensionBaseDTO -> {
+                ScaffoldingLogPositionDimensionDTO dimensionToSave = ScaffoldingLogPositionDimensionDTO.builder()
+                        .company(savedDTO.getCompany())
+                        .dimensionType(positionDimensionBaseDTO.getDimensionType())
+                        .height(positionDimensionBaseDTO.getHeight())
+                        .width(positionDimensionBaseDTO.getWidth())
+                        .length(positionDimensionBaseDTO.getLength())
+                        .operationType(positionDimensionBaseDTO.getOperationType())
+                        .dismantlingDate(positionDimensionBaseDTO.getDismantlingDate())
+                        .assemblyDate(positionDimensionBaseDTO.getAssemblyDate())
+                        .scaffoldingPosition(savedDTO)
+                        .build();
+                return scaffoldingLogPositionDimensionService.save(dimensionToSave);
+            }).toList();
+        }
+
 
         //todo save working times (new positionId must be present? and after test if returned saved position dont have workingTimes we can add it)
-        List<ScaffoldingLogPositionWorkingTimeDTO> savedWorkingTimes = createDto.getWorkingTimes().stream().map(positionWorkingTimeDTO -> {
-            ScaffoldingLogPositionWorkingTimeDTO toSave = ScaffoldingLogPositionWorkingTimeDTO.builder()
-                    .company(savedDTO.getCompany())
-                    .operationType(positionWorkingTimeDTO.getOperationType())
-                    .numberOfHours(positionWorkingTimeDTO.getNumberOfHours())
-                    .numberOfWorkers(positionWorkingTimeDTO.getNumberOfWorkers())
-                    .scaffoldingPosition(savedDTO)
-                    .build();
-            return scaffoldingLogPositionWorkingTimeService.save(toSave);
-        }).toList();
+        if (createDto.getWorkingTimes() != null && !createDto.getWorkingTimes().isEmpty()) {
+            List<ScaffoldingLogPositionWorkingTimeDTO> savedWorkingTimes = createDto.getWorkingTimes().stream().map(positionWorkingTimeDTO -> {
+                ScaffoldingLogPositionWorkingTimeDTO toSaveWorkingTime = ScaffoldingLogPositionWorkingTimeDTO.builder()
+                        .company(savedDTO.getCompany())
+                        .operationType(positionWorkingTimeDTO.getOperationType())
+                        .numberOfHours(positionWorkingTimeDTO.getNumberOfHours())
+                        .numberOfWorkers(positionWorkingTimeDTO.getNumberOfWorkers())
+                        .scaffoldingPosition(savedDTO)
+                        .build();
+                return scaffoldingLogPositionWorkingTimeService.save(toSaveWorkingTime);
+            }).toList();
 
+        }
         return findById(savedEntity.getId());
+
     }
 
     @Override

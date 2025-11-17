@@ -56,13 +56,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex, HttpHeaders headers,
             HttpStatusCode status, WebRequest request) {
+
+        String detailedMessage = ex.getMessage();
+        Throwable cause = ex.getCause();
+
+        log.error("=== HttpMessageNotReadableException START ===");
+        log.error("Request URI: {}", request.getDescription(false));
+        log.error("Exception message: {}", detailedMessage);
+        log.error("Exception: ", ex);
+
+        if (cause != null) {
+            log.error("Root cause: {}", cause.getMessage());
+            log.error("Root cause type: {}", cause.getClass().getName());
+            log.error("Root cause: ", cause);
+        }
+        log.error("=== HttpMessageNotReadableException END ===");
+
         ErrorDetails errorDetails = ErrorDetails.builder()
                 .timestamp(LocalDateTime.now())
                 .code(ExceptionHandlerErrorCode.MALFORMED_JSON.getCode())
-                .message("Invalid JSON format")
-                .details(Map.of("description", request.getDescription(false)))
+                .message("Invalid JSON format: " + (cause != null ? cause.getMessage() : detailedMessage))
+                .details(Map.of("description", request.getDescription(false),
+                        "error", detailedMessage != null ? detailedMessage : "Unknown error"
+                ))
                 .build();
-        log.error("HttpMessageNotReadableException: ", ex);
+//        log.error("HttpMessageNotReadableException: ", ex);
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 

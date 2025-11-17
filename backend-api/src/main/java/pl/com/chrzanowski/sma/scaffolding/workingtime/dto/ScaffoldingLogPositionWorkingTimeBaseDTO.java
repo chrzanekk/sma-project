@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Getter
 public class ScaffoldingLogPositionWorkingTimeBaseDTO {
     protected Long id;
-    protected BigDecimal numberOfWorkers;
+    protected Integer numberOfWorkers;
     protected BigDecimal numberOfHours;
     protected ScaffoldingOperationType operationType;
 

@@ -7,22 +7,25 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
+import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 
-@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class, ScaffoldingLogPositionBaseMapper.class})
 public interface ScaffoldingLogPositionDimensionDTOMapper extends EntityMapper<ScaffoldingLogPositionDimensionDTO, ScaffoldingLogPositionDimension> {
 
     @Mapping(source = "company", target = "company")
-//    @Mapping(source = "operationType", target = "operationType")
+    @Mapping(source = "operationType", target = "operationType")
     @Mapping(source = "id", target = "id")
     @Mapping(source = "height", target = "height")
     @Mapping(source = "width", target = "width")
     @Mapping(source = "length", target = "length")
-//    @Mapping(source = "dimensionType", target = "dimensionType")
-//    @Mapping(source = "dismantlingDate", target = "dismantlingDate")
-//    @Mapping(source = "assemblyDate", target = "assemblyDate")
+    @Mapping(source = "dimensionType", target = "dimensionType")
+    @Mapping(source = "dismantlingDate", target = "dismantlingDate")
+    @Mapping(source = "assemblyDate", target = "assemblyDate")
+    @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
     ScaffoldingLogPositionDimensionDTO toDto(ScaffoldingLogPositionDimension entity);
 
-    //    @Mapping(source = "company", target = "company")
+    @Mapping(source = "company", target = "company")
+    @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
 //    @Mapping(source = "operationType", target = "operationType")
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
@@ -32,6 +35,7 @@ public interface ScaffoldingLogPositionDimensionDTOMapper extends EntityMapper<S
 
     @Mapping(target = "company", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "scaffoldingPosition", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)

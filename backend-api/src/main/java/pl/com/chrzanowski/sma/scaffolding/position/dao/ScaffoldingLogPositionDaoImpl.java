@@ -60,4 +60,9 @@ public class ScaffoldingLogPositionDaoImpl implements ScaffoldingLogPositionDao 
         log.debug("DAO: Delete ScaffoldingLogPosition by id: {}", aLong);
         repository.deleteById(aLong);
     }
+
+    @Override
+    public void flush() {
+        repository.flush();
+    }
 }

@@ -8,13 +8,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.service.HasId;
 import pl.com.chrzanowski.sma.company.dto.CompanyBaseDTO;
-import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
-import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeBaseDTO;
-
-import java.util.Set;
 
 @Jacksonized
 @SuperBuilder(toBuilder = true)

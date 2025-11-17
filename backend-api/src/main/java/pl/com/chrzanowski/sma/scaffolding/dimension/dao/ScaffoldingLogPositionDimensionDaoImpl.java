@@ -31,7 +31,7 @@ public class ScaffoldingLogPositionDimensionDaoImpl implements ScaffoldingLogPos
 
     @Override
     public ScaffoldingLogPositionDimension save(ScaffoldingLogPositionDimension entity) {
-        log.debug("DAO: Save dimension: {}", entity.getId());
+        log.debug("DAO: Save dimension: {}", entity.toString());
         return repository.save(entity);
     }
 

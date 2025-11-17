@@ -31,7 +31,7 @@ public class ScaffoldingLogPositionWorkingTimeJPADaoImpl implements ScaffoldingL
 
     @Override
     public ScaffoldingLogPositionWorkingTime save(ScaffoldingLogPositionWorkingTime entity) {
-        log.debug("DAO: Save workingTime: {}", entity.getId());
+        log.debug("DAO: Save workingTime: {}", entity.toString());
         return repository.save(entity);
     }
 

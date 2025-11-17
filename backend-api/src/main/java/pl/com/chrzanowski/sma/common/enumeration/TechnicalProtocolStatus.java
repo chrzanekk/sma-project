@@ -5,7 +5,7 @@ public enum TechnicalProtocolStatus {
     CREATED("created"),
     IN_SIGNATURE("inSignature"),
     IN_SIGNATURE_2("inSignature2"),
-    RECEIVED("received"),;
+    RECEIVED("received");
 
     private String name;
 
