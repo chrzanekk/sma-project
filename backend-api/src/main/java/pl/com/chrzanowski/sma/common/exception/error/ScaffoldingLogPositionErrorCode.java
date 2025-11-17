@@ -2,8 +2,13 @@ package pl.com.chrzanowski.sma.common.exception.error;
 
 public enum ScaffoldingLogPositionErrorCode implements IErrorCode {
     SCAFFOLDING_LOG_POSITION_NOT_FOUND("scaffoldingLogPositionNotFound"),
-    DELETE_NOT_POSSIBLE("deleteNotPossible");
-
+    SCAFFOLDING_LOG_POSITION_ALREADY_EXIST("scaffoldingLogPositionAlreadyExist"),
+    DELETE_NOT_POSSIBLE("deleteNotPossible"),
+    INVALID_SCAFFOLDING_NUMBER_FORMAT("invalidScaffoldingNumberFormat"),
+    INVALID_SCAFFOLDING_NUMBER_RANGE("invalidScaffoldingNumberRange"),
+    INVALID_SCAFFOLDING_NUMBER_YEAR("invalidScaffoldingNumberYear"),
+    INVALID_SCAFFOLDING_NUMBER_DATE("invalidScaffoldingNumberDate"),
+    DUPLICATE_SCAFFOLDING_NUMBER("duplicateScaffoldingNumber");
 
     private final String code;
 

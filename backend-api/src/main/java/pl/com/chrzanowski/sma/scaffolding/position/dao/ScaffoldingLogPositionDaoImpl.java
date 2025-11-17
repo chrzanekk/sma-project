@@ -62,7 +62,7 @@ public class ScaffoldingLogPositionDaoImpl implements ScaffoldingLogPositionDao 
     }
 
     @Override
-    public void flush() {
-        repository.flush();
+    public Boolean existsByScaffoldingNumberAndScaffoldingLogId(String scaffoldingNumber, Long scaffoldingLogId) {
+        return repository.existsByScaffoldingNumberAndScaffoldingLogId(scaffoldingNumber, scaffoldingLogId);
     }
 }

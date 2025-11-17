@@ -8,16 +8,12 @@ import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionException;
 import pl.com.chrzanowski.sma.common.exception.error.ScaffoldingLogPositionErrorCode;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionDTO;
-import pl.com.chrzanowski.sma.scaffolding.dimension.service.ScaffoldingLogPositionDimensionService;
 import pl.com.chrzanowski.sma.scaffolding.position.dao.ScaffoldingLogPositionDao;
-import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
-import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeDTO;
-import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeService;
+import pl.com.chrzanowski.sma.scaffolding.position.validator.ScaffoldingNumberValidationService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -34,82 +30,63 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private final ScaffoldingLogPositionDao scaffoldingLogPositionDao;
     private final ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper;
     private final ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper;
+    private final ScaffoldingNumberValidationService scaffoldingNumberValidationService;
 
-    private final ScaffoldingLogPositionDimensionService scaffoldingLogPositionDimensionService;
 
-    private final ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService;
-
-    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper, ScaffoldingLogPositionDimensionService scaffoldingLogPositionDimensionService, ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService) {
+    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService) {
         this.scaffoldingLogPositionDao = scaffoldingLogPositionDao;
         this.scaffoldingLogPositionDTOMapper = scaffoldingLogPositionDTOMapper;
         this.scaffoldingLogPositionBaseMapper = scaffoldingLogPositionBaseMapper;
-        this.scaffoldingLogPositionDimensionService = scaffoldingLogPositionDimensionService;
-        this.scaffoldingLogPositionWorkingTimeService = scaffoldingLogPositionWorkingTimeService;
+        this.scaffoldingNumberValidationService = scaffoldingNumberValidationService;
     }
 
 
     @Override
     public ScaffoldingLogPositionDTO save(ScaffoldingLogPositionDTO createDto) {
         log.debug("Request to save ScaffoldingLogPosition : {}", createDto.toString());
-        if (createDto.getParentPosition() != null) {
-            List<ScaffoldingLogPositionDimensionBaseDTO> current = createDto.getParentPosition().getDimensions();
-            BigDecimal parentPositionDimension = createDto.getParentPosition().getScaffoldingFullDimension();
-            BigDecimal newDimension = calculateScaffoldingDimensions(parentPositionDimension, current);
-            ScaffoldingLogPositionBaseDTO parentPosition = createDto.getParentPosition();
-            parentPosition = parentPosition.toBuilder().scaffoldingFullDimension(newDimension).build();
-            ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionBaseMapper.toEntity(parentPosition);
-            parentPositionEntity = scaffoldingLogPositionDao.save(parentPositionEntity);
-            createDto = createDto.toBuilder().parentPosition(scaffoldingLogPositionBaseMapper.toDto(parentPositionEntity)).build();
+
+        scaffoldingNumberValidationService.validateScaffoldingNumber(createDto.getScaffoldingNumber());
+
+        Boolean existingPosition = scaffoldingLogPositionDao.existsByScaffoldingNumberAndScaffoldingLogId(createDto.getScaffoldingNumber(), createDto.getScaffoldingLog().getId());
+        if (existingPosition) {
+            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_ALREADY_EXIST, "Scaffolding Position with number " + createDto.getScaffoldingNumber() + " already exist");
         } else {
-            BigDecimal dimension = calculateScaffoldingDimensions(BigDecimal.ZERO, createDto.getDimensions());
-            createDto = createDto.toBuilder().scaffoldingFullDimension(dimension).build();
+            if (createDto.getParentPosition() != null) {
+                ScaffoldingLogPositionDTO parentPosition = findById(createDto.getParentPosition().getId());
+                BigDecimal parentPositionDimension = createDto.getParentPosition().getScaffoldingFullDimension();
+
+                BigDecimal newDimension = calculateScaffoldingDimension(parentPositionDimension, createDto.getDimensions());
+
+                parentPosition = parentPosition.toBuilder().scaffoldingFullDimension(newDimension).build();
+                ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionBaseMapper.toEntity(parentPosition);
+                parentPositionEntity = scaffoldingLogPositionDao.save(parentPositionEntity);
+                createDto = createDto.toBuilder().parentPosition(scaffoldingLogPositionBaseMapper.toDto(parentPositionEntity)).build();
+            }
+
+            BigDecimal calculateScaffoldingDimension = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
+            createDto = createDto.toBuilder().scaffoldingFullDimension(calculateScaffoldingDimension).build();
+
+
+            ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
+
+            if (toSaveEntity.getDimensions() != null) {
+                toSaveEntity.getDimensions().forEach(dimension -> {
+                    dimension.setScaffoldingPosition(toSaveEntity);
+                    dimension.setCompany(toSaveEntity.getCompany());
+                });
+            }
+
+            if (toSaveEntity.getWorkingTimes() != null) {
+                toSaveEntity.getWorkingTimes().forEach(workingTime -> {
+                    workingTime.setScaffoldingPosition(toSaveEntity);
+                    workingTime.setCompany(toSaveEntity.getCompany());
+                });
+            }
+
+            ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
+
+            return findById(savedEntity.getId());
         }
-
-        ScaffoldingLogPositionDTO toSave = createDto.toBuilder()
-                .dimensions(null)
-                .workingTimes(null)
-                .build();
-        ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(toSave);
-        ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
-        ScaffoldingLogPositionDTO savedDTO = scaffoldingLogPositionDTOMapper.toDto(savedEntity);
-
-        //todo find way to avoid flushing when saving new position in same transaction
-        scaffoldingLogPositionDao.flush();
-
-        if (createDto.getDimensions() != null && !createDto.getDimensions().isEmpty()) {
-            List<ScaffoldingLogPositionDimensionDTO> savedDimensions = createDto.getDimensions().stream().map(positionDimensionBaseDTO -> {
-                ScaffoldingLogPositionDimensionDTO dimensionToSave = ScaffoldingLogPositionDimensionDTO.builder()
-                        .company(savedDTO.getCompany())
-                        .dimensionType(positionDimensionBaseDTO.getDimensionType())
-                        .height(positionDimensionBaseDTO.getHeight())
-                        .width(positionDimensionBaseDTO.getWidth())
-                        .length(positionDimensionBaseDTO.getLength())
-                        .operationType(positionDimensionBaseDTO.getOperationType())
-                        .dismantlingDate(positionDimensionBaseDTO.getDismantlingDate())
-                        .assemblyDate(positionDimensionBaseDTO.getAssemblyDate())
-                        .scaffoldingPosition(savedDTO)
-                        .build();
-                return scaffoldingLogPositionDimensionService.save(dimensionToSave);
-            }).toList();
-        }
-
-
-        //todo save working times (new positionId must be present? and after test if returned saved position dont have workingTimes we can add it)
-        if (createDto.getWorkingTimes() != null && !createDto.getWorkingTimes().isEmpty()) {
-            List<ScaffoldingLogPositionWorkingTimeDTO> savedWorkingTimes = createDto.getWorkingTimes().stream().map(positionWorkingTimeDTO -> {
-                ScaffoldingLogPositionWorkingTimeDTO toSaveWorkingTime = ScaffoldingLogPositionWorkingTimeDTO.builder()
-                        .company(savedDTO.getCompany())
-                        .operationType(positionWorkingTimeDTO.getOperationType())
-                        .numberOfHours(positionWorkingTimeDTO.getNumberOfHours())
-                        .numberOfWorkers(positionWorkingTimeDTO.getNumberOfWorkers())
-                        .scaffoldingPosition(savedDTO)
-                        .build();
-                return scaffoldingLogPositionWorkingTimeService.save(toSaveWorkingTime);
-            }).toList();
-
-        }
-        return findById(savedEntity.getId());
-
     }
 
     @Override
@@ -135,7 +112,7 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         scaffoldingLogPositionDao.deleteById(aLong);
     }
 
-    private BigDecimal calculateScaffoldingDimensions(BigDecimal existingDimension, List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList) {
+    private BigDecimal calculateScaffoldingDimension(BigDecimal existingDimension, List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList) {
         BigDecimal calculatedDimension = dimensionDTOList.stream()
                 .map(dimensionDTO -> {
                     BigDecimal value = dimensionDTO.getHeight()

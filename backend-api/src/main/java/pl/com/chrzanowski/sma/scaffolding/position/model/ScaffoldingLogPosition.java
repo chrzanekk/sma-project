@@ -75,7 +75,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @ToString.Exclude
     private ScaffoldingLogPosition parentPosition;
 
-    @OneToMany(mappedBy = "parentPosition", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentPosition", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Builder.Default
     private List<ScaffoldingLogPosition> childPositions = new ArrayList<>();
 
@@ -116,4 +116,40 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @OneToMany(mappedBy = "scaffoldingPosition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ScaffoldingLogPositionWorkingTime> workingTimes = new ArrayList<>();
+
+    public void addDimension(ScaffoldingLogPositionDimension dimension) {
+        dimensions.add(dimension);
+        dimension.setScaffoldingPosition(this);
+        dimension.setCompany(this.company);
+    }
+
+    public void removeDimension(ScaffoldingLogPositionDimension dimension) {
+        dimensions.remove(dimension);
+        dimension.setScaffoldingPosition(null);
+    }
+
+    // Helper methods dla workingTimes
+    public void addWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
+        workingTimes.add(workingTime);
+        workingTime.setScaffoldingPosition(this);
+        workingTime.setCompany(this.company);
+    }
+
+    public void removeWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
+        workingTimes.remove(workingTime);
+        workingTime.setScaffoldingPosition(null);
+    }
+
+    // Helper methods dla childPositions (jeśli używane)
+    public void addChildPosition(ScaffoldingLogPosition child) {
+        childPositions.add(child);
+        child.setParentPosition(this);
+        child.setCompany(this.company);
+        child.setScaffoldingLog(this.scaffoldingLog);
+    }
+
+    public void removeChildPosition(ScaffoldingLogPosition child) {
+        childPositions.remove(child);
+        child.setParentPosition(null);
+    }
 }

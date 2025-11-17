@@ -8,4 +8,6 @@ import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 public interface ScaffoldingLogPositionRepository extends JpaRepository<ScaffoldingLogPosition, Long>,
         JpaSpecificationExecutor<ScaffoldingLogPosition>,
         QuerydslPredicateExecutor<ScaffoldingLogPosition> {
+
+    Boolean existsByScaffoldingNumberAndScaffoldingLogId(String scaffoldingNumber, Long scaffoldingLogId);
 }
