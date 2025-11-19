@@ -17,7 +17,8 @@ public enum ResourceCode implements ICode {
     RESOURCE("resource","resourceManagement"),
     EMPLOYEE("employee","employeeManagement"),
     SCAFFOLDING_LOG("scaffoldingLog","scaffoldingLogManagement"),
-    SCAFFOLDING_LOG_POSITIONS("scaffoldingLogPosition","scaffoldingLogPositionManagement");
+    SCAFFOLDING_LOG_POSITIONS("scaffoldingLogPosition","scaffoldingLogPositionManagement"),
+    UNIT("unit","unitManagement");
 
 
     private final String displayName;

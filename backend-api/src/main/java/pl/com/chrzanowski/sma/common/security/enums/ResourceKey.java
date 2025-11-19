@@ -109,7 +109,14 @@ public enum ResourceKey {
             null,
             ResourceCode.SCAFFOLDING_LOG_POSITIONS.getDescription(),
             false,
-            Set.of("SCAFFOLDING_LOG_MANAGEMENT"));
+            Set.of("SCAFFOLDING_LOG_MANAGEMENT")),
+    // Position Management
+    UNIT_MANAGEMENT(ResourceCode.UNIT.getDisplayName(),
+            ApiPath.UNIT + Constants.ALL,
+            null,
+            ResourceCode.UNIT.getDescription(),
+            false,
+            Set.of());
 
     @Getter
     private final String displayName;
@@ -136,4 +143,4 @@ public enum ResourceKey {
     private static class Constants {
         public static final String ALL = "/**";
     }
-    }
+}

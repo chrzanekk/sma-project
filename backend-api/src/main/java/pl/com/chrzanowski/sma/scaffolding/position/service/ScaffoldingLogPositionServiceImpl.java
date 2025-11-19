@@ -115,9 +115,16 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private BigDecimal calculateScaffoldingDimension(BigDecimal existingDimension, List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList) {
         BigDecimal calculatedDimension = dimensionDTOList.stream()
                 .map(dimensionDTO -> {
-                    BigDecimal value = dimensionDTO.getHeight()
-                            .multiply(dimensionDTO.getWidth())
-                            .multiply(dimensionDTO.getLength());
+                    BigDecimal value;
+                    if(dimensionDTO.getWidth().compareTo(BigDecimal.ONE) > 0) {
+                        value = dimensionDTO.getHeight()
+                                .multiply(dimensionDTO.getWidth())
+                                .multiply(dimensionDTO.getLength());
+                    } else {
+                        value = dimensionDTO.getHeight()
+                                .multiply(BigDecimal.ONE)
+                                .multiply(dimensionDTO.getLength());
+                    }
                     return dimensionDTO.getOperationType().equals(ScaffoldingOperationType.ASSEMBLY) ? value : value.negate();
                 }).reduce(BigDecimal.ZERO, BigDecimal::add);
         return calculatedDimension.add(Objects.requireNonNullElse(existingDimension, BigDecimal.ZERO));
