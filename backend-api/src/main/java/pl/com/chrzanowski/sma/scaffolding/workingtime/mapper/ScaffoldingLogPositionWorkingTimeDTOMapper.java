@@ -14,6 +14,7 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositi
 public interface ScaffoldingLogPositionWorkingTimeDTOMapper extends EntityMapper<ScaffoldingLogPositionWorkingTimeDTO, ScaffoldingLogPositionWorkingTime> {
 
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "unit", target = "unit")
     @Mapping(source = "scaffoldingPosition", target = "scaffoldingPosition")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
@@ -22,9 +23,11 @@ public interface ScaffoldingLogPositionWorkingTimeDTOMapper extends EntityMapper
     ScaffoldingLogPositionWorkingTime toEntity(ScaffoldingLogPositionWorkingTimeDTO dto);
 
     @Mapping(source = "company", target = "company")
+    @Mapping(source = "unit", target = "unit")
     ScaffoldingLogPositionWorkingTimeDTO toDto(ScaffoldingLogPositionWorkingTime entity);
 
-    @Mapping(target = "company",ignore = true)
+    @Mapping(target = "company", ignore = true)
+    @Mapping(target = "unit", ignore = true)
     @Mapping(target = "scaffoldingPosition", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdDatetime", ignore = true)

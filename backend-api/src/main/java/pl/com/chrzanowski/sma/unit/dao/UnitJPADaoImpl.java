@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+import pl.com.chrzanowski.sma.common.enumeration.UnitType;
 import pl.com.chrzanowski.sma.unit.model.Unit;
 import pl.com.chrzanowski.sma.unit.repository.UnitRepository;
 import pl.com.chrzanowski.sma.unit.service.filter.UnitQuerySpec;
@@ -60,5 +61,23 @@ public class UnitJPADaoImpl implements UnitDao {
     public void deleteById(Long id) {
         log.debug("DAO: Delete unit : {}", id);
         unitRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<Unit> findBySymbolAndCompanyId(String symbol, Long companyId) {
+        log.debug("DAO: Find Unit by symbol and companyId: {}, {}", symbol, companyId);
+        return unitRepository.findBySymbolAndCompanyId(symbol, companyId);
+    }
+
+    @Override
+    public List<Unit> findByCompanyIdAndUnitType(Long companyId, UnitType unitType) {
+        log.debug("DAO: Find Unit by company and unitType: {}, {}", companyId, unitType);
+        return unitRepository.findByCompanyIdAndUnitType(companyId, unitType);
+    }
+
+    @Override
+    public List<Unit> findByCompanyId(Long companyId) {
+        log.debug("DAO: Find Unit by companyId: {}", companyId);
+        return unitRepository.findByCompanyId(companyId);
     }
 }

@@ -14,12 +14,11 @@ import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.log.dto.ScaffoldingLogBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeBaseDTO;
+import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Jacksonized
 @SuperBuilder(toBuilder = true)
@@ -40,6 +39,7 @@ public class ScaffoldingLogPositionBaseDTO {
     protected ScaffoldingType scaffoldingType;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     protected BigDecimal scaffoldingFullDimension;
+    protected UnitBaseDTO scaffoldingFullDimensionUnit;
     @NotNull
     protected TechnicalProtocolStatus technicalProtocolStatus;
     protected ScaffoldingLogPositionBaseDTO parentPosition;

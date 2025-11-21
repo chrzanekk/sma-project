@@ -7,9 +7,6 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
-import pl.com.chrzanowski.sma.position.dto.PositionBaseDTO;
-import pl.com.chrzanowski.sma.scaffolding.log.mapper.ScaffoldingLogBaseMapper;
-import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
@@ -32,6 +29,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "contractorContact", source = "contractorContact")
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
+    @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
     ScaffoldingLogPositionDTO toDto(ScaffoldingLogPosition entity);
 
     @Mapping(target = "company", source = "company")
@@ -41,6 +39,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
     @Mapping(target = "parentPosition", source = "parentPosition")
     @Mapping(target = "childPositions", source = "childPositions")
+    @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
@@ -62,5 +61,6 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
+    @Mapping(target = "scaffoldingFullDimensionUnit", ignore = true)
     void updateFromDto(ScaffoldingLogPositionDTO dto, @MappingTarget ScaffoldingLogPosition entity);
 }

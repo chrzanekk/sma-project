@@ -10,6 +10,7 @@ import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
 import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
 import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
+import pl.com.chrzanowski.sma.unit.model.Unit;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -64,6 +65,12 @@ public class ScaffoldingLogPositionDimension extends AuditableEntity {
     @NotNull
     @ToString.Exclude
     private ScaffoldingLogPosition scaffoldingPosition;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    @NotNull
+    @ToString.Exclude
+    private Unit unit;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", nullable = false)

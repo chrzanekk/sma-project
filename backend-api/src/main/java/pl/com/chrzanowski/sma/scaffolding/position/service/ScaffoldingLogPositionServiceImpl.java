@@ -14,11 +14,12 @@ import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPosition
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.validator.ScaffoldingNumberValidationService;
+import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
+import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
+import pl.com.chrzanowski.sma.unit.service.UnitService;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -31,13 +32,15 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private final ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper;
     private final ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper;
     private final ScaffoldingNumberValidationService scaffoldingNumberValidationService;
+    private final UnitService unitService;
 
 
-    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService) {
+    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService) {
         this.scaffoldingLogPositionDao = scaffoldingLogPositionDao;
         this.scaffoldingLogPositionDTOMapper = scaffoldingLogPositionDTOMapper;
         this.scaffoldingLogPositionBaseMapper = scaffoldingLogPositionBaseMapper;
         this.scaffoldingNumberValidationService = scaffoldingNumberValidationService;
+        this.unitService = unitService;
     }
 
 
@@ -50,43 +53,51 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         Boolean existingPosition = scaffoldingLogPositionDao.existsByScaffoldingNumberAndScaffoldingLogId(createDto.getScaffoldingNumber(), createDto.getScaffoldingLog().getId());
         if (existingPosition) {
             throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_ALREADY_EXIST, "Scaffolding Position with number " + createDto.getScaffoldingNumber() + " already exist");
-        } else {
-            if (createDto.getParentPosition() != null) {
-                ScaffoldingLogPositionDTO parentPosition = findById(createDto.getParentPosition().getId());
-                BigDecimal parentPositionDimension = createDto.getParentPosition().getScaffoldingFullDimension();
-
-                BigDecimal newDimension = calculateScaffoldingDimension(parentPositionDimension, createDto.getDimensions());
-
-                parentPosition = parentPosition.toBuilder().scaffoldingFullDimension(newDimension).build();
-                ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionBaseMapper.toEntity(parentPosition);
-                parentPositionEntity = scaffoldingLogPositionDao.save(parentPositionEntity);
-                createDto = createDto.toBuilder().parentPosition(scaffoldingLogPositionBaseMapper.toDto(parentPositionEntity)).build();
-            }
-
-            BigDecimal calculateScaffoldingDimension = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
-            createDto = createDto.toBuilder().scaffoldingFullDimension(calculateScaffoldingDimension).build();
-
-
-            ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
-
-            if (toSaveEntity.getDimensions() != null) {
-                toSaveEntity.getDimensions().forEach(dimension -> {
-                    dimension.setScaffoldingPosition(toSaveEntity);
-                    dimension.setCompany(toSaveEntity.getCompany());
-                });
-            }
-
-            if (toSaveEntity.getWorkingTimes() != null) {
-                toSaveEntity.getWorkingTimes().forEach(workingTime -> {
-                    workingTime.setScaffoldingPosition(toSaveEntity);
-                    workingTime.setCompany(toSaveEntity.getCompany());
-                });
-            }
-
-            ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
-
-            return findById(savedEntity.getId());
         }
+
+
+        if (createDto.getParentPosition() != null) {
+            ScaffoldingLogPositionDTO parentPosition = findById(createDto.getParentPosition().getId());
+            BigDecimal parentPositionDimension = createDto.getParentPosition().getScaffoldingFullDimension();
+
+            Map<UnitBaseDTO, BigDecimal> parentDimensionResult = calculateScaffoldingDimension(parentPositionDimension, createDto.getDimensions(), createDto.getCompany().getId());
+
+            Map.Entry<UnitBaseDTO, BigDecimal> parentEntry = parentDimensionResult.entrySet().iterator().next();
+
+            parentPosition = parentPosition.toBuilder()
+                    .scaffoldingFullDimension(parentEntry.getValue())
+                    .scaffoldingFullDimensionUnit(parentEntry.getKey())
+                    .build();
+            ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionBaseMapper.toEntity(parentPosition);
+            parentPositionEntity = scaffoldingLogPositionDao.save(parentPositionEntity);
+            createDto = createDto.toBuilder().parentPosition(scaffoldingLogPositionBaseMapper.toDto(parentPositionEntity)).build();
+        }
+
+        Map<UnitBaseDTO, BigDecimal> calculatedScaffoldingDimension = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions(), createDto.getCompany().getId());
+        Map.Entry<UnitBaseDTO, BigDecimal> calculatedScaffoldingDimensionEntry = calculatedScaffoldingDimension.entrySet().iterator().next();
+        createDto = createDto.toBuilder()
+                .scaffoldingFullDimension(calculatedScaffoldingDimensionEntry.getValue())
+                .scaffoldingFullDimensionUnit(calculatedScaffoldingDimensionEntry.getKey())
+                .build();
+
+        ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
+
+        if (toSaveEntity.getDimensions() != null) {
+            toSaveEntity.getDimensions().forEach(dimension -> {
+                dimension.setScaffoldingPosition(toSaveEntity);
+                dimension.setCompany(toSaveEntity.getCompany());
+            });
+        }
+
+        if (toSaveEntity.getWorkingTimes() != null && !toSaveEntity.getWorkingTimes().isEmpty()) {
+            toSaveEntity.getWorkingTimes().forEach(workingTime -> {
+                workingTime.setScaffoldingPosition(toSaveEntity);
+                workingTime.setCompany(toSaveEntity.getCompany());
+            });
+        }
+        ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
+
+        return findById(savedEntity.getId());
     }
 
     @Override
@@ -112,21 +123,80 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         scaffoldingLogPositionDao.deleteById(aLong);
     }
 
-    private BigDecimal calculateScaffoldingDimension(BigDecimal existingDimension, List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList) {
-        BigDecimal calculatedDimension = dimensionDTOList.stream()
-                .map(dimensionDTO -> {
-                    BigDecimal value;
-                    if(dimensionDTO.getWidth().compareTo(BigDecimal.ONE) > 0) {
-                        value = dimensionDTO.getHeight()
-                                .multiply(dimensionDTO.getWidth())
-                                .multiply(dimensionDTO.getLength());
-                    } else {
-                        value = dimensionDTO.getHeight()
-                                .multiply(BigDecimal.ONE)
-                                .multiply(dimensionDTO.getLength());
-                    }
-                    return dimensionDTO.getOperationType().equals(ScaffoldingOperationType.ASSEMBLY) ? value : value.negate();
-                }).reduce(BigDecimal.ZERO, BigDecimal::add);
-        return calculatedDimension.add(Objects.requireNonNullElse(existingDimension, BigDecimal.ZERO));
+    private Map<UnitBaseDTO, BigDecimal> calculateScaffoldingDimension(BigDecimal existingDimension,
+                                                                       List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList,
+                                                                       Long companyId) {
+        int runningMetersCount = 0;
+        int squareMetersCount = 0;
+        int cubicMetersCount = 0;
+        int dimensionSize = dimensionDTOList.size();
+
+        BigDecimal calculatedDimension = BigDecimal.ZERO;
+
+        for (ScaffoldingLogPositionDimensionBaseDTO dimensionDTO : dimensionDTOList) {
+            BigDecimal value;
+
+            // Określ typ wymiaru i oblicz wartość
+            if (dimensionDTO.getWidth().compareTo(BigDecimal.ONE) > 0) {
+                // OBJĘTOŚĆ (m3): szerokość > 1
+                value = dimensionDTO.getHeight()
+                        .multiply(dimensionDTO.getWidth())
+                        .multiply(dimensionDTO.getLength());
+                cubicMetersCount++;
+                log.debug("Dimension type: m3 (width > 1), width: {}", dimensionDTO.getWidth());
+
+            } else if (dimensionDTO.getWidth().compareTo(BigDecimal.ONE) == 0
+                    && dimensionDTO.getHeight().compareTo(BigDecimal.ONE) == 0) {
+                // DŁUGOŚĆ (mb): szerokość = 1 i wysokość = 1
+                value = dimensionDTO.getLength();
+                runningMetersCount++;
+                log.debug("Dimension type: mb (width = 1 and height = 1)");
+
+            } else {
+                // POWIERZCHNIA (m2): szerokość <= 1 (ale nie oba = 1)
+                value = dimensionDTO.getHeight()
+                        .multiply(dimensionDTO.getLength());
+                squareMetersCount++;
+                log.debug("Dimension type: m2 (width <= 1, width: {}, height: {})",
+                        dimensionDTO.getWidth(), dimensionDTO.getHeight());
+            }
+
+            // Dodaj lub odejmij w zależności od typu operacji
+            BigDecimal signedValue = dimensionDTO.getOperationType().equals(ScaffoldingOperationType.ASSEMBLY)
+                    ? value
+                    : value.negate();
+
+            calculatedDimension = calculatedDimension.add(signedValue);
+        }
+        calculatedDimension = calculatedDimension.add(Objects.requireNonNullElse(existingDimension, BigDecimal.ZERO));
+
+        log.debug("Dimension counts - cubic: {}, square: {}, running: {}, total: {}",
+                cubicMetersCount, squareMetersCount, runningMetersCount, dimensionSize);
+        String unitSymbol;
+        if (cubicMetersCount > 0) {
+            unitSymbol = "m3";
+            log.debug("Determined unit: m3 (cubicMetersCount > 0)");
+        } else if (cubicMetersCount == 0 && (squareMetersCount > 0
+                || squareMetersCount == dimensionSize)) {
+            unitSymbol = "m2";
+            log.debug("Determined unit: m2 (cubicMetersCount == 0 && squareMetersCount > 0 && (squareMetersCount > runningMetersCount || squareMetersCount == dimensionSize))");
+        } else if (runningMetersCount == dimensionSize) {
+            // Warunek 3: Brak m3, wszystkie wymiary to mb → całość w mb
+            unitSymbol = "mb";
+            log.debug("Determined unit: mb (cubicMetersCount == 0 && runningMetersCount == dimensionSize)");
+
+        } else {
+            // Domyślnie m3 (dla pustej listy lub nieokreślonych przypadków)
+            unitSymbol = "m3";
+            log.warn("Could not determine unit based on counts, defaulting to m2. " +
+                            "Counts: cubic={}, square={}, running={}, total={}",
+                    cubicMetersCount, squareMetersCount, runningMetersCount, dimensionSize);
+        }
+
+        UnitDTO unitDTO = unitService.findBySymbolAndCompanyId(unitSymbol, companyId);
+
+        Map<UnitBaseDTO, BigDecimal> result = new HashMap<>();
+        result.put(unitDTO, calculatedDimension);
+        return result;
     }
 }

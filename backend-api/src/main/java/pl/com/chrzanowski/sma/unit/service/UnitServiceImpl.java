@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.com.chrzanowski.sma.common.enumeration.UnitType;
 import pl.com.chrzanowski.sma.common.exception.UnitException;
 import pl.com.chrzanowski.sma.common.exception.error.UnitErrorCode;
 import pl.com.chrzanowski.sma.unit.dao.UnitDao;
@@ -11,6 +12,7 @@ import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
 import pl.com.chrzanowski.sma.unit.mapper.UnitDTOMapper;
 import pl.com.chrzanowski.sma.unit.model.Unit;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -63,5 +65,28 @@ public class UnitServiceImpl implements UnitService {
             );
         }
         unitDao.deleteById(aLong);
+    }
+
+    @Override
+    public UnitDTO findBySymbolAndCompanyId(String symbol, Long companyId) {
+        log.debug("Request to get Unit by symbol : {}", symbol);
+        Optional<Unit> unit = unitDao.findBySymbolAndCompanyId(symbol, companyId);
+        return unitDTOMapper.toDto(unit.orElseThrow(
+                ()-> new UnitException(
+                        UnitErrorCode.UNIT_NOT_FOUND,
+                        "Unit with symbol " + symbol + " not found"
+                )));
+    }
+
+    @Override
+    public List<UnitDTO> findByCompanyIdAndUnitType(Long companyId, UnitType unitType) {
+        log.debug("Request to get Units by companyId and unitType : {},{}", companyId, unitType);
+        return unitDTOMapper.toDtoList(unitDao.findByCompanyIdAndUnitType(companyId, unitType));
+    }
+
+    @Override
+    public List<UnitDTO> findByCompanyId(Long companyId) {
+        log.debug("Request to get Units by companyId: {}", companyId);
+        return unitDTOMapper.toDtoList(unitDao.findByCompanyId(companyId));
     }
 }

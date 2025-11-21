@@ -7,8 +7,9 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
+import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
 
-@Mapper(componentModel = "spring",uses = {ScaffoldingLogPositionBaseMapper.class})
+@Mapper(componentModel = "spring",uses = {ScaffoldingLogPositionBaseMapper.class, UnitBaseMapper.class})
 public interface ScaffoldingLogPositionWorkingTimeBaseMapper extends EntityMapper<ScaffoldingLogPositionWorkingTimeBaseDTO, ScaffoldingLogPositionWorkingTime> {
 
     @Mapping(target = "createdDatetime", ignore = true)

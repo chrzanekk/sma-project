@@ -12,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import pl.com.chrzanowski.sma.common.enumeration.UnitType;
 import pl.com.chrzanowski.sma.helper.SimplePagedList;
 import pl.com.chrzanowski.sma.unit.dao.UnitJPADaoImpl;
 import pl.com.chrzanowski.sma.unit.model.Unit;
@@ -35,9 +36,6 @@ class UnitJPADaoImplTest {
 
     @Mock
     private UnitQuerySpec unitQuerySpec;
-
-    @Mock
-    private BlazeJPAQuery<Unit> baseQuery;
 
     private AutoCloseable closeable;
 
@@ -206,5 +204,191 @@ class UnitJPADaoImplTest {
 
         assertThrows(RuntimeException.class, () -> unitJPADaoImpl.deleteById(id));
         verify(unitRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    void findBySymbolAndCompanyId_Positive() {
+        // Given
+        String symbol = "m2";
+        Long companyId = 1L;
+        Unit unit = new Unit();
+        unit.setSymbol(symbol);
+
+        when(unitRepository.findBySymbolAndCompanyId(symbol, companyId))
+                .thenReturn(Optional.of(unit));
+
+        // When
+        Optional<Unit> result = unitJPADaoImpl.findBySymbolAndCompanyId(symbol, companyId);
+
+        // Then
+        assertTrue(result.isPresent());
+        assertEquals(symbol, result.get().getSymbol());
+        verify(unitRepository, times(1)).findBySymbolAndCompanyId(symbol, companyId);
+    }
+
+    @Test
+    void findBySymbolAndCompanyId_Negative() {
+        // Given
+        String symbol = "nonexistent";
+        Long companyId = 999L;
+
+        when(unitRepository.findBySymbolAndCompanyId(symbol, companyId))
+                .thenReturn(Optional.empty());
+
+        // When
+        Optional<Unit> result = unitJPADaoImpl.findBySymbolAndCompanyId(symbol, companyId);
+
+        // Then
+        assertTrue(result.isEmpty());
+        verify(unitRepository, times(1)).findBySymbolAndCompanyId(symbol, companyId);
+    }
+
+    @Test
+    void findByCompanyIdAndUnitType_Positive() {
+        // Given
+        Long companyId = 1L;
+        UnitType unitType = UnitType.AREA;
+        Unit unit1 = new Unit();
+        unit1.setSymbol("m2");
+        unit1.setUnitType(UnitType.AREA);
+
+        Unit unit2 = new Unit();
+        unit2.setSymbol("km2");
+        unit2.setUnitType(UnitType.AREA);
+
+        List<Unit> expectedUnits = List.of(unit1, unit2);
+
+        when(unitRepository.findByCompanyIdAndUnitType(companyId, unitType))
+                .thenReturn(expectedUnits);
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyIdAndUnitType(companyId, unitType);
+
+        // Then
+        assertEquals(2, result.size());
+        assertTrue(result.stream().allMatch(u -> u.getUnitType() == UnitType.AREA));
+        verify(unitRepository, times(1)).findByCompanyIdAndUnitType(companyId, unitType);
+    }
+
+    @Test
+    void findByCompanyIdAndUnitType_Negative() {
+        // Given
+        Long companyId = 999L;
+        UnitType unitType = UnitType.VOLUME;
+
+        when(unitRepository.findByCompanyIdAndUnitType(companyId, unitType))
+                .thenReturn(Collections.emptyList());
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyIdAndUnitType(companyId, unitType);
+
+        // Then
+        assertTrue(result.isEmpty());
+        verify(unitRepository, times(1)).findByCompanyIdAndUnitType(companyId, unitType);
+    }
+
+    @Test
+    void findByCompanyId_Positive() {
+        // Given
+        Long companyId = 1L;
+        Unit unit1 = new Unit();
+        unit1.setSymbol("m2");
+
+        Unit unit2 = new Unit();
+        unit2.setSymbol("m3");
+
+        Unit unit3 = new Unit();
+        unit3.setSymbol("r-h");
+
+        List<Unit> expectedUnits = List.of(unit1, unit2, unit3);
+
+        when(unitRepository.findByCompanyId(companyId))
+                .thenReturn(expectedUnits);
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyId(companyId);
+
+        // Then
+        assertEquals(3, result.size());
+        assertEquals("m2", result.get(0).getSymbol());
+        assertEquals("m3", result.get(1).getSymbol());
+        assertEquals("r-h", result.get(2).getSymbol());
+        verify(unitRepository, times(1)).findByCompanyId(companyId);
+    }
+
+    @Test
+    void findByCompanyId_Negative() {
+        // Given
+        Long companyId = 999L;
+
+        when(unitRepository.findByCompanyId(companyId))
+                .thenReturn(Collections.emptyList());
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyId(companyId);
+
+        // Then
+        assertTrue(result.isEmpty());
+        verify(unitRepository, times(1)).findByCompanyId(companyId);
+    }
+
+    @Test
+    void findBySymbolAndCompanyId_NullParameters() {
+
+        when(unitRepository.findBySymbolAndCompanyId(null, null))
+                .thenReturn(Optional.empty());
+
+        // When
+        Optional<Unit> result = unitJPADaoImpl.findBySymbolAndCompanyId(null, null);
+
+        // Then
+        assertTrue(result.isEmpty());
+        verify(unitRepository, times(1)).findBySymbolAndCompanyId(null, null);
+    }
+
+    @Test
+    void findByCompanyIdAndUnitType_NullUnitType() {
+        // Given
+        Long companyId = 1L;
+
+        when(unitRepository.findByCompanyIdAndUnitType(companyId, null))
+                .thenReturn(Collections.emptyList());
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyIdAndUnitType(companyId, null);
+
+        // Then
+        assertTrue(result.isEmpty());
+        verify(unitRepository, times(1)).findByCompanyIdAndUnitType(companyId, null);
+    }
+
+    @Test
+    void findByCompanyId_MultipleUnitTypes() {
+        // Given
+        Long companyId = 1L;
+        Unit areaUnit = new Unit();
+        areaUnit.setSymbol("m2");
+        areaUnit.setUnitType(UnitType.AREA);
+
+        Unit volumeUnit = new Unit();
+        volumeUnit.setSymbol("m3");
+        volumeUnit.setUnitType(UnitType.VOLUME);
+
+        Unit durationUnit = new Unit();
+        durationUnit.setSymbol("r-h");
+        durationUnit.setUnitType(UnitType.DURATION);
+
+        List<Unit> expectedUnits = List.of(areaUnit, volumeUnit, durationUnit);
+
+        when(unitRepository.findByCompanyId(companyId))
+                .thenReturn(expectedUnits);
+
+        // When
+        List<Unit> result = unitJPADaoImpl.findByCompanyId(companyId);
+
+        // Then
+        assertEquals(3, result.size());
+        assertEquals(3, result.stream().map(Unit::getUnitType).distinct().count());
+        verify(unitRepository, times(1)).findByCompanyId(companyId);
     }
 }

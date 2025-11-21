@@ -15,6 +15,7 @@ import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
 import pl.com.chrzanowski.sma.scaffolding.log.model.ScaffoldingLog;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
+import pl.com.chrzanowski.sma.unit.model.Unit;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -59,6 +60,12 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @Column(name = "scaffolding_full_dimension", precision = 19, scale = 4)
     @DecimalMin(value = "0.0")
     private BigDecimal scaffoldingFullDimension;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scaffolding_full_dimension_unit_id", nullable = false)
+    @NotNull
+    @ToString.Exclude
+    private Unit scaffoldingFullDimensionUnit;
 
     @Column(name = "technical_protocol_status", length = 50)
     @Enumerated(EnumType.STRING)
