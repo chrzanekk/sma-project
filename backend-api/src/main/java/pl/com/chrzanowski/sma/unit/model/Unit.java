@@ -36,8 +36,9 @@ public class Unit extends AuditableEntity {
     @Enumerated(EnumType.STRING)
     private UnitType unitType;
 
+    //nullable true because we have some basic units to add for all companies
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id", nullable = false)
+    @JoinColumn(name = "company_id", nullable = true)
     @ToString.Exclude
     private Company company;
 }

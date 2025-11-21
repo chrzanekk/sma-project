@@ -19,7 +19,7 @@ CREATE TABLE units (
                        symbol VARCHAR(16) NOT NULL,
                        description VARCHAR(128),
                        unit_type VARCHAR(32) NOT NULL,
-                       company_id BIGINT NOT NULL,
+                       company_id BIGINT,
                        create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                        created_by BIGINT,
                        modify_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -38,24 +38,30 @@ CREATE INDEX idx_units_company ON units(company_id);
 CREATE INDEX idx_units_symbol_company ON units(symbol, company_id);
 CREATE INDEX idx_units_type ON units(unit_type);
 
--- Unique constraint - symbol + company
-CREATE UNIQUE INDEX uk_unit_symbol_company ON units(symbol, company_id);
+-- Unique constraint - symbol + company (NULL company oznacza globalną jednostkę)
+-- Dla PostgreSQL NULL != NULL, więc możemy mieć wiele rekordów z tym samym symbolem i company_id=NULL
+-- Ale lepiej dodać partial unique index który ignoruje rekordy z NULL company_id dla bezpieczeństwa
+CREATE UNIQUE INDEX uk_unit_symbol_company ON units(symbol, company_id) WHERE company_id IS NOT NULL;
+
+-- Unique constraint dla globalnych jednostek (company_id = NULL)
+-- Zapewnia że każdy symbol dla globalnych jednostek jest unikalny
+CREATE UNIQUE INDEX uk_unit_symbol_global ON units(symbol) WHERE company_id IS NULL;
 
 -- =============================================================================
 -- BAZOWE JEDNOSTKI (dla company_id = 1, można powtórzyć dla innych firm)
 -- =============================================================================
 INSERT INTO units (symbol, description, unit_type, company_id)
 VALUES
-    ('m2', 'Metr kwadratowy', 'AREA', 1),
-    ('m3', 'Metr sześcienny', 'VOLUME', 1),
-    ('mb', 'Metr bieżący', 'LENGTH', 1),
-    ('r-h', 'Roboczogodzina', 'DURATION', 1),
-    ('km', 'Kilometr', 'LENGTH', 1),
-    ('k/h', 'Kilometry na godzinę', 'SPEED', 1),
-    ('m2/doba', 'Metr kwadratowy na dobę', 'DENSITY', 1),
-    ('m3/doba', 'Metr sześcienny na dobę', 'DENSITY', 1),
-    ('mb/doba', 'Metr bieżący na dobę', 'DENSITY', 1),
-    ('kN/m', 'Kiloniutony na metr', 'FORCE', 1);
+    ('m2', 'Metr kwadratowy', 'AREA', null),
+    ('m3', 'Metr sześcienny', 'VOLUME', null),
+    ('mb', 'Metr bieżący', 'LENGTH', null),
+    ('r-h', 'Roboczogodzina', 'DURATION', null),
+    ('km', 'Kilometr', 'LENGTH', null),
+    ('k/h', 'Kilometry na godzinę', 'SPEED', null),
+    ('m2/doba', 'Metr kwadratowy na dobę', 'DENSITY', null),
+    ('m3/doba', 'Metr sześcienny na dobę', 'DENSITY', null),
+    ('mb/doba', 'Metr bieżący na dobę', 'DENSITY', null),
+    ('kN/m', 'Kiloniutony na metr', 'FORCE', null);
 
 -- =============================================================================
 -- KOMENTARZE
