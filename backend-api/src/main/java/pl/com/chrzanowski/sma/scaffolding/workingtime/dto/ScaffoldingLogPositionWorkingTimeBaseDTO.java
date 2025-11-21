@@ -6,6 +6,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
+import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 
 import java.math.BigDecimal;
 
@@ -18,6 +19,7 @@ public class ScaffoldingLogPositionWorkingTimeBaseDTO {
     protected Long id;
     protected Integer numberOfWorkers;
     protected BigDecimal numberOfHours;
+    protected UnitBaseDTO unit;
     protected ScaffoldingOperationType operationType;
 
 }
