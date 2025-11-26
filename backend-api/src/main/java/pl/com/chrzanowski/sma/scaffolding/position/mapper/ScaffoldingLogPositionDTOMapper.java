@@ -9,8 +9,9 @@ import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
+import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
 
-@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class, ContractorBaseMapper.class, ContactBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {CompanyBaseMapper.class, ContractorBaseMapper.class, ContactBaseMapper.class, UnitBaseMapper.class})
 public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<ScaffoldingLogPositionDTO, ScaffoldingLogPosition> {
 
     @Mapping(target = "id", source = "id")
@@ -23,13 +24,13 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "scaffoldingFullDimension", source = "scaffoldingFullDimension")
     @Mapping(target = "technicalProtocolStatus", source = "technicalProtocolStatus")
     @Mapping(target = "parentPosition", source = "parentPosition")
-    @Mapping(target = "childPositions", source = "childPositions")
     @Mapping(target = "company", source = "company")
     @Mapping(target = "contractor", source = "contractor")
     @Mapping(target = "contractorContact", source = "contractorContact")
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
+    @Mapping(target = "childPositions", ignore = true)
     ScaffoldingLogPositionDTO toDto(ScaffoldingLogPosition entity);
 
     @Mapping(target = "company", source = "company")

@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.scaffolding.position.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -84,6 +85,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
 
     @OneToMany(mappedBy = "parentPosition", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @Builder.Default
+    @JsonIgnoreProperties("parentPosition")
     private List<ScaffoldingLogPosition> childPositions = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

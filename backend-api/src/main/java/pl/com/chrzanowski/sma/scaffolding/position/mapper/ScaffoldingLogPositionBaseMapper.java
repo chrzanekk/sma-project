@@ -18,7 +18,9 @@ import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
         UnitBaseMapper.class,
         ScaffoldingLogPositionDimensionBaseMapper.class,
         ScaffoldingLogPositionWorkingTimeBaseMapper.class,
-        ContractorBaseMapper.class, ContactBaseMapper.class})
+        ContractorBaseMapper.class,
+        ContactBaseMapper.class,
+        UnitBaseMapper.class})
 public interface ScaffoldingLogPositionBaseMapper extends EntityMapper<ScaffoldingLogPositionBaseDTO, ScaffoldingLogPosition> {
 
     @Mapping(target = "createdDatetime", ignore = true)
@@ -27,6 +29,8 @@ public interface ScaffoldingLogPositionBaseMapper extends EntityMapper<Scaffoldi
     @Mapping(target = "modifiedBy", ignore = true)
     ScaffoldingLogPosition toEntity(ScaffoldingLogPositionBaseDTO dto);
 
+    @Mapping(target = "childPositions", ignore = true)
+    @Mapping(target = "parentPosition", ignore = true)
     ScaffoldingLogPositionBaseDTO toDto(ScaffoldingLogPosition entity);
 
     @Mapping(target = "createdDatetime", ignore = true)
