@@ -7,8 +7,9 @@ import pl.com.chrzanowski.sma.common.mapper.EntityMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
+import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
 
-@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class})
+@Mapper(componentModel = "spring", uses = {ScaffoldingLogPositionBaseMapper.class, UnitBaseMapper.class})
 public interface ScaffoldingLogPositionDimensionBaseMapper extends EntityMapper<ScaffoldingLogPositionDimensionBaseDTO, ScaffoldingLogPositionDimension> {
 
 

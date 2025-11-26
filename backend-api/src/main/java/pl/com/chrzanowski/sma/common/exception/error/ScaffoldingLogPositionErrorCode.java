@@ -8,7 +8,9 @@ public enum ScaffoldingLogPositionErrorCode implements IErrorCode {
     INVALID_SCAFFOLDING_NUMBER_RANGE("invalidScaffoldingNumberRange"),
     INVALID_SCAFFOLDING_NUMBER_YEAR("invalidScaffoldingNumberYear"),
     INVALID_SCAFFOLDING_NUMBER_DATE("invalidScaffoldingNumberDate"),
-    DUPLICATE_SCAFFOLDING_NUMBER("duplicateScaffoldingNumber");
+    DUPLICATE_SCAFFOLDING_NUMBER("duplicateScaffoldingNumber"),
+    ID_MISSING("idMissing");
+
 
     private final String code;
 

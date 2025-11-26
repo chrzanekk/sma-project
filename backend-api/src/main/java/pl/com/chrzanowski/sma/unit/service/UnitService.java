@@ -14,4 +14,7 @@ public interface UnitService extends BaseCrudService<UnitDTO, UnitDTO, UnitDTO, 
 
     List<UnitDTO> findByCompanyId(Long companyId);
 
+    List<UnitDTO> findAllGlobalUnits();
+    UnitDTO findGlobalUnitBySymbol(String symbol);
+    List<UnitDTO> findGlobalUnitsByType(UnitType unitType);
 }

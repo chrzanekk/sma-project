@@ -60,4 +60,10 @@ public class ScaffoldingLogPositionDimensionDaoImpl implements ScaffoldingLogPos
         log.debug("DAO: Delete dimension by id: {}", aLong);
         repository.deleteById(aLong);
     }
+
+    @Override
+    public List<ScaffoldingLogPositionDimension> findByScaffoldingLogPositionId(Long id) {
+        log.debug("DAO: Find dimensions by ScaffoldingLogPosition id: {}", id);
+        return repository.findByScaffoldingPositionId(id);
+    }
 }

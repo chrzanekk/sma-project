@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.jackson.Jacksonized;
 import pl.com.chrzanowski.sma.common.enumeration.DimensionType;
 import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingOperationType;
+import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,4 +30,5 @@ public class ScaffoldingLogPositionDimensionBaseDTO {
     protected LocalDate dismantlingDate;
     protected LocalDate assemblyDate;
     protected ScaffoldingOperationType operationType;
+    protected UnitBaseDTO unit;
 }

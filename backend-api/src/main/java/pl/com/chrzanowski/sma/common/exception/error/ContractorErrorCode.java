@@ -11,7 +11,10 @@ public enum ContractorErrorCode implements IErrorCode {
     COUNTRY_MISSING("countryMissing"),
     IS_CUSTOMER_MISSING("isCustomerMissing"),
     IS_SUPPLIER_MISSING("isSupplierMissing"),
-    IS_SCAFFOLDING_USER_MISSING("isScaffoldingUserMissing");
+    IS_SCAFFOLDING_USER_MISSING("isScaffoldingUserMissing"),
+    CONTRACTOR_NOT_CUSTOMER("contractorNotCustomer"),
+    CONTRACTOR_NOT_SCAFFOLDING_USER("contractorNotScaffoldingUser");
+
 
     private final String code;
 

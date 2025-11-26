@@ -80,4 +80,22 @@ public class UnitJPADaoImpl implements UnitDao {
         log.debug("DAO: Find Unit by companyId: {}", companyId);
         return unitRepository.findByCompanyId(companyId);
     }
+
+    @Override
+    public List<Unit> findAllGlobalUnits() {
+        log.debug("DAO: Find all global units (company_id IS NULL)");
+        return unitRepository.findAllGlobalUnits();
+    }
+
+    @Override
+    public Optional<Unit> findGlobalUnitBySymbol(String symbol) {
+        log.debug("DAO: Find global unit by symbol: {}", symbol);
+        return unitRepository.findGlobalUnitBySymbol(symbol);
+    }
+
+    @Override
+    public List<Unit> findGlobalUnitsByType(UnitType unitType) {
+        log.debug("DAO: Find global units by type: {}", unitType);
+        return unitRepository.findGlobalUnitsByType(unitType);
+    }
 }

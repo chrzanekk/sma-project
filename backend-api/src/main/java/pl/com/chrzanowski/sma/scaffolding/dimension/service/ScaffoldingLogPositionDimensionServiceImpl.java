@@ -5,12 +5,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionDimensionException;
+import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionException;
 import pl.com.chrzanowski.sma.common.exception.error.ScaffoldingLogPositionDimensionErrorCode;
+import pl.com.chrzanowski.sma.common.exception.error.ScaffoldingLogPositionErrorCode;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dao.ScaffoldingLogPositionDimensionDao;
+import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionDTO;
+import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,10 +26,12 @@ public class ScaffoldingLogPositionDimensionServiceImpl implements ScaffoldingLo
 
     private final ScaffoldingLogPositionDimensionDao dao;
     private final ScaffoldingLogPositionDimensionDTOMapper dtoMapper;
+    private final ScaffoldingLogPositionDimensionBaseMapper  baseMapper;
 
-    public ScaffoldingLogPositionDimensionServiceImpl(ScaffoldingLogPositionDimensionDao dao, ScaffoldingLogPositionDimensionDTOMapper dtoMapper) {
+    public ScaffoldingLogPositionDimensionServiceImpl(ScaffoldingLogPositionDimensionDao dao, ScaffoldingLogPositionDimensionDTOMapper dtoMapper, ScaffoldingLogPositionDimensionBaseMapper baseMapper) {
         this.dao = dao;
         this.dtoMapper = dtoMapper;
+        this.baseMapper = baseMapper;
     }
 
     @Override
@@ -61,5 +68,14 @@ public class ScaffoldingLogPositionDimensionServiceImpl implements ScaffoldingLo
             throw new ScaffoldingLogPositionDimensionException(ScaffoldingLogPositionDimensionErrorCode.SCAFFOLDING_LOG_POSITION_DIMENSION_NOT_FOUND, "Dimension " + aLong + "not found");
         }
         dao.deleteById(aLong);
+    }
+
+    @Override
+    public List<ScaffoldingLogPositionDimensionBaseDTO> findByScaffoldingLogPositionId(Long id) {
+        log.debug("Request to get ScaffoldingLogPositionDimension by id: {}", id);
+        if (id == null) {
+            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.ID_MISSING, "id is null");
+        }
+        return baseMapper.toDtoList(dao.findByScaffoldingLogPositionId(id));
     }
 }

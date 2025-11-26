@@ -15,4 +15,8 @@ public interface UnitDao extends BaseCrudDao<Unit, Long> {
     List<Unit> findByCompanyIdAndUnitType(Long companyId, UnitType unitType);
 
     List<Unit> findByCompanyId(Long companyId);
+
+    List<Unit> findAllGlobalUnits();
+    Optional<Unit> findGlobalUnitBySymbol(String symbol);
+    List<Unit> findGlobalUnitsByType(UnitType unitType);
 }
