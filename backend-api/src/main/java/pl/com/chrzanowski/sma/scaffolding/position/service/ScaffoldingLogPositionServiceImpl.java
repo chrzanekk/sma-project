@@ -10,28 +10,23 @@ import pl.com.chrzanowski.sma.common.exception.ContractorException;
 import pl.com.chrzanowski.sma.common.exception.ScaffoldingLogPositionException;
 import pl.com.chrzanowski.sma.common.exception.error.ContractorErrorCode;
 import pl.com.chrzanowski.sma.common.exception.error.ScaffoldingLogPositionErrorCode;
-import pl.com.chrzanowski.sma.company.mapper.CompanyBaseMapper;
 import pl.com.chrzanowski.sma.contact.dto.ContactBaseDTO;
 import pl.com.chrzanowski.sma.contact.mapper.ContactBaseMapper;
-import pl.com.chrzanowski.sma.contact.model.Contact;
 import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
-import pl.com.chrzanowski.sma.contractor.model.Contractor;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
+import pl.com.chrzanowski.sma.scaffolding.dimension.dto.DimensionResult;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.dimension.model.ScaffoldingLogPositionDimension;
-import pl.com.chrzanowski.sma.scaffolding.dimension.service.ScaffoldingLogPositionDimensionService;
 import pl.com.chrzanowski.sma.scaffolding.position.dao.ScaffoldingLogPositionDao;
 import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO;
-import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.validator.ScaffoldingNumberValidationService;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPositionWorkingTimeBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeService;
-import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
 import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
 import pl.com.chrzanowski.sma.unit.service.UnitService;
@@ -51,7 +46,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
     private final ScaffoldingLogPositionDao scaffoldingLogPositionDao;
     private final ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper;
-    private final ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper;
     private final ScaffoldingNumberValidationService scaffoldingNumberValidationService;
     private final UnitService unitService;
     private final UnitBaseMapper unitBaseMapper;
@@ -59,17 +53,13 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private final ContractorBaseMapper contractorBaseMapper;
     private final ContactService contactService;
     private final ContactBaseMapper contactBaseMapper;
-    private final ScaffoldingLogPositionDimensionService scaffoldingLogPositionDimensionService;
     private final ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper;
     private final ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService;
     private final ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper;
-    private final CompanyBaseMapper companyBaseMapper;
 
-
-    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingLogPositionBaseMapper scaffoldingLogPositionBaseMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionService scaffoldingLogPositionDimensionService, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper, CompanyBaseMapper companyBaseMapper) {
+    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper) {
         this.scaffoldingLogPositionDao = scaffoldingLogPositionDao;
         this.scaffoldingLogPositionDTOMapper = scaffoldingLogPositionDTOMapper;
-        this.scaffoldingLogPositionBaseMapper = scaffoldingLogPositionBaseMapper;
         this.scaffoldingNumberValidationService = scaffoldingNumberValidationService;
         this.unitService = unitService;
         this.unitBaseMapper = unitBaseMapper;
@@ -77,72 +67,39 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         this.contractorBaseMapper = contractorBaseMapper;
         this.contactService = contactService;
         this.contactBaseMapper = contactBaseMapper;
-        this.scaffoldingLogPositionDimensionService = scaffoldingLogPositionDimensionService;
         this.scaffoldingLogPositionDimensionBaseMapper = scaffoldingLogPositionDimensionBaseMapper;
         this.scaffoldingLogPositionWorkingTimeService = scaffoldingLogPositionWorkingTimeService;
         this.scaffoldingLogPositionWorkingTimeBaseMapper = scaffoldingLogPositionWorkingTimeBaseMapper;
-        this.companyBaseMapper = companyBaseMapper;
     }
 
 
     @Override
     public ScaffoldingLogPositionDTO save(ScaffoldingLogPositionDTO createDto) {
-        log.debug("Request to save ScaffoldingLogPosition : {}", createDto.toString());
+        log.debug("Request to save ScaffoldingLogPosition : {}", createDto);
 
         scaffoldingNumberValidationService.validateScaffoldingNumber(createDto.getScaffoldingNumber());
+        checkIfPositionWithNumberExistsInLog(createDto.getScaffoldingNumber(), createDto.getScaffoldingLog().getId());
 
-        checkIfPositionWithNumberExistsInLog(createDto);
+        // Obliczanie wymiarów dla nowej pozycji
+        DimensionResult dimensionResult = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
 
-        Map<UnitBaseDTO, BigDecimal> calculatedScaffoldingDimension =
-                calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions(), createDto.getCompany().getId());
-        Map.Entry<UnitBaseDTO, BigDecimal> calculatedScaffoldingDimensionEntry =
-                calculatedScaffoldingDimension.entrySet().iterator().next();
-
-        createDto = createDto.toBuilder()
-                .scaffoldingFullDimension(calculatedScaffoldingDimensionEntry.getValue())
-                .scaffoldingFullDimensionUnit(calculatedScaffoldingDimensionEntry.getKey())
-                .build();
-
+        // Mapowanie DTO -> Entity z ustawionymi wymiarami
         ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
+        toSaveEntity.setScaffoldingFullDimension(dimensionResult.value());
+        toSaveEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(dimensionResult.unit()));
 
+        // Obsługa Parent Position
         if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
-            ScaffoldingLogPosition parentEntity = scaffoldingLogPositionDao.findById(createDto.getParentPosition().getId())
-                    .orElseThrow(() -> new ScaffoldingLogPositionException(
-                            ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
-                            "Parent position not found"
-                    ));
-            ;
-            toSaveEntity.setParentPosition(parentEntity);
-
-            BigDecimal parentDimension = parentEntity.getScaffoldingFullDimension();
-            Map<UnitBaseDTO, BigDecimal> parentResult =
-                    calculateScaffoldingDimension(parentDimension, createDto.getDimensions(), createDto.getCompany().getId());
-            Map.Entry<UnitBaseDTO, BigDecimal> parentEntry = parentResult.entrySet().iterator().next();
-
-            parentEntity.setScaffoldingFullDimension(parentEntry.getValue());
-            parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(parentEntry.getKey()));
-            scaffoldingLogPositionDao.save(parentEntity);
-            //todo change scaffolding number in child position, need to implement algorithm to find last child and then increment number
+            handleParentPositionOnCreate(toSaveEntity, createDto);
         }
 
-        if (toSaveEntity.getDimensions() != null) {
-            toSaveEntity.getDimensions().forEach(dimension -> {
-                dimension.setScaffoldingPosition(toSaveEntity);
-                dimension.setCompany(toSaveEntity.getCompany());
-            });
-        }
+        // Ustawienie relacji dwukierunkowych
+        linkSubEntities(toSaveEntity);
 
-        if (toSaveEntity.getWorkingTimes() != null && !toSaveEntity.getWorkingTimes().isEmpty()) {
-            toSaveEntity.getWorkingTimes().forEach(workingTime -> {
-                workingTime.setScaffoldingPosition(toSaveEntity);
-                workingTime.setCompany(toSaveEntity.getCompany());
-            });
-        }
         ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
-
-        return findById(savedEntity.getId());
+        // OPTYMALIZACJA: Konwersja savedEntity bezpośrednio, bez ponownego findById
+        return scaffoldingLogPositionDTOMapper.toDto(savedEntity);
     }
-
 
     @Override
     public ScaffoldingLogPositionDTO update(ScaffoldingLogPositionDTO updateDto) {
@@ -150,42 +107,42 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
         scaffoldingNumberValidationService.validateScaffoldingNumber(updateDto.getScaffoldingNumber());
 
-        Long updatedId = updateDto.getId();
         ScaffoldingLogPosition existingPosition = scaffoldingLogPositionDao.findById(updateDto.getId())
                 .orElseThrow(() -> new ScaffoldingLogPositionException(
                         ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
-                        "Scaffolding Log Position with id " + updatedId + " not found"));
+                        "Scaffolding Log Position with id " + updateDto.getId() + " not found"));
 
+        // Aktualizacja pól prostych z DTO
         scaffoldingLogPositionDTOMapper.updateFromDto(updateDto, existingPosition);
 
-        updateParentPosition(updateDto, existingPosition);
-
-        // check contractor and scaffolding user with their contacts
-        updateContractor(updateDto, existingPosition);
-        updateContractorContact(updateDto, existingPosition);
-        updateScaffoldingUser(updateDto, existingPosition);
-        updateScaffoldingUserContact(updateDto, existingPosition);
+        updateParentRelationship(updateDto, existingPosition);
+        updateRelatedEntities(updateDto, existingPosition);
 
         //check dimension change and recalculate if needed
-        List<ScaffoldingLogPositionDimensionBaseDTO> existingDimensionDTOList = scaffoldingLogPositionDimensionService.findByScaffoldingLogPositionId(existingPosition.getId());
-        List<ScaffoldingLogPositionDimensionBaseDTO> updatingDimensionDTOList = updateDto.getDimensions();
+        // Obsługa zmian wymiarów
+        List<ScaffoldingLogPositionDimensionBaseDTO> updatingDimensions = updateDto.getDimensions();
+        // Pobieramy aktualne wymiary z bazy (lub z obiektu jeśli sesja jest otwarta)
+        List<ScaffoldingLogPositionDimension> currentDimensions = existingPosition.getDimensions();
 
-        boolean dimensionsChanged = !areDimensionsEqual(existingDimensionDTOList, updatingDimensionDTOList);
+        // Konwersja encji na DTO do porównania
+        List<ScaffoldingLogPositionDimensionBaseDTO> currentDimensionsDto = currentDimensions.stream()
+                .map(scaffoldingLogPositionDimensionBaseMapper::toDto)
+                .toList();
 
-        if (dimensionsChanged) {
-            updateDimensions(existingPosition, existingDimensionDTOList, updatingDimensionDTOList);
+        if (!areDimensionsEqual(currentDimensionsDto, updatingDimensions)) {
+            // Aktualizacja kolekcji wymiarów
+            mergeDimensions(existingPosition, updatingDimensions);
 
-            // Recalculate dimensions for current position
-            Map<UnitBaseDTO, BigDecimal> calculatedDimension =
-                    calculateScaffoldingDimension(BigDecimal.ZERO, updatingDimensionDTOList, existingPosition.getCompany().getId());
-            Map.Entry<UnitBaseDTO, BigDecimal> entry = calculatedDimension.entrySet().iterator().next();
+            // Przeliczenie wymiarów dla bieżącej pozycji
+            DimensionResult newDimensions = calculateScaffoldingDimension(BigDecimal.ZERO, updatingDimensions);
+            existingPosition.setScaffoldingFullDimension(newDimensions.value());
+            existingPosition.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(newDimensions.unit()));
 
-            existingPosition.setScaffoldingFullDimension(entry.getValue());
-            existingPosition.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(entry.getKey()));
-
-            // Recalculate parent position if exists
+            // Przeliczenie rodzica jeśli istnieje
             if (existingPosition.getParentPosition() != null) {
-                recalculateParentDimensions(updateDto, existingPosition);
+                // TODO: Zweryfikuj logikę biznesową. Obecnie dodajesz nowe wymiary do rodzica.
+                // Czy nie powinieneś najpierw odjąć STARYCH wymiarów dziecka od rodzica?
+                updateParentDimensions(existingPosition.getParentPosition(), updatingDimensions);
             }
         }
 
@@ -196,127 +153,228 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
 
-    private void checkIfPositionWithNumberExistsInLog(ScaffoldingLogPositionDTO dto) {
-        Boolean existingPosition = scaffoldingLogPositionDao.existsByScaffoldingNumberAndScaffoldingLogId(dto.getScaffoldingNumber(), dto.getScaffoldingLog().getId());
-        if (existingPosition) {
-            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_ALREADY_EXIST, "Scaffolding Position with number " + dto.getScaffoldingNumber() + " already exist");
+    private void handleParentPositionOnCreate(ScaffoldingLogPosition childEntity, ScaffoldingLogPositionDTO childDto) {
+        ScaffoldingLogPosition parentEntity = scaffoldingLogPositionDao.findById(childDto.getParentPosition().getId())
+                .orElseThrow(() -> new ScaffoldingLogPositionException(
+                        ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
+                        "Parent position not found"));
+
+        childEntity.setParentPosition(parentEntity);
+
+        updateParentDimensions(parentEntity, childDto.getDimensions());
+        // todo change scaffolding number in child position
+    }
+
+    private void updateParentDimensions(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPositionDimensionBaseDTO> childDimensions) {
+        DimensionResult parentResult = calculateScaffoldingDimension(parentEntity.getScaffoldingFullDimension(), childDimensions);
+        parentEntity.setScaffoldingFullDimension(parentResult.value());
+        parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(parentResult.unit()));
+        scaffoldingLogPositionDao.save(parentEntity);
+    }
+
+    private void checkIfPositionWithNumberExistsInLog(String scaffoldingNumber, Long logId) {
+        if (scaffoldingLogPositionDao.existsByScaffoldingNumberAndScaffoldingLogId(scaffoldingNumber, logId)) {
+            throw new ScaffoldingLogPositionException(
+                    ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_ALREADY_EXIST,
+                    "Scaffolding Position with number " + scaffoldingNumber + " already exist");
         }
     }
 
-    private void updateScaffoldingUserContact(ScaffoldingLogPositionDTO updateDto, ScaffoldingLogPosition existingPosition) {
-        if (!existingPosition.getScaffoldingUserContact().getId().equals(updateDto.getScaffoldingUserContact().getId())) {
-            ContactBaseDTO contactBaseDTO = contactService.findById(updateDto.getScaffoldingUserContact().getId());
-            Contact contactToUpdate = contactBaseMapper.toEntity(contactBaseDTO);
-            existingPosition.setScaffoldingUserContact(contactToUpdate);
+    private void linkSubEntities(ScaffoldingLogPosition entity) {
+        if (entity.getDimensions() != null) {
+            entity.getDimensions().forEach(d -> {
+                d.setScaffoldingPosition(entity);
+                d.setCompany(entity.getCompany());
+            });
+        }
+        if (entity.getWorkingTimes() != null) {
+            entity.getWorkingTimes().forEach(wt -> {
+                wt.setScaffoldingPosition(entity);
+                wt.setCompany(entity.getCompany());
+            });
         }
     }
 
-    private void updateScaffoldingUser(ScaffoldingLogPositionDTO updateDto, ScaffoldingLogPosition existingPosition) {
-        if (!existingPosition.getScaffoldingUser().getId().equals(updateDto.getScaffoldingUser().getId())) {
-            ContractorBaseDTO scaffoldingUser = contractorService.findById(updateDto.getScaffoldingUser().getId());
-            if (!scaffoldingUser.getCustomer()) {
-                throw new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_CUSTOMER, "Contractor is not a customer");
-            }
-            if (!scaffoldingUser.getScaffoldingUser()) {
+    private void updateRelatedEntities(ScaffoldingLogPositionDTO dto, ScaffoldingLogPosition entity) {
+        updateContractorIfNeeded(dto.getContractor().getId(), entity);
+        updateContractorContactIfNeeded(dto.getContractorContact().getId(), entity);
+        updateScaffoldingUserIfNeeded(dto.getScaffoldingUser().getId(), entity);
+        updateScaffoldingUserContactIfNeeded(dto.getScaffoldingUserContact().getId(), entity);
+    }
+
+    private void updateContractorIfNeeded(Long newContractorId, ScaffoldingLogPosition entity) {
+        if (!entity.getContractor().getId().equals(newContractorId)) {
+            ContractorBaseDTO dto = contractorService.findById(newContractorId);
+            validateContractorIsCustomer(dto);
+            entity.setContractor(contractorBaseMapper.toEntity(dto));
+        }
+    }
+
+    private void updateScaffoldingUserIfNeeded(Long newUserId, ScaffoldingLogPosition entity) {
+        if (!entity.getScaffoldingUser().getId().equals(newUserId)) {
+            ContractorBaseDTO dto = contractorService.findById(newUserId);
+            validateContractorIsCustomer(dto);
+            if (!dto.getScaffoldingUser()) {
                 throw new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_SCAFFOLDING_USER, "Contractor is not a scaffolding user");
             }
-            Contractor scaffoldingUserToUpdate = contractorBaseMapper.toEntity(scaffoldingUser);
-            existingPosition.setScaffoldingUser(scaffoldingUserToUpdate);
+            entity.setScaffoldingUser(contractorBaseMapper.toEntity(dto));
         }
     }
 
-    private void updateContractorContact(ScaffoldingLogPositionDTO updateDto, ScaffoldingLogPosition existingPosition) {
-        if (!existingPosition.getContractorContact().getId().equals(updateDto.getContractorContact().getId())) {
-            ContactBaseDTO contactBaseDTO = contactService.findById(updateDto.getContractorContact().getId());
-            Contact contactToUpdate = contactBaseMapper.toEntity(contactBaseDTO);
-            existingPosition.setContractorContact(contactToUpdate);
+    private void validateContractorIsCustomer(ContractorBaseDTO dto) {
+        if (!dto.getCustomer()) {
+            throw new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_CUSTOMER, "Contractor is not a customer");
         }
     }
 
-    private void updateContractor(ScaffoldingLogPositionDTO updateDto, ScaffoldingLogPosition existingPosition) {
-        if (!existingPosition.getContractor().getId().equals(updateDto.getContractor().getId())) {
-            ContractorBaseDTO contractorBaseDTO = contractorService.findById(updateDto.getContractor().getId());
-            if (!contractorBaseDTO.getCustomer()) {
-                throw new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_CUSTOMER, "Contractor is not a customer");
+    private void updateContractorContactIfNeeded(Long newContactId, ScaffoldingLogPosition entity) {
+        if (!entity.getContractorContact().getId().equals(newContactId)) {
+            ContactBaseDTO dto = contactService.findById(newContactId);
+            entity.setContractorContact(contactBaseMapper.toEntity(dto));
+        }
+    }
+
+    private void updateScaffoldingUserContactIfNeeded(Long newContactId, ScaffoldingLogPosition entity) {
+        if (!entity.getScaffoldingUserContact().getId().equals(newContactId)) {
+            ContactBaseDTO dto = contactService.findById(newContactId);
+            entity.setScaffoldingUserContact(contactBaseMapper.toEntity(dto));
+        }
+    }
+
+    private void updateParentRelationship(ScaffoldingLogPositionDTO dto, ScaffoldingLogPosition entity) {
+        Long newParentId = dto.getParentPosition() != null ? dto.getParentPosition().getId() : null;
+        Long currentParentId = entity.getParentPosition() != null ? entity.getParentPosition().getId() : null;
+
+        if (!Objects.equals(currentParentId, newParentId)) {
+            if (newParentId != null) {
+                ScaffoldingLogPosition newParent = scaffoldingLogPositionDao.findById(newParentId)
+                        .orElseThrow(() -> new ScaffoldingLogPositionException(
+                                ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
+                                "Parent position not found"));
+                entity.setParentPosition(newParent);
+            } else {
+                entity.setParentPosition(null);
             }
-            Contractor contractor = contractorBaseMapper.toEntity(contractorBaseDTO);
-            existingPosition.setContractor(contractor);
         }
     }
 
-    @Override
-    public ScaffoldingLogPositionDTO findById(Long aLong) {
-        log.debug("Request to get ScaffoldingLogPosition by id: {}", aLong);
-        Optional<ScaffoldingLogPosition> result = scaffoldingLogPositionDao.findById(aLong);
-        return scaffoldingLogPositionDTOMapper.toDto(result.orElseThrow(
-                () -> new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND, "Scaffolding Log Position: " + aLong + " not found")
-        ));
-    }
+    private void mergeDimensions(ScaffoldingLogPosition existingPosition,
+                                 List<ScaffoldingLogPositionDimensionBaseDTO> updatingDTOs) {
 
-    @Override
-    public void delete(Long aLong) {
-        log.debug("Request to delete ScaffoldingLogPosition by id: {}", aLong);
-        if (scaffoldingLogPositionDao.findById(aLong).isEmpty()) {
-            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND, "Scaffolding Log Position: " + aLong + " not found");
+        // Mapowanie po ID dla szybkiego dostępu
+        Map<Long, ScaffoldingLogPositionDimensionBaseDTO> dtoMap = updatingDTOs.stream()
+                .filter(d -> d.getId() != null)
+                .collect(Collectors.toMap(ScaffoldingLogPositionDimensionBaseDTO::getId, Function.identity()));
+
+        Iterator<ScaffoldingLogPositionDimension> iterator = existingPosition.getDimensions().iterator();
+
+        // 1. Usuwanie
+        while (iterator.hasNext()) {
+            ScaffoldingLogPositionDimension current = iterator.next();
+            if (!dtoMap.containsKey(current.getId())) {
+                iterator.remove(); // Hibernate orphanRemoval usunie rekord
+                current.setScaffoldingPosition(null);
+                current.setCompany(null);
+            }
         }
-        scaffoldingLogPositionDao.deleteById(aLong);
+
+        // 2. Aktualizacja i Dodawanie
+        for (ScaffoldingLogPositionDimensionBaseDTO dto : updatingDTOs) {
+            if (dto.getId() == null) {
+                // Dodawanie nowego
+                createAndAddNewDimension(dto, existingPosition);
+            } else {
+                // Aktualizacja istniejącego
+                existingPosition.getDimensions().stream()
+                        .filter(d -> d.getId().equals(dto.getId()))
+                        .findFirst()
+                        .ifPresent(existingDim -> updateDimensionFields(existingDim, dto));
+            }
+        }
     }
 
-    private Map<UnitBaseDTO, BigDecimal> calculateScaffoldingDimension(BigDecimal existingDimension,
-                                                                       List<ScaffoldingLogPositionDimensionBaseDTO> dimensionDTOList,
-                                                                       Long companyId) {
-        int runningMetersCount = 0;
-        int squareMetersCount = 0;
+    private void createAndAddNewDimension(ScaffoldingLogPositionDimensionBaseDTO dto, ScaffoldingLogPosition position) {
+        UnitDTO unitDTO;
+        if (dto.getUnit() != null && dto.getUnit().getId() != null) {
+            unitDTO = unitService.findById(dto.getUnit().getId());
+        } else {
+            String symbol = determineUnitSymbol(dto);
+            unitDTO = unitService.findGlobalUnitBySymbol(symbol);
+        }
+
+        ScaffoldingLogPositionDimension newDimension = ScaffoldingLogPositionDimension.builder()
+                .height(dto.getHeight())
+                .width(dto.getWidth())
+                .length(dto.getLength())
+                .dimensionType(dto.getDimensionType())
+                .dismantlingDate(dto.getDismantlingDate())
+                .assemblyDate(dto.getAssemblyDate())
+                .operationType(dto.getOperationType())
+                .unit(unitBaseMapper.toEntity(unitDTO))
+                .scaffoldingPosition(position)
+                .company(position.getCompany())
+                .build();
+
+        position.getDimensions().add(newDimension);
+    }
+
+    private void updateDimensionFields(ScaffoldingLogPositionDimension entity, ScaffoldingLogPositionDimensionBaseDTO dto) {
+        // Tylko jeśli wartości są inne - można dodać dodatkowy check equals, ale settery są tanie
+        entity.setHeight(dto.getHeight());
+        entity.setWidth(dto.getWidth());
+        entity.setLength(dto.getLength());
+        entity.setDimensionType(dto.getDimensionType());
+        entity.setDismantlingDate(dto.getDismantlingDate());
+        entity.setAssemblyDate(dto.getAssemblyDate());
+        entity.setOperationType(dto.getOperationType());
+
+        if (dto.getUnit() != null && dto.getUnit().getId() != null) {
+            // Opcjonalnie: sprawdź czy ID się zmieniło przed pobraniem z bazy
+            if (!entity.getUnit().getId().equals(dto.getUnit().getId())) {
+                UnitDTO unitDTO = unitService.findById(dto.getUnit().getId());
+                entity.setUnit(unitBaseMapper.toEntity(unitDTO));
+            }
+        }
+    }
+
+    private DimensionResult calculateScaffoldingDimension(BigDecimal existingDimension,
+                                                          List<ScaffoldingLogPositionDimensionBaseDTO> dimensions) {
         int cubicMetersCount = 0;
-        int dimensionSize = dimensionDTOList.size();
-
+        int squareMetersCount = 0;
+        int runningMetersCount = 0;
         BigDecimal calculatedDimension = BigDecimal.ZERO;
 
-        for (ScaffoldingLogPositionDimensionBaseDTO dimensionDTO : dimensionDTOList) {
+        for (ScaffoldingLogPositionDimensionBaseDTO dim : dimensions) {
             BigDecimal value;
-
-            // Określ typ wymiaru i oblicz wartość
-            if (dimensionDTO.getWidth().compareTo(BigDecimal.ONE) > 0) {
-                // OBJĘTOŚĆ (m3): szerokość > 1
-                value = dimensionDTO.getHeight()
-                        .multiply(dimensionDTO.getWidth())
-                        .multiply(dimensionDTO.getLength());
+            // width > 1.0 -> m3
+            if (dim.getWidth().compareTo(BigDecimal.ONE) > 0) {
+                value = dim.getHeight().multiply(dim.getWidth()).multiply(dim.getLength());
                 cubicMetersCount++;
-                log.debug("Dimension type: m3 (width > 1), width: {}", dimensionDTO.getWidth());
-
-            } else if (dimensionDTO.getWidth().compareTo(BigDecimal.ONE) == 0
-                    && dimensionDTO.getHeight().compareTo(BigDecimal.ONE) == 0) {
-                // DŁUGOŚĆ (mb): szerokość = 1 i wysokość = 1
-                value = dimensionDTO.getLength();
+            }
+            // width == 1.0 && height == 1.0 -> mb
+            else if (dim.getWidth().compareTo(BigDecimal.ONE) == 0 && dim.getHeight().compareTo(BigDecimal.ONE) == 0) {
+                value = dim.getLength();
                 runningMetersCount++;
-                log.debug("Dimension type: mb (width = 1 and height = 1)");
-
-            } else {
-                // POWIERZCHNIA (m2): szerokość <= 1 (ale nie oba = 1)
-                value = dimensionDTO.getHeight()
-                        .multiply(dimensionDTO.getLength());
+            }
+            // width <= 1.0 (reszta) -> m2
+            else {
+                value = dim.getHeight().multiply(dim.getLength());
                 squareMetersCount++;
-                log.debug("Dimension type: m2 (width <= 1, width: {}, height: {})",
-                        dimensionDTO.getWidth(), dimensionDTO.getHeight());
             }
 
-            // Dodaj lub odejmij w zależności od typu operacji
-            BigDecimal signedValue = dimensionDTO.getOperationType().equals(ScaffoldingOperationType.ASSEMBLY)
-                    ? value
-                    : value.negate();
-
-            calculatedDimension = calculatedDimension.add(signedValue);
+            if (ScaffoldingOperationType.ASSEMBLY.equals(dim.getOperationType())) {
+                calculatedDimension = calculatedDimension.add(value);
+            } else {
+                calculatedDimension = calculatedDimension.subtract(value);
+            }
         }
-        calculatedDimension = calculatedDimension.add(Objects.requireNonNullElse(existingDimension, BigDecimal.ZERO));
 
-        log.debug("Dimension counts - cubic: {}, square: {}, running: {}, total: {}",
-                cubicMetersCount, squareMetersCount, runningMetersCount, dimensionSize);
-        UnitDTO unitDTO = determinateUnit(cubicMetersCount, squareMetersCount, dimensionSize, runningMetersCount);
+        BigDecimal finalValue = calculatedDimension.add(Objects.requireNonNullElse(existingDimension, BigDecimal.ZERO));
+        UnitDTO unit = determinateUnit(cubicMetersCount, squareMetersCount, dimensions.size(), runningMetersCount);
 
-        Map<UnitBaseDTO, BigDecimal> result = new HashMap<>();
-        result.put(unitDTO, calculatedDimension);
-        return result;
+        return new DimensionResult(unit, finalValue);
     }
+
 
     private UnitDTO determinateUnit(int cubicMetersCount, int squareMetersCount, int dimensionSize, int runningMetersCount) {
         String unitSymbol;
@@ -364,100 +422,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         return existingKeys.equals(updatingKeys);
     }
 
-    private void updateDimensions(
-            ScaffoldingLogPosition existingPosition,
-            List<ScaffoldingLogPositionDimensionBaseDTO> existingDTOList,
-            List<ScaffoldingLogPositionDimensionBaseDTO> updatingDTOList) {
-
-        Map<Long, ScaffoldingLogPositionDimensionBaseDTO> existingMap = existingDTOList.stream()
-                .filter(d -> d.getId() != null)
-                .collect(Collectors.toMap(ScaffoldingLogPositionDimensionBaseDTO::getId, Function.identity()));
-
-        Map<Long, ScaffoldingLogPositionDimensionBaseDTO> updatingMap = updatingDTOList.stream()
-                .filter(d -> d.getId() != null)
-                .collect(Collectors.toMap(ScaffoldingLogPositionDimensionBaseDTO::getId, Function.identity()));
-
-        Set<Long> existingIds = existingMap.keySet();
-        Set<Long> updatingIds = updatingMap.keySet();
-
-        List<Long> toDelete = existingIds.stream()
-                .filter(id -> !updatingIds.contains(id))
-                .toList();
-
-        Iterator<ScaffoldingLogPositionDimension> iterator = existingPosition.getDimensions().iterator();
-        while (iterator.hasNext()) {
-            ScaffoldingLogPositionDimension dimension = iterator.next();
-            if (toDelete.contains(dimension.getId())) {
-                log.debug("Removing dimension with id: {}", dimension.getId());
-                iterator.remove();
-                dimension.setScaffoldingPosition(null);
-                dimension.setCompany(null);
-                // orphanRemoval = true w encji zadba o usunięcie z bazy
-            }
-        }
-
-        // Process updating dimensions - AKTUALIZUJ BEZPOŚREDNIO ENCJE
-        for (ScaffoldingLogPositionDimensionBaseDTO updatingDTO : updatingDTOList) {
-            if (updatingDTO.getId() != null && existingMap.containsKey(updatingDTO.getId())) {
-                // Update existing dimension - znajdź encję i zaktualizuj jej pola
-                ScaffoldingLogPositionDimension existing = existingPosition.getDimensions().stream()
-                        .filter(d -> d.getId().equals(updatingDTO.getId()))
-                        .findFirst()
-                        .orElse(null);
-
-                if (existing != null) {
-                    ScaffoldingLogPositionDimensionBaseDTO existingDTO = existingMap.get(updatingDTO.getId());
-                    if (!areDimensionFieldsEqual(existingDTO, updatingDTO)) {
-                        log.debug("Updating dimension with id: {}", updatingDTO.getId());
-
-                        // AKTUALIZUJ BEZPOŚREDNIO POLA ENCJI
-                        existing.setHeight(updatingDTO.getHeight());
-                        existing.setWidth(updatingDTO.getWidth());
-                        existing.setLength(updatingDTO.getLength());
-                        existing.setDimensionType(updatingDTO.getDimensionType());
-                        existing.setDismantlingDate(updatingDTO.getDismantlingDate());
-                        existing.setAssemblyDate(updatingDTO.getAssemblyDate());
-                        existing.setOperationType(updatingDTO.getOperationType());
-
-                        // Aktualizuj unit jeśli jest podany
-                        if (updatingDTO.getUnit() != null && updatingDTO.getUnit().getId() != null) {
-                            UnitDTO unitDTO = unitService.findById(updatingDTO.getUnit().getId());
-                            existing.setUnit(unitBaseMapper.toEntity(unitDTO));
-                        }
-                    }
-                }
-            } else {
-                // Add new dimension - DODAJ NOWY WYMIAR BEZPOŚREDNIO DO KOLEKCJI
-                log.debug("Adding new dimension");
-
-                // Określ unit dla nowego wymiaru
-                UnitDTO unitDTO;
-                if (updatingDTO.getUnit() != null && updatingDTO.getUnit().getId() != null) {
-                    unitDTO = unitService.findById(updatingDTO.getUnit().getId());
-                } else {
-                    // Określ na podstawie wymiarów
-                    String unitSymbol = determineUnitSymbol(updatingDTO);
-                    unitDTO = unitService.findGlobalUnitBySymbol(unitSymbol);
-                }
-
-                ScaffoldingLogPositionDimension newDimension = ScaffoldingLogPositionDimension.builder()
-                        .height(updatingDTO.getHeight())
-                        .width(updatingDTO.getWidth())
-                        .length(updatingDTO.getLength())
-                        .dimensionType(updatingDTO.getDimensionType())
-                        .dismantlingDate(updatingDTO.getDismantlingDate())
-                        .assemblyDate(updatingDTO.getAssemblyDate())
-                        .operationType(updatingDTO.getOperationType())
-                        .unit(unitBaseMapper.toEntity(unitDTO))
-                        .scaffoldingPosition(existingPosition)  // USTAW encję
-                        .company(existingPosition.getCompany())  // USTAW company
-                        .build();
-
-                existingPosition.getDimensions().add(newDimension);
-            }
-        }
-    }
-
     private String determineUnitSymbol(ScaffoldingLogPositionDimensionBaseDTO dimensionDTO) {
         if (dimensionDTO.getWidth().compareTo(BigDecimal.ONE) > 0) {
             return "m3"; // objętość
@@ -467,46 +431,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         } else {
             return "m2"; // powierzchnia
         }
-    }
-
-    private void updateParentPosition(ScaffoldingLogPositionDTO updateDto, ScaffoldingLogPosition existingPosition) {
-        Long currentParentId = existingPosition.getParentPosition() != null
-                ? existingPosition.getParentPosition().getId()
-                : null;
-
-        Long newParentId = updateDto.getParentPosition() != null
-                ? updateDto.getParentPosition().getId()
-                : null;
-
-        // Jeśli parent się zmienił
-        if (!Objects.equals(currentParentId, newParentId)) {
-            if (newParentId != null) {
-                // Ustaw nowego parenta
-                ScaffoldingLogPosition parentPosition = scaffoldingLogPositionDao.findById(newParentId)
-                        .orElseThrow(() -> new ScaffoldingLogPositionException(
-                                ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
-                                "Parent position with id " + newParentId + " not found"
-                        ));
-                existingPosition.setParentPosition(parentPosition);
-            } else {
-                // Usuń parenta
-                existingPosition.setParentPosition(null);
-            }
-        }
-    }
-
-    private boolean areDimensionFieldsEqual(
-            ScaffoldingLogPositionDimensionBaseDTO dto1,
-            ScaffoldingLogPositionDimensionBaseDTO dto2) {
-
-        return Objects.equals(dto1.getId(), dto2.getId()) &&
-                Objects.equals(dto1.getHeight(), dto2.getHeight()) &&
-                Objects.equals(dto1.getWidth(), dto2.getWidth()) &&
-                Objects.equals(dto1.getLength(), dto2.getLength()) &&
-                Objects.equals(dto1.getDimensionType(), dto2.getDimensionType()) &&
-                Objects.equals(dto1.getDismantlingDate(), dto2.getDismantlingDate()) &&
-                Objects.equals(dto1.getAssemblyDate(), dto2.getAssemblyDate()) &&
-                Objects.equals(dto1.getOperationType(), dto2.getOperationType());
     }
 
     private DimensionKey createDimensionKey(ScaffoldingLogPositionDimensionBaseDTO dto) {
@@ -522,54 +446,23 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         );
     }
 
-    private ScaffoldingLogPositionDTO recalculateParentDimensions(ScaffoldingLogPositionDTO dto) {
-        log.debug("Recalculating parent position dimensions for id: {}", dto.getParentPosition().getId());
-
-        ScaffoldingLogPositionDTO parentPosition = findById(dto.getParentPosition().getId());
-        BigDecimal parentPositionDimension = dto.getParentPosition().getScaffoldingFullDimension();
-
-        Map<UnitBaseDTO, BigDecimal> parentDimensionResult = calculateScaffoldingDimension(parentPositionDimension, dto.getDimensions(), dto.getCompany().getId());
-
-        Map.Entry<UnitBaseDTO, BigDecimal> parentEntry = parentDimensionResult.entrySet().iterator().next();
-
-        parentPosition = parentPosition.toBuilder()
-                .scaffoldingFullDimension(parentEntry.getValue())
-                .scaffoldingFullDimensionUnit(parentEntry.getKey())
-                .build();
-        ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionBaseMapper.toEntity(parentPosition);
-        parentPositionEntity = scaffoldingLogPositionDao.save(parentPositionEntity);
-        return dto.toBuilder().parentPosition(scaffoldingLogPositionBaseMapper.toDto(parentPositionEntity)).build();
+    @Override
+    public ScaffoldingLogPositionDTO findById(Long aLong) {
+        log.debug("Request to get ScaffoldingLogPosition by id: {}", aLong);
+        Optional<ScaffoldingLogPosition> result = scaffoldingLogPositionDao.findById(aLong);
+        return scaffoldingLogPositionDTOMapper.toDto(result.orElseThrow(
+                () -> new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND, "Scaffolding Log Position: " + aLong + " not found")
+        ));
     }
 
-    private void recalculateParentDimensions(ScaffoldingLogPositionDTO dto, ScaffoldingLogPosition currentPosition) {
-        log.debug("Recalculating parent position dimensions for parent id: {}", dto.getParentPosition().getId());
-
-        // Pobierz parent jako encję (nie DTO!)
-        ScaffoldingLogPosition parentPositionEntity = scaffoldingLogPositionDao.findById(dto.getParentPosition().getId())
-                .orElseThrow(() -> new ScaffoldingLogPositionException(
-                        ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
-                        "Parent position with id " + dto.getParentPosition().getId() + " not found"
-                ));
-
-        BigDecimal parentPositionDimension = parentPositionEntity.getScaffoldingFullDimension();
-
-        // Przelicz wymiary
-        Map<UnitBaseDTO, BigDecimal> parentDimensionResult =
-                calculateScaffoldingDimension(parentPositionDimension, dto.getDimensions(), dto.getCompany().getId());
-
-        Map.Entry<UnitBaseDTO, BigDecimal> parentEntry = parentDimensionResult.entrySet().iterator().next();
-
-        // AKTUALIZUJ BEZPOŚREDNIO ENCJĘ (nie DTO!)
-        parentPositionEntity.setScaffoldingFullDimension(parentEntry.getValue());
-        parentPositionEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(parentEntry.getKey()));
-
-        // Zapisz zmiany w parent
-        scaffoldingLogPositionDao.save(parentPositionEntity);
-
-        // Ustaw parent w current position
-        currentPosition.setParentPosition(parentPositionEntity);
+    @Override
+    public void delete(Long aLong) {
+        log.debug("Request to delete ScaffoldingLogPosition by id: {}", aLong);
+        if (scaffoldingLogPositionDao.findById(aLong).isEmpty()) {
+            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND, "Scaffolding Log Position: " + aLong + " not found");
+        }
+        scaffoldingLogPositionDao.deleteById(aLong);
     }
-
 
     private record DimensionKey(
             Long id,

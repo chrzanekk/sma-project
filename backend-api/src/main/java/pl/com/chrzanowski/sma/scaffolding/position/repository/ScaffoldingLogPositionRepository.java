@@ -10,4 +10,6 @@ public interface ScaffoldingLogPositionRepository extends JpaRepository<Scaffold
         QuerydslPredicateExecutor<ScaffoldingLogPosition> {
 
     Boolean existsByScaffoldingNumberAndScaffoldingLogId(String scaffoldingNumber, Long scaffoldingLogId);
+
+    boolean existsById(Long id);
 }

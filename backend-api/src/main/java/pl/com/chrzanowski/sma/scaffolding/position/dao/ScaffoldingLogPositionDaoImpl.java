@@ -65,4 +65,9 @@ public class ScaffoldingLogPositionDaoImpl implements ScaffoldingLogPositionDao 
     public Boolean existsByScaffoldingNumberAndScaffoldingLogId(String scaffoldingNumber, Long scaffoldingLogId) {
         return repository.existsByScaffoldingNumberAndScaffoldingLogId(scaffoldingNumber, scaffoldingLogId);
     }
+
+    @Override
+    public Boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
 }
