@@ -1,39 +1,38 @@
 import * as Yup from 'yup';
+import React from "react";
 import {useTranslation} from "react-i18next";
 import {Form, Formik, FormikHelpers} from "formik";
-import React from "react";
 import {Button, Flex} from "@chakra-ui/react";
 import {CustomInputFilterField} from "@/components/shared/CustomFormFields.tsx";
 
 interface FilterValues {
-    nameContains?: string;
+    symbolContains?: string;
     descriptionContains?: string;
 }
 
 const validationSchema = Yup.object({
-    nameContains: Yup.string(),
-    descriptionContains: Yup.string(),
+   symbolContains: Yup.string(),
+    descriptionContains: Yup.string()
 })
 
-interface Props {
+interface FilterProps {
     onSubmit: (values: FilterValues) => void;
 }
 
-const PositionFilterForm: React.FC<Props> = ({onSubmit}) => {
-    const {t} = useTranslation(['positions', 'common']);
+const UnitFilterForm: React.FC<FilterProps> = ({onSubmit}) => {
+    const {t} = useTranslation(['units', 'common']);
     return (
         <Formik<FilterValues>
-            initialValues={
-                {
-                    nameContains: '',
-                    descriptionContains: ''
-                }}
+            initialValues={{
+                symbolContains:'',
+                descriptionContains:''
+            }}
             validationSchema={validationSchema}
-            onSubmit={(values, {setSubmitting}: FormikHelpers<FilterValues>) => {
+            onSubmit={(values,{setSubmitting}: FormikHelpers<FilterValues>) => {
                 setSubmitting(false);
-                onSubmit(values)
+                onSubmit(values);
             }}>
-            {({handleSubmit, resetForm}) => {
+            {({handleSubmit, resetForm})=> {
                 return (
                     <Form onSubmit={handleSubmit}>
                         <Flex
@@ -43,9 +42,10 @@ const PositionFilterForm: React.FC<Props> = ({onSubmit}) => {
                             justifyContent={"center"}
                             flexWrap={"wrap"}
                         >
-                            <CustomInputFilterField name="nameContains" placeholder={t('positions:name')}/>
+                            <CustomInputFilterField name="symbolContains" placeholder={t('units:symbol')}/>
                             <CustomInputFilterField name="descriptionContains"
-                                                    placeholder={t('positions:description')}/>
+                                                    placeholder={t('units:description')}/>
+                        {/*    TODO: add filter by UnitType using enum and on backend */}
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>
                             <Button type="submit" colorPalette="blue"
@@ -71,4 +71,4 @@ const PositionFilterForm: React.FC<Props> = ({onSubmit}) => {
     )
 }
 
-export default PositionFilterForm;
+export default UnitFilterForm;

@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.common.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum UnitType {
     LENGTH("length"),           // mb, km
     AREA("area"),              // m2
@@ -15,6 +17,7 @@ public enum UnitType {
         this.type = type;
     }
 
+    @JsonValue
     public String getType() {
         return type;
     }

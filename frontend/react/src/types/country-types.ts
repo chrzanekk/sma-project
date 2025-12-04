@@ -8,7 +8,7 @@ export class Country {
 
     public static readonly countries: Country[] = Country._countries;
 
-    private constructor(public readonly code: string, public readonly name: string) {
+    constructor(public readonly code: string, public readonly name: string) {
         Country._countries.push(this);
         Country.ALL[code.toUpperCase()] = this;
     }
@@ -203,6 +203,7 @@ const countryData: { code: string; name: string }[] = [
 ];
 
 // Tworzymy wszystkie kraje
+
 countryData.forEach(({ code, name }) => new Country(code, name));
 
 
