@@ -80,6 +80,9 @@ public class ScaffoldingLogPositionQuerySpec {
             if (filter.getScaffoldingUserContactNameContains() != null && !filter.getScaffoldingUserContactNameContains().isEmpty()) {
                 predicate.and(scaffoldingLogPosition.scaffoldingUserContact.lastName.containsIgnoreCase(filter.getScaffoldingUserContactNameContains()));
             }
+            if (filter.getParentPositionOnly() != null && filter.getParentPositionOnly()) {
+                predicate.and(scaffoldingLogPosition.parentPosition.isNull());
+            }
         }
         return predicate;
     }
