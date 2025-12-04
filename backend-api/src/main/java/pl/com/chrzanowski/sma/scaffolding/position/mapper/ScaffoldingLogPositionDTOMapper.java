@@ -30,6 +30,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
+    @Mapping(target = "fullWorkingTime", source = "fullWorkingTime")
     @Mapping(target = "childPositions", ignore = true)
     ScaffoldingLogPositionDTO toDto(ScaffoldingLogPosition entity);
 
@@ -41,6 +42,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "parentPosition", source = "parentPosition")
     @Mapping(target = "childPositions", source = "childPositions")
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
+    @Mapping(target = "fullWorkingTime", source = "fullWorkingTime")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

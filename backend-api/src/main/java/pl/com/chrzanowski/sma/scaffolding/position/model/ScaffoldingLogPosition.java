@@ -68,6 +68,10 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @ToString.Exclude
     private Unit scaffoldingFullDimensionUnit;
 
+
+    @Column(name = "full_working_time")
+    private BigDecimal fullWorkingTime;
+
     @Column(name = "technical_protocol_status", length = 50)
     @Enumerated(EnumType.STRING)
     private TechnicalProtocolStatus technicalProtocolStatus;

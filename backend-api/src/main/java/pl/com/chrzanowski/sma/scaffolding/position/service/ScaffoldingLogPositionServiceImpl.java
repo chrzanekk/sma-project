@@ -25,8 +25,11 @@ import pl.com.chrzanowski.sma.scaffolding.position.dto.ScaffoldingLogPositionDTO
 import pl.com.chrzanowski.sma.scaffolding.position.mapper.ScaffoldingLogPositionDTOMapper;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.validator.ScaffoldingNumberValidationService;
+import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPositionWorkingTimeBaseMapper;
+import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeService;
+import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
 import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
 import pl.com.chrzanowski.sma.unit.service.UnitService;
@@ -82,11 +85,14 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
         // Obliczanie wymiarów dla nowej pozycji
         DimensionResult dimensionResult = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
+        BigDecimal fullWorkingTime = calculateFullWorkingTime(BigDecimal.ZERO, createDto.getWorkingTimes());
+
 
         // Mapowanie DTO -> Entity z ustawionymi wymiarami
         ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
         toSaveEntity.setScaffoldingFullDimension(dimensionResult.value());
         toSaveEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(dimensionResult.unit()));
+        toSaveEntity.setFullWorkingTime(fullWorkingTime);
 
         // Obsługa Parent Position
         if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
@@ -121,15 +127,10 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         //check dimension change and recalculate if needed
         // Obsługa zmian wymiarów
         List<ScaffoldingLogPositionDimensionBaseDTO> updatingDimensions = updateDto.getDimensions();
-        // Pobieramy aktualne wymiary z bazy (lub z obiektu jeśli sesja jest otwarta)
-        List<ScaffoldingLogPositionDimension> currentDimensions = existingPosition.getDimensions();
+        boolean dimensionChanged = hasDimensionChanged(existingPosition, updateDto.getDimensions());
 
-        // Konwersja encji na DTO do porównania
-        List<ScaffoldingLogPositionDimensionBaseDTO> currentDimensionsDto = currentDimensions.stream()
-                .map(scaffoldingLogPositionDimensionBaseMapper::toDto)
-                .toList();
 
-        if (!areDimensionsEqual(currentDimensionsDto, updatingDimensions)) {
+        if (dimensionChanged) {
             // Aktualizacja kolekcji wymiarów
             mergeDimensions(existingPosition, updatingDimensions);
 
@@ -137,19 +138,50 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             DimensionResult newDimensions = calculateScaffoldingDimension(BigDecimal.ZERO, updatingDimensions);
             existingPosition.setScaffoldingFullDimension(newDimensions.value());
             existingPosition.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(newDimensions.unit()));
-
-            // Przeliczenie rodzica jeśli istnieje
-            if (existingPosition.getParentPosition() != null) {
-                // TODO: Zweryfikuj logikę biznesową. Obecnie dodajesz nowe wymiary do rodzica.
-                // Czy nie powinieneś najpierw odjąć STARYCH wymiarów dziecka od rodzica?
-                updateParentDimensions(existingPosition.getParentPosition(), updatingDimensions);
-            }
         }
 
-        //todo check changed working time - next step
+        List<ScaffoldingLogPositionWorkingTimeBaseDTO> updatingWorkingTimes = updateDto.getWorkingTimes();
+        boolean workingTimeChanged = hasWorkingTimeChanged(existingPosition, updatingWorkingTimes);
+        if (workingTimeChanged) {
+            mergeWorkingTimes(existingPosition, updatingWorkingTimes);
+            BigDecimal fullWorkingTime = calculateFullWorkingTime(BigDecimal.ZERO, updatingWorkingTimes);
+            existingPosition.setFullWorkingTime(fullWorkingTime);
+        }
+
+        if (existingPosition.getParentPosition() != null && (dimensionChanged || workingTimeChanged)) {
+            ScaffoldingLogPosition parentEntity = existingPosition.getParentPosition();
+            if (dimensionChanged) {
+                // TODO: Tu jest potencjalny błąd logiczny "double counting" omawiany wcześniej.
+                // Przy update powinieneś przekazać "deltę" lub przeliczyć rodzica na nowo.
+                // Zakładając, że updateParentDimensionsState dodaje "nowe" wartości:
+                // Musisz najpierw ODJĄĆ stare wartości dziecka od rodzica.
+                // Na razie zostawiam Twoją logikę:
+                updateParentDimensionsState(parentEntity, updatingDimensions);
+            }
+            if (workingTimeChanged) {
+                // Analogicznie - updateParentWorkingTimeState obecnie "dodaje" (zależy od implementacji calculateFullWorkingTime)
+                // Powinieneś upewnić się, że ta metoda poprawnie obsługuje aktualizację (nie dodaje w kółko tego samego).
+                updateParentWorkingTimeState(parentEntity, updatingWorkingTimes);
+            }
+            scaffoldingLogPositionDao.save(existingPosition);
+        }
 
         ScaffoldingLogPosition updatedPosition = scaffoldingLogPositionDao.save(existingPosition);
         return findById(updatedPosition.getId());
+    }
+
+
+    private BigDecimal calculateFullWorkingTime(BigDecimal existingWorkingTime, List<ScaffoldingLogPositionWorkingTimeBaseDTO> workingTimes) {
+        BigDecimal base = existingWorkingTime != null ? existingWorkingTime : BigDecimal.ZERO;
+        if (workingTimes == null || workingTimes.isEmpty()) {
+            return base;
+        }
+        BigDecimal manHours = workingTimes.stream()
+                .filter(dto -> dto.getNumberOfWorkers() != null && dto.getNumberOfHours() != null)
+                .map(dto -> dto.getNumberOfHours()
+                        .multiply(BigDecimal.valueOf(dto.getNumberOfWorkers())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return base.add(manHours);
     }
 
 
@@ -161,15 +193,21 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
         childEntity.setParentPosition(parentEntity);
 
-        updateParentDimensions(parentEntity, childDto.getDimensions());
+        updateParentDimensionsState(parentEntity, childDto.getDimensions());
+        updateParentWorkingTimeState(parentEntity, childDto.getWorkingTimes());
+        scaffoldingLogPositionDao.save(parentEntity);
         // todo change scaffolding number in child position
     }
 
-    private void updateParentDimensions(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPositionDimensionBaseDTO> childDimensions) {
+    private void updateParentDimensionsState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPositionDimensionBaseDTO> childDimensions) {
         DimensionResult parentResult = calculateScaffoldingDimension(parentEntity.getScaffoldingFullDimension(), childDimensions);
         parentEntity.setScaffoldingFullDimension(parentResult.value());
         parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(parentResult.unit()));
-        scaffoldingLogPositionDao.save(parentEntity);
+    }
+
+    private void updateParentWorkingTimeState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPositionWorkingTimeBaseDTO> childWorkingTimes) {
+        BigDecimal fullWorkingTime = calculateFullWorkingTime(parentEntity.getFullWorkingTime(), childWorkingTimes);
+        parentEntity.setFullWorkingTime(fullWorkingTime);
     }
 
     private void checkIfPositionWithNumberExistsInLog(String scaffoldingNumber, Long logId) {
@@ -293,6 +331,34 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         }
     }
 
+    private void mergeWorkingTimes(ScaffoldingLogPosition existingPosition,
+                                   List<ScaffoldingLogPositionWorkingTimeBaseDTO> updatingDTOs) {
+        Map<Long, ScaffoldingLogPositionWorkingTimeBaseDTO> dtoMap = updatingDTOs
+                .stream()
+                .filter(d -> d.getId() != null)
+                .collect(Collectors.toMap(ScaffoldingLogPositionWorkingTimeBaseDTO::getId, Function.identity()));
+
+        Iterator<ScaffoldingLogPositionWorkingTime> iterator = existingPosition.getWorkingTimes().iterator();
+        while (iterator.hasNext()) {
+            ScaffoldingLogPositionWorkingTime current = iterator.next();
+            if (!dtoMap.containsKey(current.getId())) {
+                iterator.remove();
+                current.setScaffoldingPosition(null);
+                current.setCompany(null);
+            }
+        }
+        for (ScaffoldingLogPositionWorkingTimeBaseDTO dto : updatingDTOs) {
+            if (dto.getId() == null) {
+                createAndAddNewWorkingTime(dto, existingPosition);
+            } else {
+                existingPosition.getWorkingTimes().stream()
+                        .filter(d -> d.getId().equals(dto.getId()))
+                        .findFirst()
+                        .ifPresent(existingWorkingTime -> updateWorkingFields(existingWorkingTime, dto));
+            }
+        }
+    }
+
     private void createAndAddNewDimension(ScaffoldingLogPositionDimensionBaseDTO dto, ScaffoldingLogPosition position) {
         UnitDTO unitDTO;
         if (dto.getUnit() != null && dto.getUnit().getId() != null) {
@@ -318,6 +384,17 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         position.getDimensions().add(newDimension);
     }
 
+    private void createAndAddNewWorkingTime(ScaffoldingLogPositionWorkingTimeBaseDTO dto, ScaffoldingLogPosition position) {
+        ScaffoldingLogPositionWorkingTime newWorkingTime = ScaffoldingLogPositionWorkingTime.builder()
+                .numberOfHours(dto.getNumberOfHours())
+                .numberOfWorkers(dto.getNumberOfWorkers())
+                .unit(unitBaseMapper.toEntity(dto.getUnit()))
+                .scaffoldingPosition(position)
+                .operationType(dto.getOperationType())
+                .company(position.getCompany())
+                .build();
+    }
+
     private void updateDimensionFields(ScaffoldingLogPositionDimension entity, ScaffoldingLogPositionDimensionBaseDTO dto) {
         // Tylko jeśli wartości są inne - można dodać dodatkowy check equals, ale settery są tanie
         entity.setHeight(dto.getHeight());
@@ -335,6 +412,14 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
                 entity.setUnit(unitBaseMapper.toEntity(unitDTO));
             }
         }
+    }
+
+    private void updateWorkingFields(ScaffoldingLogPositionWorkingTime entity, ScaffoldingLogPositionWorkingTimeBaseDTO dto) {
+        entity.setNumberOfHours(dto.getNumberOfHours());
+        entity.setNumberOfWorkers(dto.getNumberOfWorkers());
+        entity.setUnit(unitBaseMapper.toEntity(dto.getUnit()));
+        entity.setOperationType(dto.getOperationType());
+
     }
 
     private DimensionResult calculateScaffoldingDimension(BigDecimal existingDimension,
@@ -402,15 +487,22 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
 
-    private boolean areDimensionsEqual(
+    private boolean hasDimensionChanged(ScaffoldingLogPosition existingPosition, List<ScaffoldingLogPositionDimensionBaseDTO> dimensions) {
+        List<ScaffoldingLogPositionDimensionBaseDTO> currentDto =
+                existingPosition.getDimensions().stream()
+                        .map(scaffoldingLogPositionDimensionBaseMapper::toDto)
+                        .toList();
+        return areDimensionsNotEqual(currentDto, dimensions);
+    }
+
+    private boolean areDimensionsNotEqual(
             List<ScaffoldingLogPositionDimensionBaseDTO> existing,
             List<ScaffoldingLogPositionDimensionBaseDTO> updating) {
 
         if (existing.size() != updating.size()) {
-            return false;
+            return true;
         }
 
-        // Create sets for comparison (ignoring order)
         Set<DimensionKey> existingKeys = existing.stream()
                 .map(this::createDimensionKey)
                 .collect(Collectors.toSet());
@@ -419,7 +511,29 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
                 .map(this::createDimensionKey)
                 .collect(Collectors.toSet());
 
-        return existingKeys.equals(updatingKeys);
+        return !existingKeys.equals(updatingKeys);
+    }
+
+    private boolean hasWorkingTimeChanged(ScaffoldingLogPosition existing, List<ScaffoldingLogPositionWorkingTimeBaseDTO> updating) {
+        List<ScaffoldingLogPositionWorkingTimeBaseDTO> currentDto = existing.getWorkingTimes().stream()
+                .map(scaffoldingLogPositionWorkingTimeBaseMapper::toDto)
+                .toList();
+        // Potrzebujesz metody areWorkingTimesEqual analogicznej do areDimensionsEqual
+        return areWorkingTimesNotEqual(currentDto, updating);
+    }
+
+    private boolean areWorkingTimesNotEqual(List<ScaffoldingLogPositionWorkingTimeBaseDTO> updating, List<ScaffoldingLogPositionWorkingTimeBaseDTO> existing) {
+        if (existing.size() != updating.size()) {
+            return true;
+        }
+        Set<WorkingTimeKey> existingKeys = existing.stream()
+                .map(this::createWorkingTimeKey)
+                .collect(Collectors.toSet());
+
+        Set<WorkingTimeKey> updatingKeys = updating.stream()
+                .map(this::createWorkingTimeKey)
+                .collect(Collectors.toSet());
+        return !existingKeys.equals(updatingKeys);
     }
 
     private String determineUnitSymbol(ScaffoldingLogPositionDimensionBaseDTO dimensionDTO) {
@@ -442,6 +556,17 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
                 dto.getDimensionType(),
                 dto.getDismantlingDate(),
                 dto.getAssemblyDate(),
+                dto.getOperationType(),
+                dto.getUnit()
+        );
+    }
+
+    private WorkingTimeKey createWorkingTimeKey(ScaffoldingLogPositionWorkingTimeBaseDTO dto) {
+        return new WorkingTimeKey(
+                dto.getId(),
+                dto.getNumberOfWorkers(),
+                dto.getNumberOfHours(),
+                dto.getUnit(),
                 dto.getOperationType()
         );
     }
@@ -472,7 +597,18 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             DimensionType dimensionType,
             LocalDate dismantlingDate,
             LocalDate assemblyDate,
+            ScaffoldingOperationType operationType,
+            UnitBaseDTO unit
+    ) {
+    }
+
+    private record WorkingTimeKey(
+            Long id,
+            Integer numberOfWorkers,
+            BigDecimal numberOfHours,
+            UnitBaseDTO unit,
             ScaffoldingOperationType operationType
     ) {
     }
 }
+
