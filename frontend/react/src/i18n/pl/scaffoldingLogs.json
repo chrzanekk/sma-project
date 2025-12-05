@@ -7,6 +7,8 @@
   "details": "Dane dziennika",
   "name": "Nazwa dziennika",
   "additionalInfo": "Dodatkowe informacje",
+  "constructionSiteName": "Nazwa budowy",
+  "contractorName": "Nazwa kontrahenta",
   "notifications" : {
     "addUnitSuccess" : "Dziennik {name} dodany pomyślnie",
     "addUnitError": "Błąd dodawania dziennika",
