@@ -38,5 +38,14 @@
   "constructionSiteManagement": "Zarządzanie budowami",
   "position": "Stanowiska",
   "positionManagement": "Zarządzanie stanowiskami",
-  "resourceManagement": "Zarządzanie dostępem do zasobów"
+  "employee": "Pracownicy",
+  "employeeManagement": "Zarządzanie pracownikami",
+  "resourceManagement": "Zarządzanie dostępem do zasobów",
+  "unit": "Jednostki miary",
+  "unitManagement": "Zarządzanie jednostkami miar",
+  "scaffoldingLog": "Dzienniki rusztowań",
+  "scaffoldingLogManagement": "Zarządzanie dziennikami rusztowań",
+  "scaffoldingLogPosition": "Wpisy dzienników rusztowań",
+  "scaffoldingLogPositionManagement": "Zarządzanie wpisami/pozycjami dzienników rusztowań"
+
 }

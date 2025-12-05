@@ -1,6 +1,6 @@
 import {UnitFilter} from "@/types/filters/unit-filter.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
-import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils.ts";
+import {getSelectedCompany} from "@/utils/company-utils.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";
 import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {FetchableUnitDTO, UnitDTO} from "@/types/unit-types.ts";
@@ -12,7 +12,7 @@ export const getUnitsByFilter = async (filter: UnitFilter) => {
     try {
         const queryParams = serializeQueryParams({
             ...filter,
-            companyId: getSelectedCompanyId(),
+            companyId: null,
             size: filter.size || 10,
             page: filter.page || 0,
         });
@@ -30,8 +30,7 @@ export const getUnitsByFilter = async (filter: UnitFilter) => {
 export const getUnitById = async (id: number) => {
     try {
         const response = await api.get(`${UNIT_API_BASE}/${id}`, getAuthConfig());
-        const unitDTO: FetchableUnitDTO = response.data as FetchableUnitDTO;
-        return unitDTO;
+        return response.data as FetchableUnitDTO;
     } catch (error) {
         throw error;
     }

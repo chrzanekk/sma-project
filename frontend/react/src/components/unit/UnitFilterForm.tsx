@@ -3,7 +3,9 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {Form, Formik, FormikHelpers} from "formik";
 import {Button, Flex} from "@chakra-ui/react";
-import {CustomInputFilterField} from "@/components/shared/CustomFormFields.tsx";
+import {CustomInputFilterField, CustomSelectField} from "@/components/shared/CustomFormFields.tsx";
+import {themeVars} from "@/theme/theme-colors.ts";
+import {getUnitTypeOptions} from "@/utils/unit-type-util.ts";
 
 interface FilterValues {
     symbolContains?: string;
@@ -21,6 +23,10 @@ interface FilterProps {
 
 const UnitFilterForm: React.FC<FilterProps> = ({onSubmit}) => {
     const {t} = useTranslation(['units', 'common']);
+    const unitTypeOptions = React.useMemo(
+        () => getUnitTypeOptions(t),
+        [t]
+    );
     return (
         <Formik<FilterValues>
             initialValues={{
@@ -45,6 +51,13 @@ const UnitFilterForm: React.FC<FilterProps> = ({onSubmit}) => {
                             <CustomInputFilterField name="symbolContains" placeholder={t('units:symbol')}/>
                             <CustomInputFilterField name="descriptionContains"
                                                     placeholder={t('units:description')}/>
+                            <CustomSelectField
+                                name="unitType"
+                                placeholder={t('units:unitTypeShort')}
+                                options={unitTypeOptions}
+                                bgColor={themeVars.bgColorSecondary}
+                                width={"150px"}
+                            />
                         {/*    TODO: add filter by UnitType using enum and on backend */}
                         </Flex>
                         <Flex gap={1} justifyContent={"center"}>

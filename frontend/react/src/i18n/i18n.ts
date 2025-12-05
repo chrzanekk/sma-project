@@ -34,7 +34,7 @@ import resourcesEn from './en/resources.json'
 import employeesPl from './pl/employees.json'
 import employeesEn from './en/employees.json'
 import unitEn from './en/unit.json'
-import unitPl from './en/unit.json'
+import unitPl from './pl/unit.json'
 
 i18n
     .use(initReactI18next)
@@ -84,7 +84,7 @@ i18n
         fallbackLng: 'en',
         ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
             'contractors', 'countries', 'contacts', 'companies', 'constructionSites',
-            'contracts', 'positions', 'resources','employees','unit'],
+            'contracts', 'positions', 'resources','employees','units'],
         defaultNS: 'common',
         interpolation: {
             escapeValue: false,

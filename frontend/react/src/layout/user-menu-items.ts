@@ -25,7 +25,8 @@ export const getUserMenuItems = (): MenuItem[] => {
         canAccessResource('ROLE_MANAGEMENT') ||
         canAccessResource('COMPANY_MANAGEMENT') ||
         canAccessResource('POSITION_MANAGEMENT') ||
-        canAccessResource('RESOURCE_MANAGEMENT');
+        canAccessResource('RESOURCE_MANAGEMENT') ||
+        canAccessResource('UNIT_MANAGEMENT');
 
     if (hasAdminAccess) {
         menuItems.push({

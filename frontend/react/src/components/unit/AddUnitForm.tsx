@@ -36,7 +36,7 @@ const AddUnitForm: React.FC<AddUnitFormProps> = ({onSuccess}) => {
             successNotification(
                 t('success', {ns: "common"}),
                 formatMessage('notifications.addUnitSuccess', {
-                    name: values.symbol
+                    symbol: values.symbol
                 }, 'units')
             );
             const mappedResponse: BaseUnitFormValues = {

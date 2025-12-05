@@ -16,6 +16,7 @@ public interface UnitDTOMapper extends EntityMapper<UnitDTO, Unit> {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "symbol", target = "symbol")
     @Mapping(source = "description", target = "description")
+    @Mapping(source = "unitType", target = "unitType")
     UnitDTO toDto(Unit position);
 
     @Mapping(source = "company", target = "company")

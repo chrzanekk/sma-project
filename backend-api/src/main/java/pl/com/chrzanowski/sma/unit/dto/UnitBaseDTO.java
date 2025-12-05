@@ -15,6 +15,7 @@ import pl.com.chrzanowski.sma.common.enumeration.UnitType;
 public class UnitBaseDTO {
     protected Long id;
     protected String symbol;
+
     protected UnitType unitType;
     protected String description;
 }

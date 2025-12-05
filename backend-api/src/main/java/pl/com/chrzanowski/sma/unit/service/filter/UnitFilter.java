@@ -14,5 +14,6 @@ public class UnitFilter {
     private Long id;
     private String symbolContains;
     private String descriptionContains;
+    private String unitType;
     private Long companyId;
 }

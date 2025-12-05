@@ -6,6 +6,7 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.enumeration.UnitType;
 import pl.com.chrzanowski.sma.unit.model.Unit;
 
 import static pl.com.chrzanowski.sma.unit.model.QUnit.unit;
@@ -33,6 +34,10 @@ public class UnitQuerySpec {
             }
             if (filter.getCompanyId() != null) {
                 predicate.and(unit.company.id.eq(filter.getCompanyId()));
+            }
+            if(filter.getUnitType() != null &&  !filter.getUnitType().isEmpty()) {
+                UnitType unitType = UnitType.valueOf(filter.getUnitType());
+                predicate.and(unit.unitType.eq(unitType));
             }
         }
         return predicate;

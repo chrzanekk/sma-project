@@ -62,6 +62,15 @@ export const useAdminPanelMenu = (
                 value: 'permissions'
             });
         }
+        // ✅ Permissions - dynamic check
+        if (canAccessResource('UNIT_MANAGEMENT')) {
+            menuItems.push({
+                label: t('units'),
+                href: '#',
+                onClick: () => setActiveView('units'),
+                value: 'units'
+            });
+        }
 
         return menuItems;
     }, [t, setActiveView, canAccessResource]);

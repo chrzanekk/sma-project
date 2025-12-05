@@ -8,8 +8,6 @@ const api = axios.create({
     timeout: 10000,
 });
 
-const toBoolean = (value: string | boolean): boolean => value === "true" || value === true;
-
 const getAuthConfig = () => {
     const token = localStorage.getItem("auth");
     if (!token) {
@@ -69,4 +67,4 @@ api.interceptors.response.use(
     }
 );
 
-export {api, getAuthConfig, toBoolean};
+export {api, getAuthConfig};

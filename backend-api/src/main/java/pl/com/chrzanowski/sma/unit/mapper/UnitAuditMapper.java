@@ -17,6 +17,8 @@ public interface UnitAuditMapper extends EntityMapper<UnitAuditableDTO, Unit> {
     @Mapping(source = "id", target = "base.id")
     @Mapping(source = "symbol", target = "base.symbol")
     @Mapping(source = "description", target = "base.description")
+    @Mapping(source = "unitType", target = "base.unitType")
+    @Mapping(source = "company", target = "base.company")
     UnitAuditableDTO toDto(Unit position);
 
 }

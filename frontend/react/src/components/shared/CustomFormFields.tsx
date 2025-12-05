@@ -330,6 +330,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             fontSize: sizeStyles.fontSize,
             width: "auto",
         }),
+        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
     };
 
     const noArrowComponents = {
@@ -350,6 +351,8 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                 styles={customSelectStyles}
                 isSearchable={false}
                 components={hideArrow ? noArrowComponents : undefined}
+                menuPortalTarget={document.body}
+                menuPosition={"fixed"}
             />
         </Box>
     );

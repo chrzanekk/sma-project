@@ -64,7 +64,7 @@ const EditPositionForm: React.FC<EditPositionFormProps> = ({onSuccess, positionI
             console.error(err);
             errorNotification(
                 t('common:error'),
-                err.response?.data?.message || t('contractors:notifications.editContractorError')
+                err.response?.data?.message || t('positions:notifications.editPositionError')
             );
         }
     };

@@ -22,6 +22,7 @@ import ResourcePermissionManagement from "@/components/admin/ResourcePermissionM
 import Unauthorized from "@/components/shared/Unauthorized.tsx";
 import {Box, Text} from "@chakra-ui/react";
 import EmployeeManagement from "@/components/employee/EmployeeManagement.tsx";
+import UnitManagement from "@/components/unit/UnitManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -101,6 +102,16 @@ const router = createBrowserRouter([
                 <ProtectedRoute resourceKey="RESOURCE_MANAGEMENT">
                     <Layout>
                         <ResourcePermissionManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "units",
+            element: (
+                <ProtectedRoute resourceKey="UNIT_MANAGEMENT">
+                    <Layout>
+                        <UnitManagement/>
                     </Layout>
                 </ProtectedRoute>
             )

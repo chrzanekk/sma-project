@@ -4,5 +4,10 @@
   "users": "Users",
   "roles": "Roles",
   "companies": "Companies",
-  "positions": "Positions"
+  "positions": "Positions",
+  "permissions": "Uprawnienia",
+  "units": "Jednostki miary",
+  "noAccess": "Nie masz dostępu do tych zasobów",
+  "selectViewMessage": "Wybierz widok z menu po prawej",
+  "selectViewHint": "Użyj przycisku \"Wybierz widok\" aby wybrać widok"
 }

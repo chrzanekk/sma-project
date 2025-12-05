@@ -1,20 +1,20 @@
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
 import {UnitDTO} from "@/types/unit-types.ts";
-import {getUnitsByFilter} from "@/services/unit-service.ts";
-import {deletePositonById} from "@/services/position-service.ts";
+import {deleteUnit, getUnitsByFilter} from "@/services/unit-service.ts";
 import UnitLayout from "@/components/unit/UnitLayout.tsx";
 import Pagination from "@/components/shared/Pagination.tsx";
 import UnitFilterForm from "@/components/unit/UnitFilterForm.tsx";
 import {Flex} from "@chakra-ui/react";
 import React from "react";
 import AddUnitDrawer from "@/components/unit/AddUnitDrawer.tsx";
+import GenericUnitTable from "@/components/unit/GenericUnitTable.tsx";
 
 const UnitManagement: React.FC = () => {
     const {
         items: units,
         currentPage,
         totalPages,
-        rowPerPage,
+        rowsPerPage,
         sortField,
         sortDirection,
         handlers: {
@@ -32,7 +32,7 @@ const UnitManagement: React.FC = () => {
                 totalPages: response.totalPages,
             };
         },
-        deletePositonById,
+        deleteUnit,
         {},
         true
     );
@@ -44,12 +44,21 @@ const UnitManagement: React.FC = () => {
                 <Flex justify={"center"} gap={2}>
                     <AddUnitDrawer fetchUnits={() => onPageChange(currentPage)}/>
                 </Flex>}
-            // table={}
+            table={
+                <GenericUnitTable
+                    units={units}
+                    onDelete={onDelete}
+                    fetchUnits={() => onPageChange(currentPage)}
+                    onSortChange={onSortChange}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                    extended={true}
+                />}
             pagination={
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    rowsPerPage={rowPerPage}
+                    rowsPerPage={rowsPerPage}
                     onPageChange={onPageChange}
                     onRowsPerPageChange={onRowsPerPageChange}
                 />}

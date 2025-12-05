@@ -10,8 +10,9 @@ import PositionManagement from "@/components/position/PositionManagement.tsx";
 import ResourcePermissionManagement from "@/components/admin/ResourcePermissionManagement.tsx";
 import {useResourcePermissions} from "@/context/ResourcePermissionContext.tsx";
 import {useAdminPanelMenu} from "@/hooks/useAdminPanelMenu.ts";
+import UnitManagement from "@/components/unit/UnitManagement.tsx";
 
-export type AdminPanelView = 'roles' | 'users' | 'companies' | 'positions' | 'permissions';
+export type AdminPanelView = 'roles' | 'users' | 'companies' | 'positions' | 'permissions' | 'units';
 
 const AdminPanel: React.FC = () => {
     const {t} = useTranslation('adminPanelMenu');
@@ -93,6 +94,10 @@ const AdminPanel: React.FC = () => {
             case 'permissions':
                 return canAccessResource('RESOURCE_MANAGEMENT') ? (
                     <ResourcePermissionManagement/>
+                ) : null;
+            case 'units':
+                return canAccessResource('UNIT_MANAGEMENT') ? (
+                    <UnitManagement/>
                 ) : null;
             default:
                 return (

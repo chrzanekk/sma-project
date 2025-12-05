@@ -39,13 +39,15 @@ const CommonUnitForm: React.FC<CommonUnitFormProps> = (({
             enableReinitialize
             innerRef={innerRef}>
             {({isValid, isSubmitting, dirty, values, setFieldValue}) => (
+
+
                 <Form>
                     <Stack gap={4}>
                         {/* Wiersz 1: Name 3/3 */}
                         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <GridItem colSpan={3}>
                                 <CustomInputField
-                                    name="name"
+                                    name="symbol"
                                     label={t('units:symbol')}
                                     placeholder={t('units:symbol')}
                                     disabled={disabled}
@@ -64,6 +66,7 @@ const CommonUnitForm: React.FC<CommonUnitFormProps> = (({
                                 />
                             </GridItem>
                         </Grid>
+                        {/* Wiersz 3: UnitType 3/3 */}
                         <Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <GridItem colSpan={3}>
                                 <CustomStandaloneSelectField
@@ -79,9 +82,7 @@ const CommonUnitForm: React.FC<CommonUnitFormProps> = (({
                                 />
                             </GridItem>
                         </Grid>
-                        {/*TODO add select from UnitTypes enum*/}
-
-                        {/* Wiersz 3: Button wyśrodkowany */}
+                        {/* Wiersz 4: Button wyśrodkowany */}
                         {!hideSubmit && (<Grid templateColumns="repeat(3, 1fr)" gap={4}>
                             <GridItem colSpan={3} textAlign="center">
                                 <Button
