@@ -1,0 +1,16 @@
+{
+  "add": "Dodaj dziennik rusztowań",
+  "log": "Dziennik",
+  "logList": "Lista dzienników",
+  "edit": "Edytuj dziennik",
+  "search": "Wyszukaj dziennik",
+  "details": "Dane dziennika",
+  "name": "Nazwa dziennika",
+  "additionalInfo": "Dodatkowe informacje",
+  "notifications" : {
+    "addUnitSuccess" : "Dziennik {name} dodany pomyślnie",
+    "addUnitError": "Błąd dodawania dziennika",
+    "editUnitSuccess" : "Dane dziennika {name} zmieniono pomyślnie",
+    "editUnitError": "Błąd edycji dziennika {name}"
+  }
+}
