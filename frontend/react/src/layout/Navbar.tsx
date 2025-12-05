@@ -2,7 +2,7 @@ import React from 'react'
 import {Box, Collapsible, Flex, HStack, Image, Link, Stack, Text, useDisclosure, VStack} from '@chakra-ui/react'
 import {FiChevronDown} from "react-icons/fi";
 import {getNavItems} from './nav-items.ts';
-import {getUserMenuItems} from './user-menu-items.ts';
+import {useUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {useThemeColors} from '@/theme/theme-colors.ts';
 import {useTranslation} from "react-i18next";
@@ -158,7 +158,7 @@ const DesktopNav: React.FC = () => {
 };
 
 const UserMenu: React.FC = () => {
-    const userMenuItems = getUserMenuItems();
+    const userMenuItems = useUserMenuItems();
     const {user} = useUser();
     const {t} = useTranslation('navbar');
     const themeColors = useThemeColors();
@@ -227,7 +227,7 @@ const UserMenu: React.FC = () => {
 };
 
 const UserMenuMobile: React.FC = () => {
-    const userMenuItems = getUserMenuItems();
+    const userMenuItems = useUserMenuItems();
     const {t} = useTranslation('navbar');
     const themeColors = useThemeColors();
 

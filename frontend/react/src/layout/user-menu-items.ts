@@ -4,7 +4,7 @@ import {MenuItem} from "@/types/menu-item-types.ts";
 import {useNavigate} from "react-router-dom";
 import {useResourcePermissions} from "@/context/ResourcePermissionContext.tsx";
 
-export const getUserMenuItems = (): MenuItem[] => {
+export const useUserMenuItems = (): MenuItem[] => {
     const {t} = useTranslation('userMenu');
     const {logOut} = useAuth();
     const navigate = useNavigate();
