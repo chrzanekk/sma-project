@@ -1,0 +1,22 @@
+import {CompanyBaseDTO} from "@/types/company-types.ts";
+import {ConstructionSiteBaseDTO} from "@/types/constrution-site-types.ts";
+import {ContractorBaseDTO} from "@/types/contractor-types.ts";
+import {ScaffoldingLogPositionBaseDTO} from "@/types/scaffolding-log-position-types.ts";
+import {AuditableTypes} from "@/types/auditable-types.ts";
+
+export interface FetchableScaffoldingLogDTO extends ScaffoldingLogDTO, AuditableTypes {
+
+}
+
+export interface ScaffoldingLogDTO extends ScaffoldingLogBaseDTO {
+    company: CompanyBaseDTO;
+    constructionSite: ConstructionSiteBaseDTO;
+    contractor: ContractorBaseDTO;
+    positions?: ScaffoldingLogPositionBaseDTO[];
+}
+
+export interface ScaffoldingLogBaseDTO {
+    id?: number;
+    name: string;
+    additionalInfo: string;
+}
