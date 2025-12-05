@@ -1,4 +1,4 @@
-import {UnitFilter} from "@/types/filters/unit-filter.ts";
+import {UnitFilter} from "@/filters/unit-filter.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";

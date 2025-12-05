@@ -14,7 +14,7 @@ export interface ContactFilter {
     sort?: string;
 }
 
-// Prosty, niemutujący builder z fluent API
+
 export class ContactFilterBuilder {
     private readonly f: Partial<ContactFilter> = {};
 

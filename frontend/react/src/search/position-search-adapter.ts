@@ -1,4 +1,4 @@
-import {PositionFilter, PositionFilterBuilder} from "@/types/filters/position-filter.ts";
+import {PositionFilter, PositionFilterBuilder} from "@/filters/position-filter.ts";
 import {PositionDTO} from "@/types/position-types.ts";
 import {getPositionByFilter} from "@/services/position-service.ts";
 

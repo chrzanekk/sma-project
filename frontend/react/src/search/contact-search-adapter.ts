@@ -1,5 +1,5 @@
 // src/search/contact-search-adapter.ts
-import { ContactFilter, ContactFilterBuilder } from "@/types/filters/contact-filter";
+import { ContactFilter, ContactFilterBuilder } from "@/filters/contact-filter";
 import { ContactDTO } from "@/types/contact-types";
 import { getContactsByFilter } from "@/services/contact-service";
 

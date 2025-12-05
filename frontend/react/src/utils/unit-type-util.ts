@@ -1,4 +1,4 @@
-import {UnitType} from "@/types/enums/unit-types-enum";
+import {UnitType} from "@/enums/unit-types-enum";
 import {SelectOption} from "@/components/shared/CustomStandaloneSelectField";
 import {TFunction} from "i18next";
 

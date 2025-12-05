@@ -1,5 +1,5 @@
 // src/types/filters/contractor-filter.ts
-import { Country } from "@/types/country-types";
+import { Country } from "@/types/country-types.ts";
 
 export interface ContractorFilter {
     id?: number;

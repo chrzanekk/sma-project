@@ -1,6 +1,6 @@
 import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {AuditableTypes} from "@/types/auditable-types.ts";
-import {UnitType} from "@/types/enums/unit-types-enum.ts";
+import {UnitType} from "@/enums/unit-types-enum.ts";
 
 export interface FetchableUnitDTO extends UnitDTO, AuditableTypes {
 

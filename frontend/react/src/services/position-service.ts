@@ -1,4 +1,4 @@
-import {PositionFilter} from "@/types/filters/position-filter.ts";
+import {PositionFilter} from "@/filters/position-filter.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";

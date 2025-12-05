@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import {BaseUnitFormValues} from "@/types/unit-types.ts";
-import {UnitType} from "@/types/enums/unit-types-enum.ts";
+import {UnitType} from "@/enums/unit-types-enum.ts";
 
 export const getUnitValidationSchema = (
     t: (key: string, options?: any) => string

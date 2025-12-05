@@ -5,7 +5,7 @@ import {ContractorDTO, ContractorUpdateDTO, FetchableContractorDTO} from "@/type
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContactDTO} from "@/types/contact-types.ts";
-import {ContractorFilter} from "@/types/filters/contractor-filter.ts";
+import {ContractorFilter} from "@/filters/contractor-filter.ts";
 
 const CONTRACTOR_API_BASE = "/api/contractors";
 

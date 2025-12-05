@@ -4,7 +4,7 @@ import {errorNotification, successNotification} from "@/notifications/notificati
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {getSelectedCompany} from "@/utils/company-utils.ts";
 import {BaseUnitFormValues, FetchableUnitDTO, UnitDTO} from "@/types/unit-types.ts";
-import {UnitType, UnitTypeValue} from "@/types/enums/unit-types-enum.ts";
+import {UnitType, UnitTypeValue} from "@/enums/unit-types-enum.ts";
 import {getUnitById, updateUnit} from "@/services/unit-service.ts";
 import {getUnitValidationSchema} from "@/validation/unitValidationSchema.ts";
 import CommonUnitForm from "@/components/unit/CommonUnitForm.tsx";
