@@ -10,9 +10,9 @@
   "constructionSiteName": "Nazwa budowy",
   "contractorName": "Nazwa kontrahenta",
   "notifications" : {
-    "addUnitSuccess" : "Dziennik {name} dodany pomyślnie",
-    "addUnitError": "Błąd dodawania dziennika",
-    "editUnitSuccess" : "Dane dziennika {name} zmieniono pomyślnie",
-    "editUnitError": "Błąd edycji dziennika {name}"
+    "addScaffoldingLogSuccess" : "Dziennik {name} dodany pomyślnie",
+    "addScaffoldingLogError": "Błąd dodawania dziennika",
+    "editScaffoldingLogSuccess" : "Dane dziennika {name} zmieniono pomyślnie",
+    "editScaffoldingLogError": "Błąd edycji dziennika {name}"
   }
 }

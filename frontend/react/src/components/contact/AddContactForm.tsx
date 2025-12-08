@@ -46,7 +46,6 @@ const AddContactForm: React.FC<AddContactFormProps> = ({onSuccess}) => {
             }
             onSuccess(mappedResponse);
         } catch (err: any) {
-            console.error(err);
             errorNotification(
                 t('error', {ns: "common"}),
                 err.response?.data?.message || t('contacts:notifications.addContactError')

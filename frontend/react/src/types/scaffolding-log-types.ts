@@ -5,18 +5,25 @@ import {ScaffoldingLogPositionBaseDTO} from "@/types/scaffolding-log-position-ty
 import {AuditableTypes} from "@/types/auditable-types.ts";
 
 export interface FetchableScaffoldingLogDTO extends ScaffoldingLogDTO, AuditableTypes {
-
+    positions?: ScaffoldingLogPositionBaseDTO[];
 }
 
 export interface ScaffoldingLogDTO extends ScaffoldingLogBaseDTO {
     company: CompanyBaseDTO;
     constructionSite: ConstructionSiteBaseDTO;
     contractor: ContractorBaseDTO;
-    positions?: ScaffoldingLogPositionBaseDTO[];
 }
 
 export interface ScaffoldingLogBaseDTO {
     id?: number;
     name: string;
     additionalInfo: string;
+}
+
+export interface BaseScaffoldingLogFormValues {
+    id?: number;
+    name: string;
+    additionalInfo: string;
+    contractor?: ContractorBaseDTO;
+    constructionSite?: ConstructionSiteBaseDTO;
 }

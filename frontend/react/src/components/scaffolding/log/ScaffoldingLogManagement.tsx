@@ -1,11 +1,12 @@
 import React from "react";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import UnitLayout from "@/components/unit/UnitLayout.tsx";
 import {Flex} from "@chakra-ui/react";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {ScaffoldingLogDTO} from "@/types/scaffolding-log-types.ts";
 import {deleteScaffoldingLog, getScaffoldingLogByFilter} from "@/services/scaffolding-log-service.ts";
 import ScaffoldingLogFilterForm from "@/components/scaffolding/log/ScaffoldingLogFilterForm.tsx";
+import ScaffoldingLogLayout from "@/components/scaffolding/log/ScaffoldingLogLayout.tsx";
+import AddScaffoldingLogDialog from "@/components/scaffolding/log/AddScaffoldingLogDialog.tsx";
 
 
 const ScaffoldingLogManagement: React.FC = () => {
@@ -37,17 +38,17 @@ const ScaffoldingLogManagement: React.FC = () => {
     );
 
     return (
-        <UnitLayout
+        <ScaffoldingLogLayout
             filters={<ScaffoldingLogFilterForm
                 onSubmit={onFilterSubmit}
             />}
-            addUnitButton={
+            addLogButton={
                 <Flex justify={"center"} gap={2}>
-                    {/*<AddUnitDrawer fetchUnits={() => onPageChange(currentPage)}/>*/}
+                    <AddScaffoldingLogDialog fetchLogs={() => onPageChange(currentPage)}/>
                 </Flex>
             }
-            {/*TODO not table, develop new type of data show*/}
-            table={}
+            /*'TODO not table, develop new type of data show'*/
+            // table={}
             pagination={
                 <Pagination
                     currentPage={currentPage}
@@ -59,4 +60,5 @@ const ScaffoldingLogManagement: React.FC = () => {
         />
     )
 };
+
 export default ScaffoldingLogManagement;
