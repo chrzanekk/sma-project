@@ -1,0 +1,18 @@
+{
+  "add": "Dodaj dziennik rusztowań",
+  "log": "Dziennik",
+  "logList": "Lista dzienników",
+  "edit": "Edytuj dziennik",
+  "search": "Wyszukaj dziennik",
+  "details": "Dane dziennika",
+  "name": "Nazwa dziennika",
+  "additionalInfo": "Dodatkowe informacje",
+  "constructionSiteName": "Nazwa budowy",
+  "contractorName": "Nazwa kontrahenta",
+  "notifications" : {
+    "addScaffoldingLogSuccess" : "Dziennik {name} dodany pomyślnie",
+    "addScaffoldingLogError": "Błąd dodawania dziennika",
+    "editScaffoldingLogSuccess" : "Dane dziennika {name} zmieniono pomyślnie",
+    "editScaffoldingLogError": "Błąd edycji dziennika {name}"
+  }
+}

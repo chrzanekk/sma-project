@@ -1,6 +1,3 @@
-import {TechnicalProtocolStatus} from "@/enums/technical-protocol-status-types-enum.ts";
-import {ScaffoldingType} from "@/enums/scaffolding-type-types-enum.ts";
-
 export interface ScaffoldingLogPositionFilter {
     id?: number;
     scaffoldingNumberContains?: string;
@@ -11,8 +8,8 @@ export interface ScaffoldingLogPositionFilter {
     dismantlingDateLessOrEqual?: string;
     dismantlingNotificationDateGreaterOrEqual?: string;
     dismantlingNotificationDateLessOrEqual?: string;
-    technicalProtocolStatus?: TechnicalProtocolStatus;
-    scaffoldingType?: ScaffoldingType;
+    technicalProtocolStatus?: string;
+    scaffoldingType?: string;
     scaffoldingFullDimensionGreaterOrEqual?: string;
     scaffoldingFullDimensionLessOrEqual?: string;
     scaffoldingLogNameContains?: string;
@@ -76,12 +73,12 @@ export class ScaffoldingLogPositionFilterBuilder {
         return this;
     }
 
-    withTechnicalProtocolStatus(status: TechnicalProtocolStatus) {
+    withTechnicalProtocolStatus(status: string) {
         this.f.technicalProtocolStatus = status;
         return this;
     }
 
-    withScaffoldingType(type: ScaffoldingType) {
+    withScaffoldingType(type: string) {
         this.f.scaffoldingType = type;
         return this;
     }

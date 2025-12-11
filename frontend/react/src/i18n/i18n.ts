@@ -43,7 +43,10 @@ import scaffoldingTypesEn from './en/enums/scaffoldingTypes.json'
 import scaffoldingTypesPl from './pl/enums/scaffoldingTypes.json'
 import technicalProtocolStatusEn from './en/enums/technicalProtocolStatuses.json'
 import technicalProtocolStatusPl from './pl/enums/technicalProtocolStatuses.json'
-
+import scaffoldingLogEn from './en/scaffoldingLogs.json'
+import scaffoldingLogPl from './pl/scaffoldingLogs.json'
+import scaffoldingLogPositionEn from './en/scaffoldingLogPositions.json'
+import scaffoldingLogPositionPl from './pl/scaffoldingLogPositions.json'
 
 i18n
     .use(initReactI18next)
@@ -72,6 +75,8 @@ i18n
                 scaffoldingTypes: scaffoldingTypesEn,
                 scaffoldingOperationTypes: scaffoldingOperationTypesEn,
                 technicalProtocolStatuses: technicalProtocolStatusEn,
+                scaffoldingLogs : scaffoldingLogEn,
+                scaffoldingLogPositions: scaffoldingLogPositionEn
             },
             pl: {
                 common: commonPl,
@@ -95,6 +100,8 @@ i18n
                 scaffoldingTypes: scaffoldingTypesPl,
                 scaffoldingOperationTypes: scaffoldingOperationTypesPl,
                 technicalProtocolStatuses: technicalProtocolStatusPl,
+                scaffoldingLogs: scaffoldingLogPl,
+                scaffoldingLogPositions: scaffoldingLogPositionPl
             },
         },
         lng: 'pl',
