@@ -9,8 +9,8 @@ import {makeContactSearchAdapter} from "@/search/contact-search-adapter.ts";
 import {getSelectedCompanyId} from "@/utils/company-utils.ts";
 
 interface Props {
-    formikRef: React.RefObject<FormikProps<any>>;
-    selected: ContactBaseDTO | null;
+    formikRef: React.RefObject<FormikProps<any> | null>;
+    selected: ContactBaseDTO | undefined;
     onSelectChange: (c: ContactBaseDTO | null) => void;
     contractorId?: number;
 }
@@ -21,7 +21,6 @@ const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, co
     const companyId = getSelectedCompanyId()!;
 
     const searchFn = useMemo(() => {
-        console.log('🔍 ContactPicker: Tworzę searchFn z contractorId:', contractorId);
         return makeContactSearchAdapter({
             fixed: {companyId, contractorId},
             defaults: {page: 0, size: 10, sort: "id,asc"},

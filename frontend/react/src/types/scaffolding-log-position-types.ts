@@ -39,6 +39,29 @@ export interface ScaffoldingLogPositionBaseDTO {
     workingTimes: ScaffoldingLogPositionWorkingTimeBaseDTO[];
 }
 
+export interface BaseScaffoldingLogPositionFormValues {
+    id?: number;
+    scaffoldingNumber: string;
+    assemblyLocation: string;
+    assemblyDate: string;
+    dismantlingDate: string;
+    dismantlingNotificationDate: string;
+    scaffoldingType: ScaffoldingType;
+    scaffoldingFullDimension: string;
+    scaffoldingFullDimensionUnit: UnitBaseDTO;
+    fullWorkingTime: string;
+    technicalProtocolStatus: TechnicalProtocolStatus;
+    parentPosition: ScaffoldingLogPositionBaseDTO;
+    childPositions: ScaffoldingLogPositionBaseDTO[];
+    scaffoldingLog: ScaffoldingLogBaseDTO;
+    contractor: ContractorBaseDTO;
+    contractorContact: ContactBaseDTO;
+    scaffoldingUser: ContractorBaseDTO;
+    scaffoldingUserContact: ContactBaseDTO;
+    dimensions: ScaffoldingLogPositionDimensionBaseDTO[];
+    workingTimes: ScaffoldingLogPositionWorkingTimeBaseDTO[];
+}
+
 
 export interface ScaffoldingLogPositionDimensionBaseDTO {
     id?: number;

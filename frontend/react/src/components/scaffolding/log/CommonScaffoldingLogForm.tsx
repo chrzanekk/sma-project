@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useMemo} from 'react';
 import {Form, Formik, FormikHelpers, FormikProps, useFormikContext} from 'formik';
 import * as Yup from 'yup';
 import {Box, Button, Grid, GridItem, Heading, Separator, SimpleGrid} from '@chakra-ui/react';
@@ -40,22 +40,22 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
             dirty
         } = useFormikContext<BaseScaffoldingLogFormValues>();
 
-        const formikRef = useRef<FormikProps<BaseScaffoldingLogFormValues>>(null);
+        // const formikRef = useRef<FormikProps<BaseScaffoldingLogFormValues>>(null);
+        //
+        // const [selectedContractor, setSelectedContractor] = useState<ContractorBaseDTO | null>(null);
+        // const [selectedSite, setSelectedSite] = useState<ConstructionSiteBaseDTO | null>(null);
 
-        const [selectedContractor, setSelectedContractor] = useState<ContractorBaseDTO | null>(null);
-        const [selectedSite, setSelectedSite] = useState<ConstructionSiteBaseDTO | null>(null);
+        // const prevScaffoldingLogIdRef = useRef<number | undefined>(undefined);
 
-        const prevScaffoldingLogIdRef = useRef<number | undefined>(undefined);
-
-        useEffect(() => {
-            const currentScaffoldingLogId = values.id;
-
-            if (currentScaffoldingLogId !== prevScaffoldingLogIdRef.current) {
-                prevScaffoldingLogIdRef.current = currentScaffoldingLogId;
-                setSelectedContractor(values.contractor || null);
-                setSelectedSite(values.constructionSite || null);
-            }
-        }, [values.id, values.contractor, values.constructionSite]);
+        // useEffect(() => {
+        //     const currentScaffoldingLogId = values.id;
+        //
+        //     if (currentScaffoldingLogId !== prevScaffoldingLogIdRef.current) {
+        //         prevScaffoldingLogIdRef.current = currentScaffoldingLogId;
+        //         setSelectedContractor(values.contractor || null);
+        //         setSelectedSite(values.constructionSite || null);
+        //     }
+        // }, [values.id, values.contractor, values.constructionSite]);
 
         const contractorSearchFn = useMemo(
             () =>
@@ -76,16 +76,21 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
 
         const handleContractorChange = (contractor: ContractorBaseDTO | null) => {
             console.log('Wybrano kontrahenta:', contractor);
-            setSelectedContractor(contractor);
             void setFieldValue('contractor', contractor);
             void setFieldTouched('contractor', true, false);
         };
 
         const handleSiteChange = (site: ConstructionSiteBaseDTO | null) => {
-            setSelectedSite(site);
             void setFieldValue('constructionSite', site);
             void setFieldTouched('constructionSite', true, false);
         };
+
+        const formikContextAdapter = {
+            current: {
+                setFieldValue,
+                setFieldTouched
+            }
+        } as unknown as React.RefObject<FormikProps<any>>;
 
 
         return (
@@ -140,8 +145,8 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                                 </Heading>
                                 <Box>
                                     <ContractorPicker
-                                        formikRef={formikRef}
-                                        selected={selectedContractor}
+                                        formikRef={formikContextAdapter}
+                                        selected={values.contractor || null}
                                         onSelectChange={handleContractorChange}
                                         searchFn={contractorSearchFn}
                                     />
@@ -157,8 +162,8 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                                     {t("constructionSites:constructionSite")}
                                 </Heading>
                                 <ConstructionSitePicker
-                                    formikRef={formikRef}
-                                    selected={selectedSite}
+                                    formikRef={formikContextAdapter}
+                                    selected={values.constructionSite || null}
                                     onSelectChange={handleSiteChange}
                                     searchFn={constructionSiteSearchFn}
                                 />

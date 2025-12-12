@@ -8,7 +8,7 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSearchWithSelect from "@/components/contractor/ContractorSearchWithSelect.tsx";
 
 interface Props {
-    formikRef: React.RefObject<FormikProps<any>>;
+    formikRef: React.RefObject<FormikProps<any> | null>;
     selected: ContractorBaseDTO | null;
     onSelectChange: (c: ContractorBaseDTO | null) => void;
     searchFn: (q: string) => Promise<ContractorDTO[]>;

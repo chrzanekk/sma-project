@@ -22,6 +22,8 @@
   "contractorContact": "Osoba kontaktowa kontrahenta",
   "scaffoldingUser": "Użytkownik rusztowania",
   "scaffoldingUserContact": "Osoba kontaktowa użytkownika",
+  "dimensions": "Wymiary",
+  "workingTimes" "Czas pracy",
   "notifications": {
     "addScaffoldingLogPositionSuccess": "Rusztowanie {scaffoldingNumber} dodany pomyślnie",
     "addScaffoldingLogPositionError": "Błąd dodawania rusztowania",

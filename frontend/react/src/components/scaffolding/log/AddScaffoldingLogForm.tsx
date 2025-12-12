@@ -6,6 +6,7 @@ import {addScaffoldingLog} from "@/services/scaffolding-log-service.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import CommonScaffoldingLogForm from "@/components/scaffolding/log/CommonScaffoldingLogForm.tsx";
+import React from "react";
 
 interface AddScaffoldingLogFormProps {
     onSuccess: (data: BaseScaffoldingLogFormValues) => void;
