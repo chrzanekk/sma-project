@@ -331,8 +331,8 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             return {
                 ...baseControl,
                 backgroundColor: bgColor ?? baseControl.backgroundColor,
-                width: width || "auto", // <- wymusza szerokość całego kontenera
-                minWidth: "auto",      // usuwa ewentualne minimalne szerokości
+                width: width || "auto",
+                minWidth: "auto",
                 maxWidth: width,
                 minHeight: sizeStyles.controlHeight,
                 height: sizeStyles.controlHeight,
@@ -348,7 +348,6 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             ...provided,
             height: sizeStyles.controlHeight,
         }),
-        // Możesz dodatkowo zmniejszyć odstępy w menu:
         menu: (provided) => ({
             ...provided,
             fontSize: sizeStyles.fontSize,
@@ -370,13 +369,13 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                 isDisabled={disabled}
                 value={selectedValue}
                 onChange={(selectedOption: any) => {
-                    onChange(selectedOption.value);
+                    console.log("onChange selectedOption:", selectedOption);
+                    if (!selectedOption) return;
+                    onChange(Number(selectedOption.value));
                 }}
                 styles={customSelectStyles}
                 isSearchable={false}
                 components={hideArrow ? noArrowComponents : undefined}
-                menuPortalTarget={document.body}
-                menuPosition={"fixed"}
             />
         </Box>
     );

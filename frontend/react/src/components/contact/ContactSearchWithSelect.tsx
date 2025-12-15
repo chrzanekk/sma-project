@@ -1,9 +1,9 @@
 // src/components/contact/ContactSearchWithSelect.tsx
-import React, { useState } from "react";
-import { Flex } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { ContactDTO } from "@/types/contact-types";
-import AsyncSearchSelect, { AsyncSearchSelectOption } from "@/components/shared/AsyncSearchSelect";
+import React, {useState} from "react";
+import {Flex} from "@chakra-ui/react";
+import {useTranslation} from "react-i18next";
+import {ContactDTO} from "@/types/contact-types";
+import AsyncSearchSelect, {AsyncSearchSelectOption} from "@/components/shared/AsyncSearchSelect";
 
 export interface ContactSearchWithSelectProps {
     searchFn: (query: string) => Promise<ContactDTO[]>;
@@ -13,6 +13,7 @@ export interface ContactSearchWithSelectProps {
     size?: "sm" | "md" | "lg" | "xs";
     placeholder?: string;
     noOptionsMessageText?: string;
+    label?: string
 }
 
 const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
@@ -23,8 +24,9 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
                                                                              size = "md",
                                                                              placeholder,
                                                                              noOptionsMessageText,
+                                                                             label
                                                                          }) => {
-    const { t } = useTranslation(["common", "contacts"]);
+    const {t} = useTranslation(["common", "contacts"]);
     const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContactDTO> | null>(null);
 
     const loadOptions = async (term: string): Promise<AsyncSearchSelectOption<ContactDTO>[]> => {
@@ -56,6 +58,7 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
                 size={size}
                 clearable={true}
                 noOptionsMessage={noOptionsMessageText ?? t("common:dataNotFound")}
+                label={label}
             />
         </Flex>
     );

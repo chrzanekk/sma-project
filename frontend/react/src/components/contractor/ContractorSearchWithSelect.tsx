@@ -15,6 +15,7 @@ export interface ContractorSearchProps {
     onInputKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     enableEnterSubmit?: boolean;
     placeholder?: string;
+    label?: string
 }
 
 const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
@@ -23,7 +24,8 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                                                                          minChars = 2,
                                                                          debounceMs = 300,
                                                                          size = "md",
-                                                                         placeholder
+                                                                         placeholder,
+                                                                         label
                                                                      }) => {
     const {t} = useTranslation(["common", "contractors"]);
 
@@ -60,6 +62,7 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                 size={size}
                 noOptionsMessage={t("common:dataNotFound")}
                 clearable={true}
+                label={label}
             />
         </Flex>
     );

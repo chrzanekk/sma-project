@@ -15,6 +15,7 @@ interface Props {
     showDetails?: boolean;
     fieldName?: string;
     placeholder?: string;
+    label?: string;
 }
 
 const ContractorPicker: React.FC<Props> = ({
@@ -24,7 +25,8 @@ const ContractorPicker: React.FC<Props> = ({
                                                searchFn,
                                                showDetails = true,
                                                fieldName = "contractor",
-                                               placeholder
+                                               placeholder,
+                                               label
                                            }) => {
     const {t} = useTranslation(["common", "contractors"]);
     const themeColors = useThemeColors();
@@ -70,6 +72,7 @@ const ContractorPicker: React.FC<Props> = ({
                 autoSearch={true}
                 size="md"
                 placeholder={searchPlaceholder}
+                label={label}
             />
             {selected && (
                 <Stack mt={2}>

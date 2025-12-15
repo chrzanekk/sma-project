@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Dialog, Flex, Heading, Portal, Text, VStack} from "@chakra-ui/react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
@@ -25,7 +25,16 @@ const SelectCompanyModal: React.FC<SelectCompanyModalProps> = ({
     const {t} = useTranslation(['common', 'navbar', 'companies']);
     const {logOut} = useAuth();
 
+    useEffect(() => {
+        if (isOpen && companies.length > 0) {
+            setSelectedCompanyId((prev) => prev ?? companies[0].id!);
+        }
+    }, [isOpen, companies]);
+
     const handleConfirm = () => {
+        if(selectedCompanyId == null) {
+            return;
+        }
         const company = companies.find(c => c?.id === selectedCompanyId) || null;
         onConfirm(company);
     };
@@ -54,8 +63,11 @@ const SelectCompanyModal: React.FC<SelectCompanyModalProps> = ({
                                                  size={'3xl'}>{t('navbar:chooseCompany')}</Heading>
                                         <CustomSimpleSelect
                                             placeholder={t('companies:name')}
-                                            value={selectedCompanyId ?? -1}
-                                            onChange={(val) => setSelectedCompanyId(val)}
+                                            value={selectedCompanyId ?? 0}
+                                            onChange={(val) => {
+                                                console.log("setSelectedCompanyId:", val);
+                                                setSelectedCompanyId(val)
+                                            }}
                                             options={companyOptions}
                                             width="100%"
                                             bgColor={themeColors.bgColorPrimary}

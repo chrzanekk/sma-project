@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {Form, Formik, FormikHelpers, FormikProps, useFormikContext} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, Grid, GridItem, Heading, Separator, SimpleGrid, StackSeparator, VStack} from '@chakra-ui/react';
+import {Box, Button, Grid, GridItem, Separator, SimpleGrid, StackSeparator, VStack} from '@chakra-ui/react';
 import {CustomInputField, CustomSelectField, CustomTextAreaField} from '@/components/shared/CustomFormFields';
 import {useTranslation} from "react-i18next";
 import ContractorPicker from "@/components/contractor/ContractorPicker.tsx";
@@ -137,6 +137,7 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                             <GridItem colSpan={3}>
                                 <CustomSelectField
                                     name="scaffoldingType"
+                                    label={t('scaffoldingLogPositions:scaffoldingType')}
                                     placeholder={t('scaffoldingLogPositions:scaffoldingType')}
                                     options={scaffoldingTypeOptions}
                                     bgColor={themeVars.bgColorPrimary}
@@ -147,6 +148,7 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                             <GridItem colSpan={3}>
                                 <CustomSelectField
                                     name="technicalProtocolStatus"
+                                    label={t('scaffoldingLogPositions:technicalProtocolStatus')}
                                     placeholder={t('scaffoldingLogPositions:technicalProtocolStatus')}
                                     options={technicalProtocolStatusOptions}
                                     bgColor={themeVars.bgColorPrimary}
@@ -182,74 +184,68 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
 
                     {/*Box wyboru zleceniodawcy + kontaktu + użytkownika + kontaktu + opcja skopiowania zleceniodawcy do użytkownika jeśli taki sam*/}
                     <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-                        <Separator orientation={"vertical"} height={"100%"}>
-                            <VStack separator={<StackSeparator/>}>
-                                <Box ml={2} mr={2}>
-                                    <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("scaffoldingLogPositions:contractor")}
-                                    </Heading>
-                                    <Box>
-                                        <ContractorPicker
-                                            formikRef={formikContextAdapter}
-                                            selected={values.contractor || null}
-                                            onSelectChange={handleContractorChange}
-                                            searchFn={contractorSearchFn}
-                                            showDetails={false}
-                                        />
-                                        {values.contractor && (
-                                            <Box mt={4}>
-                                                <ContactPicker
-                                                    formikRef={formikContextAdapter}
-                                                    selected={values.contractorContact}
-                                                    onSelectChange={handleContractorContactChange}
-                                                    contractorId={values.contractor!.id}
-                                                    showDetails={false}
-                                                />
-                                            </Box>
-                                        )}
-                                    </Box>
-                                </Box>
-                                <Box ml={2} mr={2}>
-                                    <Heading size={"xl"} color={themeColors.fontColor}>
-                                        {t("scaffoldingLogPositions:scaffoldingUser")}
-                                    </Heading>
-                                    <Box>
-                                        <ContractorPicker
-                                            formikRef={formikContextAdapter}
-                                            selected={values.scaffoldingUser || null}
-                                            onSelectChange={handleScaffoldingUserChange}
-                                            searchFn={contractorSearchFn}
-                                            showDetails={false}
-                                        />
-                                        {values.scaffoldingUser && (
-                                            <Box mt={4}>
-                                                <ContactPicker
-                                                    formikRef={formikContextAdapter}
-                                                    selected={values.scaffoldingUserContact}
-                                                    onSelectChange={handleScaffoldingUserContactChange}
-                                                    contractorId={values.scaffoldingUser!.id}
-                                                    showDetails={false}
-                                                />
-                                            </Box>
-                                        )}
-                                    </Box>
-                                </Box>
-                            </VStack>
-                        </Separator>
-                    </Box>
-                    <DimensionArrayField/>
-                    <Box>
-                        <Separator orientation={"vertical"} height={"100%"}>
 
-                        </Separator>
+                        <VStack separator={<StackSeparator/>}>
+                            <Box ml={2} mr={2}>
+                                <Box>
+                                    <ContractorPicker
+                                        formikRef={formikContextAdapter}
+                                        selected={values.contractor || null}
+                                        onSelectChange={handleContractorChange}
+                                        searchFn={contractorSearchFn}
+                                        showDetails={false}
+                                        fieldName={"contractor"}
+                                        label={t("scaffoldingLogPositions:contractor")}
+                                    />
+                                    {values.contractor && (
+                                        <Box mt={4}>
+                                            <ContactPicker
+                                                formikRef={formikContextAdapter}
+                                                selected={values.contractorContact}
+                                                onSelectChange={handleContractorContactChange}
+                                                contractorId={values.contractor!.id}
+                                                showDetails={false}
+                                                label={t("scaffoldingLogPositions:contractorContact")}
+                                            />
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                            <Box ml={2} mr={2}>
+                                <Box>
+                                    <ContractorPicker
+                                        formikRef={formikContextAdapter}
+                                        selected={values.scaffoldingUser || null}
+                                        onSelectChange={handleScaffoldingUserChange}
+                                        searchFn={contractorSearchFn}
+                                        showDetails={false}
+                                        fieldName={"scaffoldingUser"}
+                                        label={t("scaffoldingLogPositions:scaffoldingUser")}
+                                    />
+                                    {values.scaffoldingUser && (
+                                        <Box mt={4}>
+                                            <ContactPicker
+                                                formikRef={formikContextAdapter}
+                                                selected={values.scaffoldingUserContact}
+                                                onSelectChange={handleScaffoldingUserContactChange}
+                                                contractorId={values.scaffoldingUser!.id}
+                                                showDetails={false}
+                                                label={t("scaffoldingLogPositions:scaffoldingUserContact")}
+                                            />
+                                        </Box>
+                                    )}
+                                </Box>
+                            </Box>
+                        </VStack>
+                    </Box>
+
+                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
+                        <DimensionArrayField/>
                     </Box>
                     {/*BOX na czas pracy (lista bo może być 5 osób x 4h i 3osoby x 3h - różne kombinacje
                      - stworzyć dynamiczną obsługę listy(dodawanie enterem + opcja usuń (krzyżyk po prawej stronie)
                      workingTimes: ScaffoldingLogPositionWorkingTimeBaseDTO[];*/}
-                    <Box>
-                        <Separator orientation={"vertical"} height={"100%"}>
-
-                        </Separator>
+                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
                     </Box>
                 </SimpleGrid>
                 <SimpleGrid columns={1}>

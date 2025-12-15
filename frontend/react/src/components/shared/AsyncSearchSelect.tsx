@@ -2,7 +2,8 @@
 import {useMemo, useRef, useState} from "react";
 import Select, {StylesConfig} from "react-select";
 import {getSelectStyles} from "@/components/shared/formOptions"; // Twoje style bazowe
-import {themeVars} from "@/theme/theme-colors";
+import {themeVars, useThemeColors} from "@/theme/theme-colors";
+import {Box, Text} from "@chakra-ui/react";
 
 export interface AsyncSearchSelectOption<T = any> {
     value: string | number;
@@ -23,6 +24,8 @@ export interface AsyncSearchSelectProps<T = any> {
     clearable?: boolean;
     noOptionsMessage?: string;
     size?: "xs" | "sm" | "md" | "lg";
+    fontSize?: string;
+    label?: string;
 }
 
 const sizeToHeights = (size: "xs" | "sm" | "md" | "lg") => {
@@ -53,8 +56,11 @@ const AsyncSearchSelect = <T, >({
                                     clearable = true,
                                     noOptionsMessage = "No results",
                                     size = "sm",
+                                    fontSize = "sm",
+                                    label
                                 }: AsyncSearchSelectProps<T>) => {
     const selectStyles = getSelectStyles();
+    const themeColors = useThemeColors();
     const [options, setOptions] = useState<AsyncSearchSelectOption<T>[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const debounceTimer = useRef<number | null>(null);
@@ -155,21 +161,34 @@ const AsyncSearchSelect = <T, >({
     };
 
     return (
-        <Select
-            isDisabled={disabled}
-            isClearable={clearable}
-            placeholder={placeholder}
-            value={value}
-            onChange={handleChange}
-            onInputChange={handleInputChange}
-            options={options}
-            styles={customSelectStyles}
-            isLoading={isLoading}
-            noOptionsMessage={() => noOptionsMessage}
-            backspaceRemovesValue
-            escapeClearsValue
-            filterOption={() => true} // żeby nie dublować lokalnego filtrowania; bazujemy na wynikach loadOptions
-        />
+        <Box mb={2}>
+            {label && (
+                <Text fontSize={fontSize}
+                      fontWeight="bold"
+                      mb="1"
+                      color={themeColors.fontColor}
+                      textAlign={"center"}
+                >
+                    {label}
+                </Text>
+            )}
+            <Select
+                isDisabled={disabled}
+                isClearable={clearable}
+                placeholder={placeholder}
+                value={value}
+                onChange={handleChange}
+                onInputChange={handleInputChange}
+                options={options}
+                styles={customSelectStyles}
+                isLoading={isLoading}
+                noOptionsMessage={() => noOptionsMessage}
+                backspaceRemovesValue
+                escapeClearsValue
+                filterOption={() => true}
+            />
+        </Box>
+
     );
 };
 

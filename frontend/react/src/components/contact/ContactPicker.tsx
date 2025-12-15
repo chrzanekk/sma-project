@@ -16,6 +16,7 @@ interface Props {
     showDetails?: boolean;
     placeholder?: string;
     fieldName?: string;
+    label?: string
 }
 
 const ContactPicker: React.FC<Props> = ({
@@ -25,7 +26,8 @@ const ContactPicker: React.FC<Props> = ({
                                             contractorId,
                                             showDetails = true,
                                             placeholder,
-                                            fieldName = "contact"
+                                            fieldName = "contact",
+                                            label
                                         }) => {
     const {t} = useTranslation(["common", "contacts"]);
     const themeColors = useThemeColors();
@@ -70,6 +72,7 @@ const ContactPicker: React.FC<Props> = ({
                 debounceMs={300}
                 size={"md"}
                 placeholder={searchPlaceholder}
+                label={label}
             />
             {selected && (
                 <Stack mt={2}>
