@@ -3,7 +3,7 @@ import React, {useMemo} from "react";
 import {ContactBaseDTO, ContactDTO} from "@/types/contact-types.ts";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {Box, Button, Flex, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
+import {Box, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
 import ContactSearchWithSelect from "@/components/contact/ContactSearchWithSelect.tsx";
 import {makeContactSearchAdapter} from "@/search/contact-search-adapter.ts";
 import {getSelectedCompanyId} from "@/utils/company-utils.ts";
@@ -40,7 +40,14 @@ const ContactPicker: React.FC<Props> = ({
         });
     }, [companyId, contractorId]);
 
-    const handleSelect = (c: ContactDTO) => {
+    const handleSelect = (c: ContactDTO | null) => {
+        if (!c) {
+            formikRef.current?.setFieldTouched(fieldName, true, false);
+            formikRef.current?.setFieldValue(fieldName, null, true);
+            onSelectChange(null);
+            return;
+        }
+
         const base: ContactBaseDTO = {
             id: c.id,
             firstName: c.firstName,
@@ -55,13 +62,7 @@ const ContactPicker: React.FC<Props> = ({
         onSelectChange(base);
     };
 
-    const handleReset = () => {
-        formikRef.current?.setFieldTouched(fieldName, true, false);
-        formikRef.current?.setFieldValue(fieldName, null, true);
-        onSelectChange(null);
-    }
-
-    const searchPlaceholder = selected ? selected.lastName + " " + selected.firstName : (placeholder || t("contacts:searchByLastName"));
+    const searchPlaceholder = placeholder ?? t("contacts:searchByLastName");
 
     return (
         <Box>
@@ -124,10 +125,6 @@ const ContactPicker: React.FC<Props> = ({
                             </Box>
                         </>
                     )}
-
-                    <Flex justify={"center"}><Button size="2xs" colorPalette="red" onClick={handleReset}>
-                        {t("common:resetSelected")}
-                    </Button></Flex>
                 </Stack>
             )}
         </Box>

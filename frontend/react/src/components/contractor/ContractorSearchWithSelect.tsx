@@ -32,8 +32,8 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
 
     const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContractorDTO> | null>(null);
 
-    // adaptacja loadOptions: z q -> Option[]
-    const loadOptions = async (term: string): Promise<AsyncSearchSelectOption<ContractorDTO>[]> => {
+    const loadOptions = async (term: string):
+        Promise<AsyncSearchSelectOption<ContractorDTO>[]> => {
         const data = await searchFn(term);
         return (data ?? []).map((c) => ({
             value: c.id!,
@@ -44,9 +44,14 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
 
     const handleChange = (opt: AsyncSearchSelectOption<ContractorDTO> | null) => {
         setSelectedOption(opt);
+
+        if(!opt) {
+            onSelect(null as unknown as ContractorDTO);
+            return;
+        }
+
         if (opt?.raw) {
             onSelect(opt.raw);
-            setSelectedOption(null);
         }
     };
 

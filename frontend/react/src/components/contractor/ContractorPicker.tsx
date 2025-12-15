@@ -1,6 +1,6 @@
 // components/contract/ContractorPicker.tsx
 import React from "react";
-import {Box, Button, Flex, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
+import {Box, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FormikProps} from "formik";
 import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types";
@@ -31,7 +31,14 @@ const ContractorPicker: React.FC<Props> = ({
     const {t} = useTranslation(["common", "contractors"]);
     const themeColors = useThemeColors();
 
-    const handleSelect = (c: ContractorDTO) => {
+    const handleSelect = (c: ContractorDTO | null) => {
+        if (!c) {
+            formikRef.current?.setFieldTouched(fieldName, true, false);
+            formikRef.current?.setFieldValue(fieldName, null, true);
+            onSelectChange(null);
+            return;
+        }
+
         const base: ContractorBaseDTO = {
             id: c.id,
             name: c.name,
@@ -52,13 +59,7 @@ const ContractorPicker: React.FC<Props> = ({
         onSelectChange(base);
     };
 
-    const handleReset = () => {
-        formikRef.current?.setFieldTouched(fieldName, true, false);
-        formikRef.current?.setFieldValue(fieldName, null, true);
-        onSelectChange(null);
-    };
-
-    const searchPlaceholder = selected ? selected.name : (placeholder || t("common:searchByName"));
+    const searchPlaceholder = (placeholder || t("common:searchByName"));
 
     return (
         <Box>
@@ -133,10 +134,6 @@ const ContractorPicker: React.FC<Props> = ({
                                 </Grid>
                             </Box>
                         </>)}
-
-                    <Flex justify={"center"}><Button size="2xs" colorPalette="red" onClick={handleReset}>
-                        {t("common:resetSelected")}
-                    </Button></Flex>
                 </Stack>
             )}
         </Box>

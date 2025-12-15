@@ -175,6 +175,7 @@ const AsyncSearchSelect = <T, >({
             <Select
                 isDisabled={disabled}
                 isClearable={clearable}
+                isSearchable
                 placeholder={placeholder}
                 value={value}
                 onChange={handleChange}

@@ -7,7 +7,7 @@ import AsyncSearchSelect, {AsyncSearchSelectOption} from "@/components/shared/As
 
 export interface ContactSearchWithSelectProps {
     searchFn: (query: string) => Promise<ContactDTO[]>;
-    onSelect: (contact: ContactDTO) => void;
+    onSelect: (contact: ContactDTO | null) => void;
     minChars?: number;
     debounceMs?: number;
     size?: "sm" | "md" | "lg" | "xs";
@@ -29,7 +29,8 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
     const {t} = useTranslation(["common", "contacts"]);
     const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContactDTO> | null>(null);
 
-    const loadOptions = async (term: string): Promise<AsyncSearchSelectOption<ContactDTO>[]> => {
+    const loadOptions = async (term: string):
+        Promise<AsyncSearchSelectOption<ContactDTO>[]> => {
         const data = await searchFn(term);
         return (data ?? []).map((c) => ({
             value: c.id!,
@@ -40,9 +41,13 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
 
     const handleChange = (opt: AsyncSearchSelectOption<ContactDTO> | null) => {
         setSelectedOption(opt);
+
+        if (!opt) {
+            onSelect(null);
+            return
+        }
         if (opt?.raw) {
             onSelect(opt.raw);
-            setSelectedOption(null); // po wyborze czyść zaznaczenie (UX jak w ContractorSearchWithSelect)
         }
     };
 
