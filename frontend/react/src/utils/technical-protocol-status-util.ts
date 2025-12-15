@@ -4,7 +4,7 @@ import {TechnicalProtocolStatus} from "@/enums/technical-protocol-status-types-e
 
 export const getTechnicalProtocolStatusOptions = (t: TFunction): SelectOption[] => {
     return Object.values(TechnicalProtocolStatus).map((value) => {
-        const label = t(`units:unitTypes.${value}`);
+        const label = t(`technicalProtocolStatuses:${value}`);
         return {value, label};
     });
 };

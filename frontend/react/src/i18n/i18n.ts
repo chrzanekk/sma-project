@@ -47,6 +47,8 @@ import scaffoldingLogEn from './en/scaffoldingLogs.json'
 import scaffoldingLogPl from './pl/scaffoldingLogs.json'
 import scaffoldingLogPositionEn from './en/scaffoldingLogPositions.json'
 import scaffoldingLogPositionPl from './pl/scaffoldingLogPositions.json'
+import dimensionDescriptionsEn from './en/enums/dimensionDescriptions.json'
+import dimensionDescriptionsPl from './pl/enums/dimensionDescriptions.json'
 
 i18n
     .use(initReactI18next)
@@ -75,8 +77,9 @@ i18n
                 scaffoldingTypes: scaffoldingTypesEn,
                 scaffoldingOperationTypes: scaffoldingOperationTypesEn,
                 technicalProtocolStatuses: technicalProtocolStatusEn,
-                scaffoldingLogs : scaffoldingLogEn,
-                scaffoldingLogPositions: scaffoldingLogPositionEn
+                scaffoldingLogs: scaffoldingLogEn,
+                scaffoldingLogPositions: scaffoldingLogPositionEn,
+                dimensionDescriptions: dimensionDescriptionsEn
             },
             pl: {
                 common: commonPl,
@@ -101,15 +104,17 @@ i18n
                 scaffoldingOperationTypes: scaffoldingOperationTypesPl,
                 technicalProtocolStatuses: technicalProtocolStatusPl,
                 scaffoldingLogs: scaffoldingLogPl,
-                scaffoldingLogPositions: scaffoldingLogPositionPl
+                scaffoldingLogPositions: scaffoldingLogPositionPl,
+                dimensionDescriptions: dimensionDescriptionsPl
             },
         },
         lng: 'pl',
         fallbackLng: 'en',
         ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
             'contractors', 'countries', 'contacts', 'companies', 'constructionSites',
-            'contracts', 'positions', 'resources','employees','units','dimensionTypes',
-            'scaffoldingTypes','scaffoldingOperationTypes','technicalProtocolStatuses'],
+            'contracts', 'positions', 'resources', 'employees', 'units', 'dimensionTypes',
+            'scaffoldingTypes', 'scaffoldingOperationTypes', 'technicalProtocolStatuses',
+            'dimensionDescriptions'],
         defaultNS: 'common',
         interpolation: {
             escapeValue: false,

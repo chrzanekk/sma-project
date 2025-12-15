@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.common.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum ScaffoldingType {
     SUSPENDED("suspended"),
     MOBILE("mobile"),
@@ -12,6 +14,7 @@ public enum ScaffoldingType {
         this.type = type;
     }
 
+    @JsonValue
     public String getType() {
         return type;
     }

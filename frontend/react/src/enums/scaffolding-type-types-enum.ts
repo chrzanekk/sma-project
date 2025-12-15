@@ -5,4 +5,4 @@ export enum ScaffoldingType {
 
 }
 
-export type ScaffoldingTpeValue = `${ScaffoldingType}`;
+export type ScaffoldingTypeValue = `${ScaffoldingType}`;

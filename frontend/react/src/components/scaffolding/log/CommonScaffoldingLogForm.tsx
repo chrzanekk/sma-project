@@ -40,23 +40,6 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
             dirty
         } = useFormikContext<BaseScaffoldingLogFormValues>();
 
-        // const formikRef = useRef<FormikProps<BaseScaffoldingLogFormValues>>(null);
-        //
-        // const [selectedContractor, setSelectedContractor] = useState<ContractorBaseDTO | null>(null);
-        // const [selectedSite, setSelectedSite] = useState<ConstructionSiteBaseDTO | null>(null);
-
-        // const prevScaffoldingLogIdRef = useRef<number | undefined>(undefined);
-
-        // useEffect(() => {
-        //     const currentScaffoldingLogId = values.id;
-        //
-        //     if (currentScaffoldingLogId !== prevScaffoldingLogIdRef.current) {
-        //         prevScaffoldingLogIdRef.current = currentScaffoldingLogId;
-        //         setSelectedContractor(values.contractor || null);
-        //         setSelectedSite(values.constructionSite || null);
-        //     }
-        // }, [values.id, values.contractor, values.constructionSite]);
-
         const contractorSearchFn = useMemo(
             () =>
                 makeContractorSearchAdapter({
@@ -95,8 +78,7 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
 
         return (
             <Form>
-                <SimpleGrid columns={3}>
-
+                <SimpleGrid columns={3} gap={2}>
 
                     <Box gap={1}>
                         {/* Wiersz 1: Name 6/6*/}
@@ -122,20 +104,6 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                                 />
                             </GridItem>
                         </Grid>
-
-                        {/* Wiersz 3: Button wyśrodkowany */}
-                        {!hideSubmit && (<Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={6} textAlign="center">
-                                <Button
-                                    disabled={!isValid || isSubmitting || !dirty}
-                                    type="submit"
-                                    colorPalette="green"
-                                    width="400px"
-                                >
-                                    {t('save', {ns: "common"})}
-                                </Button>
-                            </GridItem>
-                        </Grid>)}
                     </Box>
                     <Box>
                         <Separator orientation={"vertical"} height={"100%"}>

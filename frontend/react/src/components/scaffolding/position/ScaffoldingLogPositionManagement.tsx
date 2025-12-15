@@ -10,6 +10,7 @@ import {
 import {ScaffoldingLogPositionDTO} from "@/types/scaffolding-log-position-types.ts";
 import ScaffoldingLogPositionLayout from "@/components/scaffolding/position/ScaffoldingLogPositionLayout.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
+import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
 
 
 const ScaffoldingLogPositionManagement: React.FC = () => {
@@ -48,7 +49,7 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
             />}
             addLogPositionButton={
                 <Flex justify={"center"} gap={2}>
-                {/*TODO design new form for multiple fields to add scaffolding to log*/}
+                    <AddScaffoldingLogPositionDialog fetchPositions={() => onPageChange(currentPage)}/>
                 </Flex>
             }
             /*'TODO table'*/

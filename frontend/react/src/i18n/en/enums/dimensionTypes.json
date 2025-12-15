@@ -1,6 +1,7 @@
 {
+  "type": "Typ wymiaru",
   "console": "Konsola",
   "suspension": "Podwieszenie",
   "griders": "Dźwigary",
-  "basiStructure": "Konstrukcja podstawowa"
+  "basicStructure": "Konstrukcja podstawowa"
 }

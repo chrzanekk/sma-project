@@ -18,7 +18,7 @@ const ScaffoldingLogLayout: React.FC<ScaffoldingLogLayoutProps> = ({
                                                                    }) => {
     const {t} = useTranslation('scaffoldingLogs');
     return (
-        <BasicLayout headerTitle={t('scaffoldingLogs: logList')}
+        <BasicLayout headerTitle={t('scaffoldingLogs:logList')}
                      filters={filters}
                      addButton={addLogButton}
                      table={table}

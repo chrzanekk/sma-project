@@ -1,7 +1,7 @@
 import React from 'react'
 import {Box, Collapsible, Flex, HStack, Image, Link, Stack, Text, useDisclosure, VStack} from '@chakra-ui/react'
 import {FiChevronDown} from "react-icons/fi";
-import {getNavItems} from './nav-items.ts';
+import {useNavItems} from './nav-items.ts';
 import {useUserMenuItems} from './user-menu-items.ts';
 import LanguageSwitcher from "@/layout/LanguageSwitcher.tsx";
 import {useThemeColors} from '@/theme/theme-colors.ts';
@@ -78,7 +78,7 @@ const Navbar: React.FC = () => {
 };
 
 const DesktopNav: React.FC = () => {
-    const navItems = getNavItems();
+    const navItems = useNavItems();
     const themeColors = useThemeColors();
 
     return (
@@ -274,7 +274,7 @@ const UserMenuMobile: React.FC = () => {
 };
 
 const MobileNav: React.FC = () => {
-    const navItems = getNavItems();
+    const navItems = useNavItems();
     const themeColors = useThemeColors();
 
     return (

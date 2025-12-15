@@ -14,7 +14,7 @@ const AddScaffoldingLogDialog: React.FC<AddLogDialogProps> = ({fetchLogs}) => {
     const themeColors = useThemeColors();
     return (
         <Box>
-            <Dialog.Root size={'lg'} placement={"top"}>
+            <Dialog.Root size={'cover'} placement={"top"}>
                 <Dialog.Trigger asChild>
                     <Button
                         colorPalette="green"
@@ -27,7 +27,7 @@ const AddScaffoldingLogDialog: React.FC<AddLogDialogProps> = ({fetchLogs}) => {
                 <Portal>
                     <Dialog.Backdrop>
                         <Dialog.Positioner>
-                            <Dialog.Content bg={themeColors.bgColorPrimary} offset={"4"} borderRadius={"md"}>
+                            <Dialog.Content bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                                 <Dialog.Context>
                                     {(store) => (
                                         <>

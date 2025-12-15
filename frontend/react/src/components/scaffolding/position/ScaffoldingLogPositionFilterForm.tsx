@@ -102,21 +102,21 @@ const ScaffoldingLogPositionFilterForm: React.FC<FilterProps> = ({
                             flexWrap={"wrap"}
                         >
                             <CustomInputFilterField name="scaffoldingNumberContains"
-                                                    placeholder={t('scaffoldingLogPositions:scaffoldingNumberContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.scaffoldingNumberContains')}/>
                             <CustomInputFilterField name="assemblyLocationContains"
-                                                    placeholder={t('scaffoldingLogPositions:assemblyLocationContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.assemblyLocationContains')}/>
                             <CustomInputFilterField name="scaffoldingFullDimensionGreaterOrEqual"
-                                                    placeholder={t('scaffoldingLogPositions:scaffoldingFullDimensionGreaterOrEqual')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.scaffoldingFullDimensionGreaterOrEqual')}/>
                             <CustomInputFilterField name="scaffoldingFullDimensionLessOrEqual"
-                                                    placeholder={t('scaffoldingLogPositions:scaffoldingFullDimensionLessOrEqual')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.scaffoldingFullDimensionLessOrEqual')}/>
                             <CustomInputFilterField name="contractorNameContains"
-                                                    placeholder={t('scaffoldingLogPositions:contractorNameContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.contractorNameContains')}/>
                             <CustomInputFilterField name="contractorContactNameContains"
-                                                    placeholder={t('scaffoldingLogPositions:contractorContactNameContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.contractorContactNameContains')}/>
                             <CustomInputFilterField name="scaffoldingUserNameContains"
-                                                    placeholder={t('scaffoldingLogPositions:scaffoldingUserNameContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.scaffoldingUserNameContains')}/>
                             <CustomInputFilterField name="scaffoldingUserContactNameContains"
-                                                    placeholder={t('scaffoldingLogPositions:scaffoldingUserContactNameContains')}/>
+                                                    placeholder={t('scaffoldingLogPositions:filters.scaffoldingUserContactNameContains')}/>
                         </Flex>
                         <Flex
                             gap={1}
@@ -126,48 +126,48 @@ const ScaffoldingLogPositionFilterForm: React.FC<FilterProps> = ({
                             flexWrap={"wrap"}
                         >
                             <CustomInputField name="assemblyDateGreaterOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:assemblyDateGreaterOrEqual')}
-                                              label={t('scaffoldingLogPositions:assemblyDateGreaterOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.assemblyDateGreaterOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.assemblyDateGreaterOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
                                               inputBGColor={themeColors.bgColorSecondary}
                             />
                             <CustomInputField name="assemblyDateLessOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:assemblyDateLessOrEqual')}
-                                              label={t('scaffoldingLogPositions:assemblyDateLessOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.assemblyDateLessOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.assemblyDateLessOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
                                               inputBGColor={themeColors.bgColorSecondary}
                             />
                             <CustomInputField name="dismantlingDateGreaterOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:dismantlingDateGreaterOrEqual')}
-                                              label={t('scaffoldingLogPositions:dismantlingDateGreaterOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.dismantlingDateGreaterOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.dismantlingDateGreaterOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
                                               inputBGColor={themeColors.bgColorSecondary}
                             />
                             <CustomInputField name="dismantlingDateLessOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:dismantlingDateLessOrEqual')}
-                                              label={t('scaffoldingLogPositions:dismantlingDateLessOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.dismantlingDateLessOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.dismantlingDateLessOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
                                               inputBGColor={themeColors.bgColorSecondary}
                             />
                             <CustomInputField name="dismantlingNotificationDateGreaterOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:dismantlingNotificationDateGreaterOrEqual')}
-                                              label={t('scaffoldingLogPositions:dismantlingNotificationDateGreaterOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.dismantlingNotificationDateGreaterOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.dismantlingNotificationDateGreaterOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
                                               inputBGColor={themeColors.bgColorSecondary}
                             />
                             <CustomInputField name="dismantlingNotificationDateLessOrEqual"
-                                              placeholder={t('scaffoldingLogPositions:dismantlingNotificationDateLessOrEqual')}
-                                              label={t('scaffoldingLogPositions:dismantlingNotificationDateLessOrEqual')}
+                                              placeholder={t('scaffoldingLogPositions:filters.dismantlingNotificationDateLessOrEqual')}
+                                              label={t('scaffoldingLogPositions:filters.dismantlingNotificationDateLessOrEqual')}
                                               type="date"
                                               width={"150px"}
                                               fontSize={"2xs"}
@@ -175,14 +175,18 @@ const ScaffoldingLogPositionFilterForm: React.FC<FilterProps> = ({
                             />
                             <CustomSelectField
                                 name="technicalProtocolStatus"
-                                placeholder={t('scaffoldingLogPositions:technicalProtocolStatus')}
+                                label={t('scaffoldingLogPositions:filters.technicalProtocolStatus')}
+                                fontSize={"2xs"}
+                                placeholder={t('scaffoldingLogPositions:filters.technicalProtocolStatus')}
                                 options={technicalProtocolStatusOptions}
                                 bgColor={themeVars.bgColorSecondary}
                                 width={"150px"}
                             />
                             <CustomSelectField
                                 name="scaffoldingType"
-                                placeholder={t('scaffoldingLogPositions:scaffoldingType')}
+                                label={t('scaffoldingLogPositions:filters.scaffoldingType')}
+                                fontSize={"2xs"}
+                                placeholder={t('scaffoldingLogPositions:filters.scaffoldingType')}
                                 options={scaffoldingTypeOptions}
                                 bgColor={themeVars.bgColorSecondary}
                                 width={"150px"}

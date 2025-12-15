@@ -45,7 +45,6 @@ public class ScaffoldingLogPositionBaseDTO {
     protected TechnicalProtocolStatus technicalProtocolStatus;
     protected ScaffoldingLogPositionBaseDTO parentPosition;
     protected List<ScaffoldingLogPositionBaseDTO> childPositions;
-    @NotNull
     protected ScaffoldingLogBaseDTO scaffoldingLog;
     @NotNull
     private ContractorBaseDTO contractor;

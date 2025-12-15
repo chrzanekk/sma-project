@@ -1,6 +1,6 @@
 import React from "react";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import Pagination from "@/components/shared/Pagination.tsx";
 import {ScaffoldingLogDTO} from "@/types/scaffolding-log-types.ts";
 import {deleteScaffoldingLog, getScaffoldingLogByFilter} from "@/services/scaffolding-log-service.ts";
@@ -38,26 +38,28 @@ const ScaffoldingLogManagement: React.FC = () => {
     );
 
     return (
-        <ScaffoldingLogLayout
-            filters={<ScaffoldingLogFilterForm
-                onSubmit={onFilterSubmit}
-            />}
-            addLogButton={
-                <Flex justify={"center"} gap={2}>
-                    <AddScaffoldingLogDialog fetchLogs={() => onPageChange(currentPage)}/>
-                </Flex>
-            }
-            /*'TODO not table, develop new type of data show'*/
-            // table={}
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
+        <Box mt={1}>
+            <ScaffoldingLogLayout
+                filters={<ScaffoldingLogFilterForm
+                    onSubmit={onFilterSubmit}
                 />}
-        />
+                addLogButton={
+                    <Flex justify={"center"} gap={2}>
+                        <AddScaffoldingLogDialog fetchLogs={() => onPageChange(currentPage)}/>
+                    </Flex>
+                }
+                /*'TODO not table, develop new type of data show'*/
+                // table={}
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />}
+            />
+        </Box>
     )
 };
 

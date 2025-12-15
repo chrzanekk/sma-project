@@ -98,7 +98,10 @@ export interface CustomSelectFieldProps {
     isMulti?: boolean;
     width?: string;
     bgColor?: string;
-    disabled?: boolean
+    disabled?: boolean;
+    fontSize?: string;
+    defaultValue?: any;
+    onValueChange?: (value: any) => void;
 }
 
 const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
@@ -110,6 +113,9 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                  width,
                                                                  bgColor,
                                                                  disabled = false,
+                                                                 fontSize = 'sm',
+                                                                 defaultValue,
+                                                                 onValueChange
                                                              }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const themeColors = useThemeColors();
@@ -118,9 +124,14 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
 
     const selectedValue = isMulti
         ? options.filter((option) => Array.isArray(field.value) && field.value.includes(option.value))
-        : field.value === undefined
-            ? null
-            : options.find((option) => option.value === field.value) || null;
+        : options.find((option) => option.value === (field.value ?? defaultValue)) || null;
+
+    React.useEffect(() => {
+        if (defaultValue !== undefined && (field.value === undefined || field.value === null || field.value === "")) {
+            setFieldValue(name, defaultValue).then();
+        }
+    }, [defaultValue, field.value, name, setFieldValue]);
+
 
     const customSelectStyles: StylesConfig<any, boolean> = {
         ...selectStyles,
@@ -199,7 +210,7 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
     return (
         <Box mb={2}>
             {label && (
-                <Text fontSize="sm"
+                <Text fontSize={fontSize}
                       fontWeight="bold"
                       mb="1" color={themeColors.fontColor}
                       textAlign={"center"}
@@ -215,13 +226,26 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 value={selectedValue}
                 isMulti={isMulti}
                 onChange={(selectedOption: any) => {
+                    let finalValue;
+
                     if (isMulti) {
                         const values = selectedOption ? selectedOption.map((opt: any) => opt.value) : [];
                         setFieldValue(name, values).catch();
+                        finalValue = values;
                     } else {
-                        setFieldValue(name, selectedOption ? selectedOption.value : "").catch();
+                        let valueToSet;
+                        if (selectedOption) {
+                            valueToSet = selectedOption.value;
+                        } else {
+                            valueToSet = defaultValue !== undefined ? defaultValue : "";
+                        }
+                        setFieldValue(name, valueToSet).catch();
+                        finalValue = valueToSet;
                     }
                     setFieldTouched(name, true, false).catch();
+                    if (onValueChange) {
+                        onValueChange(finalValue);
+                    }
                 }}
                 styles={customSelectStyles}
             />
@@ -330,7 +354,7 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             fontSize: sizeStyles.fontSize,
             width: "auto",
         }),
-        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+        menuPortal: (base) => ({...base, zIndex: 9999}),
     };
 
     const noArrowComponents = {

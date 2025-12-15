@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import {NavItem} from "@/types/nav-item-types.ts";
 import {useResourcePermissions} from "@/context/ResourcePermissionContext.tsx";
 
-export const getNavItems = (): NavItem[] => {
+export const useNavItems = (): NavItem[] => {
     const {t} = useTranslation('navbar');
     const navigate = useNavigate();
     const {canAccessResource, loading} = useResourcePermissions();
@@ -25,24 +25,26 @@ export const getNavItems = (): NavItem[] => {
     });
 
     // Diary - always visible (not protected by resources yet)
-    navItems.push({
-        label: t('diary'),
-        value: "diary",
-        children: [
-            {
-                label: t('diaryList'),
-                href: '#',
-                onClick: () => navigate('/diaryList'),
-                value: "diaryList"
-            },
-            {
-                label: t('diaryAddNew'),
-                href: '#',
-                onClick: () => navigate('/diaryAddNew'),
-                value: "diaryAddNew"
-            },
-        ],
-    });
+    if (canAccessResource('SCAFFOLDING_LOG_MANAGEMENT') && canAccessResource('SCAFFOLDING_LOG_POSITION_MANAGEMENT')) {
+        navItems.push({
+            label: t('log'),
+            value: "log",
+            children: [
+                {
+                    label: t('logList'),
+                    href: '#',
+                    onClick: () => navigate('/logList'),
+                    value: "logList"
+                },
+                {
+                    label: t('logPositions'),
+                    href: '#',
+                    onClick: () => navigate('/logPositions'),
+                    value: "logPositions"
+                },
+            ],
+        });
+    }
 
     // Warehouse - always visible (not protected by resources yet)
     navItems.push({

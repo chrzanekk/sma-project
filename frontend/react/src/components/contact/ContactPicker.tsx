@@ -13,9 +13,20 @@ interface Props {
     selected: ContactBaseDTO | undefined;
     onSelectChange: (c: ContactBaseDTO | null) => void;
     contractorId?: number;
+    showDetails?: boolean;
+    placeholder?: string;
+    fieldName?: string;
 }
 
-const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, contractorId}) => {
+const ContactPicker: React.FC<Props> = ({
+                                            formikRef,
+                                            selected,
+                                            onSelectChange,
+                                            contractorId,
+                                            showDetails = true,
+                                            placeholder,
+                                            fieldName = "contact"
+                                        }) => {
     const {t} = useTranslation(["common", "contacts"]);
     const themeColors = useThemeColors();
     const companyId = getSelectedCompanyId()!;
@@ -37,16 +48,18 @@ const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, co
             additionalInfo: c.additionalInfo,
             company: c.company
         };
-        formikRef.current?.setFieldTouched("contact", true, false);
-        formikRef.current?.setFieldValue("contact", base, true);
+        formikRef.current?.setFieldTouched(fieldName, true, false);
+        formikRef.current?.setFieldValue(fieldName, base, true);
         onSelectChange(base);
     };
 
     const handleReset = () => {
-        formikRef.current?.setFieldTouched("contact", true, false);
-        formikRef.current?.setFieldValue("contact", null, true);
+        formikRef.current?.setFieldTouched(fieldName, true, false);
+        formikRef.current?.setFieldValue(fieldName, null, true);
         onSelectChange(null);
     }
+
+    const searchPlaceholder = selected ? selected.lastName + " " + selected.firstName : (placeholder || t("contacts:searchByLastName"));
 
     return (
         <Box>
@@ -56,52 +69,59 @@ const ContactPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, co
                 minChars={2}
                 debounceMs={300}
                 size={"md"}
+                placeholder={searchPlaceholder}
             />
             {selected && (
                 <Stack mt={2}>
-                    <Box borderWidth={"1px"} borderRadius={"md"} overflow={"hidden"}>
-                        <Grid templateColumns="repeat(12,1fr)" gap={0}>
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
-                                    {t("contacts:firstName")}
-                                </Text>
-                            </GridItem>
+                    {showDetails && (
+                        <>
+                            <Box borderWidth={"1px"} borderRadius={"md"} overflow={"hidden"}>
+                                <Grid templateColumns="repeat(12,1fr)" gap={0}>
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
+                                            {t("contacts:firstName")}
+                                        </Text>
+                                    </GridItem>
 
-                            <GridItem colSpan={9} borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text color={themeColors.fontColor}>{selected.firstName}</Text>
-                            </GridItem>
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
-                                    {t("contacts:lastName")}
-                                </Text>
-                            </GridItem>
+                                    <GridItem colSpan={9} borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text color={themeColors.fontColor}>{selected.firstName}</Text>
+                                    </GridItem>
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
+                                            {t("contacts:lastName")}
+                                        </Text>
+                                    </GridItem>
+                                    <GridItem colSpan={9} borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text color={themeColors.fontColor}>{selected.lastName}</Text>
+                                    </GridItem>
 
-                            <GridItem colSpan={9} borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text color={themeColors.fontColor}>{selected.lastName}</Text>
-                            </GridItem>
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
-                                    {t("contacts:phoneNumber")}
-                                </Text>
-                            </GridItem>
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight={"bold"} mb={1} color={themeColors.fontColor}>
+                                            {t("contacts:phoneNumber")}
+                                        </Text>
+                                    </GridItem>
 
-                            <GridItem colSpan={9} borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text color={themeColors.fontColor}>{selected.phoneNumber}</Text>
-                            </GridItem>
-                        </Grid>
-                    </Box>
+                                    <GridItem colSpan={9} borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text color={themeColors.fontColor}>{selected.phoneNumber}</Text>
+                                    </GridItem>
+
+                                </Grid>
+                            </Box>
+                        </>
+                    )}
+
                     <Flex justify={"center"}><Button size="2xs" colorPalette="red" onClick={handleReset}>
                         {t("common:resetSelected")}
                     </Button></Flex>

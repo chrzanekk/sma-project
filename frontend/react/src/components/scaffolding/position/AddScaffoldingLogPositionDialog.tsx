@@ -1,8 +1,9 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {Box, Button, Dialog, Heading, Portal} from "@chakra-ui/react";
+import {Box, Button, Dialog, Heading, Portal, Text} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
+import AddScaffoldingLogPositionForm from "@/components/scaffolding/position/AddScaffoldingLogPositionForm.tsx";
 
 interface AddLogPositionDialogProps {
     fetchPositions: () => void;
@@ -26,22 +27,25 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
                 <Portal>
                     <Dialog.Backdrop>
                         <Dialog.Positioner>
-                            <Dialog.Content bg={themeColors.bgColorPrimary} offset={"4"} borderRadius={"md"}>
+                            <Dialog.Content bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"}>
                                 <Dialog.Context>
                                     {(store) => (
-                                        <>
+                                        <Box>
                                             <Dialog.CloseTrigger/>
                                             <Dialog.Header>
-                                                <Heading size={"xl"} color={themeColors.fontColor}>
-                                                    {t("scaffoldingLogPositions:details")}
-                                                </Heading>
+                                                {/*<Heading size={"xl"} color={themeColors.fontColor}>*/}
+                                                    <Text textAlign={"center"} color={themeColors.fontColor} textStyle={"3xl"}>
+                                                        {t("scaffoldingLogPositions:details")}
+                                                    </Text>
+                                                {/*</Heading>*/}
                                             </Dialog.Header>
                                             <Dialog.Body>
-                                                {/*<AddScaffoldingLogForm*/}
-                                                {/*    onSuccess={() => {*/}
-                                                {/*        fetchPositions();*/}
-                                                {/*        store.setOpen(false);*/}
-                                                {/*    }}/>*/}
+                                                <AddScaffoldingLogPositionForm onSuccess={
+                                                    () => {
+                                                        fetchPositions();
+                                                        store.setOpen(false)
+                                                    }
+                                                }/>
                                             </Dialog.Body>
                                             <Dialog.Footer>
                                                 <Dialog.ActionTrigger asChild>
@@ -53,7 +57,7 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
                                                     </Button>
                                                 </Dialog.ActionTrigger>
                                             </Dialog.Footer>
-                                        </>
+                                        </Box>
                                     )}
                                 </Dialog.Context>
                             </Dialog.Content>

@@ -54,10 +54,10 @@ export interface BaseScaffoldingLogPositionFormValues {
     parentPosition: ScaffoldingLogPositionBaseDTO;
     childPositions: ScaffoldingLogPositionBaseDTO[];
     scaffoldingLog: ScaffoldingLogBaseDTO;
-    contractor: ContractorBaseDTO;
-    contractorContact: ContactBaseDTO;
-    scaffoldingUser: ContractorBaseDTO;
-    scaffoldingUserContact: ContactBaseDTO;
+    contractor?: ContractorBaseDTO;
+    contractorContact?: ContactBaseDTO;
+    scaffoldingUser?: ContractorBaseDTO;
+    scaffoldingUserContact?: ContactBaseDTO;
     dimensions: ScaffoldingLogPositionDimensionBaseDTO[];
     workingTimes: ScaffoldingLogPositionWorkingTimeBaseDTO[];
 }

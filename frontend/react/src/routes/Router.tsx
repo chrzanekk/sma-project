@@ -24,6 +24,7 @@ import {Box, Text} from "@chakra-ui/react";
 import EmployeeManagement from "@/components/employee/EmployeeManagement.tsx";
 import UnitManagement from "@/components/unit/UnitManagement.tsx";
 import ScaffoldingLogManagement from "@/components/scaffolding/log/ScaffoldingLogManagement.tsx";
+import ScaffoldingLogPositionManagement from "@/components/scaffolding/position/ScaffoldingLogPositionManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -168,7 +169,7 @@ const router = createBrowserRouter([
             )
         },
         {
-            path: "diaryList",
+            path: "logList",
             element: (
                 <ProtectedRoute resourceKey="SCAFFOLDING_LOG_MANAGEMENT">
                     <Layout>
@@ -178,12 +179,22 @@ const router = createBrowserRouter([
             )
         },
         {
-            path: "diaryAddNew",
+            path: "logPositions",
+            element: (
+                <ProtectedRoute resourceKey="SCAFFOLDING_LOG_POSITION_MANAGEMENT">
+                    <Layout>
+                        <ScaffoldingLogPositionManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "logAddNew",
             element: (
                 <ProtectedRoute>
                     <Layout>
                         <UnderConstructionRoute
-                            nameKey={'diaryAddNew'}
+                            nameKey={'logAddNew'}
                             nameSpace={'navbar'}
                         />
                     </Layout>

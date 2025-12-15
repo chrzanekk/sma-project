@@ -14,15 +14,17 @@ export interface ContractorSearchProps {
     size?: "sm" | "md";
     onInputKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     enableEnterSubmit?: boolean;
+    placeholder?: string;
 }
 
 const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
-                                                               searchFn,
-                                                               onSelect,
-                                                               minChars = 2,
-                                                               debounceMs = 300,
-                                                               size = "md",
-                                                           }) => {
+                                                                         searchFn,
+                                                                         onSelect,
+                                                                         minChars = 2,
+                                                                         debounceMs = 300,
+                                                                         size = "md",
+                                                                         placeholder
+                                                                     }) => {
     const {t} = useTranslation(["common", "contractors"]);
 
 
@@ -52,7 +54,7 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                 loadOptions={loadOptions}
                 value={selectedOption}
                 onChange={handleChange}
-                placeholder={t("common:searchByName")}
+                placeholder={placeholder || t("common:searchByName")}
                 minChars={minChars}
                 debounceMs={debounceMs}
                 size={size}
