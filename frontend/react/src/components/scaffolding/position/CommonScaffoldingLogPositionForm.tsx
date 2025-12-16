@@ -58,7 +58,6 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
         );
 
         const handleContractorChange = (contractor: ContractorBaseDTO | null) => {
-            console.log('Wybrano kontrahenta:', contractor);
             void setFieldValue('contractor', contractor);
             void setFieldTouched('contractor', true, false);
 
@@ -68,13 +67,11 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
         };
 
         const handleContractorContactChange = (contact: ContactBaseDTO | null) => {
-            // setSelectedContact(contact);
             void setFieldValue('contractorContact', contact);
             void setFieldTouched('contractorContact', true, false);
         };
 
         const handleScaffoldingUserChange = (contractor: ContractorBaseDTO | null) => {
-            console.log('Wybrano użytkownika rusztowania:', contractor);
             void setFieldValue('scaffoldingUser', contractor);
             void setFieldTouched('scaffoldingUser', true, false);
 
@@ -161,6 +158,7 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                                 </GridItem>
                             </Grid>
                             {/*Wiersz 4: Kontraktor/Zleceniodawca 3/6, Uzytkownik rusztowania 3/6*/}
+                            <Separator orientation={"horizontal"} height={"100%"}>
                             <Grid templateColumns="repeat(6, 1fr)" gap={4}>
                                 <GridItem colSpan={3}>
                                     <Box>
@@ -213,6 +211,7 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
                                     </Box>
                                 </GridItem>
                             </Grid>
+                            </Separator>
                             {/*Wiersz 5: DismantlingNotificationDate 3/6, DismantlingDate 3/6*/}
                             <Separator orientation={"horizontal"} height={"100%"}>
                                 <Grid templateColumns="repeat(6, 1fr)" gap={4}>

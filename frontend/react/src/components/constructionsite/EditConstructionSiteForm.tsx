@@ -99,7 +99,7 @@ const EditContractorForm: React.FC<EditConstructionSiteFormProps> = ({
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
-            hideSubmit={hideSubmit}s
+            hideSubmit={hideSubmit}
         />
 
     )

@@ -37,7 +37,6 @@ const DimensionsArrayField: React.FC = () => {
 
     useEffect(() => {
         if (!values.dimensions || values.dimensions.length === 0) {
-            // Dodano 'void' aby uciszyć 'Promise ignored'
             void setFieldValue('dimensions', [createEmptyDimension()]);
         }
     }, [createEmptyDimension, setFieldValue, values.dimensions]);
