@@ -1,6 +1,6 @@
 import React from "react";
 import {useDataManagement} from "@/hooks/useDataManagement.ts";
-import {Flex} from "@chakra-ui/react";
+import {Box, Flex} from "@chakra-ui/react";
 import Pagination from "@/components/shared/Pagination.tsx";
 import ScaffoldingLogPositionFilterForm from "@/components/scaffolding/position/ScaffoldingLogPositionFilterForm.tsx";
 import {
@@ -42,28 +42,30 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
     );
 
     return (
-        <ScaffoldingLogPositionLayout
-            filters={<ScaffoldingLogPositionFilterForm
-                onSubmit={onFilterSubmit}
-                isFullLogPositionList={false}
-            />}
-            addLogPositionButton={
-                <Flex justify={"center"} gap={2}>
-                    <AddScaffoldingLogPositionDialog fetchPositions={() => onPageChange(currentPage)}/>
-                </Flex>
-            }
-            /*'TODO table'*/
-            // table={}
-            pagination={
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    rowsPerPage={rowsPerPage}
-                    onPageChange={onPageChange}
-                    onRowsPerPageChange={onRowsPerPageChange}
+        <Box mt={1}>
+            <ScaffoldingLogPositionLayout
+                filters={<ScaffoldingLogPositionFilterForm
+                    onSubmit={onFilterSubmit}
+                    isFullLogPositionList={false}
                 />}
-            bgColor={useThemeColors().bgColorPrimary}
-        />
+                addLogPositionButton={
+                    <Flex justify={"center"} gap={2}>
+                        <AddScaffoldingLogPositionDialog fetchPositions={() => onPageChange(currentPage)}/>
+                    </Flex>
+                }
+                /*'TODO table'*/
+                // table={}
+                pagination={
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        rowsPerPage={rowsPerPage}
+                        onPageChange={onPageChange}
+                        onRowsPerPageChange={onRowsPerPageChange}
+                    />}
+                bgColor={useThemeColors().bgColorPrimary}
+            />
+        </Box>
     )
 };
 

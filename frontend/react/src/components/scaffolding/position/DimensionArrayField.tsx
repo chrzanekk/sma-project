@@ -13,7 +13,7 @@ import {DimensionType} from '@/enums/dimension-types-enum.ts';
 import {getScaffoldingOperationTypeOptions} from "@/utils/scaffolding-operation-type-util.ts";
 import {getDimensionTypeOptions} from "@/utils/dimension-type-util.ts";
 import {UnitBaseDTO} from '@/types/unit-types.ts';
-import {CustomNumberInput} from "@/components/shared/CustomNumberInput.tsx"; // Załóżmy, że masz ten import
+import {CustomNumberInput} from "@/components/shared/CustomNumberInput.tsx";
 
 const DimensionsArrayField: React.FC = () => {
     const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'dimensionTypes', 'scaffoldingOperationTypes', 'dimensionDescriptions']);
@@ -81,21 +81,24 @@ const DimensionsArrayField: React.FC = () => {
     return (
         <FieldArray name="dimensions">
             {({remove}) => (
-                <Box mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-                    <Heading size="md" mb={4} color={themeColors.fontColor}>
+                <Box mt={2} p={2}>
+                    <Heading size="md" mb={4} color={themeColors.fontColor} textAlign={"center"}>
                         {t('scaffoldingLogPositions:dimensions')}
                     </Heading>
 
                     <Grid templateColumns="repeat(13, 1fr)" gap={2} mb={2}>
                         {/* Nagłówki bez zmian */}
                         <GridItem colSpan={2}><Heading
-                            size="xs">{t('dimensionDescriptions:length')}</Heading></GridItem>
-                        <GridItem colSpan={2}><Heading size="xs">{t('dimensionDescriptions:width')}</Heading></GridItem>
+                            size="xs" textAlign={"center"}>{t('dimensionDescriptions:length')}</Heading></GridItem>
+                        <GridItem colSpan={2}><Heading size="xs"
+                                                       textAlign={"center"}>{t('dimensionDescriptions:width')}</Heading></GridItem>
                         <GridItem colSpan={2}><Heading
-                            size="xs">{t('dimensionDescriptions:height')}</Heading></GridItem>
-                        <GridItem colSpan={3}><Heading size="xs">{t('dimensionTypes:type')}</Heading></GridItem>
+                            size="xs" textAlign={"center"}>{t('dimensionDescriptions:height')}</Heading></GridItem>
+                        <GridItem colSpan={3}><Heading size="xs"
+                                                       textAlign={"center"}>{t('dimensionTypes:type')}</Heading></GridItem>
                         <GridItem colSpan={3}><Heading
-                            size="xs">{t('scaffoldingOperationTypes:operation')}</Heading></GridItem>
+                            size="xs"
+                            textAlign={"center"}>{t('scaffoldingOperationTypes:operation')}</Heading></GridItem>
                         <GridItem colSpan={1}></GridItem>
                     </Grid>
 

@@ -24,6 +24,8 @@
   "scaffoldingUserContact": "Osoba kontaktowa użytkownika",
   "dimensions": "Wymiary",
   "workingTimes": "Czas pracy",
+  "numberOfWorkers": "Ilość pracowników",
+  "numberOfHours": "Ilość godzin",
   "notifications": {
     "addScaffoldingLogPositionSuccess": "Rusztowanie {scaffoldingNumber} dodany pomyślnie",
     "addScaffoldingLogPositionError": "Błąd dodawania rusztowania",

@@ -1,7 +1,7 @@
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {useThemeColors} from "@/theme/theme-colors.ts";
-import {Box, Button, Dialog, Heading, Portal, Text} from "@chakra-ui/react";
+import {Box, Button, Dialog, Portal, Text} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import AddScaffoldingLogPositionForm from "@/components/scaffolding/position/AddScaffoldingLogPositionForm.tsx";
 
@@ -14,7 +14,7 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
     const themeColors = useThemeColors();
     return (
         <Box>
-            <Dialog.Root size={'full'} placement={"top"}>
+            <Dialog.Root size={{mdDown: 'full', md: "full"}} placement={"bottom"} scrollBehavior={"inside"}>
                 <Dialog.Trigger asChild>
                     <Button
                         colorPalette="green"
@@ -33,19 +33,21 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
                                         <Box>
                                             <Dialog.CloseTrigger/>
                                             <Dialog.Header>
-                                                {/*<Heading size={"xl"} color={themeColors.fontColor}>*/}
-                                                    <Text textAlign={"center"} color={themeColors.fontColor} textStyle={"3xl"}>
-                                                        {t("scaffoldingLogPositions:details")}
-                                                    </Text>
-                                                {/*</Heading>*/}
+                                                <Text textAlign={"center"} color={themeColors.fontColor}
+                                                      textStyle={"3xl"}>
+                                                    {t("scaffoldingLogPositions:details")}
+                                                </Text>
                                             </Dialog.Header>
                                             <Dialog.Body>
-                                                <AddScaffoldingLogPositionForm onSuccess={
-                                                    () => {
-                                                        fetchPositions();
-                                                        store.setOpen(false)
-                                                    }
-                                                }/>
+                                                <Box>
+                                                    <AddScaffoldingLogPositionForm onSuccess={
+                                                        () => {
+                                                            fetchPositions();
+                                                            store.setOpen(false)
+                                                        }
+                                                    }/>
+                                                </Box>
+
                                             </Dialog.Body>
                                             <Dialog.Footer>
                                                 <Dialog.ActionTrigger asChild>

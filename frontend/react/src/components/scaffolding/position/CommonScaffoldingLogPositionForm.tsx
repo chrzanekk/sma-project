@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import {Form, Formik, FormikHelpers, FormikProps, useFormikContext} from 'formik';
 import * as Yup from 'yup';
-import {Box, Button, Grid, GridItem, Separator, SimpleGrid, StackSeparator, VStack} from '@chakra-ui/react';
+import {Box, Button, Container, Grid, GridItem, Separator} from '@chakra-ui/react';
 import {CustomInputField, CustomSelectField, CustomTextAreaField} from '@/components/shared/CustomFormFields';
 import {useTranslation} from "react-i18next";
 import ContractorPicker from "@/components/contractor/ContractorPicker.tsx";
@@ -17,6 +17,7 @@ import ContactPicker from "@/components/contact/ContactPicker.tsx";
 import {ScaffoldingType} from "@/enums/scaffolding-type-types-enum.ts";
 import {TechnicalProtocolStatus} from "@/enums/technical-protocol-status-types-enum.ts";
 import DimensionArrayField from "@/components/scaffolding/position/DimensionArrayField.tsx";
+import WorkingTimesArrayField from "@/components/scaffolding/position/WorkingTimesArrayField.tsx";
 
 interface CommonScaffoldingLogPositionFormProps {
     initialValues: BaseScaffoldingLogPositionFormValues;
@@ -96,178 +97,185 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
 
 
         return (
-            <Form>
-                <SimpleGrid columns={3} gap={2}>
-                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-                        {/* Wiersz 1: Scaffolding Number 3/6, Assembly Date*/}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            {/*wstawić w numer rusztowania wybraną datę (poprawić jeśli ktoś źle wpisał) po numerze np. 123/15/12/2025*/}
-                            <GridItem colSpan={4}>
-                                <CustomInputField
-                                    name="scaffoldingNumber"
-                                    label={t('scaffoldingLogPositions:scaffoldingNumber')}
-                                    placeholder={t('scaffoldingLogPositions:scaffoldingNumber')}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={2}>
-                                <CustomInputField
-                                    name="assemblyDate"
-                                    label={t('scaffoldingLogPositions:assemblyDate')}
-                                    placeholder={t('scaffoldingLogPositions:assemblyDate')}
-                                    disabled={disabled}
-                                    type={"date"}
-                                />
-                            </GridItem>
-                        </Grid>
-                        {/* Wiersz 2: Assembly location 6/6 */}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            <GridItem colSpan={6}>
-                                <CustomTextAreaField
-                                    name="assemblyLocation"
-                                    label={t('scaffoldingLogPositions:assemblyLocation')}
-                                    placeholder={t('scaffoldingLogPositions:assemblyLocation')}
-                                    disabled={disabled}
-                                />
-                            </GridItem>
-                        </Grid>
-                        {/* Wiersz 3: ScaffoldingType 3/6, TechnicalProtocolStatus 3/6 */}
-                        <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                            {/*wstawić w numer rusztowania wybraną datę (poprawić jeśli ktoś źle wpisał) po numerze np. 123/15/12/2025*/}
-                            <GridItem colSpan={3}>
-                                <CustomSelectField
-                                    name="scaffoldingType"
-                                    label={t('scaffoldingLogPositions:scaffoldingType')}
-                                    placeholder={t('scaffoldingLogPositions:scaffoldingType')}
-                                    options={scaffoldingTypeOptions}
-                                    bgColor={themeVars.bgColorPrimary}
-                                    width={"3fr"}
-                                    defaultValue={ScaffoldingType.BASIC}
-                                />
-                            </GridItem>
-                            <GridItem colSpan={3}>
-                                <CustomSelectField
-                                    name="technicalProtocolStatus"
-                                    label={t('scaffoldingLogPositions:technicalProtocolStatus')}
-                                    placeholder={t('scaffoldingLogPositions:technicalProtocolStatus')}
-                                    options={technicalProtocolStatusOptions}
-                                    bgColor={themeVars.bgColorPrimary}
-                                    width={"3fr"}
-                                    defaultValue={TechnicalProtocolStatus.TO_BE_CREATED}
-                                />
-                            </GridItem>
-                        </Grid>
-                        {/*Wiersz 4: DismantlingNotificationDate 3/6, DismantlingDate 3/6*/}
-                        <Separator orientation={"horizontal"} height={"100%"}>
+            <Form><Box gap={1} mt={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
+                <Grid templateColumns={"repeat(7,1fr)"}>
+                    <GridItem colSpan={2} ml={1} gap={3} mt={1} p={1} borderWidth="2px" borderRadius="md"
+                              borderColor={themeColors.borderColor}>
+                        <Box>
+                            {/* Wiersz 1: Scaffolding Number 3/6, Assembly Date*/}
                             <Grid templateColumns="repeat(6, 1fr)" gap={4}>
-                                <GridItem colSpan={3}>
+                                {/*wstawić w numer rusztowania wybraną datę (poprawić jeśli ktoś źle wpisał) po numerze np. 123/15/12/2025*/}
+                                <GridItem colSpan={4}>
                                     <CustomInputField
-                                        name="dismantlingNotificationDate"
-                                        label={t('scaffoldingLogPositions:dismantlingNotificationDate')}
-                                        placeholder={t('scaffoldingLogPositions:dismantlingNotificationDate')}
+                                        name="scaffoldingNumber"
+                                        label={t('scaffoldingLogPositions:scaffoldingNumber')}
+                                        placeholder={t('scaffoldingLogPositions:scaffoldingNumber')}
                                         disabled={disabled}
-                                        type={"date"}
                                     />
                                 </GridItem>
-                                <GridItem colSpan={3}>
+                                <GridItem colSpan={2}>
                                     <CustomInputField
-                                        name="dismantlingDate"
-                                        label={t('scaffoldingLogPositions:dismantlingDate')}
-                                        placeholder={t('scaffoldingLogPositions:dismantlingDate')}
+                                        name="assemblyDate"
+                                        label={t('scaffoldingLogPositions:assemblyDate')}
+                                        placeholder={t('scaffoldingLogPositions:assemblyDate')}
                                         disabled={disabled}
                                         type={"date"}
                                     />
                                 </GridItem>
                             </Grid>
-                        </Separator>
-                    </Box>
-
-                    {/*Box wyboru zleceniodawcy + kontaktu + użytkownika + kontaktu + opcja skopiowania zleceniodawcy do użytkownika jeśli taki sam*/}
-                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-
-                        <VStack separator={<StackSeparator/>}>
-                            <Box ml={2} mr={2}>
-                                <Box>
-                                    <ContractorPicker
-                                        formikRef={formikContextAdapter}
-                                        selected={values.contractor || null}
-                                        onSelectChange={handleContractorChange}
-                                        searchFn={contractorSearchFn}
-                                        showDetails={false}
-                                        fieldName={"contractor"}
-                                        label={t("scaffoldingLogPositions:contractor")}
+                            {/* Wiersz 2: Assembly location 6/6 */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                <GridItem colSpan={6}>
+                                    <CustomTextAreaField
+                                        name="assemblyLocation"
+                                        label={t('scaffoldingLogPositions:assemblyLocation')}
+                                        placeholder={t('scaffoldingLogPositions:assemblyLocation')}
+                                        disabled={disabled}
                                     />
-                                    {values.contractor && (
-                                        <Box mt={4}>
-                                            <ContactPicker
-                                                formikRef={formikContextAdapter}
-                                                selected={values.contractorContact}
-                                                onSelectChange={handleContractorContactChange}
-                                                contractorId={values.contractor!.id}
-                                                showDetails={false}
-                                                label={t("scaffoldingLogPositions:contractorContact")}
-                                            />
-                                        </Box>
-                                    )}
-                                </Box>
-                            </Box>
-                            <Box ml={2} mr={2}>
-                                <Box>
-                                    <ContractorPicker
-                                        formikRef={formikContextAdapter}
-                                        selected={values.scaffoldingUser || null}
-                                        onSelectChange={handleScaffoldingUserChange}
-                                        searchFn={contractorSearchFn}
-                                        showDetails={false}
-                                        fieldName={"scaffoldingUser"}
-                                        label={t("scaffoldingLogPositions:scaffoldingUser")}
+                                </GridItem>
+                            </Grid>
+                            {/* Wiersz 3: ScaffoldingType 3/6, TechnicalProtocolStatus 3/6 */}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                {/*wstawić w numer rusztowania wybraną datę (poprawić jeśli ktoś źle wpisał) po numerze np. 123/15/12/2025*/}
+                                <GridItem colSpan={3}>
+                                    <CustomSelectField
+                                        name="scaffoldingType"
+                                        label={t('scaffoldingLogPositions:scaffoldingType')}
+                                        placeholder={t('scaffoldingLogPositions:scaffoldingType')}
+                                        options={scaffoldingTypeOptions}
+                                        bgColor={themeVars.bgColorPrimary}
+                                        width={"3fr"}
+                                        defaultValue={ScaffoldingType.BASIC}
                                     />
-                                    {values.scaffoldingUser && (
-                                        <Box mt={4}>
-                                            <ContactPicker
-                                                formikRef={formikContextAdapter}
-                                                selected={values.scaffoldingUserContact}
-                                                onSelectChange={handleScaffoldingUserContactChange}
-                                                contractorId={values.scaffoldingUser!.id}
-                                                showDetails={false}
-                                                label={t("scaffoldingLogPositions:scaffoldingUserContact")}
-                                            />
-                                        </Box>
-                                    )}
-                                </Box>
-                            </Box>
-                        </VStack>
-                    </Box>
-
-                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-                        <DimensionArrayField/>
-                    </Box>
-                    {/*BOX na czas pracy (lista bo może być 5 osób x 4h i 3osoby x 3h - różne kombinacje
-                     - stworzyć dynamiczną obsługę listy(dodawanie enterem + opcja usuń (krzyżyk po prawej stronie)
-                     workingTimes: ScaffoldingLogPositionWorkingTimeBaseDTO[];*/}
-                    <Box gap={1} mt={2} p={2} borderWidth="2px" borderRadius="md" borderColor={themeColors.borderColor}>
-                    </Box>
-                </SimpleGrid>
-                <SimpleGrid columns={1}>
-                    <Box>
-                        <Separator orientation={"horizontal"} width={"100%"}>
-                            {!hideSubmit && (
-                                <Grid templateColumns="repeat(6, 1fr)" gap={4} mt={4}>
-                                    <GridItem colSpan={6} textAlign="center">
-                                        <Button
-                                            disabled={!isValid || isSubmitting || !dirty}
-                                            type="submit"
-                                            colorPalette="green"
-                                            width="400px"
-                                        >
-                                            {t('save', {ns: "common"})}
-                                        </Button>
+                                </GridItem>
+                                <GridItem colSpan={3}>
+                                    <CustomSelectField
+                                        name="technicalProtocolStatus"
+                                        label={t('scaffoldingLogPositions:technicalProtocolStatus')}
+                                        placeholder={t('scaffoldingLogPositions:technicalProtocolStatus')}
+                                        options={technicalProtocolStatusOptions}
+                                        bgColor={themeVars.bgColorPrimary}
+                                        width={"3fr"}
+                                        defaultValue={TechnicalProtocolStatus.TO_BE_CREATED}
+                                    />
+                                </GridItem>
+                            </Grid>
+                            {/*Wiersz 4: Kontraktor/Zleceniodawca 3/6, Uzytkownik rusztowania 3/6*/}
+                            <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                <GridItem colSpan={3}>
+                                    <Box>
+                                        <ContractorPicker
+                                            formikRef={formikContextAdapter}
+                                            selected={values.contractor || null}
+                                            onSelectChange={handleContractorChange}
+                                            searchFn={contractorSearchFn}
+                                            showDetails={false}
+                                            fieldName={"contractor"}
+                                            label={t("scaffoldingLogPositions:contractor")}
+                                        />
+                                        {values.contractor && (
+                                            <Box mt={4}>
+                                                <ContactPicker
+                                                    formikRef={formikContextAdapter}
+                                                    selected={values.contractorContact}
+                                                    onSelectChange={handleContractorContactChange}
+                                                    contractorId={values.contractor!.id}
+                                                    showDetails={false}
+                                                    label={t("scaffoldingLogPositions:contractorContact")}
+                                                />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </GridItem>
+                                <GridItem colSpan={3}>
+                                    <Box>
+                                        <ContractorPicker
+                                            formikRef={formikContextAdapter}
+                                            selected={values.scaffoldingUser || null}
+                                            onSelectChange={handleScaffoldingUserChange}
+                                            searchFn={contractorSearchFn}
+                                            showDetails={false}
+                                            fieldName={"scaffoldingUser"}
+                                            label={t("scaffoldingLogPositions:scaffoldingUser")}
+                                        />
+                                        {values.scaffoldingUser && (
+                                            <Box mt={4}>
+                                                <ContactPicker
+                                                    formikRef={formikContextAdapter}
+                                                    selected={values.scaffoldingUserContact}
+                                                    onSelectChange={handleScaffoldingUserContactChange}
+                                                    contractorId={values.scaffoldingUser!.id}
+                                                    showDetails={false}
+                                                    label={t("scaffoldingLogPositions:scaffoldingUserContact")}
+                                                />
+                                            </Box>
+                                        )}
+                                    </Box>
+                                </GridItem>
+                            </Grid>
+                            {/*Wiersz 5: DismantlingNotificationDate 3/6, DismantlingDate 3/6*/}
+                            <Separator orientation={"horizontal"} height={"100%"}>
+                                <Grid templateColumns="repeat(6, 1fr)" gap={4}>
+                                    <GridItem colSpan={3}>
+                                        <CustomInputField
+                                            name="dismantlingNotificationDate"
+                                            label={t('scaffoldingLogPositions:dismantlingNotificationDate')}
+                                            placeholder={t('scaffoldingLogPositions:dismantlingNotificationDate')}
+                                            disabled={disabled}
+                                            type={"date"}
+                                        />
+                                    </GridItem>
+                                    <GridItem colSpan={3}>
+                                        <CustomInputField
+                                            name="dismantlingDate"
+                                            label={t('scaffoldingLogPositions:dismantlingDate')}
+                                            placeholder={t('scaffoldingLogPositions:dismantlingDate')}
+                                            disabled={disabled}
+                                            type={"date"}
+                                        />
                                     </GridItem>
                                 </Grid>
-                            )}
-                        </Separator>
-                    </Box>
-                </SimpleGrid>
+                            </Separator>
+                        </Box>
+                    </GridItem>
+                    <GridItem colSpan={3} gap={1} mt={1} ml={1} borderWidth="2px" borderRadius="md"
+                              borderColor={themeColors.borderColor}>
+                        <DimensionArrayField/>
+                    </GridItem>
+                    <GridItem colSpan={2} gap={1} mt={1} ml={1} mr={1} borderWidth="2px" borderRadius="md"
+                              borderColor={themeColors.borderColor}>
+                        <WorkingTimesArrayField/>
+                    </GridItem>
+
+                    <GridItem colSpan={7}
+                              p={2}
+                              mt={1}
+                              ml={1}
+                              mr={1}
+                              mb={1}
+                              borderWidth="2px"
+                              borderRadius="md"
+                              borderColor={themeColors.borderColor}
+                    >
+                        {!hideSubmit && (
+                            <Container centerContent={true}>
+                                <Button
+                                    disabled={!isValid || isSubmitting || !dirty}
+                                    type="submit"
+                                    colorPalette="green"
+                                    width="400px"
+                                >
+                                    {t('save', {ns: "common"})}
+                                </Button>
+                            </Container>
+
+
+
+                        )}
+                    </GridItem>
+
+                </Grid>
+            </Box>
             </Form>
         )
     }
