@@ -14,5 +14,11 @@
     "addScaffoldingLogError": "Błąd dodawania dziennika",
     "editScaffoldingLogSuccess" : "Dane dziennika {name} zmieniono pomyślnie",
     "editScaffoldingLogError": "Błąd edycji dziennika {name}"
+  },
+  "sort": {
+    "id": "Sortuj domyślnie (po ID)",
+    "name": "Sortuj po nazwie dziennika",
+    "constructionSiteName": "Sortuj po nazwie budowy",
+    "contractorName": "Sortuj po nazwie kontrahenta"
   }
 }
