@@ -49,7 +49,7 @@ spring:
       max-file-size: 20MB
       max-request-size: 25MB
   config:
-    import: "optional:file:../sma-project/.env[.properties]"
+    import: "optional:file:../.env[.properties]"
 
   flyway:
     enabled: true
@@ -63,5 +63,5 @@ jwt:
 
 platform:
   url: http://localhost:5173
-  replyToEmail: scaffapp@kchrzanowski.pl
-  fromEmail: Scaffolding App / LocalHost <scaffapp@kchrzanowski.pl>
+  replyToEmail: sma@konradchrzanowski.pl
+  fromEmail: Scaffolding App / LocalHost <sma@konradchrzanowski.pl>
