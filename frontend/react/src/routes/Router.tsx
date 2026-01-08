@@ -189,6 +189,16 @@ const router = createBrowserRouter([
             )
         },
         {
+            path: "scaffolding-logs/:logId/positions",
+            element: (
+                <ProtectedRoute resourceKey="SCAFFOLDING_LOG_POSITION_MANAGEMENT">
+                    <Layout>
+                        <ScaffoldingLogPositionManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
             path: "logAddNew",
             element: (
                 <ProtectedRoute>

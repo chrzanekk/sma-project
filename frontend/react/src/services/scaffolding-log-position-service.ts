@@ -13,6 +13,7 @@ export const getScaffoldingLogPositionByFilter = async (filter: ScaffoldingLogPo
         const queryParams = serializeQueryParams({
             ...filter,
             companyId: getSelectedCompanyId(),
+            scaffoldingLogId: filter.scaffoldingLogId,
             size: filter.size || 10,
             page: filter.page || 0
         });

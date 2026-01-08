@@ -83,6 +83,9 @@ public class ScaffoldingLogPositionQuerySpec {
             if (filter.getParentPositionOnly() != null && filter.getParentPositionOnly()) {
                 predicate.and(scaffoldingLogPosition.parentPosition.isNull());
             }
+            if (filter.getScaffoldingLogId() != null) {
+                predicate.and(scaffoldingLogPosition.scaffoldingLog.id.eq(filter.getScaffoldingLogId()));
+            }
         }
         return predicate;
     }

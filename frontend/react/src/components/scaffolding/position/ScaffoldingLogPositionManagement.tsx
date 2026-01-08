@@ -7,15 +7,23 @@ import {
     deleteScaffoldingLogPosition,
     getScaffoldingLogPositionByFilter
 } from "@/services/scaffolding-log-position-service.ts";
-import {ScaffoldingLogPositionDTO} from "@/types/scaffolding-log-position-types.ts";
+import {FetchableScaffoldingLogPositionDTO} from "@/types/scaffolding-log-position-types.ts";
 import ScaffoldingLogPositionLayout from "@/components/scaffolding/position/ScaffoldingLogPositionLayout.tsx";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
+import ScaffoldingLogPositionTable from "@/components/scaffolding/position/ScaffoldingLogPositionTable.tsx";
+import {useLocation, useParams} from "react-router-dom";
 
 
 const ScaffoldingLogPositionManagement: React.FC = () => {
+
+    const {logId} = useParams<{ logId: string }>();
+    const location = useLocation();
+
+    const logName = location.state?.logName ?? "";
+
     const {
-        items: logs,
+        items: logPositions,
         currentPage,
         totalPages,
         rowsPerPage,
@@ -28,9 +36,13 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
             onFilterSubmit,
             onDelete
         }
-    } = useDataManagement<ScaffoldingLogPositionDTO>(
+    } = useDataManagement<FetchableScaffoldingLogPositionDTO>(
         async (params) => {
-            const response = await getScaffoldingLogPositionByFilter(params);
+            const fetchParams = {
+                ...params,
+                scaffoldingLogId: logId ? Number(logId) : undefined
+            };
+            const response = await getScaffoldingLogPositionByFilter(fetchParams);
             return {
                 data: response.logs,
                 totalPages: response.totalPages,
@@ -53,8 +65,13 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                         <AddScaffoldingLogPositionDialog fetchPositions={() => onPageChange(currentPage)}/>
                     </Flex>
                 }
-                /*'TODO table'*/
-                // table={}
+                table={<ScaffoldingLogPositionTable
+                    positions={logPositions}
+                    onDelete={onDelete}
+                    onSortChange={onSortChange}
+                    sortField={sortField}
+                    sortDirection={sortDirection}
+                />}
                 pagination={
                     <Pagination
                         currentPage={currentPage}
@@ -64,7 +81,9 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                         onRowsPerPageChange={onRowsPerPageChange}
                     />}
                 bgColor={useThemeColors().bgColorPrimary}
+                scaffoldingLogName={logName}
             />
+
         </Box>
     )
 };

@@ -7,6 +7,7 @@ import {Field} from "@/components/ui/field.tsx";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import {FaArrowDownAZ, FaArrowDownZA, FaExplosion, FaRegTrashCan, FaTableList} from "react-icons/fa6";
 import EditScaffoldingLogDialog from "@/components/scaffolding/log/EditScaffoldingLogDialog.tsx";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
     logs: FetchableScaffoldingLogDTO[]
@@ -29,7 +30,7 @@ const ScaffoldingLogView: React.FC<Props> = ({
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedLogId, setSelectedLogId] = useState<number | null>(null);
     const themeColors = useThemeColors();
-
+    const navigate = useNavigate();
 
     const handleDeleteClick = (id: number) => {
         setSelectedLogId(id);
@@ -225,7 +226,11 @@ const ScaffoldingLogView: React.FC<Props> = ({
                                 <HStack justifyContent="center" mt={1} ml={1} mr={1} mb={1}>
                                     <Button
                                         colorPalette="blue"
-                                        size={"2xs"}>
+                                        size={"2xs"}
+                                        onClick={() => navigate(`/scaffolding-logs/${log.id}/positions`, {
+                                            state: { logName: log.name }
+                                        })}
+                                    >
                                         {t('positionList', {ns: "scaffoldingLogPositions"})}
                                         <FaTableList/>
                                     </Button>

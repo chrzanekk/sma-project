@@ -19,6 +19,7 @@ export interface ScaffoldingLogPositionFilter {
     scaffoldingUserNameContains?: string;
     scaffoldingUserContactNameContains?: string;
     parentPositionOnly?: boolean;
+    scaffoldingLogId?: number;
 
     page?: number;
     size?: number;
@@ -125,6 +126,11 @@ export class ScaffoldingLogPositionFilterBuilder {
 
     withParentPositionOnly(isParent: boolean) {
         this.f.parentPositionOnly = isParent;
+        return this;
+    }
+
+    withScaffoldingLogId(id: number) {
+        this.f.scaffoldingLogId = id;
         return this;
     }
 
