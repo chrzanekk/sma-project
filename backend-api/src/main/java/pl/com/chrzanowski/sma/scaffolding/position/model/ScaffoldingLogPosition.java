@@ -87,7 +87,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @ToString.Exclude
     private ScaffoldingLogPosition parentPosition;
 
-    @OneToMany(mappedBy = "parentPosition", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentPosition",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     @JsonIgnoreProperties("parentPosition")
     private List<ScaffoldingLogPosition> childPositions = new ArrayList<>();

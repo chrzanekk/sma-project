@@ -595,10 +595,115 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     @Override
     public void delete(Long aLong) {
         log.debug("Request to delete ScaffoldingLogPosition by id: {}", aLong);
-        if (scaffoldingLogPositionDao.findById(aLong).isEmpty()) {
-            throw new ScaffoldingLogPositionException(ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND, "Scaffolding Log Position: " + aLong + " not found");
+
+        ScaffoldingLogPosition positionToDelete = scaffoldingLogPositionDao.findById(aLong)
+                .orElseThrow(() -> new ScaffoldingLogPositionException(
+                        ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
+                        "Scaffolding Log Position: " + aLong + " not found"));
+
+        if(positionToDelete.getParentPosition() == null) {
+            scaffoldingLogPositionDao.deleteById(positionToDelete.getId());
+            return;
         }
-        scaffoldingLogPositionDao.deleteById(aLong);
+
+        ScaffoldingLogPosition parent = positionToDelete.getParentPosition();
+        List<ScaffoldingLogPosition> siblings = parent.getChildPositions();
+
+        validateIsLatestModification(positionToDelete, siblings);
+
+        recalculateParentBeforeDelete(parent, positionToDelete);
+
+        parent.getChildPositions().remove(positionToDelete);
+        scaffoldingLogPositionDao.deleteById(positionToDelete.getId());
+
+
+        scaffoldingLogPositionDao.save(parent);
+
+    }
+
+    /**
+     * Sprawdza, czy usuwana pozycja jest ostatnią w sekwencji modyfikacji.
+     */
+    private void validateIsLatestModification(ScaffoldingLogPosition toDelete, List<ScaffoldingLogPosition> siblings) {
+        // Sortujemy rodzeństwo po dacie utworzenia (lub ID jeśli jest sekwencyjne) malejąco
+        // Zakładam, że pole createdDate istnieje (z AuditableEntity)
+        Optional<ScaffoldingLogPosition> latestSibling = siblings.stream()
+                .max(Comparator.comparing(ScaffoldingLogPosition::getId)); // Lub getCreatedDate()
+
+        if (latestSibling.isPresent()) {
+            if (!latestSibling.get().getId().equals(toDelete.getId())) {
+                throw new ScaffoldingLogPositionException(
+                        ScaffoldingLogPositionErrorCode.CANNOT_DELETE_HISTORICAL_POSITION,
+                        "Cannot delete historical modification. Only the latest sub-position can be deleted."
+                );
+            }
+        }
+    }
+
+    /**
+     * Przelicza stan rodzica tak, jakby usuwana podpozycja nigdy nie istniała.
+     */
+    private void recalculateParentBeforeDelete(ScaffoldingLogPosition parent, ScaffoldingLogPosition toDelete) {
+        // 1. Wymiary
+        // Musimy "odwrócić" wpływ usuwanej pozycji na rodzica.
+        // Jeśli pozycja dodawała wymiar (ASSEMBLY), to teraz musimy go odjąć od rodzica.
+        // Jeśli odejmowała (DISMANTLING), musimy go dodać.
+        // ALE PROŚCIEJ: Przeliczyć rodzica od nowa biorąc pod uwagę wszystkie dzieci OPRÓCZ usuwanego.
+
+        List<ScaffoldingLogPositionDimensionBaseDTO> allChildrenDimensions = parent.getChildPositions().stream()
+                .filter(child -> !child.getId().equals(toDelete.getId())) // Pomiń usuwany
+                .map(child -> child.getDimensions().stream()
+                        .map(scaffoldingLogPositionDimensionBaseMapper::toDto)
+                        .collect(Collectors.toList()))
+                .flatMap(List::stream)
+                .toList();
+
+        // Obliczamy nowy wymiar rodzica bazując na jego własnej bazie (ewentualnej) + reszcie dzieci
+        // UWAGA: Tu zakładam, że rodzic jako ROOT ma swoje wymiary bazowe, a dzieci to delty.
+        // Jeśli rodzic jest tylko sumą dzieci, to startujemy od ZERO.
+        // Z analizy Twojego kodu wynika, że przekazujesz current parent dimension do calculateScaffoldingDimension.
+        // Tutaj musimy zrobić inaczej: wziąć bazowy wymiar rodzica (bez dzieci) i nałożyć na niego resztę dzieci.
+
+        // Jednak najbezpieczniej przy delcie jest po prostu odwrócić operację na liczbach:
+
+        BigDecimal currentTotal = parent.getScaffoldingFullDimension();
+        BigDecimal toDeleteDelta = calculateNetDimensionChange(toDelete.getDimensions());
+
+        // Nowy total = obecny total - delta usuwanej pozycji
+        BigDecimal newTotal = currentTotal.subtract(toDeleteDelta);
+        parent.setScaffoldingFullDimension(newTotal);
+
+
+        // 2. Czas pracy
+        BigDecimal currentWorkingTime = parent.getFullWorkingTime();
+        BigDecimal toDeleteTime = calculateFullWorkingTime(BigDecimal.ZERO,
+                toDelete.getWorkingTimes().stream()
+                        .map(scaffoldingLogPositionWorkingTimeBaseMapper::toDto)
+                        .collect(Collectors.toList()));
+
+        parent.setFullWorkingTime(currentWorkingTime.subtract(toDeleteTime));
+    }
+
+    // Pomocnicza metoda do obliczenia "wartości netto" danej pozycji (czy dodaje czy odejmuje)
+    private BigDecimal calculateNetDimensionChange(List<ScaffoldingLogPositionDimension> dimensions) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (ScaffoldingLogPositionDimension dim : dimensions) {
+            BigDecimal value;
+            if (dim.getWidth().compareTo(BigDecimal.ONE) > 0) {
+                value = dim.getHeight().multiply(dim.getWidth()).multiply(dim.getLength());
+            } else if (dim.getWidth().compareTo(BigDecimal.ONE) == 0 && dim.getHeight().compareTo(BigDecimal.ONE) == 0) {
+                value = dim.getLength();
+            } else {
+                value = dim.getHeight().multiply(dim.getLength());
+            }
+
+            if (ScaffoldingOperationType.ASSEMBLY.equals(dim.getOperationType())) {
+                total = total.add(value);
+            } else {
+                total = total.subtract(value);
+            }
+        }
+        return total;
     }
 
     private record DimensionKey(

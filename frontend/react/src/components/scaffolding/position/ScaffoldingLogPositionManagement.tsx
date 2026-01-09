@@ -74,6 +74,7 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                     onSortChange={onSortChange}
                     sortField={sortField}
                     sortDirection={sortDirection}
+                    fetchPositions={() => onPageChange(currentPage)}
                 />}
                 pagination={
                     <Pagination

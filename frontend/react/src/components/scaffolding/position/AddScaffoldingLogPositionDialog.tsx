@@ -4,25 +4,38 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Box, Button, Dialog, Portal, Text} from "@chakra-ui/react";
 import {FaPlus} from "react-icons/fa";
 import AddScaffoldingLogPositionForm from "@/components/scaffolding/position/AddScaffoldingLogPositionForm.tsx";
+import {ScaffoldingLogPositionBaseDTO} from "@/types/scaffolding-log-position-types.ts";
 
 interface AddLogPositionDialogProps {
     fetchPositions: () => void;
     scaffoldingLogId?: number;
+    parentPosition?: ScaffoldingLogPositionBaseDTO;
+    triggerLabel?: string;
+    triggerIcon?: React.ReactElement;
+    triggerColorPalette?: string;
 }
 
-const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({fetchPositions, scaffoldingLogId}) => {
+const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({
+                                                                                  fetchPositions,
+                                                                                  scaffoldingLogId,
+                                                                                  parentPosition,
+                                                                                  triggerLabel,
+                                                                                  triggerIcon = <FaPlus/>,
+                                                                                  triggerColorPalette = "green"
+                                                                              }) => {
     const {t} = useTranslation('scaffoldingLogPositions');
     const themeColors = useThemeColors();
+
     return (
-        <Box>
+        <Box onClick={(e) => e.stopPropagation()}>
             <Dialog.Root size={{mdDown: 'full', md: "full"}} placement={"bottom"} scrollBehavior={"inside"}>
                 <Dialog.Trigger asChild>
                     <Button
-                        colorPalette="green"
+                        colorPalette={triggerColorPalette}
                         size={"2xs"}
                         p={1}
-                    ><FaPlus/>
-                        {t('add')}
+                    >{triggerIcon}
+                        {triggerLabel || t('add', {ns: 'common'})}
                     </Button>
                 </Dialog.Trigger>
                 <Portal>
@@ -41,12 +54,14 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
                                             </Dialog.Header>
                                             <Dialog.Body>
                                                 <Box>
-                                                    <AddScaffoldingLogPositionForm onSuccess={
-                                                        () => {
-                                                            fetchPositions();
-                                                            store.setOpen(false)
-                                                        }}
-                                                                                   scaffoldingLogId={scaffoldingLogId}
+                                                    <AddScaffoldingLogPositionForm
+                                                        onSuccess={
+                                                            () => {
+                                                                fetchPositions();
+                                                                store.setOpen(false)
+                                                            }}
+                                                        scaffoldingLogId={scaffoldingLogId}
+                                                        parentPosition={parentPosition}
                                                     />
                                                 </Box>
 

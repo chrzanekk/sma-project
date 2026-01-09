@@ -9,6 +9,7 @@ import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import AuditCell from "@/components/shared/AuditCell.tsx";
 import {FaCirclePlus, FaExplosion, FaPen, FaRegTrashCan} from "react-icons/fa6";
+import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
 
 interface ScaffoldingLogPositionTableProps {
     positions: FetchableScaffoldingLogPositionDTO[];
@@ -16,6 +17,7 @@ interface ScaffoldingLogPositionTableProps {
     onSortChange: (field: string) => void;
     sortField: string | null;
     sortDirection: "asc" | "desc";
+    fetchPositions: () => void;
 }
 
 const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = ({
@@ -23,7 +25,8 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                                                      onDelete,
                                                                                      onSortChange,
                                                                                      sortField,
-                                                                                     sortDirection
+                                                                                     sortDirection,
+                                                                                     fetchPositions
                                                                                  }) => {
     const {t} = useTranslation(['scaffoldingLogPositions', 'common',
         'technicalProtocolStatuses', 'scaffoldingTypes',
@@ -37,6 +40,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
     const {commonCellProps, commonColumnHeaderProps} = useTableStyles();
 
     const toggleExpand = (id: number) => {
+        console.log(positions);
         setExpandedRow(prev => (prev === id ? null : id));
     };
 
@@ -121,6 +125,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                     <Table.Body>
                         {positions.map((position) => {
                             const isExpanded = expandedRow === position.id;
+                            const hasChildren = position.childPositions && position.childPositions.length > 0;
                             return (
                                 <React.Fragment key={position.id}>
                                     <Table.Row key={position.id}
@@ -133,8 +138,13 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                onClick={() => toggleExpand(position.id!)}>
 
                                         <Table.Cell {...commonCellProps} width={"2%"}>{position.id}</Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"8%"}>{position.scaffoldingNumber}</Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"20%"}>{position.assemblyLocation}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}
+                                                    width={"8%"}>
+                                                    {hasChildren &&
+                                                        <Badge colorPalette="blue" mr={1} size="xs">P</Badge>}
+                                                        {position.scaffoldingNumber}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}
+                                                    width={"20%"}>{position.assemblyLocation}</Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"}>
                                             {DateFormatter.formatDate(position.assemblyDate)}
                                         </Table.Cell>
@@ -144,7 +154,8 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                         <Table.Cell {...commonCellProps} width={"5%"}>
                                             {DateFormatter.formatDate(position.dismantlingNotificationDate)}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps} width={"5%"}>{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps}
+                                                    width={"5%"}>{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"}>
                                             {position.scaffoldingFullDimension} {position.scaffoldingFullDimensionUnit?.symbol}
                                         </Table.Cell>
@@ -168,10 +179,14 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                         />
                                         <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>
                                             <HStack gap={1}>
-                                                <Button colorPalette="orange" size="2xs">
-                                                    {t("addSubPosition", {ns: "scaffoldingLogPositions"})}
-                                                    <FaCirclePlus/>
-                                                </Button>
+                                                <AddScaffoldingLogPositionDialog
+                                                    fetchPositions={fetchPositions}
+                                                    scaffoldingLogId={position.scaffoldingLog?.id}
+                                                    parentPosition={position.parentPosition ? position.parentPosition : position}
+                                                    triggerLabel={t("addSubPosition", {ns: "scaffoldingLogPositions"})}
+                                                    triggerIcon={<FaCirclePlus/>}
+                                                    triggerColorPalette="orange"
+                                                />
                                                 <Button colorPalette="blue" size="2xs">
                                                     {t("edit", {ns: "scaffoldingLogPositions"})}
                                                     <FaPen/>
@@ -188,12 +203,12 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
 
                                     {isExpanded && (
                                         <Table.Row bg={themeColors.bgColorSecondary}>
-                                            <Table.Cell colSpan={12} p={0}>
+                                            <Table.Cell colSpan={13} p={0}>
                                                 <Collapsible.Root open={isExpanded}>
                                                     <Collapsible.Content>
                                                         <Box p={2} bg={themeColors.bgColorSecondary}
                                                              borderBottomWidth="1px"
-                                                             borderColor={themeColors.borderColor}>
+                                                             borderColor={ "gray.400"}>
                                                             <HStack alignItems="start" gap={4} width="auto">
 
                                                                 {/* TABELA 1: WYMIARY CZĄSTKOWE */}
@@ -340,7 +355,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                                     </Table.ScrollArea>
                                                                 </VStack>
                                                                 {/* TABELA 4: Użytkownik*/}
-                                                                <VStack align="start" flex={21} gap={1}>
+                                                                <VStack align="start" flex={33} gap={1}>
                                                                     <Text fontWeight="bold" fontSize="sm"
                                                                           color={themeColors.fontColor}>
                                                                         {t("scaffoldingLogPositions:scaffoldingUser")}
