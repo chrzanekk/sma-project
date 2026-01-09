@@ -62,7 +62,10 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                 />}
                 addLogPositionButton={
                     <Flex justify={"center"} gap={2}>
-                        <AddScaffoldingLogPositionDialog fetchPositions={() => onPageChange(currentPage)}/>
+                        <AddScaffoldingLogPositionDialog
+                            fetchPositions={() => onPageChange(currentPage)}
+                            scaffoldingLogId={logId ? Number(logId) : undefined}
+                        />
                     </Flex>
                 }
                 table={<ScaffoldingLogPositionTable

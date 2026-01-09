@@ -1,5 +1,7 @@
 package pl.com.chrzanowski.sma.common.enumeration;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum DimensionType {
     CONSOLE("console"),
     SUSPENSION("suspension"),
@@ -13,6 +15,7 @@ public enum DimensionType {
         this.type = type;
     }
 
+    @JsonValue
     public String getType() {
         return type;
     }

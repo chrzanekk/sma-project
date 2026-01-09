@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import {BasePositionFormValues} from "@/types/position-types.ts";
 import {BaseEmployeeFormValues} from "@/types/employee-types.ts";
 
 export const getEmployeeValidationSchema = (
@@ -23,8 +22,8 @@ export const getEmployeeValidationSchema = (
             .required(t("errors:verification.required", {field: t("positions:position")}))
             .test(
                 'position-not-null',
-                t("errors:verification.required", { field: t("positions:position") }),
+                t("errors:verification.required", {field: t("positions:position")}),
                 (value) => value !== null && value !== undefined
             ),
-    }) as Yup.Schema<BaseEmployeeFormValues>;
+    }) as unknown as Yup.Schema<BaseEmployeeFormValues>;
 };

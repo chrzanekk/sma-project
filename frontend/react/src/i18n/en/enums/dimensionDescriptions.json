@@ -1,5 +1,12 @@
 {
+  "partialDimensions": "Wymiary cząstkowe",
+  "noDimensions": "Brak wymiarów",
   "length": "Długość",
   "width": "Szerokość",
-  "height": "Wysokość"
+  "height": "Wysokość",
+  "unit": "Jednostka miary",
+  "lshort": "Dł.",
+  "wshort": "Szer.",
+  "hshort": "Wys.",
+  "unitShort": "Jm."
 }

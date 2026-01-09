@@ -9,6 +9,7 @@
   "unitType": "Typ jednostki miary",
   "unitTypeShort": "Typ jednostki",
   "description": "Opis",
+  "hours": "Godziny",
   "notifications" : {
     "addUnitSuccess" : "Stanowisko {symbol} dodane pomyślnie",
     "addUnitError": "Błąd dodawania jednostki",

@@ -7,9 +7,10 @@ import AddScaffoldingLogPositionForm from "@/components/scaffolding/position/Add
 
 interface AddLogPositionDialogProps {
     fetchPositions: () => void;
+    scaffoldingLogId?: number;
 }
 
-const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({fetchPositions}) => {
+const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({fetchPositions, scaffoldingLogId}) => {
     const {t} = useTranslation('scaffoldingLogPositions');
     const themeColors = useThemeColors();
     return (
@@ -44,8 +45,9 @@ const AddScaffoldingLogPositionDialog: React.FC<AddLogPositionDialogProps> = ({f
                                                         () => {
                                                             fetchPositions();
                                                             store.setOpen(false)
-                                                        }
-                                                    }/>
+                                                        }}
+                                                                                   scaffoldingLogId={scaffoldingLogId}
+                                                    />
                                                 </Box>
 
                                             </Dialog.Body>

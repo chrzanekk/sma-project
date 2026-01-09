@@ -32,6 +32,7 @@ import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPosi
 import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
 import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
+import pl.com.chrzanowski.sma.unit.model.Unit;
 import pl.com.chrzanowski.sma.unit.service.UnitService;
 
 import java.math.BigDecimal;
@@ -57,10 +58,9 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private final ContactService contactService;
     private final ContactBaseMapper contactBaseMapper;
     private final ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper;
-    private final ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService;
     private final ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper;
 
-    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeService scaffoldingLogPositionWorkingTimeService, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper) {
+    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper) {
         this.scaffoldingLogPositionDao = scaffoldingLogPositionDao;
         this.scaffoldingLogPositionDTOMapper = scaffoldingLogPositionDTOMapper;
         this.scaffoldingNumberValidationService = scaffoldingNumberValidationService;
@@ -71,7 +71,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         this.contactService = contactService;
         this.contactBaseMapper = contactBaseMapper;
         this.scaffoldingLogPositionDimensionBaseMapper = scaffoldingLogPositionDimensionBaseMapper;
-        this.scaffoldingLogPositionWorkingTimeService = scaffoldingLogPositionWorkingTimeService;
         this.scaffoldingLogPositionWorkingTimeBaseMapper = scaffoldingLogPositionWorkingTimeBaseMapper;
     }
 
@@ -151,16 +150,9 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         if (existingPosition.getParentPosition() != null && (dimensionChanged || workingTimeChanged)) {
             ScaffoldingLogPosition parentEntity = existingPosition.getParentPosition();
             if (dimensionChanged) {
-                // TODO: Tu jest potencjalny błąd logiczny "double counting" omawiany wcześniej.
-                // Przy update powinieneś przekazać "deltę" lub przeliczyć rodzica na nowo.
-                // Zakładając, że updateParentDimensionsState dodaje "nowe" wartości:
-                // Musisz najpierw ODJĄĆ stare wartości dziecka od rodzica.
-                // Na razie zostawiam Twoją logikę:
                 updateParentDimensionsState(parentEntity, updatingDimensions);
             }
             if (workingTimeChanged) {
-                // Analogicznie - updateParentWorkingTimeState obecnie "dodaje" (zależy od implementacji calculateFullWorkingTime)
-                // Powinieneś upewnić się, że ta metoda poprawnie obsługuje aktualizację (nie dodaje w kółko tego samego).
                 updateParentWorkingTimeState(parentEntity, updatingWorkingTimes);
             }
             scaffoldingLogPositionDao.save(existingPosition);
@@ -219,16 +211,38 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
     private void linkSubEntities(ScaffoldingLogPosition entity) {
+        Map<String, UnitBaseDTO> unitCache = new HashMap<>();
+
+        Function<String, Unit> getUnitEntity = (symbol) -> {
+            if (!unitCache.containsKey(symbol)) {
+                unitCache.put(symbol, unitService.findGlobalUnitBySymbol(symbol));
+            }
+            return unitBaseMapper.toEntity(unitCache.get(symbol));
+        };
+
+
         if (entity.getDimensions() != null) {
             entity.getDimensions().forEach(d -> {
                 d.setScaffoldingPosition(entity);
                 d.setCompany(entity.getCompany());
+                if (d.getUnit() == null) {
+                    ScaffoldingLogPositionDimensionBaseDTO tempDto = ScaffoldingLogPositionDimensionBaseDTO.builder()
+                            .width(d.getWidth())
+                            .height(d.getHeight())
+                            .build();
+
+                    String symbol = determineUnitSymbol(tempDto);
+                    d.setUnit(getUnitEntity.apply(symbol));
+                }
             });
         }
         if (entity.getWorkingTimes() != null) {
             entity.getWorkingTimes().forEach(wt -> {
                 wt.setScaffoldingPosition(entity);
                 wt.setCompany(entity.getCompany());
+                if(wt.getUnit() == null) {
+                    wt.setUnit(getUnitEntity.apply("r-h"));
+                }
             });
         }
     }
@@ -396,7 +410,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
     private void updateDimensionFields(ScaffoldingLogPositionDimension entity, ScaffoldingLogPositionDimensionBaseDTO dto) {
-        // Tylko jeśli wartości są inne - można dodać dodatkowy check equals, ale settery są tanie
         entity.setHeight(dto.getHeight());
         entity.setWidth(dto.getWidth());
         entity.setLength(dto.getLength());
@@ -406,7 +419,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         entity.setOperationType(dto.getOperationType());
 
         if (dto.getUnit() != null && dto.getUnit().getId() != null) {
-            // Opcjonalnie: sprawdź czy ID się zmieniło przed pobraniem z bazy
             if (!entity.getUnit().getId().equals(dto.getUnit().getId())) {
                 UnitDTO unitDTO = unitService.findById(dto.getUnit().getId());
                 entity.setUnit(unitBaseMapper.toEntity(unitDTO));

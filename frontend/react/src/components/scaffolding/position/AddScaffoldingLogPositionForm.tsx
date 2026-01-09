@@ -13,23 +13,31 @@ import {addScaffoldingLogPosition} from "@/services/scaffolding-log-position-ser
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
 import {formatMessage} from "@/notifications/FormatMessage.tsx";
 import {Box} from "@chakra-ui/react";
-import {useThemeColors} from "@/theme/theme-colors.ts";
 import CommonScaffoldingLogPositionForm from "@/components/scaffolding/position/CommonScaffoldingLogPositionForm.tsx";
 import {ScaffoldingType} from "@/enums/scaffolding-type-types-enum.ts";
 import {TechnicalProtocolStatus} from "@/enums/technical-protocol-status-types-enum.ts";
+import {ScaffoldingLogBaseDTO} from "@/types/scaffolding-log-types.ts";
 
 interface AddScaffoldingLogPositionFormProps {
     onSuccess: (data: BaseScaffoldingLogPositionFormValues) => void;
     parentPosition?: ScaffoldingLogPositionBaseDTO;
+    scaffoldingLogId?: number;
 }
 
-const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps> = ({onSuccess, parentPosition}) => {
+const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps> = ({
+                                                                                         onSuccess,
+                                                                                         parentPosition,
+                                                                                         scaffoldingLogId
+                                                                                     }) => {
     const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'errors']);
     const currentCompany = getSelectedCompany();
-    const themeColors = useThemeColors();
 
     const scaffoldingTypeOptions = React.useMemo(() => getScaffoldingTypeOptions(t), [t]);
     const technicalProtocolStatusOptions = React.useMemo(() => getTechnicalProtocolStatusOptions(t), [t]);
+
+    const initialScaffoldingLog: ScaffoldingLogBaseDTO | null = scaffoldingLogId
+        ? { id: scaffoldingLogId } as ScaffoldingLogBaseDTO
+        : null;
 
     const initialValues: BaseScaffoldingLogPositionFormValues = {
         id: undefined,
@@ -45,7 +53,7 @@ const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps
         fullWorkingTime: "",
 
         parentPosition: parentPosition || null as any,
-        scaffoldingLog: null as any,
+        scaffoldingLog: initialScaffoldingLog!,
 
         contractor: undefined,
         contractorContact: undefined,
@@ -60,12 +68,22 @@ const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps
 
     const handleSubmit = async (values: BaseScaffoldingLogPositionFormValues) => {
         try {
+            const cleanedDimensions = values.dimensions.filter(dim =>
+                dim.length || dim.width || dim.height // Zostawiamy tylko te, które mają cokolwiek wpisane
+            );
+
+            // To samo dla workingTimes (jeśli dodasz podobną logikę tam)
+            const cleanedWorkingTimes = values.workingTimes.filter(wt =>
+                wt.numberOfWorkers || wt.numberOfHours
+            );
             const mappedScaffoldingLogPosition: ScaffoldingLogPositionDTO = {
                 ...values,
                 contractor: values.contractor!,
                 contractorContact: values.contractorContact!,
                 scaffoldingUser: values.scaffoldingUser!,
                 scaffoldingUserContact: values.scaffoldingUserContact!,
+                dimensions: cleanedDimensions,
+                workingTimes: cleanedWorkingTimes,
                 company: currentCompany!
             }
             const response = await addScaffoldingLogPosition(mappedScaffoldingLogPosition);

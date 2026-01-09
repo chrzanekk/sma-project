@@ -1,23 +1,14 @@
 import {FetchableScaffoldingLogPositionDTO} from "@/types/scaffolding-log-position-types.ts";
 import {useTranslation} from "react-i18next";
-import {
-    Badge,
-    Box,
-    Button,
-    Collapsible,
-    HStack,
-    Table,
-    Text,
-    useDisclosure,
-    VStack
-} from "@chakra-ui/react";
+import {Badge, Box, Button, Collapsible, HStack, Table, Text, useDisclosure, VStack} from "@chakra-ui/react";
 import React, {useState} from "react";
 import {useThemeColors} from "@/theme/theme-colors.ts";
 import {Field} from "@/components/ui/field.tsx";
 import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
-import { useTableStyles } from "@/components/shared/tableStyles.ts";
+import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import AuditCell from "@/components/shared/AuditCell.tsx";
+import {FaCirclePlus, FaExplosion, FaPen, FaRegTrashCan} from "react-icons/fa6";
 
 interface ScaffoldingLogPositionTableProps {
     positions: FetchableScaffoldingLogPositionDTO[];
@@ -34,7 +25,10 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                                                      sortField,
                                                                                      sortDirection
                                                                                  }) => {
-    const {t} = useTranslation(['scaffoldingLogPositions', 'common']);
+    const {t} = useTranslation(['scaffoldingLogPositions', 'common',
+        'technicalProtocolStatuses', 'scaffoldingTypes',
+        'scaffoldingOperationTypes', 'dimensionDescriptions', 'dimensionTypes',
+        'employees', 'units']);
     const {open, onOpen, onClose} = useDisclosure();
     const [selectedId, setSelectedId] = useState<number | null>(null);
     const [expandedRow, setExpandedRow] = useState<number | null>(null);
@@ -96,7 +90,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                 {t("scaffoldingLogPositions:dismantlingDate")}{renderSortIndicator("dismantlingDate")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("dismantlingNotificationDate")}>
-                                {t("scaffoldingLogPositions:dismantlingNotificationDate")}{renderSortIndicator("dismantlingNotificationDate")}</Table.ColumnHeader>
+                                {t("scaffoldingLogPositions:dismantlingNotificationDateShort")}{renderSortIndicator("dismantlingNotificationDate")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("scaffoldingType")}>
                                 {t("scaffoldingLogPositions:scaffoldingType")}{renderSortIndicator("scaffoldingType")}</Table.ColumnHeader>
@@ -109,18 +103,6 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("technicalProtocolStatus")}>
                                 {t("scaffoldingLogPositions:technicalProtocolStatus")}{renderSortIndicator("technicalProtocolStatus")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("contractor")}>
-                                {t("scaffoldingLogPositions:contractor")}{renderSortIndicator("contractor")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("contractorContact")}>
-                                {t("scaffoldingLogPositions:contractorContact")}{renderSortIndicator("contractorContact")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("scaffoldingUser")}>
-                                {t("scaffoldingLogPositions:scaffoldingUser")}{renderSortIndicator("scaffoldingUser")}</Table.ColumnHeader>
-                            <Table.ColumnHeader {...commonColumnHeaderProps}
-                                                onClick={() => onSortChange("scaffoldingUserContact")}>
-                                {t("scaffoldingLogPositions:scaffoldingUserContact")}{renderSortIndicator("scaffoldingUserContact")}</Table.ColumnHeader>
                             <Table.ColumnHeader
                                 {...commonColumnHeaderProps}
                                 onClick={() => onSortChange("createdDatetime")}
@@ -150,148 +132,252 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                }}
                                                onClick={() => toggleExpand(position.id!)}>
 
-                                        <Table.Cell {...commonCellProps}>{position.id}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{position.scaffoldingNumber}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{position.assemblyLocation}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {DateFormatter.formatDateTime(position.assemblyDate)}
+                                        <Table.Cell {...commonCellProps} width={"2%"}>{position.id}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"8%"}>{position.scaffoldingNumber}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"20%"}>{position.assemblyLocation}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"5%"}>
+                                            {DateFormatter.formatDate(position.assemblyDate)}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {DateFormatter.formatDateTime(position.dismantlingDate)}
+                                        <Table.Cell {...commonCellProps} width={"5%"}>
+                                            {DateFormatter.formatDate(position.dismantlingDate)}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {DateFormatter.formatDateTime(position.dismantlingNotificationDate)}
+                                        <Table.Cell {...commonCellProps} width={"5%"}>
+                                            {DateFormatter.formatDate(position.dismantlingNotificationDate)}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>{position.scaffoldingType}</Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
+                                        <Table.Cell {...commonCellProps} width={"5%"}>{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"5%"}>
                                             {position.scaffoldingFullDimension} {position.scaffoldingFullDimensionUnit?.symbol}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.fullWorkingTime} h
+                                        <Table.Cell {...commonCellProps} width={"3%"}>
+                                            {position.fullWorkingTime} r-h
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.technicalProtocolStatus}
+                                        <Table.Cell {...commonCellProps} width={"8%"}>
+                                            {t(`technicalProtocolStatuses:${position.technicalProtocolStatus}`)}
                                         </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.contractor.name}
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.contractorContact.firstName} {position.contractorContact.lastName}
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.scaffoldingUser.name}
-                                        </Table.Cell>
-                                        <Table.Cell {...commonCellProps}>
-                                            {position.scaffoldingUserContact.firstName} {position.scaffoldingUserContact.lastName}
-                                        </Table.Cell>
-
                                         <AuditCell
                                             value={position.createdDatetime}
                                             user={position.createdBy}
                                             cellProps={commonCellProps}
+                                            width={"8%"}
                                         />
                                         <AuditCell
                                             value={position.lastModifiedDatetime}
                                             user={position.modifiedBy}
                                             cellProps={commonCellProps}
+                                            width={"8%"}
                                         />
                                         <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>
-                                            <Button colorPalette="red" size="2xs"
-                                                    onClick={() => handleDeleteClick(position.id!)}>
-                                                {t("delete", {ns: "common"})}
-                                            </Button>
+                                            <HStack gap={1}>
+                                                <Button colorPalette="orange" size="2xs">
+                                                    {t("addSubPosition", {ns: "scaffoldingLogPositions"})}
+                                                    <FaCirclePlus/>
+                                                </Button>
+                                                <Button colorPalette="blue" size="2xs">
+                                                    {t("edit", {ns: "scaffoldingLogPositions"})}
+                                                    <FaPen/>
+                                                </Button>
+                                                <Button colorPalette="red" size="2xs"
+                                                        onClick={() => handleDeleteClick(position.id!)}>
+                                                    {t("delete", {ns: "common"})}
+                                                    <FaExplosion/>
+                                                    <FaRegTrashCan/>
+                                                </Button>
+                                            </HStack>
                                         </Table.Cell>
                                     </Table.Row>
 
-
                                     {isExpanded && (
                                         <Table.Row bg={themeColors.bgColorSecondary}>
-                                            <Table.Cell colSpan={9} p={0}>
+                                            <Table.Cell colSpan={12} p={0}>
                                                 <Collapsible.Root open={isExpanded}>
                                                     <Collapsible.Content>
-                                                        <Box p={4} bg="gray.50" borderBottomWidth="1px"
-                                                             borderColor="gray.200">
-                                                            <HStack alignItems="start" gap={6} width="100%">
+                                                        <Box p={2} bg={themeColors.bgColorSecondary}
+                                                             borderBottomWidth="1px"
+                                                             borderColor={themeColors.borderColor}>
+                                                            <HStack alignItems="start" gap={4} width="auto">
 
                                                                 {/* TABELA 1: WYMIARY CZĄSTKOWE */}
-                                                                <VStack align="start" flex={1} gap={2}>
+                                                                <VStack align="start" flex={1} gap={1}>
                                                                     <Text fontWeight="bold" fontSize="sm"
-                                                                          color="gray.600">
-                                                                        {t("partialDimensions", {defaultValue: "Wymiary cząstkowe"})}
+                                                                          color={themeColors.fontColor}>
+                                                                        {t("dimensionDescriptions:partialDimensions")}
                                                                     </Text>
-                                                                    <Table.Root size="sm" variant="outline" bg="white">
-                                                                        <Table.Header>
-                                                                            <Table.Row>
-                                                                                <Table.ColumnHeader>Wys.</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Szer.</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Dł.</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Typ</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Operacja</Table.ColumnHeader>
-                                                                            </Table.Row>
-                                                                        </Table.Header>
-                                                                        <Table.Body>
-                                                                            {position.dimensions?.length > 0 ? (
-                                                                                position.dimensions.map((dim, idx) => (
-                                                                                    <Table.Row key={dim.id || idx}>
-                                                                                        <Table.Cell>{dim.height} {dim.unit?.symbol}</Table.Cell>
-                                                                                        <Table.Cell>{dim.width} {dim.unit?.symbol}</Table.Cell>
-                                                                                        <Table.Cell>{dim.length} {dim.unit?.symbol}</Table.Cell>
-                                                                                        <Table.Cell><Badge
-                                                                                            variant="outline">{dim.dimensionType}</Badge></Table.Cell>
-                                                                                        <Table.Cell
-                                                                                            fontSize="xs">{dim.operationType}</Table.Cell>
-                                                                                    </Table.Row>
-                                                                                ))
-                                                                            ) : (
-                                                                                <Table.Row>
-                                                                                    <Table.Cell colSpan={5}
-                                                                                                textAlign="center"
-                                                                                                color="gray.500">
-                                                                                        {t("noDimensions", {defaultValue: "Brak wymiarów"})}
-                                                                                    </Table.Cell>
+                                                                    <Table.ScrollArea borderWidth="1px"
+                                                                                      borderRadius="md"
+                                                                                      borderColor="grey">
+                                                                        <Table.Root size="sm" interactive
+                                                                                    showColumnBorder>
+                                                                            <Table.Header>
+                                                                                <Table.Row
+                                                                                    bg={themeColors.bgColorPrimary}>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:hshort")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:wshort")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:lshort")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:unitShort")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("scaffoldingTypes:scaffoldingTypeShort")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("scaffoldingOperationTypes:operation")}</Table.ColumnHeader>
                                                                                 </Table.Row>
-                                                                            )}
-                                                                        </Table.Body>
-                                                                    </Table.Root>
+                                                                            </Table.Header>
+                                                                            <Table.Body>
+                                                                                {position.dimensions?.length > 0 ? (
+                                                                                    position.dimensions.map((dim, idx) => (
+                                                                                        <Table.Row key={dim.id || idx}
+                                                                                                   _hover={{
+                                                                                                       textDecoration: "none",
+                                                                                                       bg: themeColors.highlightBgColor,
+                                                                                                       color: themeColors.fontColorHover,
+                                                                                                   }}>
+                                                                                            <Table.Cell {...commonCellProps}>{dim.height} </Table.Cell>
+                                                                                            <Table.Cell {...commonCellProps}>{dim.width} </Table.Cell>
+                                                                                            <Table.Cell {...commonCellProps}>{dim.length}</Table.Cell>
+                                                                                            <Table.Cell {...commonCellProps}> {dim.unit?.symbol}</Table.Cell>
+                                                                                            <Table.Cell {...commonCellProps}><Badge
+                                                                                                variant="outline"
+                                                                                                size={"xs"}>{t(`dimensionTypes:${dim.dimensionType}`)}</Badge></Table.Cell>
+                                                                                            <Table.Cell
+                                                                                                fontSize="xs" {...commonCellProps}>{t(`scaffoldingOperationTypes:${dim.operationType}`)}</Table.Cell>
+                                                                                        </Table.Row>
+                                                                                    ))
+                                                                                ) : (
+                                                                                    <Table.Row>
+                                                                                        <Table.Cell colSpan={5}
+                                                                                                    textAlign="center"
+                                                                                                    color={themeColors.fontColor}>
+                                                                                            {t("dimensionDescriptions:noDimensions")}
+                                                                                        </Table.Cell>
+                                                                                    </Table.Row>
+                                                                                )}
+                                                                            </Table.Body>
+                                                                        </Table.Root>
+                                                                    </Table.ScrollArea>
                                                                 </VStack>
 
                                                                 {/* TABELA 2: CZAS PRACY */}
-                                                                <VStack align="start" flex={1} gap={2}>
+                                                                <VStack align="start" flex={2} gap={1}>
                                                                     <Text fontWeight="bold" fontSize="sm"
-                                                                          color="gray.600">
+                                                                          color={themeColors.fontColor}>
                                                                         {t("workingTimes", {defaultValue: "Czas pracy"})}
                                                                     </Text>
-                                                                    <Table.Root size="sm" variant="outline" bg="white">
-                                                                        <Table.Header>
-                                                                            <Table.Row>
-                                                                                <Table.ColumnHeader>Pracownicy</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Godziny</Table.ColumnHeader>
-                                                                                <Table.ColumnHeader>Operacja</Table.ColumnHeader>
-                                                                            </Table.Row>
-                                                                        </Table.Header>
-                                                                        <Table.Body>
-                                                                            {position.workingTimes?.length > 0 ? (
-                                                                                position.workingTimes.map((wt, idx) => (
-                                                                                    <Table.Row key={wt.id || idx}>
-                                                                                        <Table.Cell>{wt.numberOfWorkers}</Table.Cell>
-                                                                                        <Table.Cell>{wt.numberOfHours} {wt.unit?.symbol}</Table.Cell>
-                                                                                        <Table.Cell
-                                                                                            fontSize="xs">{wt.operationType}</Table.Cell>
-                                                                                    </Table.Row>
-                                                                                ))
-                                                                            ) : (
-                                                                                <Table.Row>
-                                                                                    <Table.Cell colSpan={3}
-                                                                                                textAlign="center"
-                                                                                                color="gray.500">
-                                                                                        {t("noWorkingTime", {defaultValue: "Brak zapisów czasu pracy"})}
-                                                                                    </Table.Cell>
+                                                                    <Table.ScrollArea borderWidth="1px"
+                                                                                      borderRadius="md"
+                                                                                      borderColor="grey">
+                                                                        <Table.Root size="sm" interactive
+                                                                                    showColumnBorder>
+                                                                            <Table.Header>
+                                                                                <Table.Row
+                                                                                    bg={themeColors.bgColorPrimary}>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>{t("employees:employees")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>{t("units:hours")}</Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>{t("scaffoldingOperationTypes:operation")}</Table.ColumnHeader>
                                                                                 </Table.Row>
-                                                                            )}
-                                                                        </Table.Body>
-                                                                    </Table.Root>
+                                                                            </Table.Header>
+                                                                            <Table.Body>
+                                                                                {position.workingTimes?.length > 0 ? (
+                                                                                    position.workingTimes.map((wt, idx) => (
+                                                                                        <Table.Row key={wt.id || idx}
+                                                                                                   _hover={{
+                                                                                                       textDecoration: "none",
+                                                                                                       bg: themeColors.highlightBgColor,
+                                                                                                       color: themeColors.fontColorHover,
+                                                                                                   }}>
+                                                                                            <Table.Cell {...commonCellProps}>{wt.numberOfWorkers}</Table.Cell>
+                                                                                            <Table.Cell {...commonCellProps}>{wt.numberOfHours} {wt.unit?.symbol}</Table.Cell>
+                                                                                            <Table.Cell
+                                                                                                fontSize="xs" {...commonCellProps}>{t(`scaffoldingOperationTypes:${wt.operationType}`)}</Table.Cell>
+                                                                                        </Table.Row>
+                                                                                    ))
+                                                                                ) : (
+                                                                                    <Table.Row>
+                                                                                        <Table.Cell colSpan={3}
+                                                                                                    textAlign="center"
+                                                                                                    color="gray.500">
+                                                                                            {t("noWorkingTime", {defaultValue: "Brak zapisów czasu pracy"})}
+                                                                                        </Table.Cell>
+                                                                                    </Table.Row>
+                                                                                )}
+                                                                            </Table.Body>
+                                                                        </Table.Root>
+                                                                    </Table.ScrollArea>
                                                                 </VStack>
 
+                                                                {/* TABELA 3: Zleceniodawca*/}
+                                                                <VStack align="start" flex={11} gap={1}>
+                                                                    <Text fontWeight="bold" fontSize="sm"
+                                                                          color={themeColors.fontColor}>
+                                                                        {t("scaffoldingLogPositions:contractor")}
+                                                                    </Text>
+                                                                    <Table.ScrollArea borderWidth="1px"
+                                                                                      borderRadius="md"
+                                                                                      borderColor="grey">
+                                                                        <Table.Root size="sm" variant="outline"
+                                                                                    interactive showColumnBorder>
+                                                                            <Table.Header>
+                                                                                <Table.Row
+                                                                                    bg={themeColors.bgColorPrimary}>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>
+                                                                                        {t("scaffoldingLogPositions:contractor")}
+                                                                                    </Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>
+                                                                                        {t("scaffoldingLogPositions:contractorContact")}
+                                                                                    </Table.ColumnHeader>
+                                                                                </Table.Row>
+                                                                            </Table.Header>
+                                                                            <Table.Body>
+                                                                                <Table.Row _hover={{
+                                                                                    textDecoration: "none",
+                                                                                    bg: themeColors.highlightBgColor,
+                                                                                    color: themeColors.fontColorHover,
+                                                                                }}>
+                                                                                    <Table.Cell {...commonCellProps}>
+                                                                                        {position.contractor.name}
+                                                                                    </Table.Cell>
+                                                                                    <Table.Cell {...commonCellProps}>
+                                                                                        {position.contractorContact.firstName} {position.contractorContact.lastName}
+                                                                                    </Table.Cell>
+                                                                                </Table.Row>
+                                                                            </Table.Body>
+                                                                        </Table.Root>
+                                                                    </Table.ScrollArea>
+                                                                </VStack>
+                                                                {/* TABELA 4: Użytkownik*/}
+                                                                <VStack align="start" flex={21} gap={1}>
+                                                                    <Text fontWeight="bold" fontSize="sm"
+                                                                          color={themeColors.fontColor}>
+                                                                        {t("scaffoldingLogPositions:scaffoldingUser")}
+                                                                    </Text>
+                                                                    <Table.ScrollArea borderWidth="1px"
+                                                                                      borderRadius="md"
+                                                                                      borderColor="grey">
+                                                                        <Table.Root size="sm" variant="outline"
+                                                                                    interactive showColumnBorder>
+                                                                            <Table.Header>
+                                                                                <Table.Row
+                                                                                    bg={themeColors.bgColorPrimary}>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>
+                                                                                        {t("scaffoldingLogPositions:scaffoldingUser")}
+                                                                                    </Table.ColumnHeader>
+                                                                                    <Table.ColumnHeader {...commonColumnHeaderProps}>
+                                                                                        {t("scaffoldingLogPositions:scaffoldingUserContact")}
+                                                                                    </Table.ColumnHeader>
+                                                                                </Table.Row>
+                                                                            </Table.Header>
+                                                                            <Table.Body>
+                                                                                <Table.Row _hover={{
+                                                                                    textDecoration: "none",
+                                                                                    bg: themeColors.highlightBgColor,
+                                                                                    color: themeColors.fontColorHover,
+                                                                                }}>
+                                                                                    <Table.Cell {...commonCellProps}>
+                                                                                        {position.scaffoldingUser.name}
+                                                                                    </Table.Cell>
+                                                                                    <Table.Cell {...commonCellProps}>
+                                                                                        {position.scaffoldingUserContact.firstName} {position.scaffoldingUserContact.lastName}
+                                                                                    </Table.Cell>
+                                                                                </Table.Row>
+                                                                            </Table.Body>
+                                                                        </Table.Root>
+                                                                    </Table.ScrollArea>
+                                                                </VStack>
                                                             </HStack>
                                                         </Box>
                                                     </Collapsible.Content>
