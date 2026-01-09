@@ -1,7 +1,7 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
 import {Box, Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
-import Select, {StylesConfig} from "react-select";
+import Select, {components, PlaceholderProps, StylesConfig} from "react-select";
 import {themeVars, useThemeColors} from "@/theme/theme-colors";
 import {getSelectStyles} from "@/components/shared/formOptions.ts";
 import {useTranslation} from "react-i18next";
@@ -22,10 +22,12 @@ export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({n
         color={themeColors.fontColor}
         placeholder={placeholder}
         _placeholder={{color: themeVars.fontColor}}
+        title={placeholder}
         size="sm"
         bg={themeColors.bgColorSecondary}
         borderRadius="md"
         width="150px"
+        textOverflow="ellipsis"
     />
 };
 
@@ -70,6 +72,8 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         {...field}
                         placeholder={placeholder}
                         _placeholder={{color: themeVars.fontColor}}
+                        title={field.value || placeholder}
+                        textOverflow="ellipsis"
                         type={type}
                         size="sm"
                         color={themeColors.fontColor}
@@ -200,10 +204,29 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
             ...provided,
             color: themeVars.fontColor,
         }),
+        valueContainer: (provided) => ({
+            ...provided,
+            // Ważne: musimy ograniczyć kontener wartości, żeby placeholder miał ramy
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
+        }),
         // Style dla placeholdera
         placeholder: (provided) => ({
             ...provided,
             color: themeVars.fontColor,
+            // Kluczowe style nadpisujące domyślne pozycjonowanie react-select
+            position: 'absolute', // React-select używa absolute, to OK
+            top: '50%',
+            transform: 'translateY(-50%)',
+            left: 0,
+            right: 0, // Rozciągnij na szerokość
+            margin: '0 8px', // Odstęp od krawędzi (zgodny z paddingiem inputa)
+
+            // Style ucinania
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 'calc(100% - 16px)' // Zabezpieczenie szerokości (minus marginesy)
         }),
     };
 
@@ -222,6 +245,9 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 options={options}
                 isDisabled={disabled}
                 placeholder={placeholder}
+                components={{
+                    Placeholder: CustomPlaceholder
+                }}
                 aria-label={placeholder}
                 value={selectedValue}
                 isMulti={isMulti}
@@ -497,6 +523,8 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
             <Input
                 name={name}
                 placeholder={placeholder}
+                title={searchTerm || placeholder}
+                textOverflow="ellipsis"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={mergedOnKeyDown}
@@ -528,5 +556,23 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
     );
 };
 
+const CustomPlaceholder = (props: PlaceholderProps<any, boolean>) => {
+    const text = typeof props.children === 'string' ? props.children : '';
 
-export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect};
+    return (
+        <components.Placeholder {...props}>
+            <div title={text} style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '100%',
+                display: 'block'
+            }}>
+                {props.children}
+            </div>
+        </components.Placeholder>
+    );
+};
+
+
+export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect, CustomPlaceholder};
