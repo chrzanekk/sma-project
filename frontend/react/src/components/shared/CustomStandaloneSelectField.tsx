@@ -1,10 +1,9 @@
 // components/shared/CustomStandaloneSelectField.tsx
 import React from "react";
 import {Box, Text} from "@chakra-ui/react";
-import Select, {StylesConfig} from "react-select";
-import {useThemeColors} from "@/theme/theme-colors.ts";
+import Select, {components, PlaceholderProps, StylesConfig} from "react-select";
+import {themeVars, useThemeColors} from "@/theme/theme-colors.ts";
 import {getSelectStyles} from "@/components/shared/formOptions.ts";
-import {themeVars} from "@/theme/theme-colors.ts";
 
 export interface SelectOption {
     value: string;
@@ -22,6 +21,24 @@ interface CustomStandaloneSelectFieldProps {
     bgColor?: string;
     disabled?: boolean;
 }
+
+const CustomPlaceholder = (props: PlaceholderProps<SelectOption, boolean>) => {
+    const text = typeof props.children === 'string' ? props.children : '';
+
+    return (
+        <components.Placeholder {...props}>
+            <div title={text} style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '100%',
+                display: 'block'
+            }}>
+                {props.children}
+            </div>
+        </components.Placeholder>
+    );
+};
 
 const CustomStandaloneSelectField: React.FC<CustomStandaloneSelectFieldProps> = ({
                                                                                      label,
@@ -110,6 +127,21 @@ const CustomStandaloneSelectField: React.FC<CustomStandaloneSelectFieldProps> = 
         placeholder: (provided) => ({
             ...provided,
             color: themeVars.fontColor,
+            position: 'absolute',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            left: 0,
+            right: 0,
+            margin: '0 8px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 'calc(100% - 16px)'
+        }),
+        valueContainer: (provided) => ({
+            ...provided,
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
         }),
     };
 
@@ -131,6 +163,9 @@ const CustomStandaloneSelectField: React.FC<CustomStandaloneSelectFieldProps> = 
                 isDisabled={disabled}
                 placeholder={placeholder}
                 aria-label={placeholder}
+                components={{
+                    Placeholder: CustomPlaceholder
+                }}
                 value={selectedValue}
                 isMulti={isMulti}
                 onChange={(selectedOption: any) => {
