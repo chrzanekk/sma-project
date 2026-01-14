@@ -18,13 +18,14 @@ export const getScaffoldingLogPositionByFilter = async (filter: ScaffoldingLogPo
             page: filter.page || 0
         });
         const response = await api.get(`${ApiPath.SCAFFOLDING_LOG_POSITION}?${queryParams}`, getAuthConfig());
-        const {items, totalPages} = parsePaginationResponse(response);
+        const {items, totalPages, totalCount} = parsePaginationResponse(response);
         return {
             logs: items as FetchableScaffoldingLogPositionDTO[],
-            totalPages
+            totalPages,
+            totalCount
         };
     } catch (error) {
-        return {logs: [], totalPages: 1}
+        return {logs: [], totalPages: 1, totalCount: 0}
     }
 }
 

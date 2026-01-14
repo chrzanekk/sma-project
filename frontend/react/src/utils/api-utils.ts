@@ -1,4 +1,4 @@
-export const parsePaginationResponse = <T>(response: any): { items: T[]; totalPages: number } => {
+export const parsePaginationResponse = <T>(response: any): { items: T[]; totalPages: number; totalCount: number } => {
     const data = response.data.content !== undefined ? response.data.content : response.data;
     const totalCount = parseInt(response.headers['x-total-count'], 10) || 0;
     const totalPages = Math.ceil(totalCount / (response.config.params?.size || 10));
@@ -6,5 +6,6 @@ export const parsePaginationResponse = <T>(response: any): { items: T[]; totalPa
     return {
         items: data,
         totalPages,
+        totalCount,
     };
 };

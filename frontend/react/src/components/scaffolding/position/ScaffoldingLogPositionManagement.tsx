@@ -46,6 +46,7 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
             return {
                 data: response.logs,
                 totalPages: response.totalPages,
+                totalCount: response.totalCount
             };
         },
         deleteScaffoldingLogPosition,
@@ -75,6 +76,8 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                     sortField={sortField}
                     sortDirection={sortDirection}
                     fetchPositions={() => onPageChange(currentPage)}
+                    currentPage={currentPage}
+                    rowsPerPage={rowsPerPage}
                 />}
                 pagination={
                     <Pagination

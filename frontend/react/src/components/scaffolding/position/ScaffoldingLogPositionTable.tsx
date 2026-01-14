@@ -18,6 +18,8 @@ interface ScaffoldingLogPositionTableProps {
     sortField: string | null;
     sortDirection: "asc" | "desc";
     fetchPositions: () => void;
+    currentPage: number;
+    rowsPerPage: number;
 }
 
 const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = ({
@@ -26,7 +28,9 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                                                      onSortChange,
                                                                                      sortField,
                                                                                      sortDirection,
-                                                                                     fetchPositions
+                                                                                     fetchPositions,
+                                                                                     currentPage,
+                                                                                     rowsPerPage
                                                                                  }) => {
     const {t} = useTranslation(['scaffoldingLogPositions', 'common',
         'technicalProtocolStatuses', 'scaffoldingTypes',
@@ -71,6 +75,10 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
         );
     }
 
+    const calculateIndex = (index: number) => {
+        return (currentPage * rowsPerPage) + index + 1;
+    };
+
     return (
         <>
             <Table.ScrollArea height="auto" borderWidth="1px" borderRadius="md" borderColor="grey">
@@ -79,7 +87,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                         <Table.Row bg={themeColors.bgColorPrimary}>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("id")}>
-                                ID{renderSortIndicator("id")}</Table.ColumnHeader>
+                                Lp.{renderSortIndicator("id")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}
                                                 onClick={() => onSortChange("scaffoldingNumber")}>
                                 {t("scaffoldingLogPositions:scaffoldingNumber")}{renderSortIndicator("scaffoldingNumber")}</Table.ColumnHeader>
@@ -123,7 +131,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {positions.map((position) => {
+                        {positions.map((position,index) => {
                             const isExpanded = expandedRow === position.id;
                             const hasChildren = position.childPositions && position.childPositions.length > 0;
                             return (
@@ -137,12 +145,12 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                }}
                                                onClick={() => toggleExpand(position.id!)}>
 
-                                        <Table.Cell {...commonCellProps} width={"2%"}>{position.id}</Table.Cell>
+                                        <Table.Cell {...commonCellProps} width={"2%"}>{calculateIndex(index)}</Table.Cell>
                                         <Table.Cell {...commonCellProps}
                                                     width={"8%"}>
-                                                    {hasChildren &&
-                                                        <Badge colorPalette="blue" mr={1} size="xs">P</Badge>}
-                                                        {position.scaffoldingNumber}</Table.Cell>
+                                            {hasChildren &&
+                                                <Badge colorPalette="blue" mr={1} size="xs">P</Badge>}
+                                            {position.scaffoldingNumber}</Table.Cell>
                                         <Table.Cell {...commonCellProps}
                                                     width={"20%"}>{position.assemblyLocation}</Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"5%"}>
@@ -208,7 +216,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                                     <Collapsible.Content>
                                                         <Box p={2} bg={themeColors.bgColorSecondary}
                                                              borderBottomWidth="1px"
-                                                             borderColor={ "gray.400"}>
+                                                             borderColor={"gray.400"}>
                                                             <HStack alignItems="start" gap={4} width="auto">
 
                                                                 {/* TABELA 1: WYMIARY CZĄSTKOWE */}
