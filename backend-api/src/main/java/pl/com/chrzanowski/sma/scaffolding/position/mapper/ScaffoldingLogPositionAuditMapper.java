@@ -53,10 +53,21 @@ public interface ScaffoldingLogPositionAuditMapper extends EntityMapper<Scaffold
     @Mapping(target = "base.scaffoldingUserContact", source = "scaffoldingUserContact")
     @Mapping(target = "base.dimensions", source = "dimensions")
     @Mapping(target = "base.workingTimes", source = "workingTimes")
-    @Mapping(target = "base.parentPosition", ignore = true)
+    @Mapping(source = "parentPosition", target = "base.parentPosition", qualifiedByName = "mapParentPosition")
     @Mapping(source = "childPositions", target = "base.childPositions", qualifiedByName = "mapChildrenWithoutParent")
     ScaffoldingLogPositionAuditableDTO toDto(ScaffoldingLogPosition scaffoldingLogPosition);
 
+
+    /**
+     * Mapuje rodzica (parentPosition) jako "płaski" obiekt DTO,
+     * ignorując jego rodzica i dzieci, aby przerwać cykl.
+     */
+    @Named("mapParentPosition")
+    @Mapping(target = "parentPosition", ignore = true)
+    @Mapping(target = "childPositions", ignore = true)
+    @Mapping(target = "dimensions", source = "dimensions")
+    @Mapping(target = "workingTimes", source = "workingTimes")
+    ScaffoldingLogPositionBaseDTO mapParentPosition(ScaffoldingLogPosition parent);
 
     /**
      * Mapuje listę dzieci bez parentPosition (zapobiega cyklicznemu odniesieniu)

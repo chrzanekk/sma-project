@@ -1,5 +1,6 @@
 package pl.com.chrzanowski.sma.scaffolding.position.repository;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -11,5 +12,6 @@ public interface ScaffoldingLogPositionRepository extends JpaRepository<Scaffold
 
     Boolean existsByScaffoldingNumberAndScaffoldingLogId(String scaffoldingNumber, Long scaffoldingLogId);
 
+    @EntityGraph(attributePaths = {"parentPosition"})
     boolean existsById(Long id);
 }

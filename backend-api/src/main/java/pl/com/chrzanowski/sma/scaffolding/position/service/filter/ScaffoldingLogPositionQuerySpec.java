@@ -7,9 +7,11 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.scaffolding.position.model.QScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
 import static pl.com.chrzanowski.sma.scaffolding.position.model.QScaffoldingLogPosition.scaffoldingLogPosition;
+
 
 @Component
 public class ScaffoldingLogPositionQuerySpec {
@@ -91,8 +93,10 @@ public class ScaffoldingLogPositionQuerySpec {
     }
 
     public BlazeJPAQuery<ScaffoldingLogPosition> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        QScaffoldingLogPosition parent = new QScaffoldingLogPosition("parent");
         BlazeJPAQuery<ScaffoldingLogPosition> query = queryFactory
                 .selectFrom(scaffoldingLogPosition)
+                .leftJoin(scaffoldingLogPosition.parentPosition, parent).fetchJoin()
                 .where(builder);
 
         if (pageable != null && pageable.getSort().isSorted()) {
