@@ -84,19 +84,16 @@ export const getScaffoldingLogPositionValidationSchema = (
                         'required-if-row-started', // Nazwa testu
                         t("errors:verification.required", { field: t("dimensionDescriptions:length") }), // Komunikat
                         function (value) {
-                            // Pobieramy rodzeństwo z obiektu parent
-                            const { width, height } = this.parent as { width?: string; height?: string };
 
-                            // 1. Jeśli WSZYSTKIE trzy pola są puste -> Wiersz jest pusty (ignorujemy, zwracamy true)
+                            const { width, height } = this.parent as { width?: string; height?: string };
                             if (!value && !width && !height) {
                                 return true;
                             }
-                            // 2. W przeciwnym razie (wiersz zaczęty) -> To pole musi mieć wartość
                             return !!value;
                         }
                     )
                     .test('is-decimal', t("errors:verification.invalidNumberFormat"), (value) => {
-                        if (!value) return true; // Puste wartości ignorujemy (walidacja required jest wyżej)
+                        if (!value) return true;
                         return numberRegex.test(value);
                     }),
 
@@ -134,11 +131,19 @@ export const getScaffoldingLogPositionValidationSchema = (
                         return numberRegex.test(value);
                     }),
 
-                // Te pola zwykle mają wartości domyślne, więc required() jest bezpieczne,
-                // ale jeśli mogą być puste, też można dodać warunek.
                 dimensionType: Yup.string().required(),
                 operationType: Yup.string().required(),
             })
+        ).test(
+            'at-least-one-dimension',
+            t("errors:verification.atLeastOneDimensionRequired", {defaultValue: "Przynajmniej jeden wymiar jest wymagany"}), // Dodaj ten klucz do tłumaczeń lub użyj hardcoded stringa na razie
+            (dimensions) => {
+                if (!dimensions || dimensions.length === 0) return false;
+
+                return dimensions.some(dim =>
+                        dim.length && dim.width && dim.height
+                );
+            }
         )
     }) as unknown as Yup.Schema<BaseScaffoldingLogPositionFormValues>;
 };
