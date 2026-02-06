@@ -8,10 +8,11 @@ import DateFormatter from "@/utils/date-formatter.ts";
 import ConfirmModal from "@/components/shared/ConfirmModal.tsx";
 import {useTableStyles} from "@/components/shared/tableStyles.ts";
 import AuditCell from "@/components/shared/AuditCell.tsx";
-import {FaCirclePlus, FaExplosion, FaPen, FaRegTrashCan} from "react-icons/fa6";
+import {FaCirclePlus, FaExplosion, FaRegTrashCan} from "react-icons/fa6";
 import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
 import ScaffoldingLogPositionDetailsDialog from "./ScaffoldingLogPositionDetailsDialog";
 import {buildScaffoldingTree} from "@/utils/scaffolding-tree-builder";
+import EditScaffoldingLogPositionDialog from "@/components/scaffolding/position/EditScaffoldingLogPositionDialog.tsx";
 
 
 // --- HOOK DO WYKRYWANIA KLIKNIĘCIA POZA ---
@@ -79,12 +80,6 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
         setExpandedRows(prev => {
             const newSet = new Set(prev);
             if (newSet.has(id)) {
-                // Opcjonalnie: Jeśli chcesz, aby kliknięcie w rozwinięty NIE zwijało go (wg Twojego opisu), zakomentuj poniższą linię:
-                // newSet.delete(id);
-                // Ale standardowe UX to toggle. Jeśli chcesz tylko rozwijać, zostaw bez delete.
-                // Wg Twojego opisu: "kliknięcie w wiersz rozwinięty nie powinno zwijać wierszy"
-                // Zrobię tak: Kliknięcie rozwija, ponowne kliknięcie NIC nie robi (chyba że w strzałkę).
-                // Ale zazwyczaj strzałka to toggle. Załóżmy standardowy toggle dla strzałki.
                 newSet.delete(id);
             } else {
                 newSet.add(id);
@@ -265,12 +260,10 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
     const handleRowClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (hasChildren && position.id) {
-            // Toggle: Rozwiń jeśli zwinięty, Zwiń jeśli rozwinięty
             onToggle(position.id);
         }
     };
 
-    // Wcięcie dla podpozycji (opcjonalne wizualne rozróżnienie)
     const paddingLeft = level * 20;
 
     return (
@@ -345,16 +338,16 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                             triggerIcon={<FaCirclePlus/>}
                             triggerColorPalette="orange"
                         />
-
-                        <Button colorPalette="blue" size="2xs">
-                            {t("edit", {ns: "scaffoldingLogPositions"})}
-                            <FaPen/>
-                        </Button>
+                        <EditScaffoldingLogPositionDialog
+                            positionId={position.id!}
+                            fetchPositions={fetchPositions}
+                            // Opcjonalnie możesz nadpisać ikonę/label, ale domyślne są ok
+                        />
 
                         <Button colorPalette="red" size="2xs" onClick={() => onDeleteClick(position.id!)}>
-                            {t("delete", {ns: "common"})}
                             <FaExplosion/>
                             <FaRegTrashCan/>
+                            {t("delete", {ns: "common"})}
                         </Button>
                     </HStack>
                 </Table.Cell>

@@ -49,10 +49,14 @@ const WorkingTimesArrayField: React.FC = () => {
         if (workingTimes.length === 0) return;
 
         const lastItem = workingTimes[workingTimes.length - 1];
+
+        // Zabezpieczenie: konwersja na string
+        const hoursString = String(lastItem?.numberOfHours || "");
+
         const isLastItemFilled =
             lastItem &&
-            lastItem.numberOfWorkers > 0 &&
-            lastItem.numberOfHours.trim() !== "";
+            Number(lastItem.numberOfWorkers) > 0 && // Upewnij się, że to liczba
+            hoursString.trim() !== ""; // Teraz bezpiecznie używasz trim()
 
         if (isLastItemFilled) {
             void setFieldValue("workingTimes", [

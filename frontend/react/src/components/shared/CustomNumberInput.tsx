@@ -15,14 +15,19 @@ export const CustomNumberInput: React.FC<CustomNumberInputProps> = ({ name, plac
     const { setFieldValue } = useFormikContext();
 
     // Funkcja formatująca do wyświetlania (dodaje spacje)
-    const formatDisplayValue = (val: string) => {
-        if (!val) return "";
-        // Zamień kropkę na przecinek dla polskiego formatu (opcjonalne) lub zostaw jak jest
-        // Tutaj: zostawiamy to co user wpisał, ale dodajemy spacje tysięczne dla części całkowitej
-        const parts = val.replace(',', '.').split('.');
+    const formatDisplayValue = (val: string | number | null | undefined) => {
+        // Obsługa pustych wartości
+        if (val === null || val === undefined || val === "") return "";
+
+        // Konwersja na string, niezależnie czy to liczba, czy string
+        const stringVal = String(val);
+
+        // Teraz bezpiecznie używamy replace na stringVal
+        const parts = stringVal.replace(',', '.').split('.');
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-        // Jeśli user wpisał przecinek, przywróć go w wyświetlaniu
-        const separator = val.includes(',') ? ',' : '.';
+
+        // Jeśli user wpisał przecinek (w stringVal), przywróć go w wyświetlaniu
+        const separator = stringVal.includes(',') ? ',' : '.';
         return parts.length > 1 ? `${parts[0]}${separator}${parts[1]}` : parts[0];
     };
 
