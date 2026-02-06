@@ -10,6 +10,7 @@ import {AuditableTypes} from "@/types/auditable-types.ts";
 import {ScaffoldingLogBaseDTO} from "@/types/scaffolding-log-types.ts";
 
 export interface FetchableScaffoldingLogPositionDTO extends ScaffoldingLogPositionDTO, AuditableTypes {
+    mappedChildPositions?: FetchableScaffoldingLogPositionDTO[];
 }
 
 export interface ScaffoldingLogPositionDTO extends ScaffoldingLogPositionBaseDTO {
