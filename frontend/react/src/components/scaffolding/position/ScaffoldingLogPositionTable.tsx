@@ -269,7 +269,7 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
     return (
         <React.Fragment>
             <Table.Row
-                bg={level > 0 ? themeColors.bgColorPrimary : themeColors.bgColorSecondary} // Inny kolor tła dla dzieci
+                bg={level > 0 ? themeColors.bgColorPrimary : themeColors.bgColorSecondary}
                 _hover={hasChildren || level > 0 ? {
                     bg: themeColors.highlightBgColor,
                     cursor: "pointer"
@@ -333,7 +333,7 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                         <AddScaffoldingLogPositionDialog
                             fetchPositions={fetchPositions}
                             scaffoldingLogId={position.scaffoldingLog?.id}
-                            parentPosition={position.parentPosition ? position.parentPosition : position} // Logika rodzica
+                            parentPosition={position.parentPosition ? position.parentPosition : position}
                             triggerLabel={t("addSubPosition", {ns: "scaffoldingLogPositions"})}
                             triggerIcon={<FaCirclePlus/>}
                             triggerColorPalette="orange"
@@ -341,7 +341,6 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                         <EditScaffoldingLogPositionDialog
                             positionId={position.id!}
                             fetchPositions={fetchPositions}
-                            // Opcjonalnie możesz nadpisać ikonę/label, ale domyślne są ok
                         />
 
                         <Button colorPalette="red" size="2xs" onClick={() => onDeleteClick(position.id!)}>

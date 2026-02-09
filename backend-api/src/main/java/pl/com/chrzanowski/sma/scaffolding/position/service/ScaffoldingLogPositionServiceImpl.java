@@ -28,7 +28,6 @@ import pl.com.chrzanowski.sma.scaffolding.position.validator.ScaffoldingNumberVa
 import pl.com.chrzanowski.sma.scaffolding.workingtime.dto.ScaffoldingLogPositionWorkingTimeBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.mapper.ScaffoldingLogPositionWorkingTimeBaseMapper;
 import pl.com.chrzanowski.sma.scaffolding.workingtime.model.ScaffoldingLogPositionWorkingTime;
-import pl.com.chrzanowski.sma.scaffolding.workingtime.service.ScaffoldingLogPositionWorkingTimeService;
 import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
 import pl.com.chrzanowski.sma.unit.mapper.UnitBaseMapper;
@@ -155,8 +154,8 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             if (workingTimeChanged) {
                 updateParentWorkingTimeState(parentEntity, updatingWorkingTimes);
             }
-            scaffoldingLogPositionDao.save(existingPosition);
         }
+        scaffoldingLogPositionDao.save(existingPosition);
 
         ScaffoldingLogPosition updatedPosition = scaffoldingLogPositionDao.save(existingPosition);
         return findById(updatedPosition.getId());
@@ -211,14 +210,7 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
     private void linkSubEntities(ScaffoldingLogPosition entity) {
-        Map<String, UnitBaseDTO> unitCache = new HashMap<>();
-
-        Function<String, Unit> getUnitEntity = (symbol) -> {
-            if (!unitCache.containsKey(symbol)) {
-                unitCache.put(symbol, unitService.findGlobalUnitBySymbol(symbol));
-            }
-            return unitBaseMapper.toEntity(unitCache.get(symbol));
-        };
+        Function<String, Unit> getUnitEntity = getStringUnitFunction();
 
 
         if (entity.getDimensions() != null) {
@@ -240,11 +232,23 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             entity.getWorkingTimes().forEach(wt -> {
                 wt.setScaffoldingPosition(entity);
                 wt.setCompany(entity.getCompany());
-                if(wt.getUnit() == null) {
+                if (wt.getUnit() == null) {
                     wt.setUnit(getUnitEntity.apply("r-h"));
                 }
             });
         }
+    }
+
+    private Function<String, Unit> getStringUnitFunction() {
+        Map<String, UnitBaseDTO> unitCache = new HashMap<>();
+
+        Function<String, Unit> getUnitEntity = (symbol) -> {
+            if (!unitCache.containsKey(symbol)) {
+                unitCache.put(symbol, unitService.findGlobalUnitBySymbol(symbol));
+            }
+            return unitBaseMapper.toEntity(unitCache.get(symbol));
+        };
+        return getUnitEntity;
     }
 
     private void updateRelatedEntities(ScaffoldingLogPositionDTO dto, ScaffoldingLogPosition entity) {
@@ -399,14 +403,16 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
     private void createAndAddNewWorkingTime(ScaffoldingLogPositionWorkingTimeBaseDTO dto, ScaffoldingLogPosition position) {
+        Function<String, Unit> unitMap = getStringUnitFunction();
         ScaffoldingLogPositionWorkingTime newWorkingTime = ScaffoldingLogPositionWorkingTime.builder()
                 .numberOfHours(dto.getNumberOfHours())
                 .numberOfWorkers(dto.getNumberOfWorkers())
-                .unit(unitBaseMapper.toEntity(dto.getUnit()))
+                .unit(unitMap.apply("r-h"))
                 .scaffoldingPosition(position)
                 .operationType(dto.getOperationType())
                 .company(position.getCompany())
                 .build();
+        position.getWorkingTimes().add(newWorkingTime);
     }
 
     private void updateDimensionFields(ScaffoldingLogPositionDimension entity, ScaffoldingLogPositionDimensionBaseDTO dto) {
@@ -530,7 +536,6 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         List<ScaffoldingLogPositionWorkingTimeBaseDTO> currentDto = existing.getWorkingTimes().stream()
                 .map(scaffoldingLogPositionWorkingTimeBaseMapper::toDto)
                 .toList();
-        // Potrzebujesz metody areWorkingTimesEqual analogicznej do areDimensionsEqual
         return areWorkingTimesNotEqual(currentDto, updating);
     }
 
@@ -601,7 +606,7 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
                         ScaffoldingLogPositionErrorCode.SCAFFOLDING_LOG_POSITION_NOT_FOUND,
                         "Scaffolding Log Position: " + aLong + " not found"));
 
-        if(positionToDelete.getParentPosition() == null) {
+        if (positionToDelete.getParentPosition() == null) {
             scaffoldingLogPositionDao.deleteById(positionToDelete.getId());
             return;
         }
