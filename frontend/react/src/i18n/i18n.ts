@@ -49,6 +49,8 @@ import scaffoldingLogPositionEn from './en/scaffoldingLogPositions.json'
 import scaffoldingLogPositionPl from './pl/scaffoldingLogPositions.json'
 import dimensionDescriptionsEn from './en/enums/dimensionDescriptions.json'
 import dimensionDescriptionsPl from './pl/enums/dimensionDescriptions.json'
+import technicalProtocolsPl from './pl/technicalProtocols.json'
+import technicalProtocolsEn from './en/technicalProtocols.json'
 
 i18n
     .use(initReactI18next)
@@ -79,7 +81,8 @@ i18n
                 technicalProtocolStatuses: technicalProtocolStatusEn,
                 scaffoldingLogs: scaffoldingLogEn,
                 scaffoldingLogPositions: scaffoldingLogPositionEn,
-                dimensionDescriptions: dimensionDescriptionsEn
+                dimensionDescriptions: dimensionDescriptionsEn,
+                technicalProtocols: technicalProtocolsEn
             },
             pl: {
                 common: commonPl,
@@ -105,7 +108,8 @@ i18n
                 technicalProtocolStatuses: technicalProtocolStatusPl,
                 scaffoldingLogs: scaffoldingLogPl,
                 scaffoldingLogPositions: scaffoldingLogPositionPl,
-                dimensionDescriptions: dimensionDescriptionsPl
+                dimensionDescriptions: dimensionDescriptionsPl,
+                technicalProtocols: technicalProtocolsPl
             },
         },
         lng: 'pl',
@@ -114,7 +118,7 @@ i18n
             'contractors', 'countries', 'contacts', 'companies', 'constructionSites',
             'contracts', 'positions', 'resources', 'employees', 'units', 'dimensionTypes',
             'scaffoldingTypes', 'scaffoldingOperationTypes', 'technicalProtocolStatuses',
-            'dimensionDescriptions'],
+            'dimensionDescriptions','technicalProtocols'],
         defaultNS: 'common',
         interpolation: {
             escapeValue: false,
