@@ -13,6 +13,7 @@ import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/A
 import ScaffoldingLogPositionDetailsDialog from "./ScaffoldingLogPositionDetailsDialog";
 import {buildScaffoldingTree} from "@/utils/scaffolding-tree-builder";
 import EditScaffoldingLogPositionDialog from "@/components/scaffolding/position/EditScaffoldingLogPositionDialog.tsx";
+import TechnicalProtocolDialog from "@/components/scaffolding/protocol/TechnicalProtocolDialog.tsx";
 
 
 // --- HOOK DO WYKRYWANIA KLIKNIĘCIA POZA ---
@@ -338,6 +339,7 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                             triggerIcon={<FaCirclePlus/>}
                             triggerColorPalette="orange"
                         />
+                        <TechnicalProtocolDialog position={position}/>
                         <EditScaffoldingLogPositionDialog
                             positionId={position.id!}
                             fetchPositions={fetchPositions}

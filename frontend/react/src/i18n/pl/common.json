@@ -48,6 +48,7 @@
   "lastModifiedBy": "Ost. zmod. przez",
   "summary": "Podsumowanie",
   "resetSelected": "Resetuj wybór",
+  "autoFilledData": "Dane pobrane z pozycji",
   "notifications": {
     "emailAlreadyExists": "Email {email} już istnieje w bazie",
     "loginAlreadyExists": "Login {login} istnieje już  w bazie",

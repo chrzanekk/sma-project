@@ -12,6 +12,7 @@
   "dependencies": {
     "@chakra-ui/react": "^3.30.0",
     "@emotion/react": "^11.14.0",
+    "@react-pdf/renderer": "^4.3.2",
     "axios": "^1.13.2",
     "classnames": "^2.5.1",
     "date-fns": "^4.1.0",
