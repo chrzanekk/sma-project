@@ -1,13 +1,14 @@
 // src/components/contact/ContactSearchWithSelect.tsx
-import React, {useState} from "react";
+import React, {useMemo} from "react";
 import {Flex} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {ContactDTO} from "@/types/contact-types";
+import {ContactBaseDTO, ContactDTO} from "@/types/contact-types";
 import AsyncSearchSelect, {AsyncSearchSelectOption} from "@/components/shared/AsyncSearchSelect";
 
 export interface ContactSearchWithSelectProps {
     searchFn: (query: string) => Promise<ContactDTO[]>;
     onSelect: (contact: ContactDTO | null) => void;
+    selected?: ContactDTO | ContactBaseDTO | null;
     minChars?: number;
     debounceMs?: number;
     size?: "sm" | "md" | "lg" | "xs";
@@ -19,6 +20,7 @@ export interface ContactSearchWithSelectProps {
 const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
                                                                              searchFn,
                                                                              onSelect,
+                                                                             selected,
                                                                              minChars = 2,
                                                                              debounceMs = 300,
                                                                              size = "md",
@@ -27,7 +29,14 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
                                                                              label
                                                                          }) => {
     const {t} = useTranslation(["common", "contacts"]);
-    const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContactDTO> | null>(null);
+    const selectedOption = useMemo<AsyncSearchSelectOption<ContactDTO> | null>(() => {
+        if (!selected) return null;
+        return {
+            value: selected.id!,
+            label: [selected.firstName, selected.lastName].filter(Boolean).join(" "),
+            raw: selected as ContactDTO,
+        };
+    }, [selected]);
 
     const loadOptions = async (term: string):
         Promise<AsyncSearchSelectOption<ContactDTO>[]> => {
@@ -40,7 +49,6 @@ const ContactSearchWithSelect: React.FC<ContactSearchWithSelectProps> = ({
     };
 
     const handleChange = (opt: AsyncSearchSelectOption<ContactDTO> | null) => {
-        setSelectedOption(opt);
 
         if (!opt) {
             onSelect(null);

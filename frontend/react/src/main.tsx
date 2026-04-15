@@ -10,6 +10,12 @@ import {CompanyProvider} from "@/context/CompanyContext.tsx";
 import {system} from "@/theme/theme.ts";
 import {GlobalStyles} from "@/theme/GlobalStyles.tsx";
 import {ResourcePermissionProvider} from "@/context/ResourcePermissionContext.tsx";
+// main.tsx
+import { Buffer } from 'buffer'
+
+window.Buffer = window.Buffer || Buffer
+window.global = window.global || window
+window.process = window.process || { env: { DEBUG: undefined } }
 
 
 function initColorMode() {
@@ -21,6 +27,7 @@ function initColorMode() {
 }
 
 initColorMode();
+
 
 createRoot(document.getElementById('root')!)
     .render(

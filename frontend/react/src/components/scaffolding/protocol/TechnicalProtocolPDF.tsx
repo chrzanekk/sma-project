@@ -1,9 +1,10 @@
 // src/components/scaffolding/protocol/TechnicalProtocolPDF.tsx
 
 import React from 'react';
-import {Document, Font, Image, Page, StyleSheet, Text, View} from '@react-pdf/renderer';
+import {Document, Font, Image, Page, Text, View} from '@react-pdf/renderer';
 import {TechnicalProtocolData} from '@/types/technical-protocol-types';
 import {getSelectedCompany} from "@/utils/company-utils.ts";
+import {styles} from './technicalProtocolPDFstyles';
 
 // Rejestracja czcionek
 Font.register({
@@ -12,166 +13,29 @@ Font.register({
 });
 
 Font.register({
-    family: 'Archivo Narrow',
-    src: '/fonts/ArchivoNarrow-VariableFont.ttf',
-});
-
-const styles = StyleSheet.create({
-    page: {
-        padding: 15,
-        fontFamily: 'Archivo Narrow',
-        fontSize: 8,
-        lineHeight: 1.2,
-    },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
-        borderBottom: 2,
-        borderBottomColor: '#000',
-        paddingBottom: 8,
-    },
-    logo: {
-        width: 70,
-        height: 50,
-    },
-    companyInfo: {
-        textAlign: 'right',
-        fontSize: 7,
-        fontFamily: "Archivo Narrow"
-    },
-    companyName: {
-        textAlign: 'right',
-        fontSize: 10,
-        fontWeight: 'bold',
-        marginBottom: 2,
-        fontFamily: "Anton"
-    },
-
-    // Tabela główna
-    table: {
-        width: '100%',
-        borderWidth: 1,
-        borderColor: '#000',
-    },
-
-    // Wiersze
-    tableRow: {
-        flexDirection: 'row',
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-    },
-    tableRowLast: {
-        borderBottomWidth: 0,
-    },
-
-    // Komórki bazowe
-    cell: {
-        padding: 3,
-        borderRightWidth: 1,
-        borderRightColor: '#000',
-        justifyContent: 'center',
-        fontSize: 7,
-    },
-    cellLast: {
-        borderRightWidth: 0,
-    },
-    cellGrey: {
-        backgroundColor: '#d3d3d3',
-    },
-    cellWhite: {
-        backgroundColor: '#ffffff',
-    },
-
-    // Szerokości kolumn
-    cellNum: {
-        width: '4%',
-        alignItems: 'center',
-        fontWeight: 'bold',
-    },
-    cellSmall: {
-        width: '20%',
-    },
-    cellMedium: {
-        width: '35%',
-    },
-    cellLarge: {
-        width: '45%',
-    },
-    cellFull: {
-        width: '96%',
-    },
-
-    // Wiersze z podziałami pionowymi
-    splitRow: {
-        flexDirection: 'row',
-        flex: 1,
-    },
-    splitColumn: {
-        flexDirection: 'column',
-    },
-    splitCellTop: {
-        flex: 1,
-        padding: 2,
-        borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        fontSize: 7,
-    },
-    splitCellBottom: {
-        flex: 2,
-        padding: 2,
-        fontSize: 7,
-    },
-
-    // Tytuł protokołu
-    titleRow: {
-        padding: 4,
-        textAlign: 'center',
-        fontWeight: 'bold',
-        fontSize: 9,
-    },
-
-    // Sekcja nagłówkowa
-    sectionHeader: {
-        padding: 3,
-        fontWeight: 'bold',
-        fontSize: 7,
-    },
-
-    // Tekst
-    boldText: {
-        fontWeight: 'bold',
-    },
-    smallText: {
-        fontSize: 6,
-    },
-
-    // Footer
-    footer: {
-        position: 'absolute',
-        bottom: 10,
-        left: 15,
-        right: 15,
-        fontSize: 6,
-        textAlign: 'center',
-        borderTop: 1,
-        borderTopColor: '#000',
-        paddingTop: 3,
-    },
-
-    // Podpisy
-    signatureRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginTop: 10,
-        marginBottom: 5,
-    },
-    signatureBox: {
-        width: '30%',
-        textAlign: 'center',
-        fontSize: 7,
-    },
+    family: 'Roboto Condensed',
+    fonts: [
+        {
+            src: '/fonts/RobotoCondensed-Regular.ttf',
+            fontWeight: 'normal',
+            fontStyle: 'normal'
+        },
+        {
+            src: '/fonts/RobotoCondensed-Bold.ttf',
+            fontWeight: 'bold',
+            fontStyle: 'normal'
+        },
+        {
+            src: '/fonts/RobotoCondensed-Italic.ttf',
+            fontWeight: 'normal',
+            fontStyle: 'italic'
+        },
+        {
+            src: '/fonts/RobotoCondensed-BoldItalic.ttf',
+            fontWeight: 'bold',
+            fontStyle: 'italic'
+        }
+    ]
 });
 
 interface TechnicalProtocolPDFProps {
@@ -188,7 +52,6 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
     const companyContact2 = "e-mail: biuro@rchscaffolding.pl";
     const taxNumber = "NIP(VAT/TAX ID): PL9462731518";
 
-    // Formatowanie wymiarów
     const dimensions = data.dimensions ? data.dimensions.split(', ') : [];
 
     return (
@@ -196,14 +59,14 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
             <Page size="A4" style={styles.page}>
                 {/* Header */}
                 <View style={styles.header}>
-                    <View>
+                    <View style={styles.headerLeft}>
                         {logoUrl ? (
                             <Image src={logoUrl} style={styles.logo}/>
                         ) : (
                             <Text style={{fontSize: 12, fontWeight: 'bold'}}>{companyName}</Text>
                         )}
                     </View>
-                    <View>
+                    <View style={styles.headerRight}>
                         <Text style={styles.companyName}>{companyName}</Text>
                         <Text style={styles.companyInfo}>{companyAddress1}</Text>
                         <Text style={styles.companyInfo}>{companyAddress2}</Text>
@@ -218,299 +81,438 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
 
                     {/* WIERSZ 1 - Tytuł */}
                     <View style={styles.tableRow}>
-                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, styles.titleRow, {width: '100%'}]}>
-                            <Text>PROTOKÓŁ ODBIORU TECHNICZNEGO RUSZTOWANIA NR: {data.scaffoldingNumber} {data.assemblyDate}</Text>
+                        <View
+                            style={[styles.cell, styles.cellWhite, styles.cellLast, {
+                                width: '100%',
+                                justifyContent: 'center',  // Wyśrodkowanie PIONOWE
+                                alignItems: 'center',      // Wyśrodkowanie POZIOME kontenera
+                                paddingBottom: 2,
+                            }]}>
+                            <Text style={[styles.boldText, {
+                                fontSize: 14,
+                                textAlign: "center",
+                                lineHeight: 1,
+                            }]}>PROTOKÓŁ
+                                ODBIORU TECHNICZNEGO RUSZTOWANIA
+                                NR: {data.scaffoldingNumber}</Text>
                         </View>
                     </View>
 
                     {/* WIERSZ 2 - Część informacyjna */}
                     <View style={styles.tableRow}>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, styles.sectionHeader, {width: '100%'}]}>
+                        <View
+                            style={[styles.cell, styles.cellGrey, styles.cellLast, styles.sectionHeader, {
+                                width: '100%',
+                                justifyContent: "center",
+                            }]}>
                             <Text>Część informacyjna:</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 3 (nr 1 na zrzucie) - Wykonawca rusztowania */}
-                    <View style={styles.tableRow}>
+                    {/* WIERSZ 3 (nr 1) - Wykonawca rusztowania */}
+                    <View style={[styles.tableRow]}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>1</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellMedium]}>
-                            <Text>Wykonawca rusztowania (instalujący):</Text>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellMedium, {
+                            paddingLeft: 3,
+                            paddingBottom: 2
+                        }]}>
+                            <Text style={styles.descriptionText}>Wykonawca rusztowania (przekazujący):</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '61%'}]}>
-                            <Text>{data.companyName || ''}</Text>
+                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
+                            width: '61%',
+                            paddingLeft: 3,
+                            paddingBottom: 2
+                        }]}>
+                            <Text style={styles.descriptionTextNormal}>{data.companyName || ''}</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 4 (nr 2 na zrzucie) - Zleceniodawca */}
+                    {/* WIERSZ 4 (nr 2) - Zleceniodawca */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>2</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, {width: '26.25%'}]}>
-                            <Text>Zleceniodawca/przyjmujący(zlecający wykonanie rusztowania lokalizację):</Text>
+                        <View style={[styles.cell, styles.cellGrey, {
+                            width: '26.25%',
+                            paddingLeft: 3,
+                            paddingBottom: 2,
+                            justifyContent: 'center'
+                        }]}>
+                            <Text style={styles.descriptionText}>Zlecający(potwierdzający) </Text>
+                            <Text style={styles.descriptionText}>wykonanie/przebudowę/zmianę lokalizacji*</Text>
                         </View>
                         <View style={[styles.cell, styles.cellGrey, {width: '8.75%'}]}>
-                            <View style={[styles.splitCellTop, {borderBottomColor: '#000'}]}>
-                                <Text>Firma</Text>
-                            </View>
-                            <View style={styles.splitCellBottom}>
-                                <Text>Nazwa obiektu</Text>
+                            <View style={styles.splitContainer}>
+                                <View style={styles.splitCellTop}>
+                                    <Text style={styles.subDescriptionText}>Firma</Text>
+                                </View>
+                                <View style={styles.splitCellBottom}>
+                                    <Text style={styles.subDescriptionText}>Numer zlecenia</Text>
+                                </View>
                             </View>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '61%'}]}>
-                            <View style={[styles.splitCellTop, {borderBottomColor: '#000'}]}>
-                                <Text style={styles.boldText}>{data.contractorName || ''}</Text>
-                            </View>
-                            <View style={styles.splitCellBottom}>
-                                <Text>{/* Nazwa obiektu - opcjonalne */}</Text>
+                            <View style={styles.splitContainer}>
+                                <View style={styles.splitCellTop}>
+                                    <Text style={styles.subDescriptionTextNormal}>{data.contractorName || ''}</Text>
+                                </View>
+                                <View style={styles.splitCellBottom}>
+                                    <Text
+                                        style={styles.subDescriptionTextNormal}>{/* Numer zlecenia - opcjonalne */}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 5 (nr 3 na zrzucie) - Użytkownik rusztowania */}
+                    {/* WIERSZ 5 (nr 3) - Użytkownik rusztowania */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>3</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, {width: '17.5%'}]}>
-                            <Text>Użytkownik rusztowania:</Text>
+                        <View style={[styles.cell, styles.cellGrey, {
+                            width: '15%',
+                            paddingLeft: 3,
+                            paddingBottom: 2,
+                            justifyContent: 'center'
+                        }]}>
+                            <Text style={styles.descriptionText}>Użytkownik rusztowania:</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, {width: '17.5%'}]}>
-                            <View style={[styles.splitCellTop]}>
-                                <Text>Firma</Text>
-                            </View>
-                            <View style={styles.splitCellBottom}>
-                                <Text>Imię i nazwisko upoważnionej osoby firmowej</Text>
+                        <View style={[styles.cell, styles.cellGrey, {width: '20%'}]}>
+                            <View style={styles.splitContainer}>
+                                <View style={styles.splitCellTop}>
+                                    <Text style={styles.subDescriptionText}>Firma</Text>
+                                </View>
+                                <View style={styles.splitCellBottom}>
+                                    <Text style={styles.subDescriptionText}>Imię i nazwisko </Text>
+                                    <Text style={styles.subDescriptionTextSmall}>upoważnionego przedstawiciela
+                                        firmy</Text>
+                                </View>
                             </View>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '61%'}]}>
-                            <View style={[styles.splitCellTop]}>
-                                <Text>{data.scaffoldingUserName || ''}</Text>
-                            </View>
-                            <View style={styles.splitCellBottom}>
-                                <Text>{data.scaffoldingUserContactLastName} {data.scaffoldingUserContactFirstName}</Text>
+                            <View style={styles.splitContainer}>
+                                <View style={styles.splitCellTop}>
+                                    <Text
+                                        style={styles.subDescriptionTextNormal}>{data.scaffoldingUserName || ''}</Text>
+                                </View>
+                                <View style={styles.splitCellBottom}>
+                                    <Text
+                                        style={styles.subDescriptionTextNormal}>{data.scaffoldingUserContactLastName} {data.scaffoldingUserContactFirstName}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 6 (nr 4 na zrzucie) - Lokalizacja rusztowania */}
+                    {/* WIERSZ 6 (nr 4) - Lokalizacja rusztowania */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>4</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellMedium]}>
-                            <Text>Lokalizacja rusztowania:</Text>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellMedium, {
+                            paddingLeft: 3,
+                            paddingBottom: 2,
+                            justifyContent: 'center'
+                        }]}>
+                            <Text style={styles.descriptionText}>Lokalizacja rusztowania:</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '61%'}]}>
-                            <Text>{data.assemblyLocation || ''}</Text>
+                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
+                            width: '61%',
+                            minHeight: 30,
+                            paddingLeft: 3,
+                            justifyContent: 'center'
+                        }]}>
+                            <Text style={styles.subDescriptionTextNormal}>{data.assemblyLocation || ''}</Text>
                         </View>
                     </View>
 
                     {/* WIERSZ 7 - Część techniczna */}
                     <View style={styles.tableRow}>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, styles.sectionHeader, {width: '100%'}]}>
+                        <View
+                            style={[styles.cell, styles.cellGrey, styles.cellLast, styles.sectionHeader, {width: '100%'}]}>
                             <Text>Część techniczna:</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 8 (nr 5,6 na zrzucie) - Rodzaj i przeznaczenie + Obciążenie */}
+                    {/* WIERSZ 8 (nr 5,6) */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>5</Text>
                         </View>
-                        <View style={{width: '44%'}}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Rodzaj i przeznaczenie rusztowania:</Text>
-                            </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 3}]}>
-                                <Text>{data.scaffoldingPurpose || 'Moduł, do prac spawalniczych rurocigów'}</Text>
+                        <View style={[styles.cell, {width: '43.5%'}]}>
+                            <View style={styles.splitContainer}>
+                                <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionText}>Rodzaj i przeznaczenie rusztowania:</Text>
+                                </View>
+                                <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
+                                    <Text
+                                        style={styles.subDescriptionTextNormal}>{data.scaffoldingPurpose || 'Moduł, do prac spawalniczych rurociągów'}</Text>
+                                </View>
                             </View>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellNum, {borderLeftWidth: 1}]}>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>6</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellLast, {width: '47%'}]}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Dopuszczalne obciążenie pomostów i konstrukcji rusztowania:</Text>
-                            </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 3}]}>
-                                <Text style={styles.boldText}>{data.loadLimit || '1,5kN/m2'}</Text>
-                                <Text style={styles.smallText}>Data i sposób przekazania rusztowania do użytkowania</Text>
-                                <Text>{data.assemblyDate}</Text>
+                        <View style={[styles.cell, styles.cellLast, {width: '48.5%'}]}>
+                            <View style={styles.splitContainer}>
+                                <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionText}>Dopuszczalne obciążenie pomostów i konstrukcji
+                                        rusztowania:</Text>
+                                </View>
+                                <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionTextNormal}>{data.loadLimit || '1,5kN/m2'}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 9 (nr 7,8 na zrzucie) - Opomność uziomi + Wymiar rusztowania */}
+                    {/* WIERSZ 9 (nr 7,8) */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>7</Text>
                         </View>
-                        <View style={{width: '44%'}}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Opomość uziomi:</Text>
-                            </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 3}]}>
-                                <Text>{data.earthingResistance || ''}</Text>
+                        <View style={[styles.cell, {width: '43.5%'}]}>
+                            <View style={styles.splitContainer}>
+                                <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionText}>Oporność uziomu:</Text>
+                                </View>
+                                <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionTextNormal}>{data.earthingResistance || ''}</Text>
+                                </View>
                             </View>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellNum, {borderLeftWidth: 1}]}>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>8</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellLast, {width: '47%'}]}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Data odbioru</Text>
-                            </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 3}]}>
-                                <Text>{data.assemblyDate}</Text>
+                        <View style={[styles.cell, styles.cellLast, {width: '48.5%'}]}>
+                            <View style={styles.splitContainer}>
+                                <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionText}>Data i godzina przekazania rusztowania do
+                                        użytkowania</Text>
+                                </View>
+                                <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
+                                    <Text style={styles.descriptionTextNormal}>{data.assemblyDate}</Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 10 (nr 9 na zrzucie) - Wymiar rusztowania */}
+                    {/* WIERSZ 10 (nr 9) - Wymiar rusztowania */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>9</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellLast, {width: '96%'}]}>
-                            <View style={[styles.splitCellTop, styles.cellGrey, {flex: 1}]}>
-                                <Text>Obmiar rusztowania:</Text>
+                        <View style={[styles.cell, styles.cellLast, {
+                            width: '96%',
+                            flexDirection: 'column',
+                        }]}>
+                            <View style={[styles.cellGrey, styles.cellGreyFullSize, {
+                                paddingLeft: 3,
+                                paddingBottom: 2,
+                                justifyContent: "center"
+                            }]}>
+                                <Text style={styles.descriptionText}>Obmiar rusztowania:</Text>
                             </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 4, paddingTop: 3}]}>
+                            <View style={[styles.cellWhite, {padding: 1, minHeight: 100}]}>
                                 {dimensions.map((dim, index) => (
-                                    <Text key={index} style={{marginBottom: 1}}>{dim}</Text>
+                                    <Text key={index} style={[styles.dimensionText, {paddingBottom: 3}]}>{dim}</Text>
                                 ))}
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 11 (nr 10 na zrzucie) - Terminarz przeglądów */}
+                    {/* WIERSZ 11 (nr 10) - Terminarz przeglądów */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>10</Text>
                         </View>
                         <View style={[styles.cell, styles.cellLast, {width: '96%', flexDirection: 'column'}]}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Terminarz przeglądów rusztowania:</Text>
+                            <View style={[styles.cellGrey, styles.cellGreyFullSize, {
+                                paddingLeft: 3,
+                                paddingBottom: 2,
+                                justifyContent: "center"
+                            }]}>
+                                <Text style={styles.descriptionText}>Terminy przeglądów rusztowania:</Text>
                             </View>
-                            <View style={{flexDirection: 'row', flex: 1, borderTopWidth: 1, borderTopColor: '#000'}}>
-                                <View style={[styles.cell, styles.cellGrey, {width: '14.28%', minHeight: 20}]}>
-                                    <Text>Data/godzina rozpoczęcia przeglądu</Text>
+                            <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#000'}}>
+                                <View style={[styles.cell, styles.cellGrey, {
+                                    maxWidth: '12%',
+                                    minHeight: 50,
+                                    paddingLeft: 2,
+                                    paddingBottom: 2,
+                                    justifyContent: "center"
+                                }]}>
+                                    <Text style={styles.descriptionTextNormalBiggerCenter}>Data/godzina i czytelny
+                                        podpis osoby
+                                        dokonującej
+                                        przeglądu</Text>
                                 </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '14.32%'}]}>
-                                    <Text> </Text>
-                                </View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View
+                                    style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '15%'}]}><Text> </Text></View>
                             </View>
-                            <View style={{flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#000'}}>
-                                <View style={[styles.cell, styles.cellGrey, {width: '14.28%', minHeight: 20}]}>
-                                    <Text>Data/godzina i czytelne podpisy osób dokonujących przeglądu</Text>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={[styles.cell, styles.cellGrey, {
+                                    maxWidth: '12%',
+                                    minHeight: 50,
+                                    paddingLeft: 2,
+                                    paddingBottom: 2,
+                                    justifyContent: "center"
+                                }]}>
+                                    <Text style={styles.descriptionTextNormalBiggerCenter}>Data/godzina i
+                                        czytelny podpis osoby dokonującej przeglądu</Text>
                                 </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, {width: '14.28%'}]}>
-                                    <Text> </Text>
-                                </View>
-                                <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '14.32%'}]}>
-                                    <Text> </Text>
-                                </View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
+                                <View
+                                    style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '15%'}]}><Text> </Text></View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 12 (nr 11 na zrzucie) - Deklaracje */}
+                    {/* WIERSZ 12 (nr 11) - Deklaracje */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>11</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {width: '96%', fontSize: 6}]}>
-                            <Text>Wykonawca (przedstawiciel rusztowania) oświadcza, że:</Text>
-                            <Text>a) rusztowanie opisane w protokole je zmontowane i jest zatwierdzone według prawa budowlanego, ratunkowego, zajęciowego i dokumentacji technicznej i zakłąda w rusztowanie...</Text>
-                            <Text>b) inspekcja użytkownika podmiot który dla podwykonawstwa czy uczestników lub dostarczanego obiektu do pracownych zgodnie z wymaganiem odpowiedzialnej regulacji...</Text>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {
+                            width: '96%',
+                            padding: 3,
+                            fontSize: 8
+                        }]}>
+                            <Text><Text style={styles.boldText}>Wykonawca </Text>(przekazujący rusztowanie) oświadcza,
+                                że:</Text>
+                            <Text>a) rusztowanie opisane niniejszym protokołem jest kompletne i zostało zmontowane
+                                zgodnie ze sztuką budowlaną, normami, dokumentacją techniczno-eksploatacyjną i
+                                instrukcją montażu wydaną przez producenta lub projektem indywidualnym oraz spełnia
+                                wymagania bezpieczeństwa i higieny pracy;</Text>
+                            <Text>b) montaż wykonali uprawnieni monterzy rusztowań</Text>
+                            <Text>c) rusztowanie nadaje się do eksploatacji.</Text>
+                            <Text><Text style={styles.boldText}>Wykonawca </Text> zobowiązuje się do przeprowadzenia w
+                                czasie eksploatacji rusztowania
+                                przeglądów jego stanu technicznego zgodnie z obowiązującymi przepisami jak również na
+                                doraźne polecenie użytkownika rusztowania.</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 13 (nr 12 na zrzucie) */}
+                    {/* WIERSZ 13 (nr 12) */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>12</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {width: '96%', fontSize: 6}]}>
-                            <Text>Rusztowanie i pozostawione bezopodstawne:</Text>
-                            <Text>a) zabezpieczenia te są oznaczone przez ocenę jego obecności lub prząglądów, szczeście w roli zarządu zdarzeń przez przyjądzeniem do zmiennie w miejście otrzymanym, odlądowane że...</Text>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {
+                            width: '96%',
+                            padding: 3,
+                            fontSize: 8
+                        }]}>
+                            <Text><Text style={styles.boldText}>Użytkownik </Text> rusztowania (odbierający) oświadcza,
+                                że:</Text>
+                            <Text>a) przejmuje rusztowanie do użytkowania;</Text>
+                            <Text>b) zobowiązuje się, że nie będzie prowadził żadnych prac związanych z przestawianiem,
+                                przebudową oraz innych prac ingerujących w konstrukcję użytkowanego rusztowania;</Text>
+                            <Text>c) będzie zgłaszał Wykonawcy rusztowania potrzeby wykonania przeglądu rusztowania w
+                                przypadku stwierdzenia wszelkich nieprawidłowości stwarzających zagrożenie dla
+                                bezpieczeństwa wykonywanych prac oraz do zabezpieczenia rusztowania przed użytkowaniem,
+                                do czasu przeprowadzenia przez Wykonawcę przeglądu i potwierdzenia możliwości dalszego
+                                użytkowania rusztowania.</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 14 (nr 13 na zrzucie) - Podpisy */}
+                    {/* WIERSZ 14 (nr 13) - Podpisy */}
                     <View style={styles.tableRow}>
-                        <View style={[styles.cell, styles.cellWhite, {width: '33.33%', minHeight: 35}]}>
-                            <Text style={[styles.boldText, {textAlign: 'center', marginBottom: 15}]}>
-                                Wykonawca (przedstawiciel rusztowania) lub osoba przełożonej:
+                        <View style={[styles.cell, styles.cellWhite, {
+                            width: '33.33%',
+                            padding: 1,
+                            minHeight: 60,
+                            justifyContent: "flex-end"
+                        }]}>
+                            <Text style={[styles.smallText, {textAlign: 'center'}]}>
+                                Wykonawca (przekazujący rusztowanie)
                             </Text>
-                            <Text style={{textAlign: 'center'}}>_____________________</Text>
-                            <Text style={[styles.smallText, {textAlign: 'center'}]}>Data / godzina</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellWhite, {width: '33.33%'}]}>
-                            <Text style={[styles.boldText, {textAlign: 'center', marginBottom: 15}]}>
-                                Zleceniodawca/oszczężający wykonane prace:
+                        <View style={[styles.cell, styles.cellWhite, {
+                            width: '33.33%',
+                            padding: 1,
+                            minHeight: 60,
+                            justifyContent: "flex-end"
+                        }]}>
+                            <Text style={[styles.smallText, {textAlign: 'center'}]}>
+                                Zlecający(potwierdzający wykonanie robót)
                             </Text>
-                            <Text style={{textAlign: 'center'}}>_____________________</Text>
-                            <Text style={[styles.smallText, {textAlign: 'center'}]}>Data / godzina / podpis</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {width: '33.34%'}]}>
-                            <Text style={[styles.boldText, {textAlign: 'center', marginBottom: 15}]}>
+                        <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
+                            width: '33.34%',
+                            padding: 1,
+                            minHeight: 60,
+                            justifyContent: "flex-end"
+                        }]}>
+                            <Text style={[styles.smallText, {textAlign: 'center'}]}>
                                 Użytkownik (odbierający rusztowanie)
                             </Text>
-                            <Text style={{textAlign: 'center'}}>_____________________</Text>
-                            <Text style={[styles.smallText, {textAlign: 'center'}]}>Data / godzina</Text>
                         </View>
                     </View>
 
-                    {/* WIERSZ 15 (nr 13 na dole zrzutu) */}
+                    {/* WIERSZ 15 (nr 13) */}
                     <View style={styles.tableRow}>
                         <View style={[styles.cell, styles.cellGrey, styles.cellNum]}>
                             <Text>13</Text>
                         </View>
-                        <View style={[styles.cell, styles.cellLast, {width: '96%'}]}>
-                            <View style={[styles.splitCellTop, styles.cellGrey]}>
-                                <Text>Rusztowanie uszczone w terminii (lub przerwanie przez użytkownika) zostało zdemontowave:</Text>
+                        <View style={[styles.cell, styles.cellLast, {width: '96%', flexDirection: 'column'}]}>
+                            <View style={[styles.cellGrey, styles.cellGreyFullSize, {
+                                paddingBottom: 2,
+                                paddingLeft: 3,
+                                justifyContent: "center"
+                            }]}>
+                                <Text style={styles.descriptionText}>Rusztowanie opisane niniejszym protokołem zostało
+                                    zdemontowane:</Text>
                             </View>
-                            <View style={[styles.splitCellBottom, styles.cellWhite, {flex: 2}]}>
-                                <Text> </Text>
+                            <View style={[styles.cellWhite, {width: '100%', flexDirection: "row", minHeight: 40}]}>
+                                <View style={[styles.cellWithoutBorder, styles.cellWhite, {
+                                    width: '50%',
+                                    justifyContent: "flex-end"
+                                }]}>
+                                    <Text style={[{
+                                        textAlign: 'left',
+                                        marginLeft: 30,
+                                        fontSize: 6
+                                    }]}>
+                                        Data/Godzina
+                                    </Text>
+                                </View>
+                                <View style={[styles.cellWithoutBorder, styles.cellWhite, {
+                                    width: '50%',
+                                    justifyContent: "flex-end"
+                                }]}>
+                                    <Text
+                                        style={[{
+                                            textAlign: 'right',
+                                            marginRight: 30,
+                                            fontSize: 6
+                                        }]}>
+                                        Podpis wykonawcy
+                                    </Text>
+                                </View>
                             </View>
                         </View>
                     </View>
 
-                    {/* WIERSZ 16 - Data ważności */}
+                    {/* WIERSZ 16 - Informacje */}
                     <View style={[styles.tableRow, styles.tableRowLast]}>
-                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {width: '100%', textAlign: 'center', padding: 2}]}>
-                            <Text>Data ważności:</Text>
+                        <View style={[styles.cell, styles.cellGrey, styles.cellLast, {
+                            width: '100%',
+                            textAlign: 'left',
+                            paddingLeft: 3,
+                            fontSize: 6
+                        }]}>
+                            <Text>--- *Niepotrzebne skreślić</Text>
                         </View>
                     </View>
 
@@ -518,7 +520,11 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
 
                 {/* Footer */}
                 <View style={styles.footer}>
-                    <Text>str. 1 z 1</Text>
+                    <Text>Stopka będzie poprawiona</Text>
+                    <Text>Stopka będzie poprawiona</Text>
+                    <Text>Stopka będzie poprawiona</Text>
+                    <Text>Stopka będzie poprawiona</Text>
+                    <Text>Stopka będzie poprawiona</Text>
                     <Text>Stopka będzie poprawiona</Text>
                 </View>
             </Page>

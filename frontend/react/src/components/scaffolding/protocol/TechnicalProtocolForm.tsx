@@ -4,8 +4,7 @@ import React, {useState} from 'react';
 import {Box, Button, Grid, GridItem, Heading, Input, Text, Textarea} from '@chakra-ui/react'; // Dodano Input, Text, Textarea
 import {useTranslation} from 'react-i18next';
 import {PDFDownloadLink} from '@react-pdf/renderer';
-import {useThemeColors} from '@/theme/theme-colors';
-import {themeVars} from "@/theme/theme-colors"; // Dodano themeVars
+import {themeVars, useThemeColors} from '@/theme/theme-colors'; // Dodano themeVars
 import {BaseScaffoldingLogPositionFormValues} from '@/types/scaffolding-log-position-types';
 import {TechnicalProtocolData} from '@/types/technical-protocol-types';
 import TechnicalProtocolPDF from './TechnicalProtocolPDF';
@@ -14,7 +13,7 @@ import {getSelectedCompany} from "@/utils/company-utils.ts";
 // --- Lokalne komponenty UI (zamiast tych z Formika) ---
 // Dzięki temu nie musisz wrapować tego w <Formik> ani psuć głównego CustomTextAreaField
 
-const SimpleInputField = ({ label, value, onChange, placeholder }: any) => {
+const SimpleInputField = ({label, value, onChange, placeholder}: any) => {
     const themeColors = useThemeColors();
     return (
         <Box mb={2}>
@@ -36,7 +35,7 @@ const SimpleInputField = ({ label, value, onChange, placeholder }: any) => {
     );
 };
 
-const SimpleTextAreaField = ({ label, value, onChange, placeholder, rows = 3 }: any) => {
+const SimpleTextAreaField = ({label, value, onChange, placeholder, rows = 3}: any) => {
     const themeColors = useThemeColors();
     return (
         <Box mb={2}>
@@ -58,6 +57,7 @@ const SimpleTextAreaField = ({ label, value, onChange, placeholder, rows = 3 }: 
         </Box>
     );
 };
+
 // -----------------------------------------------------
 
 interface TechnicalProtocolFormProps {
@@ -65,7 +65,7 @@ interface TechnicalProtocolFormProps {
 }
 
 const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position}) => {
-    const {t} = useTranslation(['common', 'scaffoldingLogPositions','companies']);
+    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'companies']);
     const themeColors = useThemeColors();
     const selectedCompany = getSelectedCompany();
 
@@ -86,8 +86,8 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
         contractorContactFirstName: position.contractorContact?.firstName || '',
         contractorContactLastName: position.contractorContact?.lastName || '',
         scaffoldingUserName: position.scaffoldingUser?.name || '',
-        scaffoldingUserContactFirstName: position.scaffoldingUserContact?.firstName || '', // Poprawiono dostęp do name
-        scaffoldingUserContactLastName: position.scaffoldingUserContact?.lastName || '', // Poprawiono dostęp do name
+        scaffoldingUserContactFirstName: position.scaffoldingUserContact?.firstName || '',
+        scaffoldingUserContactLastName: position.scaffoldingUserContact?.lastName || '',
         assemblyLocation: position.assemblyLocation || '',
         assemblyDate: position.assemblyDate || '',
         dimensions: formatDimensions(),
@@ -96,6 +96,12 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
         earthingResistance: '',
         additionalInfo: '',
     });
+
+    const [pdfData, setPdfData] = useState<TechnicalProtocolData | null>(null);
+
+    const handlePreparePdf = () => {
+        setPdfData(protocolData);
+    };
 
     const handleInputChange = (field: keyof TechnicalProtocolData, value: string) => {
         setProtocolData(prev => ({...prev, [field]: value}));
@@ -108,6 +114,39 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
             <Heading size="lg" mb={4} color={themeColors.fontColor}>
                 {t('scaffoldingLogPositions:technicalProtocol')}
             </Heading>
+            {/*TYMCZASOWO BUTTONSY NA GÓRZE */}
+            <Box textAlign="center" mt={4}>
+                <Button
+                    colorPalette="orange"
+                    size="lg"
+                    mr={3}
+                    onClick={handlePreparePdf}
+                >
+                    {t('common:preparePDF')}
+                </Button>
+
+                {pdfData && (
+                    <PDFDownloadLink
+                        document={
+                            <TechnicalProtocolPDF
+                                data={pdfData}
+                                logoUrl={"/img/companies/rch_logo.png"}
+                            />
+                        }
+                        fileName={filename}
+                    >
+                        {({loading}) => (
+                            <Button
+                                colorPalette="blue"
+                                size="lg"
+                                loading={loading}
+                            >
+                                {loading ? t('common:generating') : t('common:downloadPDF')}
+                            </Button>
+                        )}
+                    </PDFDownloadLink>
+                )}
+            </Box>
 
             <Box mb={4} p={4} borderWidth={1} borderRadius="md" borderColor={themeColors.borderColor}>
                 <Heading size="md" mb={3} color={themeColors.fontColor}>
@@ -189,25 +228,38 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
                 </Grid>
             </Box>
 
-            <Box textAlign="center">
-                <PDFDownloadLink
-                    document={<TechnicalProtocolPDF
-                        data={protocolData}
-                        logoUrl={"/img/companies/rch_logo.png"}
-                    />}
-                    fileName={filename}
-                >
-                    {({loading}) => (
-                        <Button
-                            colorPalette="blue"
-                            size="lg"
-                            loading={loading}
-                        >
-                            {loading ? t('common:generating') : t('common:downloadPDF')}
-                        </Button>
-                    )}
-                </PDFDownloadLink>
-            </Box>
+            {/*<Box textAlign="center" mt={4}>*/}
+            {/*    <Button*/}
+            {/*        colorPalette="orange"*/}
+            {/*        size="lg"*/}
+            {/*        mr={3}*/}
+            {/*        onClick={handlePreparePdf}*/}
+            {/*    >*/}
+            {/*        {t('common:preparePDF')}*/}
+            {/*    </Button>*/}
+
+            {/*    {pdfData && (*/}
+            {/*        <PDFDownloadLink*/}
+            {/*            document={*/}
+            {/*                <TechnicalProtocolPDF*/}
+            {/*                    data={pdfData}*/}
+            {/*                    logoUrl={"/img/companies/rch_logo.png"}*/}
+            {/*                />*/}
+            {/*            }*/}
+            {/*            fileName={filename}*/}
+            {/*        >*/}
+            {/*            {({loading}) => (*/}
+            {/*                <Button*/}
+            {/*                    colorPalette="blue"*/}
+            {/*                    size="lg"*/}
+            {/*                    loading={loading}*/}
+            {/*                >*/}
+            {/*                    {loading ? t('common:generating') : t('common:downloadPDF')}*/}
+            {/*                </Button>*/}
+            {/*            )}*/}
+            {/*        </PDFDownloadLink>*/}
+            {/*    )}*/}
+            {/*</Box>*/}
         </Box>
     );
 };

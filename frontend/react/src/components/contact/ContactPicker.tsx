@@ -69,6 +69,7 @@ const ContactPicker: React.FC<Props> = ({
             <ContactSearchWithSelect
                 searchFn={searchFn}
                 onSelect={handleSelect}
+                selected={selected}
                 minChars={2}
                 debounceMs={300}
                 size={"md"}

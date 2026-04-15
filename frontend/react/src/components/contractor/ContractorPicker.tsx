@@ -68,6 +68,7 @@ const ContractorPicker: React.FC<Props> = ({
                     return await searchFn(q);
                 }}
                 onSelect={handleSelect}
+                selected={selected}
                 minChars={2}
                 debounceMs={300}
                 autoSearch={true}

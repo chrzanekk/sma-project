@@ -1,12 +1,13 @@
-import React, {useState} from "react";
+import React, {useMemo} from "react";
 import {Flex} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types.ts";
 import AsyncSearchSelect, {AsyncSearchSelectOption} from "@/components/shared/AsyncSearchSelect.tsx";
 
 export interface ContractorSearchProps {
     searchFn: (query: string) => Promise<ContractorDTO[]>;
     onSelect: (contractor: ContractorDTO) => void;
+    selected?: ContractorDTO | ContractorBaseDTO | null;
     minChars?: number;
     debounceMs?: number;
     autoSearch?: boolean;
@@ -21,6 +22,7 @@ export interface ContractorSearchProps {
 const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                                                                          searchFn,
                                                                          onSelect,
+                                                                         selected,
                                                                          minChars = 2,
                                                                          debounceMs = 300,
                                                                          size = "md",
@@ -29,8 +31,14 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                                                                      }) => {
     const {t} = useTranslation(["common", "contractors"]);
 
-
-    const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContractorDTO> | null>(null);
+    const selectedOption = useMemo<AsyncSearchSelectOption<ContractorDTO> | null>(() => {
+        if (!selected) return null;
+        return {
+            value: selected.id!,
+            label: selected.name,
+            raw: selected as ContractorDTO,
+        };
+    }, [selected]);
 
     const loadOptions = async (term: string):
         Promise<AsyncSearchSelectOption<ContractorDTO>[]> => {
@@ -43,9 +51,7 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
     };
 
     const handleChange = (opt: AsyncSearchSelectOption<ContractorDTO> | null) => {
-        setSelectedOption(opt);
-
-        if(!opt) {
+        if (!opt) {
             onSelect(null as unknown as ContractorDTO);
             return;
         }

@@ -49,11 +49,9 @@ const EditScaffoldingLogPositionForm: React.FC<EditScaffoldingLogPositionFormPro
 
                 const formValues: BaseScaffoldingLogPositionFormValues = {
                     ...data,
-                    // Upewniamy się, że daty są w dobrym formacie dla input[type="date"]
                     assemblyDate: mapDate(data.assemblyDate),
                     dismantlingDate: mapDate(data.dismantlingDate),
                     dismantlingNotificationDate: mapDate(data.dismantlingNotificationDate),
-                    // Upewniamy się, że tablice istnieją
                     dimensions: data.dimensions || [],
                     workingTimes: data.workingTimes || [],
                     childPositions: data.childPositions || []

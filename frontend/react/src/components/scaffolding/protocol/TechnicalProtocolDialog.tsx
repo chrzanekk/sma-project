@@ -38,8 +38,6 @@ const TechnicalProtocolDialog: React.FC<TechnicalProtocolDialogProps> = ({
                     <Dialog.Backdrop/>
                     <Dialog.Positioner>
                         <Dialog.Content bg={themeColors.bgColorSecondary} offset={"4"} borderRadius={"md"} maxH="85vh">
-
-
                             <Dialog.CloseTrigger/>
                             <Dialog.Body>
                                 <TechnicalProtocolForm
