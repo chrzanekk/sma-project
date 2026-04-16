@@ -5,6 +5,7 @@ import {Document, Font, Image, Page, Text, View} from '@react-pdf/renderer';
 import {TechnicalProtocolData} from '@/types/technical-protocol-types';
 import {getSelectedCompany} from "@/utils/company-utils.ts";
 import {styles} from './technicalProtocolPDFstyles';
+import {Trans, useTranslation} from "react-i18next";
 
 // Rejestracja czcionek
 Font.register({
@@ -53,6 +54,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
     const taxNumber = "NIP(VAT/TAX ID): PL9462731518";
 
     const dimensions = data.dimensions ? data.dimensions.split(', ') : [];
+    const {t} = useTranslation('technicalProtocols');
+
 
     return (
         <Document>
@@ -92,9 +95,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                 fontSize: 14,
                                 textAlign: "center",
                                 lineHeight: 1,
-                            }]}>PROTOKÓŁ
-                                ODBIORU TECHNICZNEGO RUSZTOWANIA
-                                NR: {data.scaffoldingNumber}</Text>
+                            }]}>{t('technicalProtocols:titleUppercase')} {data.scaffoldingNumber}</Text>
                         </View>
                     </View>
 
@@ -105,7 +106,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                 width: '100%',
                                 justifyContent: "center",
                             }]}>
-                            <Text>Część informacyjna:</Text>
+                            <Text>{t('technicalProtocols:informationPart')}</Text>
                         </View>
                     </View>
 
@@ -118,7 +119,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             paddingLeft: 3,
                             paddingBottom: 2
                         }]}>
-                            <Text style={styles.descriptionText}>Wykonawca rusztowania (przekazujący):</Text>
+                            <Text style={styles.descriptionText}>{t('technicalProtocols:scaffoldingPerformer')}</Text>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
                             width: '61%',
@@ -140,16 +141,15 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             paddingBottom: 2,
                             justifyContent: 'center'
                         }]}>
-                            <Text style={styles.descriptionText}>Zlecający(potwierdzający) </Text>
-                            <Text style={styles.descriptionText}>wykonanie/przebudowę/zmianę lokalizacji*</Text>
+                            <Text style={styles.descriptionText}>{t('technicalProtocols:scaffoldingAcceptor')} </Text>
                         </View>
                         <View style={[styles.cell, styles.cellGrey, {width: '8.75%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={styles.splitCellTop}>
-                                    <Text style={styles.subDescriptionText}>Firma</Text>
+                                    <Text style={styles.subDescriptionText}>{t('technicalProtocols:company')}</Text>
                                 </View>
                                 <View style={styles.splitCellBottom}>
-                                    <Text style={styles.subDescriptionText}>Numer zlecenia</Text>
+                                    <Text style={styles.subDescriptionText}>{t('technicalProtocols:orderNumber')}</Text>
                                 </View>
                             </View>
                         </View>
@@ -177,17 +177,19 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             paddingBottom: 2,
                             justifyContent: 'center'
                         }]}>
-                            <Text style={styles.descriptionText}>Użytkownik rusztowania:</Text>
+                            <Text style={styles.descriptionText}>{t('technicalProtocols:scaffoldingUser')}</Text>
                         </View>
                         <View style={[styles.cell, styles.cellGrey, {width: '20%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={styles.splitCellTop}>
-                                    <Text style={styles.subDescriptionText}>Firma</Text>
+                                    <Text
+                                        style={styles.subDescriptionText}>{t('technicalProtocols:scaffoldingUserCompany')}</Text>
                                 </View>
                                 <View style={styles.splitCellBottom}>
-                                    <Text style={styles.subDescriptionText}>Imię i nazwisko </Text>
-                                    <Text style={styles.subDescriptionTextSmall}>upoważnionego przedstawiciela
-                                        firmy</Text>
+                                    <Text
+                                        style={styles.subDescriptionText}>{t('technicalProtocols:firstAndLastNameOfScaffoldingUserContactPart1')}</Text>
+                                    <Text
+                                        style={styles.subDescriptionTextSmall}>{t('technicalProtocols:firstAndLastNameOfScaffoldingUserContactPart2')}</Text>
                                 </View>
                             </View>
                         </View>
@@ -215,7 +217,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             paddingBottom: 2,
                             justifyContent: 'center'
                         }]}>
-                            <Text style={styles.descriptionText}>Lokalizacja rusztowania:</Text>
+                            <Text
+                                style={styles.descriptionText}>{t('technicalProtocols:scaffoldingLocalisation')}</Text>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
                             width: '61%',
@@ -231,7 +234,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                     <View style={styles.tableRow}>
                         <View
                             style={[styles.cell, styles.cellGrey, styles.cellLast, styles.sectionHeader, {width: '100%'}]}>
-                            <Text>Część techniczna:</Text>
+                            <Text>{t('technicalProtocols:technicalPart')}</Text>
                         </View>
                     </View>
 
@@ -243,11 +246,11 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                         <View style={[styles.cell, {width: '43.5%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
-                                    <Text style={styles.descriptionText}>Rodzaj i przeznaczenie rusztowania:</Text>
+                                    <Text style={styles.descriptionText}>{t('technicalProtocols:typeAndPurpose')}</Text>
                                 </View>
                                 <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
                                     <Text
-                                        style={styles.subDescriptionTextNormal}>{data.scaffoldingPurpose || 'Moduł, do prac spawalniczych rurociągów'}</Text>
+                                        style={styles.subDescriptionTextNormal}>{data.scaffoldingPurpose || t('technicalProtocols:defaultTypeAndPurpose')}</Text>
                                 </View>
                             </View>
                         </View>
@@ -257,8 +260,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                         <View style={[styles.cell, styles.cellLast, {width: '48.5%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
-                                    <Text style={styles.descriptionText}>Dopuszczalne obciążenie pomostów i konstrukcji
-                                        rusztowania:</Text>
+                                    <Text style={styles.descriptionText}>{t('technicalProtocols:loadLimit')}</Text>
                                 </View>
                                 <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
                                     <Text style={styles.descriptionTextNormal}>{data.loadLimit || '1,5kN/m2'}</Text>
@@ -275,7 +277,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                         <View style={[styles.cell, {width: '43.5%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
-                                    <Text style={styles.descriptionText}>Oporność uziomu:</Text>
+                                    <Text
+                                        style={styles.descriptionText}>{t('technicalProtocols:earthingResistance')}</Text>
                                 </View>
                                 <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
                                     <Text style={styles.descriptionTextNormal}>{data.earthingResistance || ''}</Text>
@@ -288,8 +291,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                         <View style={[styles.cell, styles.cellLast, {width: '48.5%'}]}>
                             <View style={styles.splitContainer}>
                                 <View style={[styles.splitCellTop, styles.cellGrey, {paddingBottom: 2}]}>
-                                    <Text style={styles.descriptionText}>Data i godzina przekazania rusztowania do
-                                        użytkowania</Text>
+                                    <Text
+                                        style={styles.descriptionText}>{t('technicalProtocols:dateAndTimeOfPuttingScaffoldingToUse')}</Text>
                                 </View>
                                 <View style={[styles.splitCellBottom, styles.cellWhite, {paddingBottom: 2}]}>
                                     <Text style={styles.descriptionTextNormal}>{data.assemblyDate}</Text>
@@ -312,7 +315,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                 paddingBottom: 2,
                                 justifyContent: "center"
                             }]}>
-                                <Text style={styles.descriptionText}>Obmiar rusztowania:</Text>
+                                <Text
+                                    style={styles.descriptionText}>{t('technicalProtocols:scaffoldingDimensions')}</Text>
                             </View>
                             <View style={[styles.cellWhite, {padding: 1, minHeight: 100}]}>
                                 {dimensions.map((dim, index) => (
@@ -333,7 +337,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                 paddingBottom: 2,
                                 justifyContent: "center"
                             }]}>
-                                <Text style={styles.descriptionText}>Terminy przeglądów rusztowania:</Text>
+                                <Text
+                                    style={styles.descriptionText}>{t('technicalProtocols:scaffoldingInspectionDates')}</Text>
                             </View>
                             <View style={{flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: '#000'}}>
                                 <View style={[styles.cell, styles.cellGrey, {
@@ -343,10 +348,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                     paddingBottom: 2,
                                     justifyContent: "center"
                                 }]}>
-                                    <Text style={styles.descriptionTextNormalBiggerCenter}>Data/godzina i czytelny
-                                        podpis osoby
-                                        dokonującej
-                                        przeglądu</Text>
+                                    <Text
+                                        style={styles.descriptionTextNormalBiggerCenter}>{t('technicalProtocols:signatureOfInspectionWithDate')}</Text>
                                 </View>
                                 <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
                                 <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
@@ -364,8 +367,8 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                     paddingBottom: 2,
                                     justifyContent: "center"
                                 }]}>
-                                    <Text style={styles.descriptionTextNormalBiggerCenter}>Data/godzina i
-                                        czytelny podpis osoby dokonującej przeglądu</Text>
+                                    <Text
+                                        style={styles.descriptionTextNormalBiggerCenter}>{t('technicalProtocols:signatureOfInspectionWithDate')}</Text>
                                 </View>
                                 <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
                                 <View style={[styles.cell, styles.cellWhite, {width: '15%'}]}><Text> </Text></View>
@@ -388,18 +391,21 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             padding: 3,
                             fontSize: 8
                         }]}>
-                            <Text><Text style={styles.boldText}>Wykonawca </Text>(przekazujący rusztowanie) oświadcza,
-                                że:</Text>
-                            <Text>a) rusztowanie opisane niniejszym protokołem jest kompletne i zostało zmontowane
-                                zgodnie ze sztuką budowlaną, normami, dokumentacją techniczno-eksploatacyjną i
-                                instrukcją montażu wydaną przez producenta lub projektem indywidualnym oraz spełnia
-                                wymagania bezpieczeństwa i higieny pracy;</Text>
-                            <Text>b) montaż wykonali uprawnieni monterzy rusztowań</Text>
-                            <Text>c) rusztowanie nadaje się do eksploatacji.</Text>
-                            <Text><Text style={styles.boldText}>Wykonawca </Text> zobowiązuje się do przeprowadzenia w
-                                czasie eksploatacji rusztowania
-                                przeglądów jego stanu technicznego zgodnie z obowiązującymi przepisami jak również na
-                                doraźne polecenie użytkownika rusztowania.</Text>
+                            <Text>
+                                <Trans
+                                    i18nKey="technicalProtocols:constructorInfoLine1"
+                                    components={[<Text key="0" style={styles.boldText}/>]}
+                                />
+                            </Text>
+                            <Text>{t('technicalProtocols:constructorInfoLine2')}</Text>
+                            <Text>{t('technicalProtocols:constructorInfoLine3')}</Text>
+                            <Text>{t('technicalProtocols:constructorInfoLine4')}</Text>
+                            <Text>
+                                <Trans
+                                    i18nKey="technicalProtocols:constructorInfoLine5"
+                                    components={[<Text key="0" style={styles.boldText}/>]}
+                                />
+                            </Text>
                         </View>
                     </View>
 
@@ -413,16 +419,15 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             padding: 3,
                             fontSize: 8
                         }]}>
-                            <Text><Text style={styles.boldText}>Użytkownik </Text> rusztowania (odbierający) oświadcza,
-                                że:</Text>
-                            <Text>a) przejmuje rusztowanie do użytkowania;</Text>
-                            <Text>b) zobowiązuje się, że nie będzie prowadził żadnych prac związanych z przestawianiem,
-                                przebudową oraz innych prac ingerujących w konstrukcję użytkowanego rusztowania;</Text>
-                            <Text>c) będzie zgłaszał Wykonawcy rusztowania potrzeby wykonania przeglądu rusztowania w
-                                przypadku stwierdzenia wszelkich nieprawidłowości stwarzających zagrożenie dla
-                                bezpieczeństwa wykonywanych prac oraz do zabezpieczenia rusztowania przed użytkowaniem,
-                                do czasu przeprowadzenia przez Wykonawcę przeglądu i potwierdzenia możliwości dalszego
-                                użytkowania rusztowania.</Text>
+                            <Text>
+                                <Trans
+                                    i18nKey="technicalProtocols:userInfoLine1"
+                                    components={[<Text key="0" style={styles.boldText}/>]}
+                                />
+                            </Text>
+                            <Text>{t('technicalProtocols:userInfoLine2')}</Text>
+                            <Text>{t('technicalProtocols:userInfoLine3')}</Text>
+                            <Text>{t('technicalProtocols:userInfoLine4')}</Text>
                         </View>
                     </View>
 
@@ -435,7 +440,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             justifyContent: "flex-end"
                         }]}>
                             <Text style={[styles.smallText, {textAlign: 'center'}]}>
-                                Wykonawca (przekazujący rusztowanie)
+                                {t('technicalProtocols:signatureConstructor')}
                             </Text>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, {
@@ -445,7 +450,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             justifyContent: "flex-end"
                         }]}>
                             <Text style={[styles.smallText, {textAlign: 'center'}]}>
-                                Zlecający(potwierdzający wykonanie robót)
+                                {t('technicalProtocols:ordererConstructor')}
                             </Text>
                         </View>
                         <View style={[styles.cell, styles.cellWhite, styles.cellLast, {
@@ -455,7 +460,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             justifyContent: "flex-end"
                         }]}>
                             <Text style={[styles.smallText, {textAlign: 'center'}]}>
-                                Użytkownik (odbierający rusztowanie)
+                                {t('technicalProtocols:signatureUser')}
                             </Text>
                         </View>
                     </View>
@@ -471,8 +476,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                 paddingLeft: 3,
                                 justifyContent: "center"
                             }]}>
-                                <Text style={styles.descriptionText}>Rusztowanie opisane niniejszym protokołem zostało
-                                    zdemontowane:</Text>
+                                <Text style={styles.descriptionText}>{t('technicalProtocols:dismantlingInfo')}</Text>
                             </View>
                             <View style={[styles.cellWhite, {width: '100%', flexDirection: "row", minHeight: 40}]}>
                                 <View style={[styles.cellWithoutBorder, styles.cellWhite, {
@@ -484,7 +488,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                         marginLeft: 30,
                                         fontSize: 6
                                     }]}>
-                                        Data/Godzina
+                                        {t('technicalProtocols:dateAndTime')}
                                     </Text>
                                 </View>
                                 <View style={[styles.cellWithoutBorder, styles.cellWhite, {
@@ -497,7 +501,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                                             marginRight: 30,
                                             fontSize: 6
                                         }]}>
-                                        Podpis wykonawcy
+                                        {t('technicalProtocols:constructorSignature')}
                                     </Text>
                                 </View>
                             </View>
@@ -512,7 +516,7 @@ const TechnicalProtocolPDF: React.FC<TechnicalProtocolPDFProps> = ({data, logoUr
                             paddingLeft: 3,
                             fontSize: 6
                         }]}>
-                            <Text>--- *Niepotrzebne skreślić</Text>
+                            <Text>{t('technicalProtocols:deleteAsAppropriate')}</Text>
                         </View>
                     </View>
 
