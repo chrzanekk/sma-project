@@ -17,14 +17,42 @@ import TechnicalProtocolDialog from "@/components/scaffolding/protocol/Technical
 
 
 // --- HOOK DO WYKRYWANIA KLIKNIĘCIA POZA ---
+// function useOutsideClick(
+//     ref: React.RefObject<HTMLElement | null>, // Dodano | null
+//     callback: () => void
+// ) {
+//     useEffect(() => {
+//         function handleClickOutside(event: MouseEvent) {
+//             // Sprawdzenie ref.current obsłuży null, więc logika w środku jest bezpieczna
+//             if (ref.current && !ref.current.contains(event.target as Node)) {
+//                 callback();
+//             }
+//         }
+//
+//         document.addEventListener("mousedown", handleClickOutside);
+//         return () => {
+//             document.removeEventListener("mousedown", handleClickOutside);
+//         };
+//     }, [ref, callback]);
+// }
+
 function useOutsideClick(
-    ref: React.RefObject<HTMLElement | null>, // Dodano | null
+    ref: React.RefObject<HTMLElement | null>,
     callback: () => void
 ) {
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
-            // Sprawdzenie ref.current obsłuży null, więc logika w środku jest bezpieczna
-            if (ref.current && !ref.current.contains(event.target as Node)) {
+            const target = event.target as Element;
+
+            // Zabezpieczenie przed zamykaniem:
+            // Szukamy, czy kliknięty element znajduje się wewnątrz Portalu Chakra UI
+            // (modale, alerty, dropdowny z selectów) za pomocą atrybutów "role".
+            const isInsidePortalOrModal = target.closest(
+                '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [data-part="content"]'
+            );
+
+            // Zwijamy tylko wtedy, gdy kliknięto poza tabelą ORAZ poza jakimkolwiek modalem
+            if (ref.current && !ref.current.contains(target) && !isInsidePortalOrModal) {
                 callback();
             }
         }
