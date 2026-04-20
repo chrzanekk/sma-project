@@ -22,6 +22,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "dismantlingNotificationDate", source = "dismantlingNotificationDate")
     @Mapping(target = "scaffoldingType", source = "scaffoldingType")
     @Mapping(target = "scaffoldingFullDimension", source = "scaffoldingFullDimension")
+    @Mapping(target = "scaffoldingPartialDimension", source = "scaffoldingPartialDimension")
     @Mapping(target = "technicalProtocolStatus", source = "technicalProtocolStatus")
     @Mapping(target = "parentPosition", source = "parentPosition")
     @Mapping(target = "company", source = "company")
@@ -30,6 +31,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "scaffoldingUser", source = "scaffoldingUser")
     @Mapping(target = "scaffoldingUserContact", source = "scaffoldingUserContact")
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
+    @Mapping(target = "scaffoldingPartialDimensionUnit", source = "scaffoldingPartialDimensionUnit")
     @Mapping(target = "fullWorkingTime", source = "fullWorkingTime")
     @Mapping(target = "childPositions", ignore = true)
     ScaffoldingLogPositionDTO toDto(ScaffoldingLogPosition entity);
@@ -42,6 +44,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "parentPosition", source = "parentPosition")
     @Mapping(target = "childPositions", source = "childPositions")
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
+    @Mapping(target = "scaffoldingPartialDimensionUnit", source = "scaffoldingPartialDimensionUnit")
     @Mapping(target = "fullWorkingTime", source = "fullWorkingTime")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
@@ -65,5 +68,6 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "modifiedBy", ignore = true)
     @Mapping(target = "scaffoldingFullDimensionUnit", ignore = true)
+    @Mapping(target = "scaffoldingPartialDimensionUnit", ignore = true)
     void updateFromDto(ScaffoldingLogPositionDTO dto, @MappingTarget ScaffoldingLogPosition entity);
 }

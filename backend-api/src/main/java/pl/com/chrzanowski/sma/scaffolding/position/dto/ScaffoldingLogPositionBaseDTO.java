@@ -40,6 +40,9 @@ public class ScaffoldingLogPositionBaseDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     protected BigDecimal scaffoldingFullDimension;
     protected UnitBaseDTO scaffoldingFullDimensionUnit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    protected BigDecimal scaffoldingPartialDimension;
+    protected UnitBaseDTO scaffoldingPartialDimensionUnit;
     protected BigDecimal fullWorkingTime;
     @NotNull
     protected TechnicalProtocolStatus technicalProtocolStatus;

@@ -16,26 +16,6 @@ import EditScaffoldingLogPositionDialog from "@/components/scaffolding/position/
 import TechnicalProtocolDialog from "@/components/scaffolding/protocol/TechnicalProtocolDialog.tsx";
 
 
-// --- HOOK DO WYKRYWANIA KLIKNIĘCIA POZA ---
-// function useOutsideClick(
-//     ref: React.RefObject<HTMLElement | null>, // Dodano | null
-//     callback: () => void
-// ) {
-//     useEffect(() => {
-//         function handleClickOutside(event: MouseEvent) {
-//             // Sprawdzenie ref.current obsłuży null, więc logika w środku jest bezpieczna
-//             if (ref.current && !ref.current.contains(event.target as Node)) {
-//                 callback();
-//             }
-//         }
-//
-//         document.addEventListener("mousedown", handleClickOutside);
-//         return () => {
-//             document.removeEventListener("mousedown", handleClickOutside);
-//         };
-//     }, [ref, callback]);
-// }
-
 function useOutsideClick(
     ref: React.RefObject<HTMLElement | null>,
     callback: () => void
@@ -44,14 +24,10 @@ function useOutsideClick(
         function handleClickOutside(event: MouseEvent) {
             const target = event.target as Element;
 
-            // Zabezpieczenie przed zamykaniem:
-            // Szukamy, czy kliknięty element znajduje się wewnątrz Portalu Chakra UI
-            // (modale, alerty, dropdowny z selectów) za pomocą atrybutów "role".
             const isInsidePortalOrModal = target.closest(
                 '[role="dialog"], [role="alertdialog"], [role="menu"], [role="listbox"], [data-part="content"]'
             );
 
-            // Zwijamy tylko wtedy, gdy kliknięto poza tabelą ORAZ poza jakimkolwiek modalem
             if (ref.current && !ref.current.contains(target) && !isInsidePortalOrModal) {
                 callback();
             }
@@ -156,48 +132,52 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
             <div ref={tableRef}>
 
                 <Table.ScrollArea height="auto" borderWidth="1px" borderRadius="md" borderColor="grey">
-                    <Table.Root size="sm" interactive showColumnBorder color={themeColors.fontColor}>
+                    <Table.Root size="sm" interactive showColumnBorder color={themeColors.fontColor}
+                                style={{tableLayout: "fixed"}}>
                         <Table.Header>
                             <Table.Row bg={themeColors.bgColorPrimary}>
                                 <Table.ColumnHeader {...commonColumnHeaderProps} width="20px"/>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"2%"}
                                                     onClick={() => onSortChange("id")}>
                                     Lp.{renderSortIndicator("id")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"8%"}
                                                     onClick={() => onSortChange("scaffoldingNumber")}>
                                     {t("scaffoldingLogPositions:scaffoldingNumber")}{renderSortIndicator("scaffoldingNumber")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"15%"}
                                                     onClick={() => onSortChange("assemblyLocation")}>
                                     {t("scaffoldingLogPositions:assemblyLocation")}{renderSortIndicator("assemblyLocation")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("assemblyDate")}>
                                     {t("scaffoldingLogPositions:assemblyDate")}{renderSortIndicator("assemblyDate")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("dismantlingDate")}>
                                     {t("scaffoldingLogPositions:dismantlingDate")}{renderSortIndicator("dismantlingDate")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("dismantlingNotificationDate")}>
                                     {t("scaffoldingLogPositions:dismantlingNotificationDateShort")}{renderSortIndicator("dismantlingNotificationDate")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("scaffoldingType")}>
                                     {t("scaffoldingLogPositions:scaffoldingType")}{renderSortIndicator("scaffoldingType")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("scaffoldingFullDimension")}>
                                     {t("scaffoldingLogPositions:scaffoldingFullDimension")}{renderSortIndicator("scaffoldingFullDimension")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
+                                                    onClick={() => onSortChange("scaffoldingPartialDimension")}>
+                                    {t("scaffoldingLogPositions:scaffoldingPartialDimension")}{renderSortIndicator("scaffoldingPartialDimension")}</Table.ColumnHeader>
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("fullWorkingTime")}>
                                     {t("scaffoldingLogPositions:fullWorkingTime")}{renderSortIndicator("fullWorkingTime")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("technicalProtocolStatus")}>
                                     {t("scaffoldingLogPositions:technicalProtocolStatus")}{renderSortIndicator("technicalProtocolStatus")}</Table.ColumnHeader>
                                 <Table.ColumnHeader
-                                    {...commonColumnHeaderProps}
+                                    {...commonColumnHeaderProps} width={"6%"}
                                     onClick={() => onSortChange("createdDatetime")}
                                 >
                                     {t("common:created")} {renderSortIndicator("createdDatetime")}
                                 </Table.ColumnHeader>
                                 <Table.ColumnHeader
-                                    {...commonColumnHeaderProps}
+                                    {...commonColumnHeaderProps} width={"6%"}
                                     onClick={() => onSortChange("lastModifiedDatetime")}
                                 >
                                     {t("common:lastModified")} {renderSortIndicator("lastModifiedDatetime")}
@@ -315,29 +295,28 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                     )}
                 </Table.Cell>
 
-                <Table.Cell {...commonCellProps} width={"2%"}>
+                <Table.Cell {...commonCellProps} >
                     {currentIndexString}
                 </Table.Cell>
 
-                <Table.Cell {...commonCellProps} width={"8%"}>
+                <Table.Cell {...commonCellProps}>
                     {hasChildren && <Badge colorPalette="blue" mr={1} size="xs">P</Badge>}
                     {position.scaffoldingNumber}
                 </Table.Cell>
 
-                <Table.Cell {...commonCellProps} width={"20%"}>{position.assemblyLocation}</Table.Cell>
-                <Table.Cell {...commonCellProps}
-                            width={"5%"}>{DateFormatter.formatDate(position.assemblyDate)}</Table.Cell>
-                <Table.Cell {...commonCellProps}
-                            width={"5%"}>{DateFormatter.formatDate(position.dismantlingDate)}</Table.Cell>
-                <Table.Cell {...commonCellProps}
-                            width={"5%"}>{DateFormatter.formatDate(position.dismantlingNotificationDate)}</Table.Cell>
-                <Table.Cell {...commonCellProps}
-                            width={"5%"}>{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
-                <Table.Cell {...commonCellProps} width={"5%"}>
+                <Table.Cell {...commonCellProps}>{position.assemblyLocation}</Table.Cell>
+                <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.assemblyDate)}</Table.Cell>
+                <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.dismantlingDate)}</Table.Cell>
+                <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.dismantlingNotificationDate)}</Table.Cell>
+                <Table.Cell {...commonCellProps} fontSize = "x-small" >{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
+                <Table.Cell {...commonCellProps}>
                     {position.scaffoldingFullDimension} {position.scaffoldingFullDimensionUnit?.symbol}
                 </Table.Cell>
-                <Table.Cell {...commonCellProps} width={"3%"}>{position.fullWorkingTime} r-h</Table.Cell>
-                <Table.Cell {...commonCellProps} width={"8%"}>
+                <Table.Cell {...commonCellProps}>
+                    {position.scaffoldingPartialDimension} {position.scaffoldingPartialDimensionUnit?.symbol}
+                </Table.Cell>
+                <Table.Cell {...commonCellProps}>{position.fullWorkingTime} r-h</Table.Cell>
+                <Table.Cell {...commonCellProps}>
                     {t(`technicalProtocolStatuses:${position.technicalProtocolStatus}`)}
                 </Table.Cell>
 
@@ -345,13 +324,11 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                     value={position.createdDatetime}
                     user={position.createdBy}
                     cellProps={commonCellProps}
-                    width={"8%"}
                 />
                 <AuditCell
                     value={position.lastModifiedDatetime}
                     user={position.modifiedBy}
                     cellProps={commonCellProps}
-                    width={"8%"}
                 />
 
                 <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>

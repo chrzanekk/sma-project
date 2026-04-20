@@ -82,20 +82,20 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         checkIfPositionWithNumberExistsInLog(createDto.getScaffoldingNumber(), createDto.getScaffoldingLog().getId());
 
         // Obliczanie wymiarów dla nowej pozycji
-        DimensionResult dimensionResult = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
+        DimensionResult partialDimensionResult = calculateScaffoldingDimension(BigDecimal.ZERO, createDto.getDimensions());
         BigDecimal fullWorkingTime = calculateFullWorkingTime(BigDecimal.ZERO, createDto.getWorkingTimes());
 
 
         // Mapowanie DTO -> Entity z ustawionymi wymiarami
         ScaffoldingLogPosition toSaveEntity = scaffoldingLogPositionDTOMapper.toEntity(createDto);
-        toSaveEntity.setScaffoldingFullDimension(dimensionResult.value());
-        toSaveEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(dimensionResult.unit()));
+        toSaveEntity.setScaffoldingPartialDimension(partialDimensionResult.value());
+        toSaveEntity.setScaffoldingPartialDimensionUnit(unitBaseMapper.toEntity(partialDimensionResult.unit()));
         toSaveEntity.setFullWorkingTime(fullWorkingTime);
 
         // Obsługa Parent Position
-        if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
+//        if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
             handleParentPositionOnCreate(toSaveEntity, createDto);
-        }
+//        }
 
         // Ustawienie relacji dwukierunkowych
         linkSubEntities(toSaveEntity);
@@ -134,8 +134,8 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
             // Przeliczenie wymiarów dla bieżącej pozycji
             DimensionResult newDimensions = calculateScaffoldingDimension(BigDecimal.ZERO, updatingDimensions);
-            existingPosition.setScaffoldingFullDimension(newDimensions.value());
-            existingPosition.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(newDimensions.unit()));
+            existingPosition.setScaffoldingPartialDimension(newDimensions.value());
+            existingPosition.setScaffoldingPartialDimensionUnit(unitBaseMapper.toEntity(newDimensions.unit()));
         }
 
         List<ScaffoldingLogPositionWorkingTimeBaseDTO> updatingWorkingTimes = updateDto.getWorkingTimes();
@@ -151,9 +151,11 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             if (dimensionChanged) {
                 updateParentDimensionsState(parentEntity, updatingDimensions);
             }
-            if (workingTimeChanged) {
-                updateParentWorkingTimeState(parentEntity, updatingWorkingTimes);
-            }
+//            if (workingTimeChanged) {
+//                updateParentWorkingTimeState(parentEntity, updatingWorkingTimes);
+//            }
+        } else {
+            updateParentDimensionsState(existingPosition, updatingDimensions);
         }
         scaffoldingLogPositionDao.save(existingPosition);
 
@@ -191,6 +193,7 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     }
 
     private void updateParentDimensionsState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPositionDimensionBaseDTO> childDimensions) {
+        // todo check method to calculate dimension of all related scaffoldings
         DimensionResult parentResult = calculateScaffoldingDimension(parentEntity.getScaffoldingFullDimension(), childDimensions);
         parentEntity.setScaffoldingFullDimension(parentResult.value());
         parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(parentResult.unit()));

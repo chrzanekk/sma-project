@@ -5,7 +5,10 @@ export const useTableStyles = () => {
 
     const commonCellProps = {
         textAlign: "center",
-        borderColor: "gray.400"
+        borderColor: "gray.400",
+        whiteSpace: "normal",
+        // wordBreak: "break-word",
+        // overflowWrap: "break-word"
     };
 
     const commonColumnHeaderProps = {
@@ -13,7 +16,10 @@ export const useTableStyles = () => {
         color: themeColors.fontColor,
         textAlign: "center",
         borderColor: "gray.400",
-        fontSize: "x-small"
+        fontSize: "x-small",
+        whiteSpace: "normal",
+        // wordBreak: "break-word",
+        // overflowWrap: "break-word"
     };
 
     return {commonCellProps, commonColumnHeaderProps};

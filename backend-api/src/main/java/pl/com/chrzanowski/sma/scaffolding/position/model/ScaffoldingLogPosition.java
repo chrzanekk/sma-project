@@ -62,12 +62,21 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @DecimalMin(value = "0.0")
     private BigDecimal scaffoldingFullDimension;
 
+    @Column(name = "scaffolding_partial_dimension", precision = 19, scale = 4)
+    @DecimalMin(value = "0.0")
+    private BigDecimal scaffoldingPartialDimension;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scaffolding_full_dimension_unit_id", nullable = false)
     @NotNull
     @ToString.Exclude
     private Unit scaffoldingFullDimensionUnit;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scaffolding_partial_dimension_unit_id", nullable = false)
+    @NotNull
+    @ToString.Exclude
+    private Unit scaffoldingPartialDimensionUnit;
 
     @Column(name = "full_working_time")
     private BigDecimal fullWorkingTime;
@@ -129,40 +138,4 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @OneToMany(mappedBy = "scaffoldingPosition", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<ScaffoldingLogPositionWorkingTime> workingTimes = new ArrayList<>();
-
-    public void addDimension(ScaffoldingLogPositionDimension dimension) {
-        dimensions.add(dimension);
-        dimension.setScaffoldingPosition(this);
-        dimension.setCompany(this.company);
-    }
-
-    public void removeDimension(ScaffoldingLogPositionDimension dimension) {
-        dimensions.remove(dimension);
-        dimension.setScaffoldingPosition(null);
-    }
-
-    // Helper methods dla workingTimes
-    public void addWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
-        workingTimes.add(workingTime);
-        workingTime.setScaffoldingPosition(this);
-        workingTime.setCompany(this.company);
-    }
-
-    public void removeWorkingTime(ScaffoldingLogPositionWorkingTime workingTime) {
-        workingTimes.remove(workingTime);
-        workingTime.setScaffoldingPosition(null);
-    }
-
-    // Helper methods dla childPositions (jeśli używane)
-    public void addChildPosition(ScaffoldingLogPosition child) {
-        childPositions.add(child);
-        child.setParentPosition(this);
-        child.setCompany(this.company);
-        child.setScaffoldingLog(this.scaffoldingLog);
-    }
-
-    public void removeChildPosition(ScaffoldingLogPosition child) {
-        childPositions.remove(child);
-        child.setParentPosition(null);
-    }
 }

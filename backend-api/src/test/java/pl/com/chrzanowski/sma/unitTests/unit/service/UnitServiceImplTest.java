@@ -7,6 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.com.chrzanowski.sma.common.exception.UnitException;
+import pl.com.chrzanowski.sma.company.dto.CompanyDTO;
+import pl.com.chrzanowski.sma.company.model.Company;
 import pl.com.chrzanowski.sma.unit.dao.UnitDao;
 import pl.com.chrzanowski.sma.unit.dto.UnitBaseDTO;
 import pl.com.chrzanowski.sma.unit.dto.UnitDTO;
@@ -32,8 +34,12 @@ class UnitServiceImplTest {
     private UnitServiceImpl unitService;
 
     private UnitDTO unitDTO;
+    private UnitDTO nonGlobalUnitDTO;
     private Unit unit;
+    private Unit nonGlobalUnit;
     private AutoCloseable autoCloseable;
+    private Company company;
+    private CompanyDTO companyDTO;
 
     @BeforeEach
     void setUp() {
@@ -47,6 +53,28 @@ class UnitServiceImplTest {
         unit = new Unit();
         unit.setId(1L);
         unit.setSymbol("m2");
+
+        company = new Company();
+        company.setId(1L);
+        company.setName("TestCompany");
+        company.setAdditionalInfo("AdditionalInfo");
+
+        companyDTO = CompanyDTO.builder()
+                .id(1L)
+                .name("TestCompany")
+                .additionalInfo("AdditionalInfo")
+                .build();
+
+        nonGlobalUnitDTO = UnitDTO.builder()
+                .id(2L)
+                .symbol("mHA")
+                .company(companyDTO)
+                .build();
+
+        nonGlobalUnit = new Unit();
+        nonGlobalUnit.setId(2L);
+        nonGlobalUnit.setSymbol("mHA");
+        nonGlobalUnit.setCompany(company);
     }
 
     @AfterEach
@@ -104,15 +132,15 @@ class UnitServiceImplTest {
 
     @Test
     void testUpdateUnit() {
-        when(unitDao.findById(anyLong())).thenReturn(Optional.of(unit));
+        when(unitDao.findById(anyLong())).thenReturn(Optional.of(nonGlobalUnit));
         doNothing().when(unitDTOMapper).updateFromDto(any(UnitDTO.class), any(Unit.class));
-        when(unitDao.save(any(Unit.class))).thenReturn(unit);
-        when(unitDTOMapper.toDto(any(Unit.class))).thenReturn(unitDTO);
+        when(unitDao.save(any(Unit.class))).thenReturn(nonGlobalUnit);
+        when(unitDTOMapper.toDto(any(Unit.class))).thenReturn(nonGlobalUnitDTO);
 
-        UnitBaseDTO result = unitService.update(unitDTO);
+        UnitBaseDTO result = unitService.update(nonGlobalUnitDTO);
         assertNotNull(result);
-        assertEquals("m2", result.getSymbol());
-        assertEquals(1L, result.getId());
+        assertEquals("mHA", result.getSymbol());
+        assertEquals(2L, result.getId());
 
         verify(unitDao, times(1)).findById(anyLong());
         verify(unitDTOMapper, times(1)).updateFromDto(any(UnitDTO.class), any(Unit.class));
@@ -133,7 +161,7 @@ class UnitServiceImplTest {
     @Test
     void testDeleteUnit() {
         Long id = 1L;
-        when(unitDao.findById(id)).thenReturn(Optional.of(unit));
+        when(unitDao.findById(id)).thenReturn(Optional.of(nonGlobalUnit));
         doNothing().when(unitDao).deleteById(id);
 
         unitService.delete(id);
@@ -145,7 +173,7 @@ class UnitServiceImplTest {
     @Test
     void testDeleteUnitFailure() {
         Long id = 1L;
-        when(unitDao.findById(id)).thenReturn(Optional.of(unit));
+        when(unitDao.findById(id)).thenReturn(Optional.of(nonGlobalUnit));
         doThrow(new RuntimeException("Delete failed")).when(unitDao).deleteById(id);
 
         assertThrows(RuntimeException.class, () -> unitService.delete(id));

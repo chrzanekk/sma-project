@@ -25,7 +25,7 @@
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
         <spring-plugin-core.version>3.0.0</spring-plugin-core.version>
-        <testcontainers.version>1.20.2</testcontainers.version>
+        <testcontainers.version>2.0.3</testcontainers.version>
         <jackson-databind.version>2.18.0</jackson-databind.version>
         <org.json.version>20240303</org.json.version>
         <org.slf4j.version>2.0.16</org.slf4j.version>
@@ -247,13 +247,13 @@
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>postgresql</artifactId>
+            <artifactId>testcontainers-postgresql</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
+            <artifactId>testcontainers-junit-jupiter</artifactId>
             <version>${testcontainers.version}</version>
             <scope>test</scope>
         </dependency>
@@ -262,13 +262,7 @@
             <artifactId>spring-boot-starter-webflux</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.11.4</version>
-            <scope>test</scope>
-        </dependency>
+
 
     </dependencies>
 

@@ -27,6 +27,8 @@ export interface ScaffoldingLogPositionBaseDTO {
     scaffoldingType: ScaffoldingType;
     scaffoldingFullDimension: string;
     scaffoldingFullDimensionUnit: UnitBaseDTO;
+    scaffoldingPartialDimension: string;
+    scaffoldingPartialDimensionUnit: UnitBaseDTO;
     fullWorkingTime: string;
     technicalProtocolStatus: TechnicalProtocolStatus;
     parentPosition: ScaffoldingLogPositionBaseDTO;
