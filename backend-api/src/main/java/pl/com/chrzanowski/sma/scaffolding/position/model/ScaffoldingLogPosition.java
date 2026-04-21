@@ -78,8 +78,15 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @ToString.Exclude
     private Unit scaffoldingPartialDimensionUnit;
 
+    /***
+     * fullWorkingTime is used to store all working times for parents and all children of position
+     */
+
     @Column(name = "full_working_time")
     private BigDecimal fullWorkingTime;
+
+    @Column(name = "partial_working_time")
+    private BigDecimal partialWorkingTime;
 
     @Column(name = "technical_protocol_status", length = 50)
     @Enumerated(EnumType.STRING)
@@ -96,7 +103,7 @@ public class ScaffoldingLogPosition extends AuditableEntity {
     @ToString.Exclude
     private ScaffoldingLogPosition parentPosition;
 
-    @OneToMany(mappedBy = "parentPosition",cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentPosition", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @Builder.Default
     @JsonIgnoreProperties("parentPosition")
     private List<ScaffoldingLogPosition> childPositions = new ArrayList<>();

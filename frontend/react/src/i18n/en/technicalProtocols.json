@@ -1,5 +1,8 @@
 {
   "title": "Scaffolding technical acceptance protocol",
+  "preparePDF": "Generate protocol",
+  "generating": "Generating protocol",
+  "downloadPDF": "Download PDF",
   "titleUppercase": "SCAFFOLDING TECHNICAL ACCEPTANCE PROTOCOL NO.:",
   "no": "number",
   "informationPart": "Information part",

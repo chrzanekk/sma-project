@@ -46,6 +46,7 @@ public interface ScaffoldingLogPositionDTOMapper extends EntityMapper<Scaffoldin
     @Mapping(target = "scaffoldingFullDimensionUnit", source = "scaffoldingFullDimensionUnit")
     @Mapping(target = "scaffoldingPartialDimensionUnit", source = "scaffoldingPartialDimensionUnit")
     @Mapping(target = "fullWorkingTime", source = "fullWorkingTime")
+    @Mapping(target = "partialWorkingTime", source = "partialWorkingTime")
     @Mapping(target = "createdDatetime", ignore = true)
     @Mapping(target = "lastModifiedDatetime", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

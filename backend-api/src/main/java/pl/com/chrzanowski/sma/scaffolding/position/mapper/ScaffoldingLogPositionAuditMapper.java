@@ -46,6 +46,7 @@ public interface ScaffoldingLogPositionAuditMapper extends EntityMapper<Scaffold
     @Mapping(target = "base.scaffoldingPartialDimension", source = "scaffoldingPartialDimension")
     @Mapping(target = "base.scaffoldingPartialDimensionUnit", source = "scaffoldingPartialDimensionUnit")
     @Mapping(target = "base.fullWorkingTime", source = "fullWorkingTime")
+    @Mapping(target = "base.partialWorkingTime", source = "partialWorkingTime")
     @Mapping(target = "base.technicalProtocolStatus", source = "technicalProtocolStatus")
     @Mapping(target = "base.company", source = "company")
     @Mapping(target = "base.scaffoldingLog", source = "scaffoldingLog")

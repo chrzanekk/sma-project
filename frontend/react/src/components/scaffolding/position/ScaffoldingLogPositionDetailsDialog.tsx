@@ -107,47 +107,74 @@ const ScaffoldingLogPositionDetailsDialog: React.FC<DetailsDialogProps> = ({posi
                                   color={themeColors.fontColor}>
                                 {t("workingTimes", {defaultValue: "Czas pracy"})}
                             </Text>
-                            <Table.ScrollArea borderWidth="1px"
-                                              borderRadius="md"
-                                              borderColor="grey">
-                                <Table.Root size="sm" interactive
-                                            showColumnBorder>
-                                    <Table.Header>
-                                        <Table.Row
-                                            bg={themeColors.bgColorPrimary}>
-                                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("employees:employees")}</Table.ColumnHeader>
-                                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("units:hours")}</Table.ColumnHeader>
-                                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("scaffoldingOperationTypes:operation")}</Table.ColumnHeader>
-                                        </Table.Row>
-                                    </Table.Header>
-                                    <Table.Body>
-                                        {position.workingTimes?.length > 0 ? (
-                                            position.workingTimes.map((wt, idx) => (
-                                                <Table.Row key={wt.id || idx}
-                                                           _hover={{
-                                                               textDecoration: "none",
-                                                               bg: themeColors.highlightBgColor,
-                                                               color: themeColors.fontColorHover,
-                                                           }}>
-                                                    <Table.Cell {...commonCellProps}>{wt.numberOfWorkers}</Table.Cell>
-                                                    <Table.Cell {...commonCellProps}>{wt.numberOfHours} {wt.unit?.symbol}</Table.Cell>
-                                                    <Table.Cell
-                                                        fontSize="xs" {...commonCellProps}>{t(`scaffoldingOperationTypes:${wt.operationType}`)}</Table.Cell>
-                                                </Table.Row>
-                                            ))
-                                        ) : (
-                                            <Table.Row>
-                                                <Table.Cell colSpan={3}
-                                                            textAlign="center"
-                                                            color="gray.500">
-                                                    {t("noWorkingTime", {defaultValue: "Brak zapisów czasu pracy"})}
-                                                </Table.Cell>
-                                            </Table.Row>
-                                        )}
-                                    </Table.Body>
-                                </Table.Root>
-                            </Table.ScrollArea>
+                            <HStack align='start' gap={1}>
 
+                                <Table.ScrollArea borderWidth="1px"
+                                                  borderRadius="md"
+                                                  borderColor="grey">
+                                    <Table.Root size="sm" interactive
+                                                showColumnBorder>
+                                        <Table.Header>
+                                            <Table.Row
+                                                bg={themeColors.bgColorPrimary}>
+                                                <Table.ColumnHeader {...commonColumnHeaderProps}>{t("employees:employees")}</Table.ColumnHeader>
+                                                <Table.ColumnHeader {...commonColumnHeaderProps}>{t("units:hours")}</Table.ColumnHeader>
+                                                <Table.ColumnHeader {...commonColumnHeaderProps}>{t("scaffoldingOperationTypes:operation")}</Table.ColumnHeader>
+                                            </Table.Row>
+                                        </Table.Header>
+                                        <Table.Body>
+                                            {position.workingTimes?.length > 0 ? (
+                                                position.workingTimes.map((wt, idx) => (
+                                                    <Table.Row key={wt.id || idx}
+                                                               _hover={{
+                                                                   textDecoration: "none",
+                                                                   bg: themeColors.highlightBgColor,
+                                                                   color: themeColors.fontColorHover,
+                                                               }}>
+                                                        <Table.Cell {...commonCellProps}>{wt.numberOfWorkers}</Table.Cell>
+                                                        <Table.Cell {...commonCellProps}>{wt.numberOfHours} {wt.unit?.symbol}</Table.Cell>
+                                                        <Table.Cell
+                                                            fontSize="xs" {...commonCellProps}>{t(`scaffoldingOperationTypes:${wt.operationType}`)}</Table.Cell>
+                                                    </Table.Row>
+
+                                                ))
+                                            ) : (
+                                                <Table.Row>
+                                                    <Table.Cell colSpan={3}
+                                                                textAlign="center"
+                                                                color="gray.500">
+                                                        {t("noWorkingTime", {defaultValue: "Brak zapisów czasu pracy"})}
+                                                    </Table.Cell>
+                                                </Table.Row>
+                                            )}
+                                        </Table.Body>
+                                    </Table.Root>
+                                </Table.ScrollArea>
+                                <Table.ScrollArea borderWidth="1px"
+                                                  borderRadius="md"
+                                                  borderColor="grey">
+                                    <Table.Root size="sm" interactive
+                                                showColumnBorder>
+                                        <Table.Header>
+                                            <Table.Row
+                                                bg={themeColors.bgColorPrimary}>
+                                                <Table.ColumnHeader {...commonColumnHeaderProps}>{t("scaffoldingLogPositions:fullWorkingTime")}</Table.ColumnHeader>
+                                            </Table.Row>
+                                        </Table.Header>
+                                        <Table.Body>
+                                            <Table.Row
+                                                _hover={{
+                                                    textDecoration: "none",
+                                                    bg: themeColors.highlightBgColor,
+                                                    color: themeColors.fontColorHover,
+                                                }}>
+
+                                                <Table.Cell {...commonCellProps}>{position.partialWorkingTime} {'r-h'}</Table.Cell>
+                                            </Table.Row>
+                                        </Table.Body>
+                                    </Table.Root>
+                                </Table.ScrollArea>
+                            </HStack>
                         </VStack>
 
                         <HStack align="start" gap={4}>

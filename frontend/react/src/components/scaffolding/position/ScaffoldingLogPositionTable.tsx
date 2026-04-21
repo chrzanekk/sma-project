@@ -315,7 +315,7 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                 <Table.Cell {...commonCellProps}>
                     {position.scaffoldingPartialDimension} {position.scaffoldingPartialDimensionUnit?.symbol}
                 </Table.Cell>
-                <Table.Cell {...commonCellProps}>{position.fullWorkingTime} r-h</Table.Cell>
+                <Table.Cell {...commonCellProps}>{position.partialWorkingTime} r-h</Table.Cell>
                 <Table.Cell {...commonCellProps}>
                     {t(`technicalProtocolStatuses:${position.technicalProtocolStatus}`)}
                 </Table.Cell>

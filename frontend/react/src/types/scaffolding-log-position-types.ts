@@ -30,6 +30,7 @@ export interface ScaffoldingLogPositionBaseDTO {
     scaffoldingPartialDimension: string;
     scaffoldingPartialDimensionUnit: UnitBaseDTO;
     fullWorkingTime: string;
+    partialWorkingTime: string;
     technicalProtocolStatus: TechnicalProtocolStatus;
     parentPosition: ScaffoldingLogPositionBaseDTO;
     childPositions: ScaffoldingLogPositionBaseDTO[];
@@ -52,7 +53,10 @@ export interface BaseScaffoldingLogPositionFormValues {
     scaffoldingType: ScaffoldingType;
     scaffoldingFullDimension: string;
     scaffoldingFullDimensionUnit: UnitBaseDTO;
+    scaffoldingPartialDimension: string;
+    scaffoldingPartialDimensionUnit: UnitBaseDTO;
     fullWorkingTime: string;
+    partialWorkingTime: string;
     technicalProtocolStatus: TechnicalProtocolStatus;
     parentPosition: ScaffoldingLogPositionBaseDTO;
     childPositions: ScaffoldingLogPositionBaseDTO[];

@@ -44,6 +44,7 @@ public class ScaffoldingLogPositionBaseDTO {
     protected BigDecimal scaffoldingPartialDimension;
     protected UnitBaseDTO scaffoldingPartialDimensionUnit;
     protected BigDecimal fullWorkingTime;
+    protected BigDecimal partialWorkingTime;
     @NotNull
     protected TechnicalProtocolStatus technicalProtocolStatus;
     protected ScaffoldingLogPositionBaseDTO parentPosition;

@@ -1,5 +1,8 @@
 {
   "title": "Protokół odbioru technicznego rusztowania",
+  "preparePDF": "Generuj protokół",
+  "generating": "Generowanie protokołu",
+  "downloadPDF": "Pobierz PDF",
   "titleUppercase": "PROTOKÓŁ ODBIORU TECHNICZNEGO RUSZTOWANIA NR:",
   "no": "numer",
   "informationPart": "Część informacyjna",

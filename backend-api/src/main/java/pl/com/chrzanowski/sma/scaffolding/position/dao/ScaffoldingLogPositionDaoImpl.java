@@ -70,4 +70,10 @@ public class ScaffoldingLogPositionDaoImpl implements ScaffoldingLogPositionDao 
     public Boolean existsById(Long id) {
         return repository.existsById(id);
     }
+
+    @Override
+    public List<ScaffoldingLogPosition> findFamilyPositions(Long rootId) {
+        log.debug("DAO: Find all by parent position ID: {}", rootId);
+        return repository.findFamilyPositions(rootId);
+    }
 }
