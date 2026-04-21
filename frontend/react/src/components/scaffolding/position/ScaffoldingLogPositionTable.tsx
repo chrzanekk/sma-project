@@ -332,7 +332,7 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                 />
 
                 <Table.Cell {...commonCellProps} onClick={(e) => e.stopPropagation()}>
-                    <HStack gap={1}>
+                    <HStack gap={1} flexWrap={"wrap"}>
                         <ScaffoldingLogPositionDetailsDialog position={position}/>
 
                         {/* Dodawanie podpozycji: przekazujemy ID rodzica */}
