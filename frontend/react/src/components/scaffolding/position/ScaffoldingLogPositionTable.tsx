@@ -143,7 +143,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                 <Table.ColumnHeader {...commonColumnHeaderProps} width={"8%"}
                                                     onClick={() => onSortChange("scaffoldingNumber")}>
                                     {t("scaffoldingLogPositions:scaffoldingNumber")}{renderSortIndicator("scaffoldingNumber")}</Table.ColumnHeader>
-                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"15%"}
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"11%"}
                                                     onClick={() => onSortChange("assemblyLocation")}>
                                     {t("scaffoldingLogPositions:assemblyLocation")}{renderSortIndicator("assemblyLocation")}</Table.ColumnHeader>
                                 <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
@@ -167,6 +167,9 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
                                 <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("fullWorkingTime")}>
                                     {t("scaffoldingLogPositions:fullWorkingTime")}{renderSortIndicator("fullWorkingTime")}</Table.ColumnHeader>
+                                <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
+                                                    onClick={() => onSortChange("partialWorkingTime")}>
+                                    {t("scaffoldingLogPositions:partialWorkingTime")}{renderSortIndicator("partialWorkingTime")}</Table.ColumnHeader>
                                 <Table.ColumnHeader {...commonColumnHeaderProps} width={"5%"}
                                                     onClick={() => onSortChange("technicalProtocolStatus")}>
                                     {t("scaffoldingLogPositions:technicalProtocolStatus")}{renderSortIndicator("technicalProtocolStatus")}</Table.ColumnHeader>
@@ -310,11 +313,12 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                 <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.dismantlingNotificationDate)}</Table.Cell>
                 <Table.Cell {...commonCellProps} fontSize = "x-small" >{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
                 <Table.Cell {...commonCellProps}>
-                    {position.scaffoldingFullDimension} {position.scaffoldingFullDimensionUnit?.symbol}
+                    {Number(position.scaffoldingFullDimension) >0 ? `${position.scaffoldingFullDimension} ${position.scaffoldingFullDimensionUnit?.symbol}` : null}
                 </Table.Cell>
                 <Table.Cell {...commonCellProps}>
                     {position.scaffoldingPartialDimension} {position.scaffoldingPartialDimensionUnit?.symbol}
                 </Table.Cell>
+                <Table.Cell {...commonCellProps}>{Number(position.fullWorkingTime) > 0 ? `${position.fullWorkingTime} r-h` : null}</Table.Cell>
                 <Table.Cell {...commonCellProps}>{position.partialWorkingTime} r-h</Table.Cell>
                 <Table.Cell {...commonCellProps}>
                     {t(`technicalProtocolStatuses:${position.technicalProtocolStatus}`)}
