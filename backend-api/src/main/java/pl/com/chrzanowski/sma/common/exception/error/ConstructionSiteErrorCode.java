@@ -1,7 +1,7 @@
 package pl.com.chrzanowski.sma.common.exception.error;
 
 public enum ConstructionSiteErrorCode implements IErrorCode {
-    CONSTRUCTION_SITE_NOT_FOUND("constructionSiteNotFound");
+    CONSTRUCTION_SITE_NOT_FOUND("constructionSites.constructionSiteNotFound");
 
     private final String code;
 

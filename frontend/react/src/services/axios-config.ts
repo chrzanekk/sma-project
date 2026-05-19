@@ -40,8 +40,11 @@ api.interceptors.response.use(
             });
         }
         if (error.response) {
-            const {code, details} = error.response.data || {};
-            const formatedMessage = formatMessage(code, details, 'errors');
+            // WYCIĄGAMY 'message' z JSON-a
+            const {code, details, message} = error.response.data || {};
+
+            // PRZEKAZUJEMY 'message' jako 4. parametr
+            const formatedMessage = formatMessage(code, details, 'errors', message);
 
             errorNotification(i18n.t('errors:error'), formatedMessage);
 

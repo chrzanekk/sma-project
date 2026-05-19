@@ -1,30 +1,35 @@
 import i18n from "i18next";
-import React from "react";
-
 
 export const formatMessage = (
-    code: string,
+    code: string | undefined,
     details?: Record<string, any>,
-    namespace: string = "common"
-    ): React.ReactNode => {
+    namespace: string = "common",
+    backendFallbackMessage?: string
+): string => {
 
-    const translatedMessage = i18n.t(`${namespace}:${code}`, {
-        ...details,
-        defaultValue: i18n.t("common:generic"),
-    });
+    // 1. Zabezpieczenie przed brakiem kodu błędu
+    if (!code) {
+        return backendFallbackMessage || i18n.t("common:generic");
+    }
 
-    if (details) {
-        Object.keys(details).forEach((key) => {
-            const value = details[key];
+    // 2. Kopiujemy obiekt details, aby nie mutować oryginału
+    const formattedDetails = details ? { ...details } : undefined;
+    if (formattedDetails) {
+        Object.keys(formattedDetails).forEach((key) => {
+            const value = formattedDetails[key];
             if (typeof value === "string") {
-                details[key] = `"${value}"`;
+                formattedDetails[key] = `"${value}"`; // Dodanie cudzysłowów tylko w kopii
             }
         });
     }
 
-    return i18n.t(`${namespace}:${code}`, {
-        ...details,
-        defaultValue: translatedMessage,
-    });
+    // 3. Fallback: Jeśli nie ma tłumaczenia, użyj wiadomości z backendu.
+    // Jeśli z backendu też nic nie przyszło, użyj komunikatu generycznego.
+    const fallback = backendFallbackMessage || i18n.t("common:generic");
 
+    // 4. Jedno właściwe wywołanie tłumaczenia
+    return i18n.t(`${namespace}:${code}`, {
+        ...formattedDetails,
+        defaultValue: fallback,
+    });
 };

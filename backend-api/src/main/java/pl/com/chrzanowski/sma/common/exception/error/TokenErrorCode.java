@@ -1,7 +1,7 @@
 package pl.com.chrzanowski.sma.common.exception.error;
 
 public enum TokenErrorCode implements IErrorCode {
-    TOKEN_MISSING("tokenMissing");
+    TOKEN_MISSING("tokens.tokenMissing");
 
 
     private final String code;
