@@ -91,17 +91,24 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         toSaveEntity.setScaffoldingPartialDimension(partialDimensionResult.value());
         toSaveEntity.setScaffoldingPartialDimensionUnit(unitBaseMapper.toEntity(partialDimensionResult.unit()));
         toSaveEntity.setPartialWorkingTime(workingTime);
-
-        // Obsługa Parent Position
-        if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
-            handleParentPositionOnCreate(toSaveEntity, createDto);
+        if (createDto.getParentPosition() == null) {
+            toSaveEntity.setScaffoldingFullDimension(partialDimensionResult.value());
+            toSaveEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(partialDimensionResult.unit()));
+            toSaveEntity.setFullWorkingTime(workingTime);
         }
+
 
         // Ustawienie relacji dwukierunkowych
         linkSubEntities(toSaveEntity);
 
+        // Obsługa Parent Position - naprawić ponowne przeliczenie fullDimension
+        if (createDto.getParentPosition() != null && createDto.getParentPosition().getId() != null) {
+            toSaveEntity.setScaffoldingFullDimension(BigDecimal.ZERO);
+            toSaveEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(partialDimensionResult.unit()));
+            handleParentPositionOnCreate(toSaveEntity, createDto);
+        }
+
         ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
-        // OPTYMALIZACJA: Konwersja savedEntity bezpośrednio, bez ponownego findById
         return scaffoldingLogPositionDTOMapper.toDto(savedEntity);
     }
 
@@ -149,18 +156,18 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             ScaffoldingLogPosition parentEntity = existingPosition.getParentPosition();
             List<ScaffoldingLogPosition> familyPositions = scaffoldingLogPositionDao.findFamilyPositions(parentEntity.getId());
             if (dimensionChanged) {
-                updateParentDimensionsState(parentEntity, familyPositions);
+                updateParentDimensionsState(parentEntity, familyPositions, BigDecimal.ZERO);
             }
             if (workingTimeChanged) {
-                updateParentWorkingTimeState(parentEntity, familyPositions);
+                updateParentWorkingTimeState(parentEntity, familyPositions, BigDecimal.ZERO);
             }
         } else if (existingPosition.getParentPosition() == null && (dimensionChanged || workingTimeChanged)) {
             List<ScaffoldingLogPosition> familyPositions = scaffoldingLogPositionDao.findFamilyPositions(existingPosition.getId());
             if (dimensionChanged) {
-                updateParentDimensionsState(existingPosition, familyPositions);
+                updateParentDimensionsState(existingPosition, familyPositions, BigDecimal.ZERO);
             }
             if (workingTimeChanged) {
-                updateParentWorkingTimeState(existingPosition, familyPositions);
+                updateParentWorkingTimeState(existingPosition, familyPositions, BigDecimal.ZERO);
             }
         }
         scaffoldingLogPositionDao.save(existingPosition);
@@ -193,36 +200,62 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
         childEntity.setParentPosition(parentEntity);
 
-
-        updateParentDimensionsState(parentEntity, familyPositions);
-        updateParentWorkingTimeState(parentEntity, familyPositions);
+        //todo need to fix calculating dimensions of parent position when user add new modification/next stage of scaffolding.
+        //todo for now parent position have incorrect fullDimension because we didnt have newest entity in familyPositions
+        updateParentDimensionsState(parentEntity, familyPositions, childEntity.getScaffoldingPartialDimension());
+        updateParentWorkingTimeState(parentEntity, familyPositions, childEntity.getPartialWorkingTime());
         scaffoldingLogPositionDao.save(parentEntity);
         // todo change scaffolding number in child position
     }
 
-    private void updateParentDimensionsState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPosition> familyPositions) {
+    /**
+     *
+     * @param parentEntity - must not be NULL
+     * @param familyPositions - must not be EMPTY
+     * @param dimensionOnCreate - add partialDimension if create/save method, add ZERO if update method
+     */
 
-        List<ScaffoldingLogPositionDimension> allFamilyDimensions = familyPositions.stream()
-                .map(ScaffoldingLogPosition::getDimensions)
-                .flatMap(List::stream)
-                .toList();
+    private void updateParentDimensionsState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPosition> familyPositions, BigDecimal dimensionOnCreate) {
+        BigDecimal dimensionOnCreateToAdd = BigDecimal.ZERO;
+        if (dimensionOnCreate != null) {
+            dimensionOnCreateToAdd = dimensionOnCreate;
+        }
+        if (familyPositions != null && !familyPositions.isEmpty()) {
+            List<ScaffoldingLogPositionDimension> allFamilyDimensions = familyPositions.stream()
+                    .map(ScaffoldingLogPosition::getDimensions)
+                    .flatMap(List::stream)
+                    .toList();
 
-        DimensionResult calculatedActualFamilyDimensions = calculateScaffoldingDimension(scaffoldingLogPositionDimensionBaseMapper.toDtoList(allFamilyDimensions));
-        BigDecimal fullFamilyDimension = calculatedActualFamilyDimensions.value();
+            DimensionResult calculatedActualFamilyDimensions = calculateScaffoldingDimension(scaffoldingLogPositionDimensionBaseMapper.toDtoList(allFamilyDimensions));
+            BigDecimal fullFamilyDimension = calculatedActualFamilyDimensions.value();
+            BigDecimal finalDimension = fullFamilyDimension.add(dimensionOnCreateToAdd);
 
-        parentEntity.setScaffoldingFullDimension(fullFamilyDimension);
-        parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(calculatedActualFamilyDimensions.unit()));
+            parentEntity.setScaffoldingFullDimension(finalDimension);
+            parentEntity.setScaffoldingFullDimensionUnit(unitBaseMapper.toEntity(calculatedActualFamilyDimensions.unit()));
+        }
     }
 
-    private void updateParentWorkingTimeState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPosition> familyPositions) {
+    /**
+     *
+     * @param parentEntity - must not be NULL
+     * @param familyPositions - must not be EMPTY
+     * @param workingTimeOnCreate - add partial workingTime if used in create/save method, add ZERO if update method
+     */
+    private void updateParentWorkingTimeState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPosition> familyPositions, BigDecimal workingTimeOnCreate) {
+        BigDecimal workingTimeOnCreateToAdd = BigDecimal.ZERO;
+        if (workingTimeOnCreate != null) {
+            workingTimeOnCreateToAdd = workingTimeOnCreate;
+        }
+        if (familyPositions != null && !familyPositions.isEmpty()) {
+            List<ScaffoldingLogPositionWorkingTime> allFamilyWorkingTimes = familyPositions.stream()
+                    .map(ScaffoldingLogPosition::getWorkingTimes)
+                    .flatMap(List::stream)
+                    .toList();
 
-        List<ScaffoldingLogPositionWorkingTime> allFamilyWorkingTimes = familyPositions.stream()
-                .map(ScaffoldingLogPosition::getWorkingTimes)
-                .flatMap(List::stream)
-                .toList();
-
-        BigDecimal fullWorkingTime = calculateWorkingTime(scaffoldingLogPositionWorkingTimeBaseMapper.toDtoList(allFamilyWorkingTimes));
-        parentEntity.setFullWorkingTime(fullWorkingTime);
+            BigDecimal fullWorkingTime = calculateWorkingTime(scaffoldingLogPositionWorkingTimeBaseMapper.toDtoList(allFamilyWorkingTimes));
+            BigDecimal finalWorkingTime = fullWorkingTime.add(workingTimeOnCreateToAdd);
+            parentEntity.setFullWorkingTime(finalWorkingTime);
+        }
     }
 
     private void checkIfPositionWithNumberExistsInLog(String scaffoldingNumber, Long logId) {
