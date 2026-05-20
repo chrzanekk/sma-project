@@ -37,7 +37,4 @@ public class ScaffoldingLogPositionFilter {
     private String scaffoldingUserContactNameContains;
     private Boolean parentPositionOnly;
     private Long scaffoldingLogId;
-
-    //todo in future extend filter of working time (qoantuty of hours multiply quantity of workers) and dimensions maybe
-
 }

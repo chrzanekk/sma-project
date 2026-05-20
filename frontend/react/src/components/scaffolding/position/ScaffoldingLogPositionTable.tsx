@@ -11,7 +11,6 @@ import AuditCell from "@/components/shared/AuditCell.tsx";
 import {FaCirclePlus, FaExplosion, FaRegTrashCan} from "react-icons/fa6";
 import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
 import ScaffoldingLogPositionDetailsDialog from "./ScaffoldingLogPositionDetailsDialog";
-import {buildScaffoldingTree} from "@/utils/scaffolding-tree-builder";
 import EditScaffoldingLogPositionDialog from "@/components/scaffolding/position/EditScaffoldingLogPositionDialog.tsx";
 import TechnicalProtocolDialog from "@/components/scaffolding/protocol/TechnicalProtocolDialog.tsx";
 
@@ -75,9 +74,7 @@ const ScaffoldingLogPositionTable: React.FC<ScaffoldingLogPositionTableProps> = 
     const themeColors = useThemeColors();
     const {commonColumnHeaderProps} = useTableStyles();
 
-    const treePositions = React.useMemo(() => {
-        return buildScaffoldingTree(positions);
-    }, [positions]);
+    const treePositions = positions;
 
 
     // HANDLER ROZWIJANIA/ZWIJANIA
@@ -311,9 +308,10 @@ const ScaffoldingLogPositionRow: React.FC<RowProps> = ({
                 <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.assemblyDate)}</Table.Cell>
                 <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.dismantlingDate)}</Table.Cell>
                 <Table.Cell {...commonCellProps}>{DateFormatter.formatDate(position.dismantlingNotificationDate)}</Table.Cell>
-                <Table.Cell {...commonCellProps} fontSize = "x-small" >{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
+                <Table.Cell {...commonCellProps}
+                            fontSize="x-small">{t(`scaffoldingTypes:${position.scaffoldingType}`)}</Table.Cell>
                 <Table.Cell {...commonCellProps}>
-                    {Number(position.scaffoldingFullDimension) >0 ? `${position.scaffoldingFullDimension} ${position.scaffoldingFullDimensionUnit?.symbol}` : null}
+                    {Number(position.scaffoldingFullDimension) > 0 ? `${position.scaffoldingFullDimension} ${position.scaffoldingFullDimensionUnit?.symbol}` : null}
                 </Table.Cell>
                 <Table.Cell {...commonCellProps}>
                     {position.scaffoldingPartialDimension} {position.scaffoldingPartialDimensionUnit?.symbol}

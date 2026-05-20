@@ -29,6 +29,28 @@ export const getScaffoldingLogPositionByFilter = async (filter: ScaffoldingLogPo
     }
 }
 
+export const getScaffoldingLogPositionByFilterCustom = async (filter: ScaffoldingLogPositionFilter) => {
+    try {
+        const queryParams = serializeQueryParams({
+            ...filter,
+            companyId: getSelectedCompanyId(),
+            scaffoldingLogId: filter.scaffoldingLogId,
+            size: filter.size || 10,
+            page: filter.page || 0
+        });
+        const response = await api.get(`${ApiPath.SCAFFOLDING_LOG_POSITION}/by-filter?${queryParams}`, getAuthConfig());
+        const { parents, children, totalElements, totalPages } = response.data;
+        return {
+            parents: parents as FetchableScaffoldingLogPositionDTO[],
+            children: children as FetchableScaffoldingLogPositionDTO[],
+            totalPages: totalPages as number,
+            totalCount: Number(totalElements)
+        };
+    } catch (error) {
+        return {logs: [], totalPages: 1, totalCount: 0}
+    }
+}
+
 export const getScaffoldingLogPositionById = async (id: number) => {
     const response = await api.get(`${ApiPath.SCAFFOLDING_LOG_POSITION}/${id}`, getAuthConfig());
     const logDTO: FetchableScaffoldingLogPositionDTO = response.data;

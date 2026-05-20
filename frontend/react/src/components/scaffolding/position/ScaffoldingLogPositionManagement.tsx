@@ -5,7 +5,7 @@ import Pagination from "@/components/shared/Pagination.tsx";
 import ScaffoldingLogPositionFilterForm from "@/components/scaffolding/position/ScaffoldingLogPositionFilterForm.tsx";
 import {
     deleteScaffoldingLogPosition,
-    getScaffoldingLogPositionByFilter
+    getScaffoldingLogPositionByFilterCustom
 } from "@/services/scaffolding-log-position-service.ts";
 import {FetchableScaffoldingLogPositionDTO} from "@/types/scaffolding-log-position-types.ts";
 import ScaffoldingLogPositionLayout from "@/components/scaffolding/position/ScaffoldingLogPositionLayout.tsx";
@@ -13,6 +13,7 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import AddScaffoldingLogPositionDialog from "@/components/scaffolding/position/AddScaffoldingLogPositionDialog.tsx";
 import ScaffoldingLogPositionTable from "@/components/scaffolding/position/ScaffoldingLogPositionTable.tsx";
 import {useLocation, useParams} from "react-router-dom";
+import {buildScaffoldingTree} from "@/utils/scaffolding-tree-builder.ts";
 
 
 const ScaffoldingLogPositionManagement: React.FC = () => {
@@ -42,9 +43,14 @@ const ScaffoldingLogPositionManagement: React.FC = () => {
                 ...params,
                 scaffoldingLogId: logId ? Number(logId) : undefined
             };
-            const response = await getScaffoldingLogPositionByFilter(fetchParams);
+            const response = await getScaffoldingLogPositionByFilterCustom(fetchParams);
+            const treeData = buildScaffoldingTree(
+                response.parents as FetchableScaffoldingLogPositionDTO[],
+                response.children as FetchableScaffoldingLogPositionDTO[]
+            );
+
             return {
-                data: response.logs,
+                data: treeData,
                 totalPages: response.totalPages,
                 totalCount: response.totalCount
             };

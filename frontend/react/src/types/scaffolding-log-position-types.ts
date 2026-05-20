@@ -99,3 +99,10 @@ export interface ScaffoldingLogPositionWorkingTimeDTO extends ScaffoldingLogPosi
     company: CompanyBaseDTO;
     scaffoldingPosition: ScaffoldingLogPositionBaseDTO;
 }
+
+export interface ScaffoldingLogPositionPageResponse {
+    parents: FetchableScaffoldingLogPositionDTO[];
+    children: FetchableScaffoldingLogPositionDTO[];
+    totalElements: number;
+    totalPages: number;
+}

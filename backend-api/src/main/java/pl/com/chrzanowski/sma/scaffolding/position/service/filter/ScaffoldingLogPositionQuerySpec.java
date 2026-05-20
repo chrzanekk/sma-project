@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import pl.com.chrzanowski.sma.scaffolding.position.model.QScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
+import java.util.List;
+
 import static pl.com.chrzanowski.sma.scaffolding.position.model.QScaffoldingLogPosition.scaffoldingLogPosition;
 
 
@@ -154,6 +156,18 @@ public class ScaffoldingLogPositionQuerySpec {
             query.orderBy(scaffoldingLogPosition.id.asc());
         }
         return query;
+    }
+
+    public List<ScaffoldingLogPosition> fetchChildrenForParents(List<Long> parentIds) {
+        if (parentIds == null || parentIds.isEmpty()) {
+            return List.of();
+        }
+        // BRAK fetchJoin — nie próbujemy ładować kolekcji w jednym zapytaniu
+        return queryFactory
+                .selectFrom(scaffoldingLogPosition)
+                .where(scaffoldingLogPosition.parentPosition.id.in(parentIds))
+                .orderBy(scaffoldingLogPosition.id.asc())
+                .fetch();
     }
 }
 
