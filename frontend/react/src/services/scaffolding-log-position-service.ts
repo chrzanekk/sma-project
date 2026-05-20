@@ -58,3 +58,8 @@ export const updateScaffoldingLogPosition = async (updateLog: ScaffoldingLogPosi
 export const deleteScaffoldingLogPosition = async (id: number) => {
     await api.delete(`${ApiPath.SCAFFOLDING_LOG_POSITION}/${id}`, getAuthConfig());
 }
+
+export const fetchNextBaseScaffoldingNumber = async (logId: number, year: number): Promise<number> => {
+    const response = await api.get(`${ApiPath.SCAFFOLDING_LOG_POSITION}/next-base-number?logId=${logId}&year=${year}`,getAuthConfig());
+    return response.data; // Zwraca np. 3
+}

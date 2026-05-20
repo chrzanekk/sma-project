@@ -76,4 +76,11 @@ public class ScaffoldingLogPositionDaoImpl implements ScaffoldingLogPositionDao 
         log.debug("DAO: Find all by parent position ID: {}", rootId);
         return repository.findFamilyPositions(rootId);
     }
+
+    @Override
+    public Optional<ScaffoldingLogPosition> findLastParentPositionInLog(Long logId, int year) {
+        log.debug("DAO: Find last position of scaffolding log {} in year {}", logId, year);
+        return repository.findLatestRootPositionByLogAndYear(logId, year);
+
+    }
 }

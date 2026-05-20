@@ -16,6 +16,7 @@ import pl.com.chrzanowski.sma.contact.service.ContactService;
 import pl.com.chrzanowski.sma.contractor.dto.ContractorBaseDTO;
 import pl.com.chrzanowski.sma.contractor.mapper.ContractorBaseMapper;
 import pl.com.chrzanowski.sma.contractor.service.ContractorService;
+import pl.com.chrzanowski.sma.scaffolding.counter.repository.ScaffoldingNumberCounterRepository;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.DimensionResult;
 import pl.com.chrzanowski.sma.scaffolding.dimension.dto.ScaffoldingLogPositionDimensionBaseDTO;
 import pl.com.chrzanowski.sma.scaffolding.dimension.mapper.ScaffoldingLogPositionDimensionBaseMapper;
@@ -58,8 +59,9 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
     private final ContactBaseMapper contactBaseMapper;
     private final ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper;
     private final ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper;
+    private final ScaffoldingNumberCounterRepository counterRepository;
 
-    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper) {
+    public ScaffoldingLogPositionServiceImpl(ScaffoldingLogPositionDao scaffoldingLogPositionDao, ScaffoldingLogPositionDTOMapper scaffoldingLogPositionDTOMapper, ScaffoldingNumberValidationService scaffoldingNumberValidationService, UnitService unitService, UnitBaseMapper unitBaseMapper, ContractorService contractorService, ContractorBaseMapper contractorBaseMapper, ContactService contactService, ContactBaseMapper contactBaseMapper, ScaffoldingLogPositionDimensionBaseMapper scaffoldingLogPositionDimensionBaseMapper, ScaffoldingLogPositionWorkingTimeBaseMapper scaffoldingLogPositionWorkingTimeBaseMapper, ScaffoldingNumberCounterRepository counterRepository) {
         this.scaffoldingLogPositionDao = scaffoldingLogPositionDao;
         this.scaffoldingLogPositionDTOMapper = scaffoldingLogPositionDTOMapper;
         this.scaffoldingNumberValidationService = scaffoldingNumberValidationService;
@@ -71,12 +73,17 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
         this.contactBaseMapper = contactBaseMapper;
         this.scaffoldingLogPositionDimensionBaseMapper = scaffoldingLogPositionDimensionBaseMapper;
         this.scaffoldingLogPositionWorkingTimeBaseMapper = scaffoldingLogPositionWorkingTimeBaseMapper;
+        this.counterRepository = counterRepository;
     }
 
 
     @Override
     public ScaffoldingLogPositionDTO save(ScaffoldingLogPositionDTO createDto) {
         log.debug("Request to save ScaffoldingLogPosition : {}", createDto);
+
+        String finalNumber = generateTransactionalScaffoldingNumber(createDto);
+
+        createDto = createDto.toBuilder().scaffoldingNumber(finalNumber).build();
 
         scaffoldingNumberValidationService.validateScaffoldingNumber(createDto.getScaffoldingNumber());
         checkIfPositionWithNumberExistsInLog(createDto.getScaffoldingNumber(), createDto.getScaffoldingLog().getId());
@@ -110,6 +117,67 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
         ScaffoldingLogPosition savedEntity = scaffoldingLogPositionDao.save(toSaveEntity);
         return scaffoldingLogPositionDTOMapper.toDto(savedEntity);
+    }
+
+    private String generateTransactionalScaffoldingNumber(ScaffoldingLogPositionDTO dto) {
+        int year = dto.getAssemblyDate().getYear();
+        String dateSuffix = String.format("/%02d/%02d/%d",
+                dto.getAssemblyDate().getDayOfMonth(),
+                dto.getAssemblyDate().getMonthValue(), year);
+
+        // DZIECKO
+        if (dto.getParentPosition() != null) {
+            String parentNumber = dto.getParentPosition().getScaffoldingNumber();
+            String parentBase = parentNumber.split("/")[0].replaceAll("[a-zA-Z]", "");
+
+            // Zlicz obecne dzieci bazy i przydziel odpowiednią literę
+            // (Musisz pobrać dzieci ze scaffoldingLogPositionDao dla ParentPosition i ustalić literę j.w.)
+            String childSuffix = calculateChildSuffix(dto.getParentPosition().getId());
+            return parentBase + childSuffix + dateSuffix;
+        }
+        // RODZIC (Nowa baza)
+        else {
+            Integer nextBaseNumber = counterRepository.generateNextBaseNumber(
+                    dto.getScaffoldingLog().getId(), year
+            );
+            return nextBaseNumber + dateSuffix;
+        }
+    }
+
+    private String calculateChildSuffix(Long parentId) {
+        // Używamy istniejącej metody findFamilyPositions, z której już korzystasz
+        List<ScaffoldingLogPosition> familyPositions = scaffoldingLogPositionDao.findFamilyPositions(parentId);
+
+        // Wyciągamy z rodziny same dzieci (pomijamy rodzica)
+        List<ScaffoldingLogPosition> children = familyPositions.stream()
+                .filter(p -> p.getParentPosition() != null && p.getParentPosition().getId().equals(parentId))
+                .toList();
+
+        if (children.isEmpty()) {
+            return "a";
+        }
+
+        int maxCharCode = getMaxCharCode(children);
+
+        // Zwracamy kolejną literę w alfabecie
+        return String.valueOf((char) (maxCharCode + 1));
+    }
+
+    private static int getMaxCharCode(List<ScaffoldingLogPosition> children) {
+        int maxCharCode = 'a' - 1; // Wartość początkowa przed 'a'
+
+        for (ScaffoldingLogPosition child : children) {
+            String prefix = child.getScaffoldingNumber().split("/")[0];
+            String suffix = prefix.replaceAll("[^a-zA-Z]", ""); // Wyciągamy same litery, np. z "1b" -> "b"
+
+            if (!suffix.isEmpty()) {
+                char lastChar = suffix.charAt(suffix.length() - 1);
+                if (lastChar > maxCharCode) {
+                    maxCharCode = lastChar;
+                }
+            }
+        }
+        return maxCharCode;
     }
 
     @Override
@@ -210,8 +278,8 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
     /**
      *
-     * @param parentEntity - must not be NULL
-     * @param familyPositions - must not be EMPTY
+     * @param parentEntity      - must not be NULL
+     * @param familyPositions   - must not be EMPTY
      * @param dimensionOnCreate - add partialDimension if create/save method, add ZERO if update method
      */
 
@@ -237,8 +305,8 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
 
     /**
      *
-     * @param parentEntity - must not be NULL
-     * @param familyPositions - must not be EMPTY
+     * @param parentEntity        - must not be NULL
+     * @param familyPositions     - must not be EMPTY
      * @param workingTimeOnCreate - add partial workingTime if used in create/save method, add ZERO if update method
      */
     private void updateParentWorkingTimeState(ScaffoldingLogPosition parentEntity, List<ScaffoldingLogPosition> familyPositions, BigDecimal workingTimeOnCreate) {
@@ -738,6 +806,13 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             }
         }
         return total;
+    }
+
+
+    @Override
+    public Integer getNextBaseScaffoldingLogNumber(Long logId, int year) {
+        log.debug("Request to get nextBaseScaffoldingLogNumber from scaffoldingLog: {}", logId);
+        return counterRepository.peekNextBaseNumber(logId, year);
     }
 
     private record DimensionKey(

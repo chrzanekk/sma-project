@@ -41,6 +41,7 @@ interface CustomInputFieldProps {
     disabled?: boolean;
     fontSize?: string;
     inputBGColor?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -52,6 +53,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                disabled,
                                                                fontSize = "sm",
                                                                inputBGColor = themeVars.bgColorPrimary,
+                                                               onChange
                                                            }) => {
     const themeColors = useThemeColors();
     return (
@@ -81,6 +83,13 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         borderRadius="md"
                         width={width || "100%"}
                         disabled={disabled}
+                        onChange={(e) => {
+                            if (onChange) {
+                                onChange(e);
+                            } else {
+                                field.onChange(e);
+                            }
+                        }}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -575,4 +584,11 @@ const CustomPlaceholder = (props: PlaceholderProps<any, boolean>) => {
 };
 
 
-export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect, CustomPlaceholder};
+export {
+    CustomTextAreaField,
+    CustomInputField,
+    CustomSelectField,
+    CustomInputSearchField,
+    CustomSimpleSelect,
+    CustomPlaceholder
+};

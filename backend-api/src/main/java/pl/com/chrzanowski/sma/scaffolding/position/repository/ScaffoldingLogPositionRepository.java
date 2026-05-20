@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScaffoldingLogPositionRepository extends JpaRepository<ScaffoldingLogPosition, Long>,
         JpaSpecificationExecutor<ScaffoldingLogPosition>,
@@ -21,4 +22,17 @@ public interface ScaffoldingLogPositionRepository extends JpaRepository<Scaffold
 
     @Query("SELECT s FROM ScaffoldingLogPosition s WHERE s.id = :rootId OR s.parentPosition.id = :rootId")
     List<ScaffoldingLogPosition> findFamilyPositions(@Param("rootId") Long rootId);
+
+    @Query(value = """
+                SELECT * FROM scaffolding_log_position
+                WHERE scaffolding_log_id = :logId
+                  AND scaffolding_parent_id IS NULL
+                  AND EXTRACT(YEAR FROM create_date) = :year
+                ORDER BY create_date
+                LIMIT 1
+            """, nativeQuery = true)
+    Optional<ScaffoldingLogPosition> findLatestRootPositionByLogAndYear(
+            @Param("logId") Long logId,
+            @Param("year") Integer year
+    );
 }
