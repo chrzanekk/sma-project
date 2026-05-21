@@ -1,10 +1,10 @@
 // src/components/scaffolding/protocol/TechnicalProtocolForm.tsx
 
 import React, {useState} from 'react';
-import {Box, Button, Grid, GridItem, Heading, Input, Text, Textarea} from '@chakra-ui/react'; // Dodano Input, Text, Textarea
+import {Box, Button, Grid, GridItem, Heading, Input, Text, Textarea} from '@chakra-ui/react';
 import {useTranslation} from 'react-i18next';
 import {PDFDownloadLink} from '@react-pdf/renderer';
-import {themeVars, useThemeColors} from '@/theme/theme-colors'; // Dodano themeVars
+import {themeVars, useThemeColors} from '@/theme/theme-colors';
 import {BaseScaffoldingLogPositionFormValues} from '@/types/scaffolding-log-position-types';
 import {TechnicalProtocolData} from '@/types/technical-protocol-types';
 import TechnicalProtocolPDF from './TechnicalProtocolPDF';
@@ -63,7 +63,7 @@ interface TechnicalProtocolFormProps {
 }
 
 const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position}) => {
-    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'companies']);
+    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'companies','technicalProtocols']);
     const themeColors = useThemeColors();
     const selectedCompany = getSelectedCompany();
 
@@ -89,7 +89,7 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
         assemblyLocation: position.assemblyLocation || '',
         assemblyDate: position.assemblyDate || '',
         dimensions: formatDimensions(),
-        scaffoldingPurpose: '',
+        scaffoldingPurpose: t('technicalProtocols:basicScaffoldingPurpose') || '',
         loadLimit: '2,0 kN/m²',
         earthingResistance: '',
         additionalInfo: '',
