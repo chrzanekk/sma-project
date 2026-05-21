@@ -581,8 +581,16 @@ public class ScaffoldingLogPositionServiceImpl implements ScaffoldingLogPosition
             }
             // width <= 1.0 (reszta) -> m2
             else {
-                value = dim.getHeight().multiply(dim.getLength());
-                squareMetersCount++;
+                if (dim.getDimensionType().equals(DimensionType.BASIC_STRUCTURE)) {
+                    value = dim.getHeight().multiply(dim.getLength());
+                    squareMetersCount++;
+                } else if (dim.getDimensionType().equals(DimensionType.CONSOLE) || dim.getDimensionType().equals(DimensionType.SUSPENSION)) {
+                    value = dim.getHeight().multiply(dim.getWidth()).multiply(dim.getLength());
+                    cubicMetersCount++;
+                } else {
+                    value = dim.getLength();
+                    runningMetersCount++;
+                }
             }
 
             if (ScaffoldingOperationType.ASSEMBLY.equals(dim.getOperationType())) {

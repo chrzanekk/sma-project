@@ -59,9 +59,9 @@ const ScaffoldingLogPositionDetailsDialog: React.FC<DetailsDialogProps> = ({posi
                                     <Table.Header>
                                         <Table.Row
                                             bg={themeColors.bgColorPrimary}>
-                                            <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:hshort")}</Table.ColumnHeader>
-                                            <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:wshort")}</Table.ColumnHeader>
                                             <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:lshort")}</Table.ColumnHeader>
+                                            <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:wshort")}</Table.ColumnHeader>
+                                            <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:hshort")}</Table.ColumnHeader>
                                             <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("dimensionDescriptions:unitShort")}</Table.ColumnHeader>
                                             <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("scaffoldingTypes:scaffoldingTypeShort")}</Table.ColumnHeader>
                                             <Table.ColumnHeader  {...commonColumnHeaderProps}>{t("scaffoldingOperationTypes:operation")}</Table.ColumnHeader>
@@ -76,9 +76,9 @@ const ScaffoldingLogPositionDetailsDialog: React.FC<DetailsDialogProps> = ({posi
                                                                bg: themeColors.highlightBgColor,
                                                                color: themeColors.fontColorHover,
                                                            }}>
-                                                    <Table.Cell {...commonCellProps}>{dim.height} </Table.Cell>
-                                                    <Table.Cell {...commonCellProps}>{dim.width} </Table.Cell>
                                                     <Table.Cell {...commonCellProps}>{dim.length}</Table.Cell>
+                                                    <Table.Cell {...commonCellProps}>{dim.width} </Table.Cell>
+                                                    <Table.Cell {...commonCellProps}>{dim.height} </Table.Cell>
                                                     <Table.Cell {...commonCellProps}> {dim.unit?.symbol}</Table.Cell>
                                                     <Table.Cell {...commonCellProps}><Badge
                                                         variant="outline"

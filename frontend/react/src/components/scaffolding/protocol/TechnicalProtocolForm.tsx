@@ -9,6 +9,7 @@ import {BaseScaffoldingLogPositionFormValues} from '@/types/scaffolding-log-posi
 import {TechnicalProtocolData} from '@/types/technical-protocol-types';
 import TechnicalProtocolPDF from './TechnicalProtocolPDF';
 import {getSelectedCompany} from "@/utils/company-utils.ts";
+import {DimensionType} from "@/enums/dimension-types-enum.ts";
 
 
 const SimpleInputField = ({label, value, onChange, placeholder}: any) => {
@@ -63,7 +64,7 @@ interface TechnicalProtocolFormProps {
 }
 
 const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position}) => {
-    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'companies','technicalProtocols']);
+    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'companies', 'technicalProtocols', 'dimensionTypes']);
     const themeColors = useThemeColors();
     const selectedCompany = getSelectedCompany();
 
@@ -73,7 +74,14 @@ const TechnicalProtocolForm: React.FC<TechnicalProtocolFormProps> = ({position})
 
         return position.dimensions
             .filter(dim => dim.length || dim.width || dim.height)
-            .map(dim => `${dim.length || '?'}m x ${dim.width || '?'}m x ${dim.height || '?'}m`)
+            .map(dim => {
+                const baseDimension =
+                    `${dim.length || '?'}m x ${dim.width || '?'}m x ${dim.height || '?'}m`;
+                if (dim.dimensionType && dim.dimensionType !== DimensionType.BASIC_STRUCTURE) {
+                    return `${baseDimension} (${t(`dimensionTypes:${dim.dimensionType}`)})`;
+                }
+                return baseDimension
+            })
             .join(', ');
     };
 
