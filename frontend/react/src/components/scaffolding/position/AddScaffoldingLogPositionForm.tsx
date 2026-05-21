@@ -42,7 +42,9 @@ const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps
     const initialValues: BaseScaffoldingLogPositionFormValues = {
         id: undefined,
         scaffoldingNumber: "",
-        assemblyLocation: parentPosition?.assemblyLocation + " - " + t('scaffoldingOperationTypes:modification') || "",
+        assemblyLocation: parentPosition?.assemblyLocation
+            ? `${parentPosition.assemblyLocation} - ${t('scaffoldingOperationTypes:modification')}`
+            : "",
         assemblyDate: "",
         dismantlingDate: "",
         dismantlingNotificationDate: "",
