@@ -24,6 +24,14 @@ public class DynamicSecurityConfigurer {
     ) {
         log.info("🔐 Configuring dynamic security with runtime authorization checks");
 
+        // ✅ 0. Actuator endpoints — MUSI być PRZED resztą reguł
+        auth.requestMatchers(
+                "/actuator/health",
+                "/actuator/health/**",
+                "/actuator/prometheus",
+                "/actuator/info"
+        ).permitAll();
+
         // ✅ 1. Public authentication endpoints
         auth.requestMatchers(
                 ApiPath.AUTH + "/login",

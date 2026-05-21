@@ -13,9 +13,9 @@ import {ResourcePermissionProvider} from "@/context/ResourcePermissionContext.ts
 // main.tsx
 import { Buffer } from 'buffer'
 
-window.Buffer = window.Buffer || Buffer
-window.global = window.global || window
-window.process = window.process || { env: { DEBUG: undefined } }
+window.Buffer = window.Buffer || Buffer;
+window.global = window.global || window;
+(window as any).process = (window as any).process || { env: { DEBUG: undefined } };
 
 
 function initColorMode() {

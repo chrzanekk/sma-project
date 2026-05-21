@@ -21,5 +21,5 @@ export const getUnitValidationSchema = (
         unitType: Yup.string()
             .oneOf(unitTypeValues as string[], t("errors:verification.invalidSelection", {field: t("units:unitType")}))
             .required(t("errors:verification.required", {field: t("units:unitType")})),
-    });
+    }) as Yup.Schema<BaseUnitFormValues>;
 };

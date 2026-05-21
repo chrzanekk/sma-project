@@ -1,8 +1,10 @@
-#todo add application-docker.yml for docker build
+# application-docker.yml — profil docker (produkcja/kontenery)
 server:
   port: 8080
   error:
     include-message: always
+  # Graceful shutdown — dokończy bieżące requesty przed zatrzymaniem kontenera
+  shutdown: graceful
 
 cors:
   allowed-origins: "*"
@@ -10,29 +12,49 @@ cors:
   allowed-headers: "*"
   exposed-headers: "*"
 
+# ─── Actuator + Prometheus ───────────────────────────────────────────────────
 management:
   endpoints:
     web:
       exposure:
-        include: "health,info"
+        # Dodano: prometheus — endpoint scrapowany przez Prometheus
+        include: "health,info,prometheus"
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      # Liveness + Readiness dla Docker healthcheck
+      probes:
+        enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      # Tag widoczny we wszystkich metrykach w Grafanie
+      application: sma-backend
+      env: docker
 
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5444/sma}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/sma}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      pool-name: SmaHikariPool
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: true
+    # W produkcji wyłącz show-sql — generuje ogromne logi
+    show-sql: false
     properties:
       hibernate:
         jdbc:
           batch_size: 20
-        transaction:
-          jta:
-            platform: org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform
+        order_updates: true
     open-in-view: false
 
   mail:
@@ -41,13 +63,16 @@ spring:
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     protocol: smtp
+
   thymeleaf:
-      cache: false
+    cache: true   # W dockerze cache włączony
+
   servlet:
     multipart:
       enabled: true
       max-file-size: 20MB
       max-request-size: 25MB
+
   config:
     import: "optional:file:../.env[.properties]"
 
@@ -56,12 +81,15 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+  lifecycle:
+    timeout-per-shutdown-phase: 30s
+
 jwt:
   jwtSecret: ${JWT_SECRET}
   jwtExpirationMs: 28800000
   tokenValidityTimeInMinutes: 15
 
 platform:
-  url: http://localhost:5173
-  replyToEmail: sma@konradchrzanowski.pl
-  fromEmail: Scaffolding App / LocalHost <sma@konradchrzanowski.pl>
+  url: ${PLATFORM_URL:http://localhost:5173}
+  replyToEmail: ${REPLY_TO_EMAIL:sma@konradchrzanowski.pl}
+  fromEmail: ${FROM_EMAIL:Scaffolding App <sma@konradchrzanowski.pl>}

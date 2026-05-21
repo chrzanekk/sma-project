@@ -119,9 +119,11 @@ const ContractorTable: React.FC<Props> = ({
                                         ? "/" + contractor.apartmentNo
                                         : ""},{" "}
                                     {contractor.postalCode} {contractor.city},{" "}
-                                    {contractor.country && typeof contractor.country === "object"
-                                        ? contractor.country.name
-                                        : contractor.country || ""}
+                                    {contractor.country
+                                        ? (typeof contractor.country === "object"
+                                            ? String(contractor.country.name ?? "")
+                                            : String(contractor.country))
+                                        : ""}
                                 </div>
                             </Table.Cell>
                             <Table.Cell>{contractor.customer ? t("common:yes") : t("common:no")}</Table.Cell>

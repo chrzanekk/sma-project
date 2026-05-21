@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration scan="true">
+
+    <!-- APPENDER: KONSOLA -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- APPENDER: LOKI — tylko w profilu docker -->
+    <springProfile name="docker">
+        <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+            <http>
+                <url>http://loki:3100/loki/api/v1/push</url>
+                <connectionTimeoutMs>10000</connectionTimeoutMs>
+                <requestTimeoutMs>10000</requestTimeoutMs>
+            </http>
+            <format>
+                <label>
+                    <pattern>app=sma-backend,host=${HOSTNAME:-local},level=%level</pattern>
+                    <readMarkers>true</readMarkers>
+                </label>
+                <message>
+                    <pattern>level=%level class=%logger{36} thread=%thread message=%message</pattern>
+                </message>
+                <sortByTime>true</sortByTime>
+            </format>
+            <batchMaxItems>100</batchMaxItems>
+            <batchTimeoutMs>1000</batchTimeoutMs>
+        </appender>
+
+        <appender name="ASYNC_LOKI" class="ch.qos.logback.classic.AsyncAppender">
+            <appender-ref ref="LOKI"/>
+            <queueSize>512</queueSize>
+            <discardingThreshold>0</discardingThreshold>
+            <neverBlock>true</neverBlock>
+        </appender>
+    </springProfile>
+
+    <!-- LOGGERS -->
+    <logger name="org.springframework.web.servlet.HandlerMapping.Mappings"
+            level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <logger name="pl.com.chrzanowski.sma" level="DEBUG"/>
+    <logger name="jakarta.activation" level="WARN"/>
+    <logger name="org.hibernate.SQL" level="WARN"/>
+    <logger name="org.flywaydb" level="INFO"/>
+
+    <!-- ROOT — usunięto FILE, dodano ASYNC_LOKI tylko w profilu docker -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <springProfile name="docker">
+            <appender-ref ref="ASYNC_LOKI"/>
+        </springProfile>
+    </root>
+
+</configuration>

@@ -6,7 +6,7 @@ export class Currency {
 
     public static readonly currencies: Currency[] = Currency._currencies;
 
-    private constructor(
+    public constructor(
         public readonly code: string,
         public readonly name: string,
         public readonly symbol?: string

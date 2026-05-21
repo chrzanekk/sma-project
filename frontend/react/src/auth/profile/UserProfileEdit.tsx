@@ -251,8 +251,10 @@ const UserProfileEdit: React.FC = () => {
 
                                 <Field
                                     label={t('shared.position')}
-                                    invalid={!!accountForm.errors.position && accountForm.touched.position}
-                                    errorText={accountForm.errors.position}
+                                    invalid={!!accountForm.errors.position && !!accountForm.touched.position}
+                                    errorText={typeof accountForm.errors.position === 'string'
+                                        ? accountForm.errors.position
+                                        : undefined}
                                 >
                                     <Input
                                         name="position"

@@ -34,7 +34,7 @@ export interface DataManagementResult<T> {
  * @param useCompanyId
  */
 export function useDataManagement<T>(
-    fetchFn: (params: FetchParams) => Promise<{ data: T[]; totalPages: number, totalCount: number }>,
+    fetchFn: (params: FetchParams) => Promise<{ data: T[]; totalPages: number, totalCount?: number }>,
     deleteFn: (id: number) => Promise<void>,
     initialFilter: Record<string, any> = {},
     useCompanyId: boolean = true,
