@@ -68,11 +68,6 @@ public class ContractJPADaoImpl implements ContractDao {
         log.debug("DAO: Find all contracts by specification with page: {}", specification);
         BlazeJPAQuery<Contract> baseQuery = contractQuerySpec.buildQuery(specification, pageable);
 
-        baseQuery.leftJoin(contract.contractor, contractor).fetchJoin()
-                .leftJoin(contract.company, company).fetchJoin()
-                .leftJoin(contract.constructionSite, constructionSite).fetchJoin()
-                .leftJoin(contract.contact, contact).fetchJoin();
-
         PagedList<Contract> content = baseQuery.fetchPage((int) pageable.getOffset(), pageable.getPageSize());
 
         return new PageImpl<>(content, pageable, content.getTotalSize());

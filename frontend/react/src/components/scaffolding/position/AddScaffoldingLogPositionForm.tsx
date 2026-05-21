@@ -29,20 +29,20 @@ const AddScaffoldingLogPositionForm: React.FC<AddScaffoldingLogPositionFormProps
                                                                                          parentPosition,
                                                                                          scaffoldingLogId
                                                                                      }) => {
-    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'errors']);
+    const {t} = useTranslation(['common', 'scaffoldingLogPositions', 'errors', 'scaffoldingOperationTypes']);
     const currentCompany = getSelectedCompany();
 
     const scaffoldingTypeOptions = React.useMemo(() => getScaffoldingTypeOptions(t), [t]);
     const technicalProtocolStatusOptions = React.useMemo(() => getTechnicalProtocolStatusOptions(t), [t]);
 
     const initialScaffoldingLog: ScaffoldingLogBaseDTO | null = scaffoldingLogId
-        ? { id: scaffoldingLogId } as ScaffoldingLogBaseDTO
+        ? {id: scaffoldingLogId} as ScaffoldingLogBaseDTO
         : null;
 
     const initialValues: BaseScaffoldingLogPositionFormValues = {
         id: undefined,
         scaffoldingNumber: "",
-        assemblyLocation: "",
+        assemblyLocation: parentPosition?.assemblyLocation + " - " + t('scaffoldingOperationTypes:modification') || "",
         assemblyDate: "",
         dismantlingDate: "",
         dismantlingNotificationDate: "",

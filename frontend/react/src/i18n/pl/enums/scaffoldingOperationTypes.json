@@ -1,5 +1,6 @@
 {
   "operation": "Operacja",
   "assembly": "Montaż",
-  "dismantling": "Demontaż"
+  "dismantling": "Demontaż",
+  "modification": "modyfikacja"
 }

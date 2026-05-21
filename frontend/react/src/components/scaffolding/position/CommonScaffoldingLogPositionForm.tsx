@@ -51,8 +51,6 @@ const FormContent: React.FC<{ disabled: boolean, hideSubmit: boolean }> = (({
             dirty
         } = useFormikContext<BaseScaffoldingLogPositionFormValues>();
 
-        // const values = useFormikContext<BaseScaffoldingLogPositionFormValues>().values;
-        // const setFieldValue = useFormikContext<BaseScaffoldingLogPositionFormValues>().setFieldValue;
         const debouncedAssemblyDate = useDebounce(values.assemblyDate, 400);
 
         useEffect(() => {
