@@ -33,6 +33,24 @@ import resourcesPl from './pl/resources.json'
 import resourcesEn from './en/resources.json'
 import employeesPl from './pl/employees.json'
 import employeesEn from './en/employees.json'
+import unitEn from './en/units.json'
+import unitPl from './pl/units.json'
+import dimensionTypeEn from './en/enums/dimensionTypes.json'
+import dimensionTypePl from './pl/enums/dimensionTypes.json'
+import scaffoldingOperationTypesEn from './en/enums/scaffoldingOperationTypes.json'
+import scaffoldingOperationTypesPl from './pl/enums/scaffoldingOperationTypes.json'
+import scaffoldingTypesEn from './en/enums/scaffoldingTypes.json'
+import scaffoldingTypesPl from './pl/enums/scaffoldingTypes.json'
+import technicalProtocolStatusEn from './en/enums/technicalProtocolStatuses.json'
+import technicalProtocolStatusPl from './pl/enums/technicalProtocolStatuses.json'
+import scaffoldingLogEn from './en/scaffoldingLogs.json'
+import scaffoldingLogPl from './pl/scaffoldingLogs.json'
+import scaffoldingLogPositionEn from './en/scaffoldingLogPositions.json'
+import scaffoldingLogPositionPl from './pl/scaffoldingLogPositions.json'
+import dimensionDescriptionsEn from './en/enums/dimensionDescriptions.json'
+import dimensionDescriptionsPl from './pl/enums/dimensionDescriptions.json'
+import technicalProtocolsPl from './pl/technicalProtocols.json'
+import technicalProtocolsEn from './en/technicalProtocols.json'
 
 i18n
     .use(initReactI18next)
@@ -55,7 +73,16 @@ i18n
                 contracts: contractsEn,
                 positions: positionsEn,
                 resources: resourcesEn,
-                employees: employeesEn
+                employees: employeesEn,
+                units: unitEn,
+                dimensionTypes: dimensionTypeEn,
+                scaffoldingTypes: scaffoldingTypesEn,
+                scaffoldingOperationTypes: scaffoldingOperationTypesEn,
+                technicalProtocolStatuses: technicalProtocolStatusEn,
+                scaffoldingLogs: scaffoldingLogEn,
+                scaffoldingLogPositions: scaffoldingLogPositionEn,
+                dimensionDescriptions: dimensionDescriptionsEn,
+                technicalProtocols: technicalProtocolsEn
             },
             pl: {
                 common: commonPl,
@@ -73,14 +100,25 @@ i18n
                 contracts: contractsPl,
                 positions: positionsPl,
                 resources: resourcesPl,
-                employees: employeesPl
+                employees: employeesPl,
+                units: unitPl,
+                dimensionTypes: dimensionTypePl,
+                scaffoldingTypes: scaffoldingTypesPl,
+                scaffoldingOperationTypes: scaffoldingOperationTypesPl,
+                technicalProtocolStatuses: technicalProtocolStatusPl,
+                scaffoldingLogs: scaffoldingLogPl,
+                scaffoldingLogPositions: scaffoldingLogPositionPl,
+                dimensionDescriptions: dimensionDescriptionsPl,
+                technicalProtocols: technicalProtocolsPl
             },
         },
         lng: 'pl',
         fallbackLng: 'en',
         ns: ['common', 'navbar', 'userMenu', 'auth', 'footer', 'adminPanelMenu',
             'contractors', 'countries', 'contacts', 'companies', 'constructionSites',
-            'contracts', 'positions', 'resources','employees'],
+            'contracts', 'positions', 'resources', 'employees', 'units', 'dimensionTypes',
+            'scaffoldingTypes', 'scaffoldingOperationTypes', 'technicalProtocolStatuses',
+            'dimensionDescriptions','technicalProtocols'],
         defaultNS: 'common',
         interpolation: {
             escapeValue: false,

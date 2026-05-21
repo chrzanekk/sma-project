@@ -10,7 +10,7 @@ import {
 } from "@/types/constrution-site-types.ts";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
 import {ContractorDTO} from "@/types/contractor-types.ts";
-import {ConstructionSiteFilter} from "@/types/filters/construction-site-filter.ts";
+import {ConstructionSiteFilter} from "@/filters/construction-site-filter.ts";
 
 
 const CONSTRUCTION_SITE_API_BASE = "/api/construction-sites";

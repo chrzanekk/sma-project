@@ -99,6 +99,7 @@ const EditUserCompaniesForm: React.FC<EditUserCompaniesFormProps> = ({userId, on
             {/* Pole wyszukiwania firm */}
             <Box mb={4}>
                 <CustomInputSearchField
+                    name={"companySearch"}
                     searchTerm={searchTerm}
                     setSearchTerm={setSearchTerm}
                     handleSearch={handleSearch}

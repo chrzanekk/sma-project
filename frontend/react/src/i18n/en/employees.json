@@ -1,5 +1,6 @@
 {
   "employee": "Pracownik",
+  "employees": "Pracownicy",
   "add": "Dodaj pracownika",
   "employeesList": "Lista pracowników",
   "edit": "Edytuj dane pracownika",
@@ -8,6 +9,8 @@
   "firstName": "Imię",
   "lastName": "Nazwisko",
   "hourRate": "Stawka godzinowa",
+  "hourRateStartsWith": "Stawka godz. od",
+  "hourRateEndsWith": "Stawka godz. do",
   "notifications" : {
     "addEmployeeSuccess" : "Pracownik {firstName} {lastName} dodany pomyślnie",
     "addEmployeeError": "Błąd dodawania pracownika",

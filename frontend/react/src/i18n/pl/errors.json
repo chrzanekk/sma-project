@@ -1,9 +1,9 @@
 {
-  "error" : "Błąd",
+  "error": "Błąd",
   "networkError": "Błąd sieci",
   "unauthorized": "Brak autoryzacji - sprawdź swoje dane logowania",
   "sessionExpired": "Sesja wygasła",
-  "sessionExpiredMessage":"Sesja wygasła, zaloguj się ponownie",
+  "sessionExpiredMessage": "Sesja wygasła, zaloguj się ponownie",
   "accessDenied": "Brak dostępu",
   "cannotConnectToServer": "Nie można połączyć się z serwerem. Sprawdź swoje połączenie.",
   "genericError": "Wystąpił błąd",
@@ -12,7 +12,7 @@
   "emailNotFound": "Nie znaleziono użytkownika o podanym adresie e-mail",
   "emailAlreadyExists": "Adres e-mail {email} już istnieje w bazie",
   "loginAlreadyExists": "Login {login} istnieje już  w bazie",
-  "emailSendFail" :  "Wysyłanie e-maila nie powiodło się",
+  "emailSendFail": "Wysyłanie e-maila nie powiodło się",
   "expiredToken": "Token wygasł",
   "objectNotFound": "Nie znaleziono obiektu",
   "passwordNotMatch": "Hasła nie pasują do siebie",
@@ -21,10 +21,6 @@
   "roleNotFound": "Nie znaleziono roli",
   "roleCannotBeDeleted": "Rola {role} nie może zostać usunięta",
   "invalidPassword": "Nieprawidłowe hasło",
-  "userAddedError": "Błąd dodawania użytkownika",
-  "userPasswordSetError": "Błąd zmieniony hasła użytkownika {login}",
-  "userEditedError": "Błąd edycji użytkownika {login}.",
-  "userNotFound": "Nie znaleziono użytkownika",
   "accountNotActive": "Konto nieaktywne. Skontaktuj się z administracją.",
   "roleAddedError": "Błąd dodawania roli",
   "contractors": {
@@ -38,7 +34,9 @@
     "countryMissing": "Kraj jest wymagany",
     "isCustomerMissing": "Określ czy to klient",
     "isSupplierMissing": "Określ czy to dostawca",
-    "isScaffoldingUser": "Określ czy to użytkownik rusztowania"
+    "isScaffoldingUser": "Określ czy to użytkownik rusztowania",
+    "contractorNotCustomer": "Kontrahent nie jest klientem",
+    "contractorNotScaffoldingUser": "Kontrahent nie jest użytkownikiem rusztowania"
   },
   "contacts": {
     "contactNotFound": "Kontakt nieodnaleziony",
@@ -53,5 +51,69 @@
     "maxLength": "{field} nie może mieć więcej niż {count, plural, one {# znak} few {# znaki} other {# znaków}}.",
     "realEndDateBeforeStartDate": "Data rzeczywistego zakończenia nie może być przed datą rozpoczęcia",
     "startDateAfterEndDate": "Data zakończenia nie może być przed datą rozpoczęcia"
+  },
+  "contract": {
+    "contractNotFound": "Nie znaleziono zlecenia",
+    "numberMissing": "Brak numeru zlecenia",
+    "valueMissing": "Brak wartości zlecenia",
+    "descriptionMissing": "Brak opisu zlecenia",
+    "startDateMissing": "Brak daty rozpoczęcia zlecenia",
+    "endDateMissing": "Brak daty zakończenia zlecenia",
+    "signUpDateMissing": "Brak daty podpisania zlecenia"
+  },
+  "constructionSites": {
+    "constructionSiteNotFound": "Nie znaleziono budowy"
+  },
+  "employees": {
+    "employeeNotFound": "Nie znaleziono pracownika",
+    "nameMissing": "Brak imienia",
+    "lastNameMissing": "Brak nazwiska",
+    "positionMissing": "Brak stanowiska",
+    "hourRateMissing": "Brak stawki godzinowej"
+  },
+  "positions": {
+    "positionNotFound": "Nie znaleziono stanowiska",
+    "nameMissing": "Brak nazwy stanowiska",
+    "deleteNotPossible": "Nie można usunąć stanowiska"
+  },
+  "resources": {
+    "criticalResourceCannotBeDeleted": "Nie można usunąć wszystkich ról z zasobu {resourceName}. To jest krytyczny zasób, który musi mieć przypisaną co najmniej rolę ROLE_ADMIN.",
+    "resourceNeedAtLeastOneRole": "Nie można usunąć wszystkich ról z zasobu {resourceName}. Zasób musi mieć przypisaną co najmniej jedną rolę."
+  },
+  "scaffoldingLogs": {
+    "scaffoldingLogNotFound": "Nie znaleziono dziennika rusztowań",
+    "deleteNotPossible": "Nie można usunąć dziennika rusztowań"
+  },
+  "scaffoldingLogPositions": {
+    "scaffoldingLogPositionNotFound": "Nie znaleziono pozycji",
+    "scaffoldingLogPositionAlreadyExist": "Pozycja już istnieje",
+    "deleteNotPossible": "Nie można usunąć",
+    "cannotDeleteHistoricalPosition": "Nie można usunąć środkowej modyfikacji",
+    "invalidScaffoldingNumberFormat": "Nieprawidłowy format numeru rusztowania",
+    "invalidScaffoldingNumberRange": "Zakres rusztowania powinien być od 1 do 9999",
+    "invalidScaffoldingNumberYear": "Nieprawidłowy rok",
+    "invalidScaffoldingNumberDate": "Nieprawidłowa data",
+    "duplicateScaffoldingNumber": "Rusztowanie o takim numerze już istnieje",
+    "idMissing": "Brak ID"
+  },
+  "scaffoldingLogWorkingTimes": {
+    "scaffoldingLogPositionWorkingTimeNotFound": "Nie znaleziono czasu pracy",
+    "deleteNotPossible": "Nie można usunąć czasu pracy"
+  },
+  "units": {
+    "unitNotFound": "Nie znaleziono jednostki miary",
+    "symbolMissing": "Brak symbolu jednostki miary",
+    "deleteNotPossible": "Nie można usunąć jednostki miary",
+    "globalUnitCannotBeModified": "Globalna jednostka miary nie może być edytowana",
+    "globalUnitCannotBeDeleted": "Globalna jednostka miary nie może być usunięta"
+  },
+  "users": {
+    "userAddedError": "Błąd dodawania użytkownika",
+    "userPasswordSetError": "Błąd zmieniony hasła użytkownika {login}",
+    "userEditedError": "Błąd edycji użytkownika {login}.",
+    "userNotFound": "Nie znaleziono użytkownika"
+  },
+  "tokens": {
+    "tokenMissing": "Nie znaleziono tokenu"
   }
 }

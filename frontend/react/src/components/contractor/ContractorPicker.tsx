@@ -1,6 +1,6 @@
 // components/contract/ContractorPicker.tsx
 import React from "react";
-import {Box, Button, Flex, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
+import {Box, Grid, GridItem, Stack, Text} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
 import {FormikProps} from "formik";
 import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types";
@@ -8,17 +8,37 @@ import {useThemeColors} from "@/theme/theme-colors.ts";
 import ContractorSearchWithSelect from "@/components/contractor/ContractorSearchWithSelect.tsx";
 
 interface Props {
-    formikRef: React.RefObject<FormikProps<any>>;
+    formikRef: React.RefObject<FormikProps<any> | null>;
     selected: ContractorBaseDTO | null;
     onSelectChange: (c: ContractorBaseDTO | null) => void;
     searchFn: (q: string) => Promise<ContractorDTO[]>;
+    showDetails?: boolean;
+    fieldName?: string;
+    placeholder?: string;
+    label?: string;
 }
 
-const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange, searchFn}) => {
+const ContractorPicker: React.FC<Props> = ({
+                                               formikRef,
+                                               selected,
+                                               onSelectChange,
+                                               searchFn,
+                                               showDetails = true,
+                                               fieldName = "contractor",
+                                               placeholder,
+                                               label
+                                           }) => {
     const {t} = useTranslation(["common", "contractors"]);
     const themeColors = useThemeColors();
 
-    const handleSelect = (c: ContractorDTO) => {
+    const handleSelect = (c: ContractorDTO | null) => {
+        if (!c) {
+            formikRef.current?.setFieldTouched(fieldName, true, false);
+            formikRef.current?.setFieldValue(fieldName, null, true);
+            onSelectChange(null);
+            return;
+        }
+
         const base: ContractorBaseDTO = {
             id: c.id,
             name: c.name,
@@ -34,16 +54,12 @@ const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange,
             scaffoldingUser: c.scaffoldingUser,
             company: c.company,
         };
-        formikRef.current?.setFieldTouched("contractor", true, false);
-        formikRef.current?.setFieldValue("contractor", base, true);
+        formikRef.current?.setFieldTouched(fieldName, true, false);
+        formikRef.current?.setFieldValue(fieldName, base, true);
         onSelectChange(base);
     };
 
-    const handleReset = () => {
-        formikRef.current?.setFieldTouched("contractor", true, false);
-        formikRef.current?.setFieldValue("contractor", null, true);
-        onSelectChange(null);
-    };
+    const searchPlaceholder = (placeholder || t("common:searchByName"));
 
     return (
         <Box>
@@ -52,66 +68,73 @@ const ContractorPicker: React.FC<Props> = ({formikRef, selected, onSelectChange,
                     return await searchFn(q);
                 }}
                 onSelect={handleSelect}
+                selected={selected}
                 minChars={2}
                 debounceMs={300}
                 autoSearch={true}
                 size="md"
+                placeholder={searchPlaceholder}
+                label={label}
             />
             {selected && (
                 <Stack mt={2}>
-                    <Box borderWidth="1px" borderRadius="md" overflow="hidden">
-                        <Grid templateColumns="repeat(12, 2fr)" gap={0}>
-                            {/* Wiersz 1: NAME i TAX NUMBER */}
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
-                                    {t("contractors:name", "NAME")}
-                                </Text>
-                            </GridItem>
+                    {showDetails && (
+                        <>
+                            <Box borderWidth="1px" borderRadius="md" overflow="hidden">
+                                <Grid templateColumns="repeat(12, 2fr)" gap={0}>
+                                    {/* Wiersz 1: NAME  */}
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                            {t("contractors:name", "NAME")}
+                                        </Text>
+                                    </GridItem>
 
-                            <GridItem colSpan={9} borderBottomWidth="1px"
-                                      borderColor="gray.400"
-                                      p={2}>
-                                <Text color={themeColors.fontColor}>{selected.name}</Text>
-                            </GridItem>
-                            {/* Wiersz 2 NIP */}
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
-                                    {t("contractors:taxNumber", "Tax Number")}
-                                </Text>
-                            </GridItem>
-                            <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
-                                <Text color={themeColors.fontColor}>{selected.taxNumber}</Text>
-                            </GridItem>
+                                    <GridItem colSpan={9} borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text color={themeColors.fontColor}>{selected.name}</Text>
+                                    </GridItem>
 
 
-                            {/* Wiersz 3: Adres */}
-                            <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px" borderColor="gray.400"
-                                      p={2}>
-                                <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
-                                    {t("contractors:address", "Address")}
-                                </Text>
-                            </GridItem>
+                                    {/* Wiersz 2 NIP */}
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                            {t("contractors:taxNumber", "Tax Number")}
+                                        </Text>
+                                    </GridItem>
+                                    <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
+                                        <Text color={themeColors.fontColor}>{selected.taxNumber}</Text>
+                                    </GridItem>
 
-                            <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
-                                <Text color={themeColors.fontColor}>
-                                    {selected.street} {selected.buildingNo}
-                                    {selected.apartmentNo && selected.apartmentNo.trim() !== ""
-                                        ? "/" + selected.apartmentNo
-                                        : ""}
-                                    , {selected.postalCode} {selected.city},{" "}
-                                    {typeof selected!.country === "object"
-                                        ? (selected!.country as { name: string }).name
-                                        : selected!.country}
-                                </Text>
-                            </GridItem>
-                        </Grid>
-                    </Box>
-                    <Flex justify={"center"}><Button size="2xs" colorPalette="red" onClick={handleReset}>
-                        {t("common:resetSelected")}
-                    </Button></Flex>
+
+                                    {/* Wiersz 3: Adres */}
+                                    <GridItem colSpan={3} borderRightWidth="1px" borderBottomWidth="1px"
+                                              borderColor="gray.400"
+                                              p={2}>
+                                        <Text fontWeight="bold" mb={1} color={themeColors.fontColor}>
+                                            {t("contractors:address", "Address")}
+                                        </Text>
+                                    </GridItem>
+
+                                    <GridItem colSpan={9} borderBottomWidth="1px" borderColor="gray.400" p={2}>
+                                        <Text color={themeColors.fontColor}>
+                                            {selected.street} {selected.buildingNo}
+                                            {selected.apartmentNo && selected.apartmentNo.trim() !== ""
+                                                ? "/" + selected.apartmentNo
+                                                : ""}
+                                            , {selected.postalCode} {selected.city},{" "}
+                                            {typeof selected!.country === "object"
+                                                ? (selected!.country as { name: string }).name
+                                                : selected!.country}
+                                        </Text>
+                                    </GridItem>
+                                </Grid>
+                            </Box>
+                        </>)}
                 </Stack>
             )}
         </Box>

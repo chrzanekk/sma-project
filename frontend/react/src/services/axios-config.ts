@@ -8,8 +8,6 @@ const api = axios.create({
     timeout: 10000,
 });
 
-const toBoolean = (value: string | boolean): boolean => value === "true" || value === true;
-
 const getAuthConfig = () => {
     const token = localStorage.getItem("auth");
     if (!token) {
@@ -42,8 +40,11 @@ api.interceptors.response.use(
             });
         }
         if (error.response) {
-            const {code, details} = error.response.data || {};
-            const formatedMessage = formatMessage(code, details, 'errors');
+            // WYCIĄGAMY 'message' z JSON-a
+            const {code, details, message} = error.response.data || {};
+
+            // PRZEKAZUJEMY 'message' jako 4. parametr
+            const formatedMessage = formatMessage(code, details, 'errors', message);
 
             errorNotification(i18n.t('errors:error'), formatedMessage);
 
@@ -69,4 +70,4 @@ api.interceptors.response.use(
     }
 );
 
-export {api, getAuthConfig, toBoolean};
+export {api, getAuthConfig};

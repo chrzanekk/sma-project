@@ -1,4 +1,4 @@
-import {EmployeeFilter} from "@/types/filters/employee-filter.ts";
+import {EmployeeFilter} from "@/filters/employee-filter.ts";
 import {serializeQueryParams} from "@/utils/query-params-serializer.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils.ts";
 import {api, getAuthConfig} from "@/services/axios-config.ts";

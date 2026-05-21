@@ -64,7 +64,6 @@ const PositionFilterForm: React.FC<Props> = ({onSubmit}) => {
                                 {t('common:clearFilters')}
                             </Button>
                         </Flex>
-
                     </Form>
                 )
             }}

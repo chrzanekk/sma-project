@@ -1,5 +1,5 @@
 // src/search/construction-site-search-adapter.ts
-import { ConstructionSiteFilter, ConstructionSiteFilterBuilder } from "@/types/filters/construction-site-filter";
+import { ConstructionSiteFilter, ConstructionSiteFilterBuilder } from "@/filters/construction-site-filter";
 import { ConstructionSiteDTO } from "@/types/constrution-site-types";
 import { getConstructionSiteByFilter } from "@/services/construction-site-service";
 

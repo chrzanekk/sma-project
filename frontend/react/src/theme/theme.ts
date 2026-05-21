@@ -26,7 +26,7 @@ const config = defineConfig({
                     value: { base: "{colors.green.300}", _dark: "{colors.green.700}" },
                 },
                 borderColor: {
-                    value: { base: "{colors.gray.200}", _dark: "{colors.gray.600}" },
+                    value: { base: "{colors.gray.200}", _dark: "{colors.gray.700}" },
                 },
                 fontColor: {
                     value: { base: "{colors.gray.600}", _dark: "{colors.gray.300}" },

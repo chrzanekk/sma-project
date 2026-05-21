@@ -22,6 +22,9 @@ import ResourcePermissionManagement from "@/components/admin/ResourcePermissionM
 import Unauthorized from "@/components/shared/Unauthorized.tsx";
 import {Box, Text} from "@chakra-ui/react";
 import EmployeeManagement from "@/components/employee/EmployeeManagement.tsx";
+import UnitManagement from "@/components/unit/UnitManagement.tsx";
+import ScaffoldingLogManagement from "@/components/scaffolding/log/ScaffoldingLogManagement.tsx";
+import ScaffoldingLogPositionManagement from "@/components/scaffolding/position/ScaffoldingLogPositionManagement.tsx";
 
 
 const router = createBrowserRouter([
@@ -106,6 +109,16 @@ const router = createBrowserRouter([
             )
         },
         {
+            path: "units",
+            element: (
+                <ProtectedRoute resourceKey="UNIT_MANAGEMENT">
+                    <Layout>
+                        <UnitManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
             path: "adminPanel",
             element: (
                 <ProtectedRoute>
@@ -156,25 +169,42 @@ const router = createBrowserRouter([
             )
         },
         {
-            path: "diaryList",
+            path: "logList",
             element: (
-                <ProtectedRoute>
+                <ProtectedRoute resourceKey="SCAFFOLDING_LOG_MANAGEMENT">
                     <Layout>
-                        <UnderConstructionRoute
-                            nameKey={'diaryList'}
-                            nameSpace={'navbar'}
-                        />
+                        <ScaffoldingLogManagement/>
                     </Layout>
                 </ProtectedRoute>
             )
         },
         {
-            path: "diaryAddNew",
+            path: "logPositions",
+            element: (
+                <ProtectedRoute resourceKey="SCAFFOLDING_LOG_POSITION_MANAGEMENT">
+                    <Layout>
+                        <ScaffoldingLogPositionManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "scaffolding-logs/:logId/positions",
+            element: (
+                <ProtectedRoute resourceKey="SCAFFOLDING_LOG_POSITION_MANAGEMENT">
+                    <Layout>
+                        <ScaffoldingLogPositionManagement/>
+                    </Layout>
+                </ProtectedRoute>
+            )
+        },
+        {
+            path: "logAddNew",
             element: (
                 <ProtectedRoute>
                     <Layout>
                         <UnderConstructionRoute
-                            nameKey={'diaryAddNew'}
+                            nameKey={'logAddNew'}
                             nameSpace={'navbar'}
                         />
                     </Layout>

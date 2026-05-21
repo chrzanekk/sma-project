@@ -1,0 +1,28 @@
+{
+  "add": "Dodaj jednostkę miary",
+  "unit": "Jednostka miary",
+  "unitList": "Lista jednostek miar",
+  "edit": "Edytuj dane jednostki",
+  "search": "Wyszukaj jednostkę miary",
+  "details": "Dane jednostki miary",
+  "symbol": "Symbol jednostki miary",
+  "unitType": "Typ jednostki miary",
+  "unitTypeShort": "Typ jednostki",
+  "description": "Opis",
+  "hours": "Godziny",
+  "notifications" : {
+    "addUnitSuccess" : "Stanowisko {symbol} dodane pomyślnie",
+    "addUnitError": "Błąd dodawania jednostki",
+    "editUnitSuccess" : "Dane jednostki {symbol} zmieniono pomyślnie",
+    "editUnitError": "Błąd edycji jednostki {symbol}"
+  },
+  "unitTypes" : {
+    "length": "Długość",
+    "area": "Powierzchnia",
+    "volume": "Objętość",
+    "duration": "Czas trwania",
+    "speed": "Prędkość",
+    "density": "Jednostka amortyzacji",
+    "force": "Siła"
+  }
+}

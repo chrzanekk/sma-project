@@ -1,12 +1,13 @@
-import React, {useState} from "react";
+import React, {useMemo} from "react";
 import {Flex} from "@chakra-ui/react";
 import {useTranslation} from "react-i18next";
-import {ContractorDTO} from "@/types/contractor-types.ts";
+import {ContractorBaseDTO, ContractorDTO} from "@/types/contractor-types.ts";
 import AsyncSearchSelect, {AsyncSearchSelectOption} from "@/components/shared/AsyncSearchSelect.tsx";
 
 export interface ContractorSearchProps {
     searchFn: (query: string) => Promise<ContractorDTO[]>;
     onSelect: (contractor: ContractorDTO) => void;
+    selected?: ContractorDTO | ContractorBaseDTO | null;
     minChars?: number;
     debounceMs?: number;
     autoSearch?: boolean;
@@ -14,22 +15,33 @@ export interface ContractorSearchProps {
     size?: "sm" | "md";
     onInputKeyDown?: React.KeyboardEventHandler<HTMLInputElement>;
     enableEnterSubmit?: boolean;
+    placeholder?: string;
+    label?: string
 }
 
 const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
-                                                               searchFn,
-                                                               onSelect,
-                                                               minChars = 2,
-                                                               debounceMs = 300,
-                                                               size = "md",
-                                                           }) => {
+                                                                         searchFn,
+                                                                         onSelect,
+                                                                         selected,
+                                                                         minChars = 2,
+                                                                         debounceMs = 300,
+                                                                         size = "md",
+                                                                         placeholder,
+                                                                         label
+                                                                     }) => {
     const {t} = useTranslation(["common", "contractors"]);
 
+    const selectedOption = useMemo<AsyncSearchSelectOption<ContractorDTO> | null>(() => {
+        if (!selected) return null;
+        return {
+            value: selected.id!,
+            label: selected.name,
+            raw: selected as ContractorDTO,
+        };
+    }, [selected]);
 
-    const [selectedOption, setSelectedOption] = useState<AsyncSearchSelectOption<ContractorDTO> | null>(null);
-
-    // adaptacja loadOptions: z q -> Option[]
-    const loadOptions = async (term: string): Promise<AsyncSearchSelectOption<ContractorDTO>[]> => {
+    const loadOptions = async (term: string):
+        Promise<AsyncSearchSelectOption<ContractorDTO>[]> => {
         const data = await searchFn(term);
         return (data ?? []).map((c) => ({
             value: c.id!,
@@ -39,10 +51,13 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
     };
 
     const handleChange = (opt: AsyncSearchSelectOption<ContractorDTO> | null) => {
-        setSelectedOption(opt);
+        if (!opt) {
+            onSelect(null as unknown as ContractorDTO);
+            return;
+        }
+
         if (opt?.raw) {
             onSelect(opt.raw);
-            setSelectedOption(null);
         }
     };
 
@@ -52,12 +67,13 @@ const ContractorSearchWithSelect: React.FC<ContractorSearchProps> = ({
                 loadOptions={loadOptions}
                 value={selectedOption}
                 onChange={handleChange}
-                placeholder={t("common:searchByName")}
+                placeholder={placeholder || t("common:searchByName")}
                 minChars={minChars}
                 debounceMs={debounceMs}
                 size={size}
                 noOptionsMessage={t("common:dataNotFound")}
                 clearable={true}
+                label={label}
             />
         </Flex>
     );

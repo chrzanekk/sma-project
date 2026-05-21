@@ -1,7 +1,7 @@
 import React from "react";
 import {Field, FieldProps, useField, useFormikContext} from "formik";
 import {Box, Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
-import Select, {StylesConfig} from "react-select";
+import Select, {components, PlaceholderProps, StylesConfig} from "react-select";
 import {themeVars, useThemeColors} from "@/theme/theme-colors";
 import {getSelectStyles} from "@/components/shared/formOptions.ts";
 import {useTranslation} from "react-i18next";
@@ -22,10 +22,12 @@ export const CustomInputFilterField: React.FC<CustomInputFilterFieldProps> = ({n
         color={themeColors.fontColor}
         placeholder={placeholder}
         _placeholder={{color: themeVars.fontColor}}
+        title={placeholder}
         size="sm"
         bg={themeColors.bgColorSecondary}
         borderRadius="md"
         width="150px"
+        textOverflow="ellipsis"
     />
 };
 
@@ -39,6 +41,7 @@ interface CustomInputFieldProps {
     disabled?: boolean;
     fontSize?: string;
     inputBGColor?: string;
+    onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const CustomInputField: React.FC<CustomInputFieldProps> = ({
@@ -50,6 +53,7 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                                                                disabled,
                                                                fontSize = "sm",
                                                                inputBGColor = themeVars.bgColorPrimary,
+                                                               onChange
                                                            }) => {
     const themeColors = useThemeColors();
     return (
@@ -70,6 +74,8 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         {...field}
                         placeholder={placeholder}
                         _placeholder={{color: themeVars.fontColor}}
+                        title={field.value || placeholder}
+                        textOverflow="ellipsis"
                         type={type}
                         size="sm"
                         color={themeColors.fontColor}
@@ -77,6 +83,13 @@ const CustomInputField: React.FC<CustomInputFieldProps> = ({
                         borderRadius="md"
                         width={width || "100%"}
                         disabled={disabled}
+                        onChange={(e) => {
+                            if (onChange) {
+                                onChange(e);
+                            } else {
+                                field.onChange(e);
+                            }
+                        }}
                     />
                     {meta.touched && meta.error && (
                         <Text color="red.500" fontSize="xs" mt="1">
@@ -98,7 +111,10 @@ export interface CustomSelectFieldProps {
     isMulti?: boolean;
     width?: string;
     bgColor?: string;
-    disabled?: boolean
+    disabled?: boolean;
+    fontSize?: string;
+    defaultValue?: any;
+    onValueChange?: (value: any) => void;
 }
 
 const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
@@ -110,6 +126,9 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                                                                  width,
                                                                  bgColor,
                                                                  disabled = false,
+                                                                 fontSize = 'sm',
+                                                                 defaultValue,
+                                                                 onValueChange
                                                              }) => {
     const {setFieldValue, setFieldTouched} = useFormikContext<any>();
     const themeColors = useThemeColors();
@@ -118,9 +137,14 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
 
     const selectedValue = isMulti
         ? options.filter((option) => Array.isArray(field.value) && field.value.includes(option.value))
-        : field.value === undefined
-            ? null
-            : options.find((option) => option.value === field.value) || null;
+        : options.find((option) => option.value === (field.value ?? defaultValue)) || null;
+
+    React.useEffect(() => {
+        if (defaultValue !== undefined && (field.value === undefined || field.value === null || field.value === "")) {
+            setFieldValue(name, defaultValue).then();
+        }
+    }, [defaultValue, field.value, name, setFieldValue]);
+
 
     const customSelectStyles: StylesConfig<any, boolean> = {
         ...selectStyles,
@@ -189,17 +213,36 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
             ...provided,
             color: themeVars.fontColor,
         }),
+        valueContainer: (provided) => ({
+            ...provided,
+            // Ważne: musimy ograniczyć kontener wartości, żeby placeholder miał ramy
+            flexWrap: 'nowrap',
+            overflow: 'hidden',
+        }),
         // Style dla placeholdera
         placeholder: (provided) => ({
             ...provided,
             color: themeVars.fontColor,
+            // Kluczowe style nadpisujące domyślne pozycjonowanie react-select
+            position: 'absolute', // React-select używa absolute, to OK
+            top: '50%',
+            transform: 'translateY(-50%)',
+            left: 0,
+            right: 0, // Rozciągnij na szerokość
+            margin: '0 8px', // Odstęp od krawędzi (zgodny z paddingiem inputa)
+
+            // Style ucinania
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            maxWidth: 'calc(100% - 16px)' // Zabezpieczenie szerokości (minus marginesy)
         }),
     };
 
     return (
         <Box mb={2}>
             {label && (
-                <Text fontSize="sm"
+                <Text fontSize={fontSize}
                       fontWeight="bold"
                       mb="1" color={themeColors.fontColor}
                       textAlign={"center"}
@@ -211,17 +254,33 @@ const CustomSelectField: React.FC<CustomSelectFieldProps> = ({
                 options={options}
                 isDisabled={disabled}
                 placeholder={placeholder}
+                components={{
+                    Placeholder: CustomPlaceholder
+                }}
                 aria-label={placeholder}
                 value={selectedValue}
                 isMulti={isMulti}
                 onChange={(selectedOption: any) => {
+                    let finalValue;
+
                     if (isMulti) {
                         const values = selectedOption ? selectedOption.map((opt: any) => opt.value) : [];
                         setFieldValue(name, values).catch();
+                        finalValue = values;
                     } else {
-                        setFieldValue(name, selectedOption ? selectedOption.value : "").catch();
+                        let valueToSet;
+                        if (selectedOption) {
+                            valueToSet = selectedOption.value;
+                        } else {
+                            valueToSet = defaultValue !== undefined ? defaultValue : "";
+                        }
+                        setFieldValue(name, valueToSet).catch();
+                        finalValue = valueToSet;
                     }
                     setFieldTouched(name, true, false).catch();
+                    if (onValueChange) {
+                        onValueChange(finalValue);
+                    }
                 }}
                 styles={customSelectStyles}
             />
@@ -307,8 +366,8 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             return {
                 ...baseControl,
                 backgroundColor: bgColor ?? baseControl.backgroundColor,
-                width: width || "auto", // <- wymusza szerokość całego kontenera
-                minWidth: "auto",      // usuwa ewentualne minimalne szerokości
+                width: width || "auto",
+                minWidth: "auto",
                 maxWidth: width,
                 minHeight: sizeStyles.controlHeight,
                 height: sizeStyles.controlHeight,
@@ -324,12 +383,12 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
             ...provided,
             height: sizeStyles.controlHeight,
         }),
-        // Możesz dodatkowo zmniejszyć odstępy w menu:
         menu: (provided) => ({
             ...provided,
             fontSize: sizeStyles.fontSize,
             width: "auto",
         }),
+        menuPortal: (base) => ({...base, zIndex: 9999}),
     };
 
     const noArrowComponents = {
@@ -345,7 +404,9 @@ const CustomSimpleSelect: React.FC<CustomSimpleSelectProps> = ({
                 isDisabled={disabled}
                 value={selectedValue}
                 onChange={(selectedOption: any) => {
-                    onChange(selectedOption.value);
+                    console.log("onChange selectedOption:", selectedOption);
+                    if (!selectedOption) return;
+                    onChange(Number(selectedOption.value));
                 }}
                 styles={customSelectStyles}
                 isSearchable={false}
@@ -471,6 +532,8 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
             <Input
                 name={name}
                 placeholder={placeholder}
+                title={searchTerm || placeholder}
+                textOverflow="ellipsis"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 onKeyDown={mergedOnKeyDown}
@@ -502,5 +565,30 @@ const CustomInputSearchField: React.FC<CustomInputSearchFieldProps> = ({
     );
 };
 
+const CustomPlaceholder = (props: PlaceholderProps<any, boolean>) => {
+    const text = typeof props.children === 'string' ? props.children : '';
 
-export {CustomTextAreaField, CustomInputField, CustomSelectField, CustomInputSearchField, CustomSimpleSelect};
+    return (
+        <components.Placeholder {...props}>
+            <div title={text} style={{
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                width: '100%',
+                display: 'block'
+            }}>
+                {props.children}
+            </div>
+        </components.Placeholder>
+    );
+};
+
+
+export {
+    CustomTextAreaField,
+    CustomInputField,
+    CustomSelectField,
+    CustomInputSearchField,
+    CustomSimpleSelect,
+    CustomPlaceholder
+};

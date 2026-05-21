@@ -6,7 +6,11 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.company.model.QCompany;
+import pl.com.chrzanowski.sma.constructionsite.model.QConstructionSite;
+import pl.com.chrzanowski.sma.contact.model.QContact;
 import pl.com.chrzanowski.sma.contract.model.Contract;
+import pl.com.chrzanowski.sma.contractor.model.QContractor;
 
 import static pl.com.chrzanowski.sma.contract.model.QContract.contract;
 
@@ -79,11 +83,19 @@ public class ContractQuerySpec {
     }
 
     public BlazeJPAQuery<Contract> buildQuery(BooleanBuilder builder, Pageable pageable) {
+        QContractor contractor = new QContractor("contractor");
+        QCompany company = new QCompany("company");
+        QConstructionSite constructionSite = new QConstructionSite("constructionSite");
+        QContact contact = new QContact("contact");
         BlazeJPAQuery<Contract> query = queryFactory
                 .selectFrom(contract)
+                .leftJoin(contract.contractor, contractor).fetchJoin()
+                .leftJoin(contract.company, company).fetchJoin()
+                .leftJoin(contract.constructionSite, constructionSite).fetchJoin()
+                .leftJoin(contract.contact, contact).fetchJoin()
                 .where(builder);
 
-        // Aplikuj sortowanie jeśli jest dostępne
+
         if (pageable != null && pageable.getSort().isSorted()) {
             Sort sort = pageable.getSort();
             sort.forEach(order -> {

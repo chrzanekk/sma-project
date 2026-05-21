@@ -21,7 +21,7 @@ export const GlobalStyles = () => (
         --buttonBgColor: #3f3f46;
         --popoverBgColor: #e4e4e7;
         --highlightBgColor: #116932;
-        --borderColor: #52525b;
+        --borderColor: #3f3f46;
         --fontColor: #d4d4d8;
         --fontColorHover: #a1a1aa;
         --fontColorChildMenu: #e4e4e7;

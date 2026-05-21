@@ -99,7 +99,8 @@ const EditContractForm: React.FunctionComponent<EditContractFormProps> = ({onSuc
         <>{!isLoading && (
             <CommonContractForm initialValues={initialValues}
                                 validationSchema={validationSchema}
-                                onSubmit={handleSubmit}/>)}</>
+                                onSubmit={handleSubmit}/>)}
+        </>
 
     )
 }

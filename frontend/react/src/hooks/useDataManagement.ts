@@ -13,6 +13,7 @@ export interface DataManagementResult<T> {
     items: T[];
     currentPage: number;
     totalPages: number;
+    totalCount: number;
     rowsPerPage: number;
     sortField: string | null;
     sortDirection: "asc" | "desc";
@@ -33,7 +34,7 @@ export interface DataManagementResult<T> {
  * @param useCompanyId
  */
 export function useDataManagement<T>(
-    fetchFn: (params: FetchParams) => Promise<{ data: T[]; totalPages: number }>,
+    fetchFn: (params: FetchParams) => Promise<{ data: T[]; totalPages: number, totalCount: number }>,
     deleteFn: (id: number) => Promise<void>,
     initialFilter: Record<string, any> = {},
     useCompanyId: boolean = true,
@@ -47,6 +48,7 @@ export function useDataManagement<T>(
     const [sortField, setSortField] = useState<string | null>(null);
     const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
     const [filter, setFilter] = useState<Record<string, any>>(initialFilter);
+    const [totalCount, setTotalCount] = useState(0);
 
     const isFirstRender = useRef(true);
 
@@ -60,9 +62,10 @@ export function useDataManagement<T>(
             sort: sortParam,
             ...(useCompanyId && selectedCompany ? {companyId: selectedCompany.id} : {}),
         };
-        const {data, totalPages} = await fetchFn(params);
+        const {data, totalPages, totalCount} = await fetchFn(params);
         setItems(data);
         setTotalPages(totalPages);
+        setTotalCount(totalCount)
     }, [fetchFn, selectedCompany, currentPage, rowsPerPage, sortField, sortDirection, filter, useCompanyId]);
 
     const onPageChange = (page: number) => {
@@ -123,6 +126,7 @@ export function useDataManagement<T>(
         items,
         currentPage,
         totalPages,
+        totalCount,
         rowsPerPage,
         sortField,
         sortDirection,

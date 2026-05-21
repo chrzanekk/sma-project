@@ -1,0 +1,17 @@
+{
+  "add": "Dodaj jednostkę miary",
+  "unit": "Jednostka miary",
+  "unitList": "Lista jednostek miar",
+  "edit": "Edytuj dane jednostki",
+  "search": "Wyszukaj jednostkę miary",
+  "details": "Dane jednostki miary",
+  "symbol": "Symbol jednostki miary",
+  "unitType": "Typ jednostki miary",
+  "description": "Opis",
+  "notifications" : {
+    "addUnitSuccess" : "Stanowisko {symbol} dodane pomyślnie",
+    "addUnitError": "Błąd dodawania jednostki",
+    "editUnitSuccess" : "Dane jednostki {symbol} zmieniono pomyślnie",
+    "editUnitError": "Błąd edycji jednostki {symbol}"
+  }
+}

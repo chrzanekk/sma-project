@@ -53,7 +53,7 @@ public class ContractorServiceImpl implements ContractorService {
         log.debug("Save contractor: {}", contractorDTO);
         validateRequiredFields(contractorDTO);
 
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany(), contractorDTO);
+        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO);
         ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
 
         Contractor contractor = contractorDTOMapper.toEntity(contractorWithSavedContacts);
@@ -63,40 +63,6 @@ public class ContractorServiceImpl implements ContractorService {
         Contractor savedContractor = contractorDao.save(contractor);
         return contractorDTOMapper.toDto(savedContractor);
     }
-
-
-    private ContractorDTO updateOld(ContractorDTO contractorDTO) {
-        log.debug("Update contractor: {}", contractorDTO);
-        validateRequiredFields(contractorDTO);
-
-        Set<ContactBaseDTO> updatedContacts = saveNewContactIfNotExists(contractorDTO.getContacts(), contractorDTO.getCompany(), contractorDTO);
-        ContractorDTO contractorWithSavedContacts = updateContractorContacts(contractorDTO, updatedContacts);
-
-        Contractor existingContractor = contractorDao.findById(contractorWithSavedContacts.getId())
-                .orElseThrow(() -> new ContractorException(ContractorErrorCode.CONTRACTOR_NOT_FOUND, "Contractor not found"));
-
-        Set<Contact> updatedContactEntities = contractorWithSavedContacts.getContacts().stream()
-                .map(dto -> contactDao.findById(dto.getId())
-                        .orElseThrow(() -> new ContractorException(ContactErrorCode.CONTACT_NOT_FOUND, "Contact not found: " + dto.getId())))
-                .collect(Collectors.toSet());
-
-        for (Contact contact : existingContractor.getContacts()) {
-            contact.setContractor(null);
-        }
-
-        existingContractor.getContacts().clear();
-
-        for (Contact contact : updatedContactEntities) {
-            contact.setContractor(existingContractor);
-            existingContractor.getContacts().add(contact);
-        }
-
-        contractorDTOMapper.updateFromDto(contractorWithSavedContacts, existingContractor);
-
-        Contractor savedContractor = contractorDao.save(existingContractor);
-        return contractorDTOMapper.toDto(savedContractor);
-    }
-
 
     private void setPersistedContacts(ContractorDTO contractorWithSavedContacts, Contractor contractor) {
         if (!contractor.getContacts().isEmpty()) {
@@ -112,24 +78,12 @@ public class ContractorServiceImpl implements ContractorService {
     }
 
     private static ContractorDTO updateContractorContacts(ContractorDTO contractorDTO, Set<ContactBaseDTO> updatedContacts) {
-        return ContractorDTO.builder()
-                .id(contractorDTO.getId())
-                .name(contractorDTO.getName())
-                .taxNumber(contractorDTO.getTaxNumber())
-                .street(contractorDTO.getStreet())
-                .buildingNo(contractorDTO.getBuildingNo())
-                .apartmentNo(contractorDTO.getApartmentNo())
-                .postalCode(contractorDTO.getPostalCode())
-                .city(contractorDTO.getCity())
-                .country(contractorDTO.getCountry())
-                .customer(contractorDTO.getCustomer())
-                .supplier(contractorDTO.getSupplier())
-                .scaffoldingUser(contractorDTO.getScaffoldingUser())
-                .company(contractorDTO.getCompany())
-                .contacts(updatedContacts).build();
+        return contractorDTO.toBuilder().contacts(updatedContacts).build();
     }
 
-    private Set<ContactBaseDTO> saveNewContactIfNotExists(Set<ContactBaseDTO> contacts, CompanyBaseDTO company, ContractorDTO contractorDTO) {
+    private Set<ContactBaseDTO> saveNewContactIfNotExists(ContractorDTO contractorDTO) {
+        Set<ContactBaseDTO> contacts = contractorDTO.getContacts();
+        CompanyBaseDTO company = contractorDTO.getCompany();
         if (contacts != null) {
             List<ContactBaseDTO> filtered = contacts.stream().filter(contactBaseDTO -> contactBaseDTO.getId() != null).toList();
             List<ContactBaseDTO> result = new ArrayList<>(filtered);

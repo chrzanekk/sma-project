@@ -4,7 +4,7 @@ import {MenuItem} from "@/types/menu-item-types.ts";
 import {useNavigate} from "react-router-dom";
 import {useResourcePermissions} from "@/context/ResourcePermissionContext.tsx";
 
-export const getUserMenuItems = (): MenuItem[] => {
+export const useUserMenuItems = (): MenuItem[] => {
     const {t} = useTranslation('userMenu');
     const {logOut} = useAuth();
     const navigate = useNavigate();
@@ -25,7 +25,8 @@ export const getUserMenuItems = (): MenuItem[] => {
         canAccessResource('ROLE_MANAGEMENT') ||
         canAccessResource('COMPANY_MANAGEMENT') ||
         canAccessResource('POSITION_MANAGEMENT') ||
-        canAccessResource('RESOURCE_MANAGEMENT');
+        canAccessResource('RESOURCE_MANAGEMENT') ||
+        canAccessResource('UNIT_MANAGEMENT');
 
     if (hasAdminAccess) {
         menuItems.push({

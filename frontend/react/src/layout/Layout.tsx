@@ -18,9 +18,19 @@ const Layout = ({children}: { children: React.ReactNode }) => {
         const companyAlreadySelected = localStorage.getItem("companySelected") === "true";
 
         if (user && !selectedCompany && !companyAlreadySelected) {
-            setShowModal(true);
+            const companies = user.companies || [];
+            if (companies.length === 1) {
+                const onlyCompany = companies[0];
+                setSelectedCompany(onlyCompany)
+                localStorage.setItem("companySelected", "true");
+                setShowModal(false);
+            } else if (companies.length > 1) {
+                setShowModal(true)
+            } else {
+                setShowModal(true);
+            }
         }
-    }, [user, selectedCompany]);
+    }, [user, selectedCompany, setSelectedCompany]);
 
     const handleConfirmCompany = (company: CompanyBaseDTO | null) => {
         setSelectedCompany(company);

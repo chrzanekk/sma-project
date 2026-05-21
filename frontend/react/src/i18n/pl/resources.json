@@ -11,8 +11,6 @@
     "errorLoadingNotifications": "Błąd wczytywania listy zasobów",
     "updateFailed": "Nie udało się zaktualizować ról zasobu"
   },
-  "criticalResourceCannotBeDeleted": "Nie można usunąć wszystkich ról z zasobu {resourceName}. To jest krytyczny zasób, który musi mieć przypisaną co najmniej rolę ROLE_ADMIN.",
-  "resourceNeedAtLeastOneRole": "Nie można usunąć wszystkich ról z zasobu {resourceName}. Zasób musi mieć przypisaną co najmniej jedną rolę.",
   "validation": {
     "criticalResourceTitle": "Krytyczny zasób",
     "noRolesTitle": "Brak ról"
@@ -38,5 +36,14 @@
   "constructionSiteManagement": "Zarządzanie budowami",
   "position": "Stanowiska",
   "positionManagement": "Zarządzanie stanowiskami",
-  "resourceManagement": "Zarządzanie dostępem do zasobów"
+  "employee": "Pracownicy",
+  "employeeManagement": "Zarządzanie pracownikami",
+  "resourceManagement": "Zarządzanie dostępem do zasobów",
+  "unit": "Jednostki miary",
+  "unitManagement": "Zarządzanie jednostkami miar",
+  "scaffoldingLog": "Dzienniki rusztowań",
+  "scaffoldingLogManagement": "Zarządzanie dziennikami rusztowań",
+  "scaffoldingLogPosition": "Wpisy dzienników rusztowań",
+  "scaffoldingLogPositionManagement": "Zarządzanie wpisami/pozycjami dzienników rusztowań"
+
 }

@@ -4,7 +4,7 @@ import {parsePaginationResponse} from "@/utils/api-utils.ts";
 import {ContactDTO, FetchableContactDTO} from "@/types/contact-types.ts";
 import {getSelectedCompany, getSelectedCompanyId} from "@/utils/company-utils";
 import {CompanyBaseDTO} from "@/types/company-types.ts";
-import {ContactFilter} from "@/types/filters/contact-filter.ts";
+import {ContactFilter} from "@/filters/contact-filter.ts";
 
 const CONTACTS_API_BASE = "/api/contacts";
 

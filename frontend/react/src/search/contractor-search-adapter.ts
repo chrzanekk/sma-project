@@ -1,5 +1,5 @@
 // src/search/contractor-search-adapter.ts
-import {ContractorFilter, ContractorFilterBuilder} from "@/types/filters/contractor-filter";
+import {ContractorFilter, ContractorFilterBuilder} from "@/filters/contractor-filter";
 import {getContractorsByFilter} from "@/services/contractor-service";
 import {ContractorDTO} from "@/types/contractor-types";
 
