@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useRef, useState} from "react";
 import {ContractorFormValues, ContractorUpdateDTO, FetchableContractorDTO} from "@/types/contractor-types.ts";
-import {ContactBaseDTO, BasePositionFormValues} from "@/types/contact-types.ts";
+import {BaseContactFormValues, ContactBaseDTO} from "@/types/contact-types.ts";
 import {getContactsByContractorIdPaged, getContractorById, updateContractor} from "@/services/contractor-service.ts";
 import {Country, getCountryOptions} from "@/types/country-types.ts";
 import {errorNotification, successNotification} from "@/notifications/notifications.ts";
@@ -23,12 +23,12 @@ interface EditContractorWithContactFormStepsProps {
 }
 
 interface ContactState {
-    contacts: BasePositionFormValues[];
+    contacts: BaseContactFormValues[];
     page: number;
     hasMore: boolean;
     loading: boolean;
-    addedContacts: BasePositionFormValues[];
-    deletedContacts: BasePositionFormValues[];
+    addedContacts: BaseContactFormValues[];
+    deletedContacts: BaseContactFormValues[];
 }
 
 const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactFormStepsProps> = ({
@@ -56,7 +56,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
 
     // Refs formularzy
     const contractorFormRef = useRef<FormikProps<ContractorFormValues>>(null);
-    const contactFormRef = useRef<FormikProps<BasePositionFormValues>>(null);
+    const contactFormRef = useRef<FormikProps<BaseContactFormValues>>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const fetchContactsPage = useCallback(async (page: number, replace = false) => {
@@ -109,7 +109,6 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
     }, [contractorId, fetchContactsPage]);
 
 
-
     const onScroll = () => {
         const container = scrollContainerRef.current;
         if (container && contactState.hasMore && !contactState.loading) {
@@ -120,7 +119,7 @@ const EditContractorWithContactFormSteps: React.FC<EditContractorWithContactForm
         }
     };
 
-    const handleAddContact = (contact: BasePositionFormValues) => {
+    const handleAddContact = (contact: BaseContactFormValues) => {
         const exists = contactState.contacts.some(
             (c) =>
                 c.firstName === contact.firstName &&

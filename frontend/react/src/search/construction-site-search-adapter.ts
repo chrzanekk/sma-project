@@ -35,7 +35,7 @@ export function makeConstructionSiteSearchAdapter(opts: ConstructionSiteSearchAd
         if (fixed.addressStartsWith) b.withAddressStartsWith(fixed.addressStartsWith);
         if (fixed.shortNameStartsWith) b.withShortNameStartsWith(fixed.shortNameStartsWith);
         if (fixed.codeStartsWith) b.withCodeStartsWith(fixed.codeStartsWith);
-        if (fixed.countryCode) b.withCountryCode(fixed.countryCode);
+        if (fixed.country) b.withCountry(fixed.country);
         if (fixed.companyId !== undefined) b.withCompanyId(fixed.companyId);
         if (fixed.contractorNameStartsWith) b.withContractorNameStartsWith(fixed.contractorNameStartsWith);
 

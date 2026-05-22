@@ -18,9 +18,6 @@
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <docker.username>chrzanekk</docker.username>
-        <docker.image.name>sma-backend-api</docker.image.name>
-        <docker.image.tag>1.0.0</docker.image.tag>
         <jsonwebtoken.version>0.12.6</jsonwebtoken.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <jakarta.persistence.version>3.2.0</jakarta.persistence.version>
@@ -36,6 +33,7 @@
         <query-dsl.version>5.1.0</query-dsl.version>
         <apache.commons.lang.version>3.17.0</apache.commons.lang.version>
         <blaze-persistence.version>1.6.15</blaze-persistence.version>
+        <loki4j.version>1.5.2</loki4j.version>
     </properties>
 
     <dependencyManagement>
@@ -224,6 +222,18 @@
             <classifier>jakarta</classifier>
             <scope>provided</scope>
         </dependency>
+        <!-- Loki4j — push logów do Loki bez Promtail -->
+        <dependency>
+            <groupId>com.github.loki4j</groupId>
+            <artifactId>loki-logback-appender</artifactId>
+            <version>${loki4j.version}</version>
+        </dependency>
+
+        <!-- Micrometer Prometheus — masz już actuator, brakuje tylko tego rejestru -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
 
 
         <!--TESTS-->
@@ -366,30 +376,6 @@
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>3.4.4</version>
-                <configuration>
-                    <from>
-                        <image>eclipse-temurin:21</image>
-                    </from>
-                    <to>
-                        <image>docker.io/${docker.username}/${docker.image.name}:${docker.image.tag}</image>
-                        <tags>
-                            <tag>latest</tag>
-                        </tags>
-                    </to>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.mysema.maven</groupId>

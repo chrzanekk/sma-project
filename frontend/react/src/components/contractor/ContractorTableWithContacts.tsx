@@ -209,10 +209,11 @@ const ContractorTableWithContacts: React.FC<ContractorTableWithContactsProps> = 
                                                 ? "/" + contractor.apartmentNo
                                                 : ""}
                                             , {contractor.postalCode} {contractor.city},{" "}
-                                            {contractor.country &&
-                                            typeof contractor.country === "object"
-                                                ? contractor.country.name
-                                                : contractor.country || ""}
+                                            {contractor.country
+                                                ? (typeof contractor.country === "object"
+                                                    ? String(contractor.country.name ?? "")
+                                                    : String(contractor.country))
+                                                : ""}
                                         </Table.Cell>
                                         <Table.Cell {...commonCellProps} width={"4%"}>
                                             {contractor.customer ? t("common:yes") : t("common:no")}
