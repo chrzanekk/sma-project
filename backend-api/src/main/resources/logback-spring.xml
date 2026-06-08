@@ -3,14 +3,12 @@
 
 <configuration scan="true">
 
-    <!-- APPENDER: KONSOLA -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <!-- APPENDER: LOKI — tylko w profilu docker -->
     <springProfile name="docker">
         <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
             <http>
@@ -38,9 +36,19 @@
             <discardingThreshold>0</discardingThreshold>
             <neverBlock>true</neverBlock>
         </appender>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC_LOKI"/>
+        </root>
     </springProfile>
 
-    <!-- LOGGERS -->
+    <springProfile name="!docker">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
+
     <logger name="org.springframework.web.servlet.HandlerMapping.Mappings"
             level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
@@ -49,13 +57,5 @@
     <logger name="jakarta.activation" level="WARN"/>
     <logger name="org.hibernate.SQL" level="WARN"/>
     <logger name="org.flywaydb" level="INFO"/>
-
-    <!-- ROOT — usunięto FILE, dodano ASYNC_LOKI tylko w profilu docker -->
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-        <springProfile name="docker">
-            <appender-ref ref="ASYNC_LOKI"/>
-        </springProfile>
-    </root>
 
 </configuration>

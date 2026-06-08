@@ -171,6 +171,7 @@ public class UserServiceImpl implements UserService {
         builder.locked(userDTO.getLocked() != null ? userDTO.getLocked() : existingUserDTO.getLocked());
         builder.enabled(userDTO.getEnabled() != null ? userDTO.getEnabled() : existingUserDTO.getEnabled());
         builder.companies(userDTO.getCompanies() != null ? userDTO.getCompanies() : existingUserDTO.getCompanies());
+        builder.lastLoginDatetime(userDTO.getLastLoginDatetime() != null ? userDTO.getLastLoginDatetime() : existingUserDTO.getLastLoginDatetime());
 
         builder.lastModifiedDatetime(Instant.now());
         UserDTO updatedUserDTO = builder.build();

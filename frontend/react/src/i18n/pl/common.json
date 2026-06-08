@@ -46,6 +46,7 @@
   "createdBy": "Utworzony przez",
   "lastModifiedDate": "Data ost. mod.",
   "lastModifiedBy": "Ost. zmod. przez",
+  "lastLoginDatetime": "Ostatnie logowanie",
   "summary": "Podsumowanie",
   "resetSelected": "Resetuj wybór",
   "autoFilledData": "Dane pobrane z pozycji",

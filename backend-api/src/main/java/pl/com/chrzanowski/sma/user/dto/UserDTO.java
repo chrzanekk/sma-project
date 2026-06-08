@@ -30,4 +30,5 @@ public class UserDTO {
     PositionBaseDTO position;
     Instant createdDatetime;
     Instant lastModifiedDatetime;
+    Instant lastLoginDatetime;
 }

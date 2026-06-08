@@ -85,4 +85,7 @@ public class User {
 
     @Column(name = "modify_date")
     private Instant lastModifiedDatetime;
+
+    @Column(name = "last_login_datetime")
+    private Instant lastLoginDatetime;
 }

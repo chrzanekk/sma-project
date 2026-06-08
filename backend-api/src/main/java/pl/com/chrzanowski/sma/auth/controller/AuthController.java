@@ -34,6 +34,7 @@ import pl.com.chrzanowski.sma.user.service.UserService;
 import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -67,11 +68,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<JWTToken> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        log.debug("REST request to login user {}", loginRequest);
+        log.debug("REST request to login user {}", loginRequest.getLogin());
         LoginRequest updatedRequest =
                 loginRequest.toBuilder().login(loginRequest.getLogin().toLowerCase()).build();
         UserDTO userDTO = userService.getUserByLogin(updatedRequest.getLogin());
-        if (!userDTO.getEnabled() || userDTO.getLocked()) {
+        if (Boolean.FALSE.equals(userDTO.getEnabled()) || Boolean.TRUE.equals(userDTO.getLocked())) {
             throw new AccountException("User is not active: " + updatedRequest.getLogin(), Map.of("login", updatedRequest.getLogin()));
         }
         UsernamePasswordAuthenticationToken token =
@@ -79,6 +80,10 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
+
+        UserDTO updatedUserDTO = userDTO.toBuilder().lastLoginDatetime(Instant.now()).build();
+        userService.update(updatedUserDTO);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add(AuthTokenFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
         return new ResponseEntity<>(new JWTToken(jwt), headers, HttpStatus.OK);
@@ -172,14 +177,5 @@ public class AuthController {
         if (!request.password().equals(request.confirmPassword())) {
             throw new PasswordNotMatchException("Password not match");
         }
-    }
-
-    private Map<String, Object> setClaims(UserDTO userDTO) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("id", userDTO.getId());
-        claims.put("username", userDTO.getLogin());
-        claims.put("email", userDTO.getEmail());
-        claims.put("roles", userDTO.getRoles());
-        return claims;
     }
 }
