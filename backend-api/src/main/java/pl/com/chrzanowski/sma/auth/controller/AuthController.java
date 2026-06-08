@@ -22,9 +22,9 @@ import pl.com.chrzanowski.sma.auth.dto.request.RegisterRequest;
 import pl.com.chrzanowski.sma.auth.dto.response.JWTToken;
 import pl.com.chrzanowski.sma.auth.dto.response.MessageResponse;
 import pl.com.chrzanowski.sma.auth.service.PasswordResetService;
-import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.enumeration.TokenType;
 import pl.com.chrzanowski.sma.common.exception.*;
+import pl.com.chrzanowski.sma.common.security.enums.ApiPath;
 import pl.com.chrzanowski.sma.common.security.jwt.AuthTokenFilter;
 import pl.com.chrzanowski.sma.common.security.jwt.JwtUtils;
 import pl.com.chrzanowski.sma.common.util.TokenUtil;
@@ -35,7 +35,6 @@ import pl.com.chrzanowski.sma.usertoken.dto.UserTokenDTO;
 import pl.com.chrzanowski.sma.usertoken.service.UserTokenService;
 
 import java.time.Instant;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
