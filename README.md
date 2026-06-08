@@ -41,6 +41,7 @@ sma-project/
 │   └── src/
 ├── frontend/react/           # React + Vite — kod źródłowy frontendu
 │   ├── Dockerfile
+│   ├── .env                  # VITE backend url dla localhost
 │   └── src/
 ├── config/                   # Konfiguracje serwisów infrastrukturalnych
 │   ├── nginx.conf
@@ -99,7 +100,7 @@ Wszystkie serwisy powinny mieć status `running` lub `healthy`. Następnie otwó
 
 ---
 
-## Konfiguracja pliku `.env`
+## Konfiguracja pliku `.env` dla backendu
 
 Plik `.env` zawiera wrażliwe dane i **nigdy nie powinien trafiać do repozytorium** (jest w `.gitignore`).
 
@@ -148,6 +149,21 @@ PLATFORM_URL=http://localhost
 > # Linux / macOS / Git Bash
 > openssl rand -base64 64
 > ```
+
+## Konfiguracja pliku `.env` dla frontendu (W przypadku pracy lokalnej patrz [Praca lokalna](#praca-lokalna-intellij--kontener-z-bazą))
+
+Pliki `.env` i `.env.local` umieszczamy w katalogu /frontend/react
+
+Zawartość `.env` powinna wyglądać tak:
+```
+VITE_API_BASE_URL=http://localhost
+```
+
+Zawartość `.env.local` powinna wyglądać tak:
+```
+VITE_API_BASE_URL=http://localhost:8080 ## lub inny wybrany port dla backendu
+```
+
 
 ---
 
@@ -278,6 +294,17 @@ Po zalogowaniu do Grafany (`http://localhost:3001`) dostępne są dashboardy w s
 
 Ten tryb pozwala na uruchamianie backendu bezpośrednio z IntelliJ (z debuggerem, hot-reload itp.)
 przy jednoczesnym korzystaniu z bazy PostgreSQL działającej w kontenerze Docker.
+
+### Krok 0 — Konfiguracja frontendu dla lokalnego devu
+
+Stwórz plik `frontend/react/.env.local` (ignorowany przez Git):
+
+```env
+VITE_API_BASE_URL=http://localhost:8080
+```
+
+Plik ten nadpisuje domyślną wartość z `.env` i przekierowuje
+requesty bezpośrednio do lokalnego backendu z pominięciem Nginx.
 
 ### Krok 1 — Uruchom infrastrukturę
 

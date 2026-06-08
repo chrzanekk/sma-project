@@ -28,3 +28,5 @@ dist-ssr
 *.sln
 *.sw?
 /backend-api/.env
+/frontend/react/.env
+/frontend/react/.env.local
