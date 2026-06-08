@@ -81,6 +81,7 @@ export interface UserDTO {
     companies: Array<CompanyBaseDTO>
     createdDatetime?: string;
     lastModifiedDatetime?: string;
+    lastLoginDatetime?: string;
 }
 
 export interface UserFormDTO {

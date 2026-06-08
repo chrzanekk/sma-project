@@ -93,6 +93,7 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("shared.enabled")}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("createDate", {ns: "common"})}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("lastModifiedDate", {ns: "common"})}</Table.ColumnHeader>
+                            <Table.ColumnHeader {...commonColumnHeaderProps}>{t("lastLoginDatetime", {ns: "common"})}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("edit", {ns: "common"})}</Table.ColumnHeader>
                             <Table.ColumnHeader {...commonColumnHeaderProps}>{t("delete", {ns: "common"})}</Table.ColumnHeader>
                         </Table.Row>
@@ -142,6 +143,9 @@ const UserTable: React.FC<Props> = ({users, onDelete, fetchUsers, onSortChange, 
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     {DateFormatter.formatDateTime(user.lastModifiedDatetime!)}
+                                </Table.Cell>
+                                <Table.Cell {...commonCellProps}>
+                                    {DateFormatter.formatDateTime(user.lastLoginDatetime!)}
                                 </Table.Cell>
                                 <Table.Cell {...commonCellProps}>
                                     <HStack gap={1} alignContent="center">
