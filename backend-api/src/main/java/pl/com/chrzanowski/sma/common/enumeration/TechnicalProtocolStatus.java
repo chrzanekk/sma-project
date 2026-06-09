@@ -19,4 +19,13 @@ public enum TechnicalProtocolStatus {
     public String getName() {
         return name;
     }
+
+    public static TechnicalProtocolStatus fromName(String name) {
+        for (TechnicalProtocolStatus type : values()) {
+            if (type.name.equalsIgnoreCase(name)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown TechnicalProtocolStatus: " + name);
+    }
 }

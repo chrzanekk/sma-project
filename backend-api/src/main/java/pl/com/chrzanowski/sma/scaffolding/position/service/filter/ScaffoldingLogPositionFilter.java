@@ -25,8 +25,8 @@ public class ScaffoldingLogPositionFilter {
     private LocalDate dismantlingDateLessOrEqual;
     private LocalDate dismantlingNotificationDateGreaterOrEqual;
     private LocalDate dismantlingNotificationDateLessOrEqual;
-    private TechnicalProtocolStatus technicalProtocolStatus;
-    private ScaffoldingType scaffoldingType;
+    private String technicalProtocolStatus;
+    private String scaffoldingType;
     private BigDecimal scaffoldingFullDimensionGreaterOrEqual;
     private BigDecimal scaffoldingFullDimensionLessOrEqual;
     private String scaffoldingLogNameContains;

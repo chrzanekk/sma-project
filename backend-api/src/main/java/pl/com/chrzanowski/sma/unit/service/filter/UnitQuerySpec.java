@@ -36,7 +36,7 @@ public class UnitQuerySpec {
                 predicate.and(unit.company.id.eq(filter.getCompanyId()));
             }
             if(filter.getUnitType() != null &&  !filter.getUnitType().isEmpty()) {
-                UnitType unitType = UnitType.valueOf(filter.getUnitType());
+                UnitType unitType = UnitType.fromType(filter.getUnitType());
                 predicate.and(unit.unitType.eq(unitType));
             }
         }

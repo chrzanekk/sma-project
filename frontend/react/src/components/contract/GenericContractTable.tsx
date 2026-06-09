@@ -80,72 +80,72 @@ const GenericContractTable = <T extends ContractDTO>({
                     <Table.Header>
                         <Table.Row bg={themeColors.bgColorPrimary}>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"2%"}
                                 onClick={() => onSortChange("id")}
                             >
                                 ID {renderSortIndicator("id")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"15%"}
                                 onClick={() => onSortChange("number")}
                             >
                                 {t("contracts:number")} {renderSortIndicator("number")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"10%"}
                                 onClick={() => onSortChange("description")}
                             >
                                 {t("contracts:description")} {renderSortIndicator("description")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"5%"}
                                 onClick={() => onSortChange("value")}
                             >
                                 {t("contracts:value")} {renderSortIndicator("value")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"2%"}
                                 onClick={() => onSortChange("currency")}
                             >
                                 {t("contracts:currency")} {renderSortIndicator("currency")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"10%"}
                                 onClick={() => onSortChange("contractor")}
                             >
                                 {t("contracts:contractor")} {renderSortIndicator("contractor")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"10%"}
                                 onClick={() => onSortChange("constructionSite")}
                             >
                                 {t("contracts:constructionSite")} {renderSortIndicator("constructionSite")}
                             </Table.ColumnHeader><Table.ColumnHeader
-                            {...commonColumnHeaderProps}
+                            {...commonColumnHeaderProps} width={"10%"}
                             onClick={() => onSortChange("contact")}
                         >
                             {t("contracts:contact")} {renderSortIndicator("contact")}
                         </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"5%"}
                                 onClick={() => onSortChange("startDate")}
                             >
                                 {t("contracts:startDate")} {renderSortIndicator("startDate")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"5%"}
                                 onClick={() => onSortChange("endDate")}
                             >
                                 {t("contracts:endDate")} {renderSortIndicator("endDate")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"5%"}
                                 onClick={() => onSortChange("signupDate")}
                             >
                                 {t("contracts:signupDate")} {renderSortIndicator("signupDate")}
                             </Table.ColumnHeader>
                             <Table.ColumnHeader
-                                {...commonColumnHeaderProps}
+                                {...commonColumnHeaderProps} width={"5%"}
                                 onClick={() => onSortChange("realEndDate")}
                             >
                                 {t("contracts:realEndDate")} {renderSortIndicator("realEndDate")}
@@ -182,20 +182,20 @@ const GenericContractTable = <T extends ContractDTO>({
                                            color: themeColors.fontColorHover
                                        }}
                             >
-                                <Table.Cell {...commonCellProps} width={"2%"}>{contract.id}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"15%"}>{contract.number}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.description}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"5%"}><FormatNumber value={Number(contract.value)} style={"currency"} currency={contract.currency}/></Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"2%"}>{contract.currency}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.contractor?.name}</Table.Cell>
-                                <Table.Cell {...commonCellProps}
-                                            width={"10%"}>{contract.constructionSite?.name}</Table.Cell>
-                                <Table.Cell {...commonCellProps}
-                                            width={"10%"}>{contract.contact?.firstName} {contract.contact?.lastName}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.startDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.endDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.signupDate}</Table.Cell>
-                                <Table.Cell {...commonCellProps} width={"10%"}>{contract.realEndDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.id}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.number}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.description}</Table.Cell>
+                                <Table.Cell {...commonCellProps} ><FormatNumber value={Number(contract.value)}
+                                                                                style={"currency"}
+                                                                                currency={contract.currency}/></Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.currency}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.contractor?.name}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.constructionSite?.name}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.contact?.firstName} {contract.contact?.lastName}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.startDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.endDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.signupDate}</Table.Cell>
+                                <Table.Cell {...commonCellProps} >{contract.realEndDate}</Table.Cell>
                                 {extended && isFetchableContract(contract) && (
                                     <>
                                         <AuditCell

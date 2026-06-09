@@ -7,6 +7,8 @@ import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import pl.com.chrzanowski.sma.common.enumeration.ScaffoldingType;
+import pl.com.chrzanowski.sma.common.enumeration.TechnicalProtocolStatus;
 import pl.com.chrzanowski.sma.scaffolding.position.model.QScaffoldingLogPosition;
 import pl.com.chrzanowski.sma.scaffolding.position.model.ScaffoldingLogPosition;
 
@@ -54,11 +56,13 @@ public class ScaffoldingLogPositionQuerySpec {
             if (filter.getDismantlingNotificationDateLessOrEqual() != null) {
                 predicate.and(scaffoldingLogPosition.dismantlingNotificationDate.loe(filter.getDismantlingNotificationDateLessOrEqual()));
             }
-            if (filter.getTechnicalProtocolStatus() != null) {
-                predicate.and(scaffoldingLogPosition.technicalProtocolStatus.eq(filter.getTechnicalProtocolStatus()));
+            if (filter.getTechnicalProtocolStatus() != null && !filter.getTechnicalProtocolStatus().isEmpty()) {
+                TechnicalProtocolStatus technicalProtocolStatus = TechnicalProtocolStatus.fromName(filter.getTechnicalProtocolStatus());
+                predicate.and(scaffoldingLogPosition.technicalProtocolStatus.eq(technicalProtocolStatus));
             }
-            if (filter.getScaffoldingType() != null) {
-                predicate.and(scaffoldingLogPosition.scaffoldingType.eq(filter.getScaffoldingType()));
+            if (filter.getScaffoldingType() != null && !filter.getScaffoldingType().isEmpty()) {
+                ScaffoldingType scaffoldingType = ScaffoldingType.fromType(filter.getScaffoldingType());
+                predicate.and(scaffoldingLogPosition.scaffoldingType.eq(scaffoldingType));
             }
             if (filter.getScaffoldingFullDimensionGreaterOrEqual() != null) {
                 predicate.and(scaffoldingLogPosition.scaffoldingFullDimension.goe(filter.getScaffoldingFullDimensionGreaterOrEqual()));
