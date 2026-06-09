@@ -48,11 +48,10 @@ const Layout = ({children}: { children: React.ReactNode }) => {
                 companies={user?.companies || []}
             />
             <Box
-                minH="100vh"
-                display="flex"
+                minH={"100vh"}
+                display={"flex"}
                 w={"auto"}
-                flexDirection="column"
-                overflow={"hidden"}
+                flexDirection={"column"}
                 bg={themeColors.bgColorSecondary}
             >
 
@@ -60,16 +59,16 @@ const Layout = ({children}: { children: React.ReactNode }) => {
                     <Navbar/>
                 </Box>
 
-                <Box as="main"
+                <Box as={"main"}
                      flex={"1"}
-                     w="100%"
-                     overflowY="auto"
+                     width={"100%"}
+                     overflowY={"auto"}
                      px={2}
                 >
                     {children}
                 </Box>
 
-                <Box as="footer" w="100%" height="50px" position="sticky" bottom="0" zIndex="10">
+                <Box as="footer" w="100%" maxH="40px" position="sticky" bottom="0" zIndex="10">
                     <Footer/>
                 </Box>
             </Box>

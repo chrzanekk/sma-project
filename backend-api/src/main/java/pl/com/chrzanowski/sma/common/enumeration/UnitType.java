@@ -21,4 +21,13 @@ public enum UnitType {
     public String getType() {
         return type;
     }
+
+    public static UnitType fromType(String type) {
+        for (UnitType unitType : values()) {
+            if (unitType.type.equalsIgnoreCase(type)) {
+                return unitType;
+            }
+        }
+        throw new IllegalArgumentException("Unknown UnitType: " + type);
+    }
 }

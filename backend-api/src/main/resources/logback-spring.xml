@@ -53,6 +53,8 @@
             level="DEBUG" additivity="false">
         <appender-ref ref="CONSOLE"/>
     </logger>
+    <logger name="org.springframework.web" level="DEBUG"/>
+<!--    <logger name="org.springframework.security" level="DEBUG"/>-->
     <logger name="pl.com.chrzanowski.sma" level="DEBUG"/>
     <logger name="jakarta.activation" level="WARN"/>
     <logger name="org.hibernate.SQL" level="WARN"/>

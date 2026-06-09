@@ -73,7 +73,8 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             justifyContent={"center"}
                             flexWrap={"wrap"}
                         >
-                            <CustomInputFilterField name="nameStartsWith" placeholder={t('contractors:name')}/>
+                            <CustomInputFilterField name="nameStartsWith"
+                                                    placeholder={t('contractors:name')}/>
                             <CustomInputFilterField name="taxNumberStartsWith"
                                                     placeholder={t('contractors:taxNumber')}/>
                             <CustomInputFilterField name="streetStartsWith" placeholder={t('contractors:street')}/>
@@ -84,18 +85,30 @@ const ContractorFilterForm: React.FC<Props> = ({onSubmit}) => {
                             <CustomInputFilterField name="postalCodeStartsWith"
                                                     placeholder={t('contractors:postalCode')}/>
                             <CustomInputFilterField name="cityStartsWith" placeholder={t('contractors:city')}/>
+                        </Flex>
+                        <Flex gap={1}
+                              px={1}
+                              py={1}
+                              justifyContent={"center"}
+                              flexWrap={"wrap"}>
                             <CustomSelectField name={"customer"}
                                                placeholder={t("contractors:customer")}
+                                               label={t("contractors:customer")}
+                                               fontSize={"2xs"}
                                                options={booleanOptions}
                                                bgColor={themeVars.bgColorSecondary}
                                                width={"150px"}/>
                             <CustomSelectField name={"supplier"}
                                                placeholder={t("contractors:supplier")}
+                                               label={t("contractors:supplier")}
+                                               fontSize={"2xs"}
                                                options={booleanOptions}
                                                bgColor={themeVars.bgColorSecondary}
                                                width={"150px"}/>
                             <CustomSelectField name={"scaffoldingUser"}
                                                placeholder={t("contractors:scaffoldingUser")}
+                                               label={t("contractors:scaffoldingUser")}
+                                               fontSize={"2xs"}
                                                options={booleanOptions}
                                                bgColor={themeVars.bgColorSecondary}
                                                width={"150px"}/>

@@ -18,4 +18,13 @@ public enum ScaffoldingType {
     public String getType() {
         return type;
     }
+
+    public static ScaffoldingType fromType(String input) {
+        for (ScaffoldingType type : values()) {
+            if (type.type.equalsIgnoreCase(input)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown ScaffoldingType: " + input);
+    }
 }

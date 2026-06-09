@@ -1,74 +1,68 @@
 import React from "react";
-import {Grid, GridItem, Text} from "@chakra-ui/react";
+import {Grid, GridItem} from "@chakra-ui/react";
 
 interface DashboardGridProps {
-    topRowContent: string;
-    columnsContent: string[];
-    bottomRowContent: string;
+    topRowContent: React.ReactNode;
+    columnsContent: React.ReactNode[];
+    bottomRowContent?: React.ReactNode;
     bgColor?: string;
-    fontColor?: string;
 }
 
 const DashboardGrid: React.FC<DashboardGridProps> = ({
                                                          topRowContent,
                                                          columnsContent,
                                                          bottomRowContent,
-                                                         bgColor = "bgColorPrimary",
-                                                         fontColor = "fontColorPrimary",
+                                                         bgColor = "bgColorPrimary"
                                                      }) => {
     return (
         <Grid
-            templateRows="repeat(3,1fr)"
-            height={"calc(100vh - 110px)"}
-            gap={3}
+            templateRows="min-content 1fr min-content"
+            minH={"calc(100vh - 150px)"}
+            gap={5}
+            w={"100%"}
         >
             {/* Górny wiersz */}
             <GridItem
-                w="100%"
+                w={"100%"}
                 bg={bgColor}
-                p={2}
-                borderRadius="lg"
-                minHeight={"30%"}
-                overflowY={"auto"}
+                p={5}
+                borderRadius={"xl"}
+                boxShadow={"sm"}
             >
-                <Text color={fontColor} fontWeight="bold">
-                    {topRowContent}
-                </Text>
+                {topRowContent}
             </GridItem>
 
             {/* Środkowy wiersz - 3 kolumny */}
-            <Grid templateColumns="repeat(3, 1fr)" gap={3}>
+            <Grid
+                templateColumns={{base: "1fr", lg: "repeat(3, 1fr)"}}
+                gap={4}
+            >
                 {columnsContent.map((content, index) => (
                     <GridItem
                         key={index}
-                        w="100%"
+                        w={"100%"}
                         h={"100%"}
                         bg={bgColor}
-                        p={2}
-                        borderRadius="lg"
-                        minHeight={"30%"}
-                        overflowY="auto"
+                        p={5}
+                        borderRadius={"xl"}
+                        boxShadow={"sm"}
+                        overflowY={"auto"}
                     >
-                        <Text color={fontColor} fontWeight="bold">
-                            {content}
-                        </Text>
+                        {content}
                     </GridItem>
                 ))}
             </Grid>
 
             {/* Dolny wiersz */}
-            <GridItem
-                w="100%"
+            {bottomRowContent && (<GridItem
+                w={"100%"}
                 bg={bgColor}
-                p={2}
-                borderRadius="lg"
-                minHeight={"30%"}
-                overflow="auto"
+                p={4}
+                borderRadius={"xl"}
+                boxShadow={"sm"}
             >
-                <Text color={fontColor} fontWeight="bold">
-                    {bottomRowContent}
-                </Text>
-            </GridItem>
+                {bottomRowContent}
+            </GridItem>)}
         </Grid>
     );
 };

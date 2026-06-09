@@ -44,6 +44,8 @@
   "mode": "Tryb",
   "createDate": "Data utworzenia",
   "createdBy": "Utworzony przez",
+  "created": "Utworzony",
+  "lastModified": "Ost. zmodyfikowany",
   "lastModifiedDate": "Data ost. mod.",
   "lastModifiedBy": "Ost. zmod. przez",
   "lastLoginDatetime": "Ostatnie logowanie",
